@@ -1,0 +1,1547 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC '-//ibatis.apache.org//DTD Sql Map 2.0//EN' 'http://ibatis.apache.org/dtd/sql-map-2.dtd'>
+<sqlMap namespace="rc">
+
+	<sql id="commonStopCaseList">
+		   	UNION ALL
+					            SELECT A.RC_NO 				--접수 번호
+									 , A.RC_SE_CD 			--접수 구분 코드
+		 							 , DECODE(A.RC_SE_CD, 'T' ,'임시','I','내사','F','정식') AS RC_SE_NM
+									 , A.PROGRS_STTUS_CD 	--진행 상태 코드
+									 , A.INV_PROVIS_CD 		--수사 단서 코드
+									 , A.RC_DT				--접수 일시
+									 , A.OCCRRNC_BEGIN_DT	--발생 시작 일시
+									 , A.OCCRRNC_END_DT 	--발생 종료 일시
+									 , A.RC_STLE_CD 		--접수 형태 코드
+									 , A.OCCRRNC_ZIP 		--발생 우편번호
+									 , A.OCCRRNC_ADDR 		--발생 주소
+									 , DGUARD.DECRYPT('TBL','ENC',A.CPTTR_HP_NO) AS CPTTR_HP_NO 		--민원인 휴대폰 번호
+									 , A.CMPTNC_EXMN_CD 	--관할 검찰 코드
+									 , A.CNSLT_MTH_CD 		--상담 방법 코드
+									 , A.CNSLT_DT 			--상담 일시
+									 , A.CASE_SUMRY 		--사건 개요
+									 , A.CRMNL_FACT 		--범죄 사실
+									 , A.PRF_DTA 			--입증 자료
+									 , A.ETC_CN 			--기타 내용
+									 , A.TMPR_NO 			--임시 번호
+									 , A.ITIV_NO 			--내사 번호
+									 , A.CASE_NO 			--사건 번호
+									 , A.FILE_ID 			--파일 ID
+									 , A.DOC_ID 			--문서 ID
+									 , A.SANCTN_ID 			--결재 ID
+									 , A.USE_YN 			--사용 여부
+									 , A.WRITNG_DEPT_CD		--작성 소속 코드
+									 , A.WRITNG_ID			--작성 ID
+									 , A.WRITNG_DT 			--작성 일시
+									 , A.UPDT_ID 			--수정 ID
+									 , A.UPDT_DT 			--수정 일시
+								     , A.CHARGER_ID			--담당자 ID
+								     , A.CHARGER_DEPT_CD	--담당자 부서코드
+								     , A.CASE_END_SE_CHANGE_CD	--사건종결구분변경코드
+						  		  FROM RC_TMPR A
+						 		 WHERE A.USE_YN = 'Y'
+						 		   AND A.DEL_YN = 'N'
+							 	   AND A.RC_SE_CD= #rc_se_cd#
+		  			 		       AND A.CHARGER_DEPT_CD = #dept_cd#
+						 	       AND A.CHARGER_ID = #esntl_id#
+						 	      <isEqual property="rc_se_cd" compareValue="I">
+						 	       AND A.PROGRS_STTUS_CD ='02113'
+						 	      </isEqual>
+						 	      <isEqual property="rc_se_cd" compareValue="T">
+						 	       AND A.PROGRS_STTUS_CD ='02111'
+						 	      </isEqual>
+  	 	  						   AND A.CASE_END_SE_CHANGE_CD ='00381'
+								 )
+
+		  			 		       <isNotEmpty property="suspect_trgter_nm" >
+		  			 		         AND A.RC_NO IN (SELECT T.RC_NO
+							                    	   FROM RC_TMPR_TRGTER T
+							                    	  WHERE T.TRGTER_NM = #suspect_trgter_nm#
+							                    	    AND T.TRGTER_SE_CD IN (SELECT ESNTL_CD FROM CMN_CD WHERE CD_DC='suspct-Group')
+							                  		)
+		  			 		       </isNotEmpty>
+		  			 		       <isNotEmpty property="sufferer_trgter_nm" >
+		  			 		         AND A.RC_NO IN (SELECT T.RC_NO
+							                    	   FROM RC_TMPR_TRGTER T
+							                    	  WHERE T.TRGTER_NM = #sufferer_trgter_nm#
+							                    	    AND T.TRGTER_SE_CD IN (SELECT ESNTL_CD FROM CMN_CD WHERE CD_DC='accs-Group')
+							                  		)
+		  			 		       </isNotEmpty>
+		  			 		       <isNotEmpty property="searchNoStart">
+		  			 		        <isNotEmpty property="searchNoEnd">
+		  			 		         AND TO_NUMBER(replace( #searchNoStart# , '-','')) <![CDATA[ <= ]]>  TO_NUMBER(replace(	<isEqual property="caseSearchTypeCd" compareValue="R">A.RC_NO  </isEqual>
+																							  			 		         	<isEqual property="caseSearchTypeCd" compareValue="C">A.CASE_NO</isEqual>
+																							  			 		         	<isEqual property="caseSearchTypeCd" compareValue="I">A.ITIV_NO</isEqual>
+																							  			 		         	<isEqual property="caseSearchTypeCd" compareValue="T">A.TMPR_NO</isEqual> , '-',''))
+		  			 		         AND TO_NUMBER(replace(   #searchNoEnd# , '-','')) <![CDATA[ >= ]]>  TO_NUMBER(replace( <isEqual property="caseSearchTypeCd" compareValue="R">A.RC_NO  </isEqual>
+																							  			 		         	<isEqual property="caseSearchTypeCd" compareValue="C">A.CASE_NO</isEqual>
+																							  			 		         	<isEqual property="caseSearchTypeCd" compareValue="I">A.ITIV_NO</isEqual>
+																							  			 		         	<isEqual property="caseSearchTypeCd" compareValue="T">A.TMPR_NO</isEqual> , '-',''))
+		  			 		        </isNotEmpty>
+		  			 		        <isEmpty property="searchNoEnd" >
+		  			 		          AND <isEqual property="caseSearchTypeCd" compareValue="R">A.RC_NO  </isEqual>
+			  			 		          <isEqual property="caseSearchTypeCd" compareValue="C">A.CASE_NO</isEqual>
+			  			 		          <isEqual property="caseSearchTypeCd" compareValue="I">A.ITIV_NO</isEqual>
+			  			 		          <isEqual property="caseSearchTypeCd" compareValue="T">A.TMPR_NO</isEqual> = #searchNoStart#
+		  			 		         </isEmpty>
+		  			 		       </isNotEmpty>
+		  			 		       <isNotEmpty property="receiptDeStart" >
+					            	<isNotEmpty property="receiptDeEnd" >
+					                  AND TO_CHAR(A.RC_DT, 'YYYYMMDD') BETWEEN REPLACE(#receiptDeStart#,'-','') AND REPLACE(#receiptDeEnd#,'-','')
+					                </isNotEmpty>
+					               </isNotEmpty>
+					               <isNotEmpty property="receiptDeStart" >
+					            	<isEmpty property="receiptDeEnd" >
+					                  AND TO_CHAR(A.RC_DT, 'YYYYMMDD') = REPLACE(#receiptDeStart#,'-','')
+					                </isEmpty>
+					               </isNotEmpty>
+	</sql>
+
+
+	<select id="selectRcNo" resultClass="String" >
+    	SELECT TO_CHAR(SYSDATE,'YYYY')||'-'||(SELECT LPAD(NVL(MAX(TO_NUMBER(SUBSTR(A.RC_NO, 6))), 0)+1, 6, '0')
+             									FROM RC_TMPR A
+              								   WHERE A.RC_NO LIKE TO_CHAR(SYSDATE,'YYYY')||'%')
+       	  FROM DUAL
+  	</select>
+
+	<select id="selectItivNo" resultClass="String" >
+    	SELECT TO_CHAR(SYSDATE,'YYYY')||'-'||(SELECT LPAD(NVL(MAX(TO_NUMBER(SUBSTR(A.ITIV_NO,6))), 0)+1, 6, '0')
+             									FROM RC_ITIV A
+              								   WHERE A.ITIV_NO LIKE TO_CHAR(SYSDATE,'YYYY')||'%')
+       	  FROM DUAL
+  	</select>
+
+	<!-- 사건 목록 -->
+	<select id="selectCaseList" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		SELECT X.RN  
+			 , X.TOT_CNT
+			 , X.RC_NO 				--접수 번호
+			 , X.RC_SE_CD 			--접수 구분 코드
+			 , X.RC_SE_NM 			--접수 구분
+			 , X.PROGRS_STTUS_CD 	--진행 상태 코드
+			 , X.RC_DT				--접수 일자
+			 , X.PROGRS_STTUS_NM	--진행 상태명
+			 , X.INV_PROVIS_CD 		--수사 단서 코드
+			 , X.INV_PROVIS_NM		--수사단서명
+			 , X.VIOLT_NM
+			 , X.OCCRRNC_BEGIN_DT	--발생 시작 일시
+			 , X.OCCRRNC_END_DT 	--발생 종료 일시
+			 , X.RC_STLE_CD 		--접수 형태 코드
+			 , X.CMPTNC_EXMN_CD 	--관할 검찰 코드
+			 , X.CNSLT_MTH_CD 		--상담 방법 코드
+			 , X.TMPR_NO 			--임시 번호
+			 , X.ITIV_NO 			--내사 번호
+			 , X.CASE_NO 			--사건 번호
+			 , X.FILE_ID 			--파일 ID
+			 , X.DOC_ID 			--문서 ID
+			 , X.SANCTN_ID 			--결재 ID
+			 , X.WRITNG_DEPT_CD		--작성 소속 코드
+			 , (TO_DATE(TO_CHAR(SYSDATE, 'YYYYMMDD'), 'YYYYMMDD') - TO_DATE(TO_CHAR(X.RC_DT, 'YYYYMMDD'), 'YYYYMMDD') ) AS DELAY_PD --지연기간
+			 , X.CHARGER_DEPT_NM 	--담당 부서 명
+			 , X.CHARGER_ID			--담당자 ID
+			 , X.ALOT_USER_NM		--담당자명
+			 , X.SUSPCT 			--피의자
+	  		 , X.SUFRER 			--피해자
+	  		 , X.WRITNG_DT 			--작성 일시
+	  		 , X.CASE_END_SE_CHANGE_CD 	--임시사건 결과코드
+	  		 , X.CASE_END_SE_CHANGE_NM
+		  FROM (
+		  		SELECT AB.*
+		  		  	 , ROWNUM AS RN
+		  		  	 , COUNT(*) OVER() AS TOT_CNT
+				  FROM(
+				  	SELECT A.*
+				  	FROM(
+						 SELECT A.RC_NO 				--접수 번호
+							 , A.RC_SE_CD 			--접수 구분 코드
+ 							 , DECODE(A.RC_SE_CD, 'T' ,'임시','I','내사','F','정식') AS RC_SE_NM
+							 , A.PROGRS_STTUS_CD 	--진행 상태 코드
+							 , A.INV_PROVIS_CD 		--수사 단서 코드
+							 , A.RC_DT				--접수 일시
+							 , A.OCCRRNC_BEGIN_DT	--발생 시작 일시
+							 , A.OCCRRNC_END_DT 	--발생 종료 일시
+							 , A.RC_STLE_CD 		--접수 형태 코드
+							 , A.OCCRRNC_ZIP 		--발생 우편번호
+							 , A.OCCRRNC_ADDR 		--발생 주소
+							 , DGUARD.DECRYPT('TBL','ENC',A.CPTTR_HP_NO) AS  CPTTR_HP_NO		--민원인 휴대폰 번호
+							 , A.CMPTNC_EXMN_CD 	--관할 검찰 코드
+							 , A.CNSLT_MTH_CD 		--상담 방법 코드
+							 , A.CNSLT_DT 			--상담 일시
+							 , A.CASE_SUMRY 		--사건 개요
+							 , A.CRMNL_FACT 		--범죄 사실
+							 , A.PRF_DTA 			--입증 자료
+							 , A.ETC_CN 			--기타 내용
+							 , A.TMPR_NO 			--임시 번호
+							 , A.ITIV_NO 			--내사 번호
+							 , A.CASE_NO 			--사건 번호
+							 , A.FILE_ID 			--파일 ID
+							 , A.DOC_ID 			--문서 ID
+							 , A.SANCTN_ID 			--결재 ID
+							 , A.USE_YN 			--사용 여부
+							 , A.WRITNG_DEPT_CD		--작성 소속 코드
+							 , A.WRITNG_ID			--작성 ID
+							 , A.WRITNG_DT 			--작성 일시
+							 , A.UPDT_ID 			--수정 ID
+							 , A.UPDT_DT 			--수정 일시
+						     , A.CHARGER_ID			--담당자 ID
+						     , A.CHARGER_DEPT_CD	--담당자 부서코드
+						     , A.CASE_END_SE_CHANGE_CD	--사건종결구분변경코드
+						     , FN_CD_NM(A.PROGRS_STTUS_CD) AS PROGRS_STTUS_NM	--진행 상태명
+						     , FN_CD_NM (A.INV_PROVIS_CD) AS INV_PROVIS_NM	--수사단서명
+						     , FN_RC_VIOLT_NM(A.RC_NO) VIOLT_NM
+						     , (SELECT LISTAGG(T.TRGTER_NM ,'/') WITHIN GROUP(ORDER BY T.SORT_ORDR, T.TRGTER_SN) AS TRGTER_SN
+								 FROM RC_TMPR_TRGTER T
+				 				WHERE T.USE_YN = 'Y'
+				 				  AND T.RC_NO  = A.RC_NO
+					  			  AND T.TRGTER_SE_CD IN (SELECT C.ESNTL_CD FROM CMN_CD C WHERE C.CD_DC='suspct-Group') 
+					  		   ) AS SUSPCT 			--피의자
+					  		 , (SELECT LISTAGG(T.TRGTER_NM ,'/') WITHIN GROUP(ORDER BY T.SORT_ORDR, T.TRGTER_SN) AS TRGTER_SN
+								 FROM RC_TMPR_TRGTER T
+				 			    WHERE T.USE_YN = 'Y'
+				 			      AND T.RC_NO  = A.RC_NO
+					  	 	      AND T.TRGTER_SE_CD IN (SELECT C.ESNTL_CD FROM CMN_CD C WHERE C.CD_DC='accs-Group')
+					  		   ) AS SUFRER 													--피해자
+					  		 , FN_CD_NM(A.CASE_END_SE_CHANGE_CD) AS CASE_END_SE_CHANGE_NM
+					  		 , FN_DEPT_NM (A.CHARGER_DEPT_CD) AS CHARGER_DEPT_NM 			--담당 부서 명
+							 , FN_USER_NM (A.CHARGER_ID) AS ALOT_USER_NM					--담당자명 
+				  		  FROM RC_TMPR A
+				 		 WHERE A.USE_YN = 'Y'
+				 		   AND A.DEL_YN = 'N'
+						   <isEqual property="rc_se_cd" compareValue="R">
+				 	       AND A.WRITNG_ID = #esntl_id#
+				 	       AND A.WRITNG_DEPT_CD	= #dept_cd#
+  			 		       <isNotEmpty property= "rcCaseYN" >
+						   <isEqual property="rcCaseYN" compareValue="Y">
+						    AND A.PROGRS_STTUS_CD = '02101'
+						   </isEqual>
+  			 		       </isNotEmpty>
+
+			 		   	   </isEqual>
+					 	   <isNotEqual property="rc_se_cd" compareValue="R">
+					 	    <isEqual property="rc_se_cd" compareValue="S">
+			 		       AND A.PROGRS_STTUS_CD IN ('02124','02125')
+			 		        </isEqual>
+			 		        <isNotEqual property="rc_se_cd" compareValue="S">
+					 	   AND A.PROGRS_STTUS_CD NOT IN ('02101','02102','02104','02111','02112','02113','02114','02123','02124','02125','02142')
+					 	   AND A.RC_SE_CD= #rc_se_cd#
+  			 		       AND A.CHARGER_DEPT_CD = #dept_cd#
+				 	       AND A.CHARGER_ID = #esntl_id#
+			 		        </isNotEqual>
+					 	   </isNotEqual>
+
+  			 		       <isNotEmpty property= "progrs_sttus_cd" >
+  			 		       AND A.PROGRS_STTUS_CD = #progrs_sttus_cd#
+  			 		       </isNotEmpty>
+
+  			 		       <isNotEmpty property="suspect_trgter_nm" >
+  			 		         AND A.RC_NO IN (SELECT T.RC_NO
+					                    	   FROM RC_TMPR_TRGTER T
+					                    	  WHERE T.TRGTER_NM = #suspect_trgter_nm#
+					                    	    AND T.TRGTER_SE_CD IN (SELECT ESNTL_CD FROM CMN_CD WHERE CD_DC='suspct-Group')
+					                  		)
+  			 		       </isNotEmpty>
+  			 		       <isNotEmpty property="sufferer_trgter_nm" >
+  			 		         AND A.RC_NO IN (SELECT T.RC_NO
+					                    	   FROM RC_TMPR_TRGTER T
+					                    	  WHERE T.TRGTER_NM = #sufferer_trgter_nm#
+					                    	    AND T.TRGTER_SE_CD IN (SELECT ESNTL_CD FROM CMN_CD WHERE CD_DC='accs-Group')
+					                  		)
+  			 		       </isNotEmpty>
+  			 		       <isNotEmpty property="searchNoStart">
+  			 		        <isNotEmpty property="searchNoEnd">
+  			 		         AND TO_NUMBER(replace( #searchNoStart# , '-','')) <![CDATA[ <= ]]>  TO_NUMBER(replace(	<isEqual property="caseSearchTypeCd" compareValue="R">A.RC_NO  </isEqual>
+																					  			 		         	<isEqual property="caseSearchTypeCd" compareValue="C">A.CASE_NO</isEqual>
+																					  			 		         	<isEqual property="caseSearchTypeCd" compareValue="I">A.ITIV_NO</isEqual>
+																					  			 		         	<isEqual property="caseSearchTypeCd" compareValue="T">A.TMPR_NO</isEqual> , '-',''))
+  			 		         AND TO_NUMBER(replace(   #searchNoEnd# , '-','')) <![CDATA[ >= ]]>  TO_NUMBER(replace( <isEqual property="caseSearchTypeCd" compareValue="R">A.RC_NO  </isEqual>
+																					  			 		         	<isEqual property="caseSearchTypeCd" compareValue="C">A.CASE_NO</isEqual>
+																					  			 		         	<isEqual property="caseSearchTypeCd" compareValue="I">A.ITIV_NO</isEqual>
+																					  			 		         	<isEqual property="caseSearchTypeCd" compareValue="T">A.TMPR_NO</isEqual> , '-',''))
+  			 		        </isNotEmpty>
+  			 		        <isEmpty property="searchNoEnd" >
+  			 		          AND <isEqual property="caseSearchTypeCd" compareValue="R">A.RC_NO  </isEqual>
+	  			 		          <isEqual property="caseSearchTypeCd" compareValue="C">A.CASE_NO</isEqual>
+	  			 		          <isEqual property="caseSearchTypeCd" compareValue="I">A.ITIV_NO</isEqual>
+	  			 		          <isEqual property="caseSearchTypeCd" compareValue="T">A.TMPR_NO</isEqual> = #searchNoStart#
+  			 		         </isEmpty>
+  			 		       </isNotEmpty>
+  			 		       <isNotEmpty property="receiptDeStart" >
+			            	<isNotEmpty property="receiptDeEnd" >
+			                  AND TO_CHAR(A.RC_DT, 'YYYYMMDD') BETWEEN REPLACE(#receiptDeStart#,'-','') AND REPLACE(#receiptDeEnd#,'-','')
+			                </isNotEmpty>
+			               </isNotEmpty>
+			               <isNotEmpty property="receiptDeStart" >
+			            	<isEmpty property="receiptDeEnd" >
+			                  AND TO_CHAR(A.RC_DT, 'YYYYMMDD') = REPLACE(#receiptDeStart#,'-','')
+			                </isEmpty>
+			               </isNotEmpty>
+			            ) A  
+				 		<isNotEmpty property="dataField">
+			           		<isNotEmpty property="sortType">
+			           			ORDER BY A.$dataField$ $sortType$ NULLS LAST
+			           		</isNotEmpty>
+			           	</isNotEmpty>
+			           	<isEmpty property="dataField">		
+			           		<isNotEmpty property="rc_se_cd" > 			           			
+  							   <isEqual property="rc_se_cd" compareValue="I">
+					 		    	ORDER BY A.ITIV_NO
+					 		   </isEqual>
+					 		   <isEqual property="rc_se_cd" compareValue="T">
+					 		    	ORDER BY A.TMPR_NO
+					 		   </isEqual>
+					 		   <isEqual property="rc_se_cd" compareValue="S">
+					 		    	ORDER BY A.CASE_NO
+					 		   </isEqual>
+					 		   <isEqual property="rc_se_cd" compareValue="F">
+					 		    	ORDER BY A.CASE_NO
+					 		   </isEqual>
+					 		</isNotEmpty>
+					 		<isEmpty property="rc_se_cd">
+					 			ORDER BY A.RC_NO
+					 		</isEmpty>
+			           	</isEmpty>
+				 	) AB				 	
+		   	  ) X
+		 WHERE (RN <![CDATA[ > ]]> #startRow# AND RN <![CDATA[ <= ]]> #endRow#)
+	  ORDER BY RN ASC
+	</select>
+
+	<!-- 전체사건 조회 -->
+	<select id="selectCaseListAll" parameterClass="java.util.HashMap" resultClass="java.util.HashMap" remapResults = "true">
+		SELECT X.RN
+		     , X.TOT_CNT
+	 		 , X.CASE_NO			--사건번호
+     		 , X.ITIV_NO			--내사번호
+	 		 , X.TMPR_NO			--임시번호
+	 		 , X.RC_NO				--접수번호
+	 		 , X.RC_DT				--접수일자
+	 		 , X.RC_SE_CD			--접수구분 코드
+	 		 , X.RC_SE_NM			--접수 구분명
+	 		 ,(TO_DATE(TO_CHAR(SYSDATE, 'YYYYMMDD'), 'YYYYMMDD') - TO_DATE(TO_CHAR(X.RC_DT, 'YYYYMMDD'), 'YYYYMMDD') ) AS DELAY_PD --지연기간
+	 		 , X.INV_PROVIS_CD		--수사단서코드
+	 		 , X.INV_PROVIS_NM		--수사단서명
+	 		 , X.VIOLT_NM			--위반사항
+	 		 , X.SUSPCT  			--피의자
+	 		 , X.SUFRER 			--피해자
+	 		 , X.PROGRS_STTUS_CD 	--진행상태코드
+	  		 , X.PROGRS_STTUS_NM 	--진행상태명
+	  		 , X.ALOT_USER_NM 		--담당자명
+	  		 , X.DOC_ID
+	  		 , X.SANCTN_ID
+	  		 ,( SELECT MAX(TRN_NO) TRN_NO FROM TRN_CASE WHERE RC_NO=X.RC_NO ) TRN_NO
+	  		 , X.CASE_END_SE_CHANGE_CD
+	  		 , X.CASE_END_SE_CHANGE_NM
+		  FROM(
+		       SELECT ABC.*
+			    	, ROWNUM AS RN
+			    	, COUNT(*) OVER() AS TOT_CNT
+				 FROM(
+				      SELECT AB.CASE_NO			--사건번호
+						   , AB.ITIV_NO			--내사번호
+						   , AB.TMPR_NO			--임시번호
+						   , AB.RC_NO			--접수번호
+						   , AB.RC_DT			--접수일자
+						   , AB.RC_SE_CD
+					       , AB.INV_PROVIS_CD	--수사단서코드
+						   , AB.VIOLT_NM		--위반사항
+						   , AB.SUSPCT  		--피의자
+						   , AB.SUFRER 			--피해자
+						   , AB.PROGRS_STTUS_CD --진행상태코드
+						   , AB.CHARGER_ID
+						   , AB.DOC_ID
+						   , AB.SANCTN_ID
+						   , AB.CASE_END_SE_CHANGE_CD
+						   , AB.RC_SE_NM
+						   , AB.PROGRS_STTUS_NM
+						   , AB.ALOT_USER_NM
+						   , AB.INV_PROVIS_NM
+						   , AB.CASE_END_SE_CHANGE_NM
+					    FROM(
+							SELECT 
+								  A.CASE_NO			--사건번호
+								, A.ITIV_NO			--내사번호
+								, A.TMPR_NO			--임시번호
+								, A.RC_NO			--접수번호
+								, A.RC_DT			--접수일자
+								, A.RC_SE_CD
+							    , A.INV_PROVIS_CD	--수사단서코드
+								, A.VIOLT_NM		--위반사항
+								, A.SUSPCT  		--피의자
+								, A.SUFRER 			--피해자
+								, A.PROGRS_STTUS_CD --진행상태코드
+								, A.CHARGER_ID
+								, A.DOC_ID
+								, A.SANCTN_ID
+								, A.CASE_END_SE_CHANGE_CD
+								, DECODE(A.RC_SE_CD, 'T' ,'임시','I','내사','F','정식') AS RC_SE_NM	--접수 구분명
+								, FN_CD_NM (A.PROGRS_STTUS_CD) AS PROGRS_STTUS_NM --진행상태명
+								, FN_USER_NM(A.CHARGER_ID) AS ALOT_USER_NM --담당자명
+								, FN_CD_NM (A.INV_PROVIS_CD) AS INV_PROVIS_NM	--수사단서명
+								, FN_CD_NM(A.CASE_END_SE_CHANGE_CD) AS CASE_END_SE_CHANGE_NM --사건종결구분
+							  FROM(
+							 SELECT A.CASE_NO
+		       					  , A.ITIV_NO
+		       					  , A.TMPR_NO
+								  , A.RC_NO
+								  , A.RC_DT
+							 	  , A.RC_SE_CD
+								  , A.INV_PROVIS_CD
+								  , FN_RC_VIOLT_NM(A.RC_NO) VIOLT_NM
+								  ,(SELECT LISTAGG(TRGTER_NM ,'/') WITHIN GROUP(ORDER BY SORT_ORDR, TRGTER_SN) AS TRGTER_SN
+									  FROM RC_TMPR_TRGTER
+					 			     WHERE USE_YN = 'Y'
+					 			       AND RC_NO  = A.RC_NO
+						  		       AND TRGTER_SE_CD IN (SELECT ESNTL_CD FROM CMN_CD WHERE CD_DC='suspct-Group')
+						  		   ) AS SUSPCT 			--피의자
+						  		  ,(SELECT LISTAGG(TRGTER_NM ,'/') WITHIN GROUP(ORDER BY SORT_ORDR, TRGTER_SN) AS TRGTER_SN
+									  FROM RC_TMPR_TRGTER
+					 			     WHERE USE_YN = 'Y'
+					 			       AND RC_NO  = A.RC_NO
+						  	 	       AND TRGTER_SE_CD IN (SELECT ESNTL_CD FROM CMN_CD WHERE CD_DC='accs-Group')
+						  		   ) AS SUFRER 			--피해자
+								  , A.PROGRS_STTUS_CD
+								  , A.CHARGER_ID
+								  , A.DOC_ID
+								  , A.SANCTN_ID
+								  , A.CASE_END_SE_CHANGE_CD
+							   FROM RC_TMPR A
+							  WHERE A.USE_YN = 'Y'
+							    AND A.DEL_YN = 'N'
+							    AND A.PROGRS_STTUS_CD NOT IN ('02101','02102','02104')
+  			 	       		  <isNotEmpty property="rc_se_cd" >
+  							   <isEqual property="rc_se_cd" compareValue="F">
+					 		    AND A.RC_SE_CD= 'F'
+					 		   </isEqual>
+					 		  </isNotEmpty>
+
+						 	  <isNotEmpty property="dept_cd" >
+						 	   AND A.CHARGER_DEPT_CD = #dept_cd#
+			           		  </isNotEmpty>
+
+						 	  <isNotEmpty property="esntl_id" >
+				 	           AND A.CHARGER_ID = #esntl_id#
+			           		  </isNotEmpty>
+
+			           		  <isEqual property="menu_cd" compareValue="00001">
+ 		  					   <isNotEmpty property="choiceCharger" >
+				 	           AND A.CHARGER_ID = #choiceCharger#
+				 	           </isNotEmpty>
+						 	  </isEqual>
+
+						 	  <isEqual property="menu_cd" compareValue="00070">
+ 		  					   <isNotEmpty property="choiceCharger" >
+				 	           AND A.CHARGER_ID = #choiceCharger#
+				 	           </isNotEmpty>
+ 		  					   <isEqual property="coldCase" compareValue="Y">
+				 	           <![CDATA[
+   		  				  	   AND A.PROGRS_STTUS_CD IN ('02103','02121','02122','02131','02132','02141','02143') 	--미제사건
+						 	   ]]>
+				 	           </isEqual>
+ 		  					   <isEqual property="trnCase" compareValue="Y">
+				 	           <![CDATA[
+   		  				  	   AND A.PROGRS_STTUS_CD = '02123' 		--송치 사건만
+						 	   ]]>
+				 	           </isEqual>
+				 	           <isEqual property="stopCase" compareValue="Y">
+				 	           <![CDATA[
+   		  				  	    AND A.PROGRS_STTUS_CD IN ('02124', '02125') 	--중지사건만
+						 	   ]]>
+				 	           </isEqual>
+						 	  </isEqual>
+
+						 	  <isEqual property="menu_cd" compareValue="00056">
+	 		  				  <![CDATA[
+   		  				  	  AND A.PROGRS_STTUS_CD IN ('02103','02121','02122','02131','02132','02141','02143')		--2020.01.24 권종열 수사관 요청(접수완료+진행중인사건+미제사건)
+						 	  ]]>
+						 	 UNION ALL
+							 	  SELECT A.CASE_NO
+			       					  , A.ITIV_NO
+			       					  , A.TMPR_NO
+									  , A.RC_NO
+									  , A.RC_DT
+								 	  , A.RC_SE_CD
+									  , A.INV_PROVIS_CD
+									  , FN_RC_VIOLT_NM(A.RC_NO) VIOLT_NM
+									  ,(SELECT LISTAGG(TRGTER_NM ,'/') WITHIN GROUP(ORDER BY TRGTER_SN) AS TRGTER_SN
+										  FROM RC_TMPR_TRGTER
+						 			     WHERE USE_YN = 'Y'
+						 			       AND RC_NO  = A.RC_NO
+							  		       AND TRGTER_SE_CD IN (SELECT ESNTL_CD FROM CMN_CD WHERE CD_DC='suspct-Group')
+							  		   ) AS SUSPCT 			--피의자
+							  		  ,(SELECT LISTAGG(TRGTER_NM ,'/') WITHIN GROUP(ORDER BY TRGTER_SN) AS TRGTER_SN
+										  FROM RC_TMPR_TRGTER
+						 			     WHERE USE_YN = 'Y'
+						 			       AND RC_NO  = A.RC_NO
+							  	 	       AND TRGTER_SE_CD IN (SELECT ESNTL_CD FROM CMN_CD WHERE CD_DC='accs-Group')
+							  		   ) AS SUFRER 			--피해자
+									  , A.PROGRS_STTUS_CD
+									  , A.CHARGER_ID
+									  , A.DOC_ID
+									  , A.SANCTN_ID
+									  , A.CASE_END_SE_CHANGE_CD
+								   FROM RC_TMPR A
+								  WHERE A.USE_YN = 'Y'
+								    AND A.DEL_YN = 'N'
+								    AND A.PROGRS_STTUS_CD  IN ('02124','02125')
+	  			 	       		  <isNotEmpty property="rc_se_cd" >
+	  							   <isEqual property="rc_se_cd" compareValue="F">
+						 		    AND A.RC_SE_CD= 'F'
+						 		   </isEqual>
+						 		  </isNotEmpty>
+
+							 	  <isNotEmpty property="dept_cd" >
+							 	   AND A.CHARGER_DEPT_CD = #dept_cd#
+				           		  </isNotEmpty>
+
+							 	  <isNotEmpty property="esntl_id" >
+					 	           AND A.CHARGER_ID = #esntl_id#
+				           		  </isNotEmpty>
+						 	  </isEqual>
+						 	 ) A
+						 	) AB
+					   WHERE 1=1
+  			 	       <isNotEmpty property="receiptDeStart" >
+			           	<isNotEmpty property="receiptDeEnd" >
+			             AND TO_CHAR(AB.RC_DT, 'YYYYMMDD') BETWEEN REPLACE(#receiptDeStart#,'-','') AND REPLACE(#receiptDeEnd#,'-','')
+			            </isNotEmpty>
+			           </isNotEmpty>
+			           <isNotEmpty property="receiptDeStart" >
+			             <isEmpty property="receiptDeEnd" >
+			             AND TO_CHAR(AB.RC_DT, 'YYYYMMDD') = REPLACE(#receiptDeStart#,'-','')
+			             </isEmpty>
+			            </isNotEmpty>
+
+	                   <isNotEmpty property="searchNoStart" >
+  			 		    <isNotEmpty property="searchNoEnd" >
+  			 		     AND TO_NUMBER(replace( #searchNoStart# , '-','')) <![CDATA[ <= ]]>  TO_NUMBER(replace(<isEqual property="caseSearchTypeCd" compareValue="R">AB.RC_NO  </isEqual>
+																					  			 		       <isEqual property="caseSearchTypeCd" compareValue="C">AB.CASE_NO</isEqual>
+																					  			 		       <isEqual property="caseSearchTypeCd" compareValue="I">AB.ITIV_NO</isEqual>
+																					  			 		       <isEqual property="caseSearchTypeCd" compareValue="T">AB.TMPR_NO</isEqual> , '-',''))
+  			 		     AND TO_NUMBER(replace(   #searchNoEnd# , '-','')) <![CDATA[ >= ]]>  TO_NUMBER(replace(<isEqual property="caseSearchTypeCd" compareValue="R">AB.RC_NO  </isEqual>
+																					  			 		       <isEqual property="caseSearchTypeCd" compareValue="C">AB.CASE_NO</isEqual>
+																					  			 		       <isEqual property="caseSearchTypeCd" compareValue="I">AB.ITIV_NO</isEqual>
+																					  			 		       <isEqual property="caseSearchTypeCd" compareValue="T">AB.TMPR_NO</isEqual> , '-',''))
+  			 		    </isNotEmpty>
+  			 	        <isEmpty property="searchNoEnd" >
+  		  	             AND <isEqual property="caseSearchTypeCd" compareValue="R">AB.RC_NO  </isEqual>
+		 		         	 <isEqual property="caseSearchTypeCd" compareValue="C">AB.CASE_NO</isEqual>
+		 		         	 <isEqual property="caseSearchTypeCd" compareValue="I">AB.ITIV_NO</isEqual>
+		 		         	 <isEqual property="caseSearchTypeCd" compareValue="T">AB.TMPR_NO</isEqual> = #searchNoStart#
+			 		    </isEmpty>
+  			           </isNotEmpty>
+  			           
+  			           <isNotEmpty property="dataField">
+  			           		<isNotEmpty property="sortType">
+  			           			ORDER BY AB.$dataField$ $sortType$ NULLS LAST
+  			           		</isNotEmpty>
+  			           </isNotEmpty>
+  			           <isEmpty property="dataField">
+  			           		<isNotEmpty property="rc_se_cd" >  			           			
+  							   <isEqual property="rc_se_cd" compareValue="F">
+					 		    	ORDER BY AB.CASE_NO
+					 		   </isEqual>
+					 		   <isEqual property="rc_se_cd" compareValue="A">
+					 		    	ORDER BY AB.RC_NO
+					 		   </isEqual>
+					 		</isNotEmpty>
+					 		<isEmpty property="rc_se_cd">
+					 			ORDER BY AB.RC_NO
+					 		</isEmpty>
+  			           </isEmpty>
+						
+			   		) ABC
+		 	  ) X
+		 WHERE (RN <![CDATA[ > ]]> #startRow# AND RN <![CDATA[ <= ]]> #endRow#)
+	  ORDER BY RN ASC
+	</select>
+
+	<!-- 사건 정보 조회 -->
+	<select id="selectCaseInfo" parameterClass="java.util.HashMap" resultClass="java.util.HashMap" remapResults = "true">
+	    SELECT RC_NO 			--접수 번호
+	         , REGEXP_SUBSTR(RC_NO, '[^-]+', 1, 1, 'i')||'-'||LTRIM(REGEXP_SUBSTR(RC_NO, '[^-]+', 1, 2, 'i'),0) AS TRIM_RC_NO
+		  	 , CASE_NO 			--사건 번호
+		  	 , REGEXP_SUBSTR(CASE_NO, '[^-]+', 1, 1, 'i')||'-'||LTRIM(REGEXP_SUBSTR(CASE_NO, '[^-]+', 1, 2, 'i'),0) AS TRIM_CASE_NO
+			 , ITIV_NO 			--내사 번호
+		  	 , REGEXP_SUBSTR(ITIV_NO, '[^-]+', 1, 1, 'i')||'-'||LTRIM(REGEXP_SUBSTR(ITIV_NO, '[^-]+', 1, 2, 'i'),0) AS TRIM_ITIV_NO
+			 , TMPR_NO 			--임시 번호
+		  	 , REGEXP_SUBSTR(TMPR_NO, '[^-]+', 1, 1, 'i')||'-'||LTRIM(REGEXP_SUBSTR(TMPR_NO, '[^-]+', 1, 2, 'i'),0) AS TRIM_TMPR_NO
+			 , RC_SE_CD 		--접수 구분 코드
+			 , DECODE(RC_SE_CD , 'F', '정식', 'I', '내사', 'T', '임시') AS RC_SE_NM
+			 , PROGRS_STTUS_CD 	--진행 상태 코드
+			 , INV_PROVIS_CD 	--수사 단서 코드
+			 , TO_CHAR(OCCRRNC_BEGIN_DT, 'YYYY-MM-DD HH:MI') AS OCCRRNC_BEGIN_DT--발생 시작 일시
+			 , TO_CHAR(OCCRRNC_BEGIN_DT, 'YYYY-MM-DD') AS OCCRRNC_BEGIN_DE		--발생 시작 일
+		 	 , TO_CHAR(OCCRRNC_BEGIN_DT, 'HH') AS OCCRRNC_BEGIN_DE_HH			--발생 시작 시
+		  	 , TO_CHAR(OCCRRNC_BEGIN_DT, 'MI') AS OCCRRNC_BEGIN_DE_MI			--발생 시작 분
+			 , TO_CHAR(OCCRRNC_END_DT, 'YYYY-MM-DD HH:MI') AS OCCRRNC_END_DT	--발생 종료 일시
+		 	 , TO_CHAR(OCCRRNC_END_DT, 'YYYY-MM-DD') AS OCCRRNC_END_DE			--발생 종료 일
+		 	 , TO_CHAR(OCCRRNC_END_DT, 'HH') AS OCCRRNC_END_DE_HH				--발생 종료 시
+		 	 , TO_CHAR(OCCRRNC_END_DT, 'MI') AS OCCRRNC_END_DE_MI				--발생 종료  분
+			 , RC_STLE_CD 		--접수 형태 코드
+			 , OCCRRNC_ZIP 		--발생 우편번호
+			 , OCCRRNC_ADDR 	--발생 주소
+			 , DGUARD.DECRYPT('TBL','ENC',CPTTR_HP_NO) AS CPTTR_HP_NO 		--민원인 휴대폰 번호
+			 , CMPTNC_EXMN_CD 	--관할 검찰 코드
+			 , FN_EXMN_NM(CMPTNC_EXMN_CD) AS CMPTNC_EXMN_NM --관할 검찰명
+			 , CNSLT_MTH_CD 	--상담 방법 코드
+			 , TO_CHAR(CNSLT_DT, 'YYYY-MM-DD HH:MI') AS CNSLT_DT	--상담 일시
+			 , TO_CHAR(CNSLT_DT, 'YYYY-MM-DD HH:MI') AS CNSLT_DE	--상담 일
+			 , TO_CHAR(CNSLT_DT, 'HH') AS CNSLT_DE_HH				--상담 시
+			 , TO_CHAR(CNSLT_DT, 'MI') AS CNSLT_DE_MI				--상담 분
+			 , CASE_SUMRY 		--사건 개요
+			 , CRMNL_FACT 		--범죄 사실
+			 , PRF_DTA 			--입증 자료
+			 , ETC_CN 			--기타 내용
+			 , FILE_ID 			--파일 ID
+			 , DOC_ID 			--문서 ID
+			 , TRNSF_SN			--이송 일렬번호
+			 , USE_YN 			--사용 여부
+			 , WRITNG_DEPT_CD	--작성 소속 코드
+			 , WRITNG_ID		--작성 ID
+			 , WRITNG_DT 		--작성 일시
+			 , UPDT_ID 			--수정 ID
+			 , UPDT_DT 			--수정 일시
+  		     , PRSCT_DE			--입건 일자
+	         , TO_CHAR(RC_DT, 'YYYY-MM-DD HH:MI') AS RC_DT	 --접수 일시
+			 , SANCTN_ID 		--결재 ID
+			 , FN_RC_VIOLT_UPPER_NMS (RC_NO) AS VIOLT_NM
+			 , RT.TRNSF_SN      -- 이송 순번
+			 ,( SELECT IPT.TRNSF_INSTT_NM   FROM  INV_PRSCT_TRNSF IPT WHERE IPT.TRNSF_SN = RT.TRNSF_SN  ) AS TRNSF_INSTT_NM	  --이송 기관
+			 ,( SELECT IPT.TRNSF_INSTT_DEPT FROM  INV_PRSCT_TRNSF IPT WHERE IPT.TRNSF_SN = RT.TRNSF_SN	) AS TRNSF_INSTT_DEPT --이송 부서
+			 ,( SELECT IPT.TRNSF_RESN_DC  	FROM  INV_PRSCT_TRNSF IPT WHERE IPT.TRNSF_SN = RT.TRNSF_SN  ) AS TRNSF_RESN_DC 	  --이송사유
+			 ,( SELECT TO_CHAR( TO_DATE( IPT.TRNSF_DE, 'YYYY-MM-DD' ), 'YYYY-MM-DD' )  FROM  INV_PRSCT_TRNSF IPT WHERE IPT.TRNSF_SN = RT.TRNSF_SN ) AS TRNSF_DE --이송일
+			 ,CASE_END_SE_CHANGE_CD
+		  FROM RC_TMPR RT
+		 WHERE RC_NO = #rc_no#
+	</select>
+
+	<!-- 사건 정보 조회 -->
+	<select id="selectCaseInfoByTmprNo" parameterClass="java.util.HashMap" resultClass="java.util.HashMap" remapResults = "true">
+	    SELECT RC_NO 			--접수 번호
+	         , REGEXP_SUBSTR(RC_NO, '[^-]+', 1, 1, 'i')||'-'||LTRIM(REGEXP_SUBSTR(RC_NO, '[^-]+', 1, 2, 'i'),0) AS TRIM_RC_NO
+		  	 , CASE_NO 			--사건 번호
+		  	 , REGEXP_SUBSTR(CASE_NO, '[^-]+', 1, 1, 'i')||'-'||LTRIM(REGEXP_SUBSTR(CASE_NO, '[^-]+', 1, 2, 'i'),0) AS TRIM_CASE_NO
+			 , ITIV_NO 			--내사 번호
+		  	 , REGEXP_SUBSTR(ITIV_NO, '[^-]+', 1, 1, 'i')||'-'||LTRIM(REGEXP_SUBSTR(ITIV_NO, '[^-]+', 1, 2, 'i'),0) AS TRIM_ITIV_NO
+			 , TMPR_NO 			--임시 번호
+		  	 , REGEXP_SUBSTR(TMPR_NO, '[^-]+', 1, 1, 'i')||'-'||LTRIM(REGEXP_SUBSTR(TMPR_NO, '[^-]+', 1, 2, 'i'),0) AS TRIM_TMPR_NO
+			 , RC_SE_CD 		--접수 구분 코드
+			 , DECODE(RC_SE_CD , 'F', '정식', 'I', '내사', 'T', '임시') AS RC_SE_NM
+			 , PROGRS_STTUS_CD 	--진행 상태 코드
+			 , INV_PROVIS_CD 	--수사 단서 코드
+			 , TO_CHAR(OCCRRNC_BEGIN_DT, 'YYYY-MM-DD HH:MI') AS OCCRRNC_BEGIN_DT--발생 시작 일시
+			 , TO_CHAR(OCCRRNC_BEGIN_DT, 'YYYY-MM-DD') AS OCCRRNC_BEGIN_DE		--발생 시작 일
+		 	 , TO_CHAR(OCCRRNC_BEGIN_DT, 'HH') AS OCCRRNC_BEGIN_DE_HH			--발생 시작 시
+		  	 , TO_CHAR(OCCRRNC_BEGIN_DT, 'MI') AS OCCRRNC_BEGIN_DE_MI			--발생 시작 분
+			 , TO_CHAR(OCCRRNC_END_DT, 'YYYY-MM-DD HH:MI') AS OCCRRNC_END_DT	--발생 종료 일시
+		 	 , TO_CHAR(OCCRRNC_END_DT, 'YYYY-MM-DD') AS OCCRRNC_END_DE			--발생 종료 일
+		 	 , TO_CHAR(OCCRRNC_END_DT, 'HH') AS OCCRRNC_END_DE_HH				--발생 종료 시
+		 	 , TO_CHAR(OCCRRNC_END_DT, 'MI') AS OCCRRNC_END_DE_MI				--발생 종료  분
+			 , RC_STLE_CD 		--접수 형태 코드
+			 , OCCRRNC_ZIP 		--발생 우편번호
+			 , OCCRRNC_ADDR 	--발생 주소
+			 , DGUARD.DECRYPT('TBL','ENC',CPTTR_HP_NO) AS CPTTR_HP_NO		--민원인 휴대폰 번호
+			 , CMPTNC_EXMN_CD 	--관할 검찰 코드
+			 , FN_EXMN_NM(CMPTNC_EXMN_CD) AS CMPTNC_EXMN_NM --관할 검찰명
+			 , CNSLT_MTH_CD 	--상담 방법 코드
+			 , TO_CHAR(CNSLT_DT, 'YYYY-MM-DD HH:MI') AS CNSLT_DT	--상담 일시
+			 , TO_CHAR(CNSLT_DT, 'YYYY-MM-DD HH:MI') AS CNSLT_DE	--상담 일
+			 , TO_CHAR(CNSLT_DT, 'HH') AS CNSLT_DE_HH				--상담 시
+			 , TO_CHAR(CNSLT_DT, 'MI') AS CNSLT_DE_MI				--상담 분
+			 , CASE_SUMRY 		--사건 개요
+			 , CRMNL_FACT 		--범죄 사실
+			 , PRF_DTA 			--입증 자료
+			 , ETC_CN 			--기타 내용
+			 , FILE_ID 			--파일 ID
+			 , DOC_ID 			--문서 ID
+			 , TRNSF_SN			--이송 일렬번호
+			 , USE_YN 			--사용 여부
+			 , WRITNG_DEPT_CD	--작성 소속 코드
+			 , WRITNG_ID		--작성 ID
+			 , WRITNG_DT 		--작성 일시
+			 , UPDT_ID 			--수정 ID
+			 , UPDT_DT 			--수정 일시
+  		     , PRSCT_DE			--입건 일자
+	         , TO_CHAR(RC_DT, 'YYYY-MM-DD HH:MI') AS RC_DT	 --접수 일시
+			 , SANCTN_ID 		--결재 ID
+			 , FN_RC_VIOLT_UPPER_NMS (RC_NO) AS VIOLT_NM
+			 , RT.TRNSF_SN      -- 이송 순번
+			 ,( SELECT IPT.TRNSF_INSTT_NM   FROM  INV_PRSCT_TRNSF IPT WHERE IPT.TRNSF_SN = RT.TRNSF_SN  ) AS TRNSF_INSTT_NM	  --이송 기관
+			 ,( SELECT IPT.TRNSF_INSTT_DEPT FROM  INV_PRSCT_TRNSF IPT WHERE IPT.TRNSF_SN = RT.TRNSF_SN	) AS TRNSF_INSTT_DEPT --이송 부서
+			 ,( SELECT IPT.TRNSF_RESN_DC  	FROM  INV_PRSCT_TRNSF IPT WHERE IPT.TRNSF_SN = RT.TRNSF_SN  ) AS TRNSF_RESN_DC 	  --이송사유
+			 ,( SELECT TO_CHAR( TO_DATE( IPT.TRNSF_DE, 'YYYY-MM-DD' ), 'YYYY-MM-DD' )  FROM  INV_PRSCT_TRNSF IPT WHERE IPT.TRNSF_SN = RT.TRNSF_SN ) AS TRNSF_DE --이송일
+			 , FN_CD_NM (CASE_END_SE_CHANGE_CD) AS CASE_END_SE_CHANGE_CD
+			 , FN_CD_NM (ED_DSPS_CD) AS ED_DSPS_CD
+			 , TO_CHAR(TMPR_CASE_RESULT_REPORT_DT , 'YYYY-MM-DD') AS TMPR_CASE_RESULT_REPORT_DT
+		  FROM RC_TMPR RT
+		 WHERE TMPR_NO = #tmpr_no#
+	</select>
+
+
+	<!-- 사건정보 폼 바인드 전용-->
+	<select id="selectCaseInfoByFormBind" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		SELECT RC_NO 			--접수 번호
+		 	 , REGEXP_SUBSTR(RC_NO, '[^-]+', 1, 1, 'i')||'-'||LTRIM(REGEXP_SUBSTR(RC_NO, '[^-]+', 1, 2, 'i'),0) AS TRIM_RC_NO
+		 	 , DECODE(CASE_NO, null, '없음', CASE_NO) AS CASE_NO --사건 번호
+		 	 , REGEXP_SUBSTR(CASE_NO, '[^-]+', 1, 1, 'i')||'-'||LTRIM(REGEXP_SUBSTR(CASE_NO, '[^-]+', 1, 2, 'i'),0) AS TRIM_CASE_NO
+			 , DECODE(ITIV_NO, null, '없음', ITIV_NO) AS ITIV_NO --내사 번호
+			 , REGEXP_SUBSTR(RC_NO, '[^-]+', 1, 1, 'i')||'-'||LTRIM(REGEXP_SUBSTR(RC_NO, '[^-]+', 1, 2, 'i'),0) AS TRIM_ITIV_NO
+			 , DECODE(TMPR_NO, null, '없음', TMPR_NO) AS TMPR_NO --임시 번호
+			 , REGEXP_SUBSTR(TMPR_NO, '[^-]+', 1, 1, 'i')||'-'||LTRIM(REGEXP_SUBSTR(TMPR_NO, '[^-]+', 1, 2, 'i'),0) AS TRIM_TMPR_NO
+			 , RC_SE_CD 		--접수 구분 코드
+			 , PRSCT_DE 		--입건 일자
+	         , TO_CHAR(RC_DT,'YYYY-MM-DD HH24:MI:SS') AS RC_DT --접수 일시
+			 , DECODE(RC_SE_CD , 'F', '정식', 'I', '내사', 'T', '임시') AS RC_SE_NM
+			 , PROGRS_STTUS_CD 	--진행 상태 코드
+			 , INV_PROVIS_CD 	--수사 단서 코드
+			 , FN_CD_NM (INV_PROVIS_CD) AS INV_PROVIS_NM 	--수사 단서 명
+			  , TO_CHAR(OCCRRNC_BEGIN_DT, 'YYYY-MM-DD HH:MI') AS OCCRRNC_BEGIN_DT--발생 시작 일시
+			 , TO_CHAR(OCCRRNC_BEGIN_DT, 'YYYY-MM-DD') AS OCCRRNC_BEGIN_DE		 --발생 시작 일
+		 	 , TO_CHAR(OCCRRNC_BEGIN_DT, 'HH') AS OCCRRNC_BEGIN_DE_HH			 --발생 시작 시
+		  	 , TO_CHAR(OCCRRNC_BEGIN_DT, 'MI') AS OCCRRNC_BEGIN_DE_MI			 --발생 시작 분
+			 , TO_CHAR(OCCRRNC_END_DT, 'YYYY-MM-DD HH:MI') AS OCCRRNC_END_DT	 --발생 종료 일시
+		 	 , TO_CHAR(OCCRRNC_END_DT, 'YYYY-MM-DD') AS OCCRRNC_END_DE			 --발생 종료 일
+		 	 , TO_CHAR(OCCRRNC_END_DT, 'HH') AS OCCRRNC_END_DE_HH				 --발생 종료 시
+		 	 , TO_CHAR(OCCRRNC_END_DT, 'MI') AS OCCRRNC_END_DE_MI				 --발생 종료  분
+			 , RC_STLE_CD 		--접수 형태 코드
+			 , FN_CD_NM (RC_STLE_CD) AS RC_STLE_NM 	--접수형태
+			 , OCCRRNC_ADDR
+			 , OCCRRNC_ZIP
+			 , REGEXP_SUBSTR(DGUARD.DECRYPT('TBL','ENC',CPTTR_HP_NO), '[^-]+', 1,1) AS CPTTR_HP_NO1 --민원인 휴대폰 번호
+			 , REGEXP_SUBSTR(DGUARD.DECRYPT('TBL','ENC',CPTTR_HP_NO), '[^-]+', 1,2) AS CPTTR_HP_NO2
+			 , REGEXP_SUBSTR(DGUARD.DECRYPT('TBL','ENC',CPTTR_HP_NO), '[^-]+', 1,3) AS CPTTR_HP_NO3
+			 , CMPTNC_EXMN_CD 	--관할 검찰 코드
+			 , CNSLT_MTH_CD 	--상담 방법 코드
+			 , TO_CHAR(CNSLT_DT,'YYYY-MM-DD HH24:MI:SS') AS CNSLT_DT --상담 일시
+			 , FN_USER_NM(CHARGER_ID) AS CHARGER_NM
+			 , CASE_SUMRY 		--사건 개요
+			 , CRMNL_FACT 		--범죄 사실
+			 , PRF_DTA 			--입증 자료
+			 , ETC_CN 			--기타 내용
+			 , FILE_ID 			--파일 ID
+			 , DOC_ID 			--문서 ID
+			 , TRNSF_SN			--이송 일렬번호
+			 , USE_YN 			--사용 여부
+			 , WRITNG_DEPT_CD	--작성 소속 코드
+			 , WRITNG_ID		--작성 ID
+			 , WRITNG_DT 		--작성 일시
+			 , UPDT_ID 			--수정 ID
+			 , UPDT_DT 			--수정 일시
+			 , SANCTN_ID 		--결재 ID
+			 ,(SELECT SUBSTR(
+			 				  XMLAGG(
+			 				  		  XMLELEMENT(COL ,'/', (SELECT DC.VIOLT_NM
+			 												 FROM CMN_VIOLT_CD DC
+															WHERE DC.USE_YN = 'Y'
+															  AND DC.VIOLT_CD != '00000'
+															  AND DC.VIOLT_CD = RTV.VIOLT_CD)
+												 ) ORDER BY RTV.VIOLT_SN
+									 ).EXTRACT('//text()' ).GETSTRINGVAL(), 2
+							  ) AS VIOLT_NM
+				 FROM RC_TMPR_VIOLT RTV
+			    WHERE RC_NO = #rc_no#
+			  ) AS VIOLT_NM
+ 			 ,(SELECT  SUBSTR(
+ 			 				  XMLAGG(
+            							XMLELEMENT(COL ,'/', RTV.VIOLT_CD) ORDER BY RTV.VIOLT_SN
+            						 ).EXTRACT('//text()').GETSTRINGVAL(), 2) VIOLT_CD
+ 				 FROM RC_TMPR_VIOLT RTV
+  			 	WHERE RC_NO = #rc_no#
+  			   ) AS VIOLT_CD
+		 FROM RC_TMPR
+		WHERE RC_NO = #rc_no#
+	</select>
+
+	<!-- 대상자 정보 폼 바인드 전용-->
+	<select id="selectTargetInfoByFormBind" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		SELECT A.TRGTER_SN
+			 , A.RC_NO
+			 , FN_TRGTER_SE_GROUP(A.TRGTER_SE_CD) AS TRGTER_SE_GROUP_CD -- 대상자 구분 그룹
+		     , A.TRGTER_SE_CD
+		     , (SELECT CD_NM FROM CMN_CD WHERE ESNTL_CD = A.TRGTER_SE_CD) TRGTER_SE_NM
+		     , A.TRGTER_CL_CD
+		     , (SELECT CD_NM FROM CMN_CD WHERE ESNTL_CD = A.TRGTER_CL_CD) TRGTER_CL_NM
+		     , A.TRGTER_NM
+		     , A.TRGTER_ENG_NM
+		     , DGUARD.DECRYPT('TBL','ENC',A.TRGTER_RRN) AS TRGTER_RRN	--주민번호
+		     , REGEXP_SUBSTR(DGUARD.DECRYPT('TBL','ENC',A.TRGTER_RRN), '[^-]+', 1,1) AS TRGTER_RRN_FRONT --주민번호 앞
+		     , REGEXP_SUBSTR(DGUARD.DECRYPT('TBL','ENC',A.TRGTER_RRN), '[^-]+', 1,2) AS TRGTER_RRN_END 	 --주민번호 뒤
+		     , A.TRGTER_AGE
+		     , A.SEXDSTN_CD
+		     , DECODE(A.SEXDSTN_CD, 'M', '남', 'F', '여', 'E', '불상') AS SEXDSTN_NM
+		     , A.TRGTER_TY_CD
+		     , DECODE(A.TRGTER_TY_CD, 'I', '개인', 'E', '기업') AS TRGTER_TY_NM --대상자 유형
+		     , REGEXP_SUBSTR(DGUARD.DECRYPT('TBL','ENC',A.OWNHOM_TEL), '[^-]+', 1,1) AS OWNHOM_TEL1 --자택전화
+			 , REGEXP_SUBSTR(DGUARD.DECRYPT('TBL','ENC',A.OWNHOM_TEL), '[^-]+', 1,2) AS OWNHOM_TEL2
+			 , REGEXP_SUBSTR(DGUARD.DECRYPT('TBL','ENC',A.OWNHOM_TEL), '[^-]+', 1,3) AS OWNHOM_TEL3
+		     , REGEXP_SUBSTR(DGUARD.DECRYPT('TBL','ENC',A.HP_NO), '[^-]+', 1,1) AS HP_NO1 		--휴대폰 번호
+			 , REGEXP_SUBSTR(DGUARD.DECRYPT('TBL','ENC',A.HP_NO), '[^-]+', 1,2) AS HP_NO2
+			 , REGEXP_SUBSTR(DGUARD.DECRYPT('TBL','ENC',A.HP_NO), '[^-]+', 1,3) AS HP_NO3
+		     , REGEXP_SUBSTR(A.WRC_TEL, '[^-]+', 1,1) AS WRC_TEL1 	--직장전화
+			 , REGEXP_SUBSTR(A.WRC_TEL, '[^-]+', 1,2) AS WRC_TEL2
+			 , REGEXP_SUBSTR(A.WRC_TEL, '[^-]+', 1,3) AS WRC_TEL3
+		     , REGEXP_SUBSTR(A.ETC_TEL, '[^-]+', 1,1) AS ETC_TEL1 	--기타전화
+			 , REGEXP_SUBSTR(A.ETC_TEL, '[^-]+', 1,2) AS ETC_TEL2
+			 , REGEXP_SUBSTR(A.ETC_TEL, '[^-]+', 1,3) AS ETC_TEL3
+		     , A.OCCP_CD
+		     , FN_CD_NM( A.OCCP_CD) OCCP_NM
+		     , A.WRC_NM
+		     , A.WRC_ADDR
+		     , A.WRC_ZIP
+		     , A.ADRES_ADDR
+		     , A.ADRES_ZIP
+		     , A.REGBS_ADDR
+		     , A.REGBS_ZIP
+		     , A.DWLSIT_ADDR
+		     , A.DWLSIT_ZIP
+		     , A.TRGTER_CPRN
+			 , A.TRGTER_CRN
+			 , A.RPRSNTV_NM
+			 , A.EMAIL
+			 , A.CLSF
+			 , A.NLTY_CD
+			 , (SELECT CD_NM FROM CMN_CD WHERE ESNTL_CD = A.NLTY_CD) NLTY_NM
+			 , A.PASPORT_NO
+			 , A.ARREST_YN
+			 , A.ARREST_DT
+			 , A.ARREST_PLACE_CD
+			 , (SELECT CD_NM FROM CMN_CD WHERE ESNTL_CD = A.ARREST_PLACE_CD) ARREST_PLACE_NM
+			 , A.ARRST_TY_CD
+			 , A.ARREST_USER_ID
+			 , A.CNSLAT_DSPTH_CD
+			 , (SELECT CD_NM FROM CMN_CD WHERE ESNTL_CD = A.CNSLAT_DSPTH_CD) CNSLAT_DSPTH_NM
+			 , A.CNSLAT_DSPTH_DT
+  			 , AGENT_SE_CD	--대리인 구분 코드
+			 , AGENT_NM		--대리인 성명
+			 , REGEXP_SUBSTR(AGENT_TEL, '[^-]+', 1,1) AS AGENT_TEL1 --대리인 휴대폰 번호
+			 , REGEXP_SUBSTR(AGENT_TEL, '[^-]+', 1,2) AS AGENT_TEL2
+			 , REGEXP_SUBSTR(AGENT_TEL, '[^-]+', 1,3) AS AGENT_TEL3
+		  FROM RC_TMPR_TRGTER A
+		 WHERE A.RC_NO = #rc_no#
+		   AND A.TRGTER_SN = #trgter_sn#
+		   AND A.USE_YN = 'Y'
+	</select>
+
+	<!--
+	<select id="selectDeptList" parameterClass="java.util.HashMap" >
+		SELECT *
+		  FROM RC_TMPR S
+		 WHERE 1=1
+	    <isNotEmpty property="slevel" prepend="AND">
+		</isNotEmpty>
+	    <isNotEmpty property="par_id" prepend="AND">
+		</isNotEmpty>
+
+	</select>
+
+
+	<select id="selectDeptDetail" parameterClass="java.util.HashMap" >
+		SELECT *
+		  FROM RC_TMPR S
+	</select>
+ 	-->
+
+	<!-- 접수 임시 등록 -->
+	<insert id="insertRcTmpr" parameterClass="HashMap">
+
+		INSERT INTO RC_TMPR (
+						      RC_NO 			--접수 번호
+						    , RC_DT 			--접수 일시
+							, RC_SE_CD 			--접수 구분 코드
+							, PROGRS_STTUS_CD 	--진행 상태 코드
+							, INV_PROVIS_CD 	--수사 단서 코드
+							, OCCRRNC_BEGIN_DT 	--발생 시작 일시
+							, OCCRRNC_END_DT 	--발생 종료 일시
+							, RC_STLE_CD 		--접수 형태 코드
+							, OCCRRNC_ZIP 		--발생 우편번호
+							, OCCRRNC_ADDR 		--발생 주소
+							, CPTTR_HP_NO 		--민원인 휴대폰 번호
+							, CMPTNC_EXMN_CD 	--관할 검찰 코드
+							, CNSLT_MTH_CD 		--상담 방법 코드
+							, CNSLT_DT 			--상담 일시
+							, CASE_SUMRY 		--사건 개요
+							, CRMNL_FACT 		--범죄 사실
+							, PRF_DTA 			--입증 자료
+							, ETC_CN 			--기타 내용
+							, ITIV_NO 			--내사 번호
+							, CASE_NO 			--사건 번호
+							, FILE_ID 			--파일 ID
+							, DOC_ID 			--문서 ID
+							, SANCTN_ID 		--결재 ID
+							, USE_YN 			--사용 여부
+							<isEqual property="rc_se_cd" compareValue="F">
+							, CHARGER_DEPT_CD	--담당 소속 코드
+							, CHARGER_ID		--담당자 ID
+							, PRSCT_DE			--입건 일자
+							</isEqual>
+							, WRITNG_DEPT_CD 	--작성 소속 코드
+							, WRITNG_ID 		--작성 ID
+							, WRITNG_DT 		--작성 일시
+							, UPDT_ID 			--수정 ID
+							, UPDT_DT 			--수정 일시
+							)
+					VALUES  (
+							  #rc_no# 			--접수 번호
+							, TO_DATE(#rc_dt#, 'YYYY-MM-DD HH24:MI:SS') --접수 일시
+							, #rc_se_cd# 		--접수 구분 코드
+							, #progrs_sttus_cd# --진행 상태 코드
+							, #inv_provis_cd# 	--수사 단서 코드
+							, TO_DATE(#occrrnc_begin_dt#, 'YYYY-MM-DD HH24:MI:SS') --발생 시작 일시
+							, TO_DATE(  #occrrnc_end_dt#, 'YYYY-MM-DD HH24:MI:SS') --발생 종료 일시
+							, #rc_stle_cd# 		--접수 형태 코드
+							, #occrrnc_zip# 	--발생 우편번호
+							, #occrrnc_addr# 	--발생 주소
+							, DGUARD.ENCRYPT('TBL','ENC',#cpttr_hp_no#) 	--민원인 휴대폰 번호
+							, #cmptnc_exmn_cd# 	--관할 검찰 코드
+							, #cnslt_mth_cd# 	--상담 방법 코드
+							, TO_DATE( #cnslt_dt#, 'YYYY-MM-DD HH24:MI:SS' ) --상담 일시
+							, #case_sumry# 		--사건 개요
+							, #crmnl_fact# 		--범죄 사실
+							, #prf_dta# 		--입증 자료
+							, #etc_cn# 			--기타 내용
+							, #itiv_no# 		--내사 번호
+							, #case_no# 		--사건 번호
+							, #file_id# 		--파일 id
+							, #doc_id# 			--문서 id
+							, #sanctn_id#		--결재 id
+							, 'Y' 				--사용 여부
+							<isEqual property="rc_se_cd" compareValue="F">
+							, #writng_dept_cd#  --담당자 소속 코드
+							, #charger_id# 		--담당자 id
+							, TO_CHAR(SYSDATE, 'YYYYMMDD')	--입건 일자
+							</isEqual>
+							, #writng_dept_cd#  --작성 소속 코드
+							, #esntl_id# 		--작성 id
+							, SYSDATE 			--작성 일시
+							, #esntl_id# 		--작성 id
+							, SYSDATE 			--수정 일시
+							)
+	</insert>
+
+
+	<!-- 접수 내사 등록 -->
+	<insert id="insertRcItiv" parameterClass="java.util.HashMap">
+
+		INSERT INTO
+		    RC_ITIV (
+					  ITIV_NO 			--내사 번호
+					, ITIV_CRCMSTNCS 	--내사 경위
+					, ITIV_OUTLINE 		--내사 요지
+					, PLAN_CN 			--계획 내용
+					, ITIV_DT 			--내사 일시
+					, CHARGER_ID 		--담당자 ID
+					, RESULT_CD 		--결과 코드
+					, RESULT_RESN 		--결과 사유
+					, RESULT_OPINION 	--결과 의견
+					, RESULT_DT 		--결과 일시
+					, DOC_CRMNL_CAREER 	--문서 범죄 경력
+					, DOC_CRMNL_FACT 	--문서 범죄 사실
+					, DOC_ID 			--문서 ID
+					, SANCTN_ID 		--결재 ID
+					, WRITNG_DEPT_CD 	--작성 소속 코드
+					, WRITNG_ID 		--작성 ID
+					, WRITNG_DT 		--작성 일시
+					, UPDT_ID 			--수정 ID
+					, UPDT_DT 			--수정 일시
+					)
+			 VALUES (
+					  #itiv_no# 		--내사 번호
+					, #itiv_crcmstncs# 	--내사 경위
+					, #itiv_outline# 	--내사 요지
+					, #plan_cn# 		--계획 내용
+					, TO_DATE(#itiv_dt#, 'YYYY-MM-DD HH24:MI:SS') --내사 일시
+					, #esntl_id# 		--담당자 id
+					, #result_cd# 		--결과 코드
+					, #result_resn# 	--결과 사유
+					, #result_opinion# 	--결과 의견
+					, #result_dt# 		--결과 일시
+					, #doc_crmnl_career#--문서 범죄 경력
+					, #doc_crmnl_fact# 	--문서 범죄 사실
+					, #doc_id# 			--문서 id
+					, #sanctn_id# 		--결재 id
+					, #writng_dept_cd#  --작성 소속 코드
+					, #esntl_id# 		--작성 id
+					, SYSDATE	 		--작성 일시
+					, #esntl_id# 		--수정 id
+					, SYSDATE	 		--수정 일시
+					)
+	</insert>
+
+	<!-- 접수 내사 등록 -->
+	<insert id="insertRcTmprViolt" parameterClass="java.util.HashMap">
+		INSERT INTO
+	  RC_TMPR_VIOLT( RC_NO
+				   , VIOLT_SN
+				   , VIOLT_CD
+				   , WRITNG_ID
+				   , WRITNG_DT
+				   )
+			 VALUES(
+				     #rc_no# 		--접수 번호
+				   , (SELECT (NVL(MAX(VIOLT_SN),0)+1) FROM RC_TMPR_VIOLT WHERE RC_NO = #rc_no# )
+				   , #violt_cd# 	--위반사항코드
+				   , #esntl_id# 	--작성 id
+				   , SYSDATE	 	--작성 일시
+				   )
+	</insert>
+
+	<!-- 접수 구분 수정 -->
+	<update id="updateReceiptSection" parameterClass="java.util.HashMap">
+		UPDATE RC_TMPR
+		   SET RC_SE_CD = #rc_se_cd#
+		 WHERE RC_NO	= #rc_no#
+	</update>
+
+	<!-- 내사건 목록 -->
+	<select id="selectDeptChargerList" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		SELECT ESNTL_ID
+		     , USER_ID
+		     , USER_NM
+		  FROM CMN_USER
+		 WHERE USE_YN ='Y'
+		   AND DEPT_CD = #dept_cd#
+	</select>
+
+	<!-- 사건 진행상태 -->
+	<select id="selectCaseProgrsStatus" parameterClass="String" resultClass="String">
+		SELECT PROGRS_STTUS_CD
+		  FROM RC_TMPR
+		 WHERE RC_NO = #rc_no#
+	</select>
+
+	<!-- 사건 진행상태 -->
+	<select id="selectOutsetReportYN" parameterClass="String" resultClass="String">
+		SELECT OUTSET_REPORT_YN
+		  FROM RC_ITIV_OUTSET
+		 WHERE RC_NO = #rc_no#
+	</select>
+
+	<!-- 위반죄명조회 -->
+	<select id="selectVioltNmRemark" parameterClass="String" resultClass="String">
+		SELECT FN_RC_INPUT_VIOLT_NMS(#violtCd#)
+		  FROM DUAL
+	</select>
+
+	<!--내사 착수 보고 조회 -->
+	<select id="selectRcItivOutset" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		SELECT IO.RC_NO 			--접수 번호
+			 , IO.OUTSET_RESN 		--착수 사유
+			 , IO.DOC_ID 			--문서 ID
+			 , IO.FILE_ID
+			 , IO.SANCTN_ID 		--결재 ID
+			 , TO_CHAR(IO.OUTSET_REPORT_DT, 'YYYY-MM-DD') AS OUTSET_REPORT_DT --내사착수일
+			 , IO.OUTSET_REPORT_YN 	--착수보고 여부
+			 , IO.ED_DSPS_CD 		--종결 처분 코드
+			 , IO.WRITNG_ID 		--작성 ID
+			 , TO_CHAR(IO.WRITNG_DT, 'YYYY-MM-DD') AS WRITNG_DT --작성 일시
+			 , IO.UPDT_ID 			--수정 ID
+			 , IO.UPDT_DT 			--수정 일시
+			 , RT.PROGRS_STTUS_CD
+		  FROM RC_ITIV_OUTSET IO
+	INNER JOIN RC_TMPR RT ON IO.RC_NO = RT.RC_NO
+		 WHERE IO.RC_NO = #rc_no#
+	</select>
+
+
+	<!--내사 결과 보고 조회 -->
+	<select id="selectRcItivResult" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		SELECT IO.ITIV_NO 			--내사 번호
+			 , IO.ITIV_RESULT_CD 	--내사결과코드
+			 , (SELECT CD_NM FROM CMN_CD WHERE ESNTL_CD = IO.ITIV_RESULT_CD) AS ITIV_RESULT_NM
+			 , IO.ITIV_CN 			--내사 내용
+			 , IO.DOC_ID 			--문서 ID
+			 , IO.FILE_ID
+			 , IO.SANCTN_ID 		--결재 ID
+			 , IO.ED_DSPS_CD		--종결 처분 코드
+			 , TO_CHAR(IO.ITIV_RESULT_REPORT_DT, 'YYYY-MM-DD') AS ITIV_RESULT_REPORT_DT	--내사결과보고일시
+			 , IO.WRITNG_ID 		--작성 ID
+			 , TO_CHAR(IO.WRITNG_DT, 'YYYY-MM-DD') AS WRITNG_DT --작성 일시
+			 , IO.UPDT_ID 			--수정 ID
+			 , IO.UPDT_DT 			--수정 일시
+			 , RT.PROGRS_STTUS_CD
+		  FROM RC_ITIV_RESULT IO
+	INNER JOIN RC_TMPR RT ON IO.ITIV_NO = RT.ITIV_NO
+		 WHERE IO.ITIV_NO = #itiv_no#
+	</select>
+
+
+	<!-- 대상자 목록 조회 -->
+	<select id="selectTrgterList" parameterClass="java.util.HashMap" resultClass="java.util.HashMap" remapResults = "true">
+		SELECT X.*
+		  FROM (
+				SELECT COUNT(*) OVER () AS TOT_CNT
+				     , ROWNUM AS RN
+				     , A.RC_NO
+					 , A.TRGTER_SN
+					 , (SELECT CD_DC FROM CMN_CD WHERE ESNTL_CD = A.TRGTER_SE_CD) AS TRGTER_GROUP
+				     , A.TRGTER_SE_CD
+				     , (SELECT CD_NM FROM CMN_CD WHERE ESNTL_CD = A.TRGTER_SE_CD) TRGTER_SE_NM
+				     , A.TRGTER_CL_CD
+				     , (SELECT CD_NM FROM CMN_CD WHERE ESNTL_CD = A.TRGTER_CL_CD) TRGTER_CL_NM
+				     , A.TRGTER_NM
+				     , A.TRGTER_ENG_NM
+				     , DGUARD.DECRYPT('TBL','ENC',A.TRGTER_RRN) AS TRGTER_RRN
+				     , REGEXP_SUBSTR(DGUARD.DECRYPT('TBL','ENC',A.TRGTER_RRN), '[^-]+', 1,1) AS TRGTER_RRN_FRONT --주민번호 앞
+		     		 , REGEXP_SUBSTR(DGUARD.DECRYPT('TBL','ENC',A.TRGTER_RRN), '[^-]+', 1,2) AS TRGTER_RRN_END 	 --주민번호 뒤
+				     , A.TRGTER_AGE
+				     , A.SEXDSTN_CD
+				     , DECODE(A.SEXDSTN_CD , 'M', '남','F','여','E','불상') AS SEXDSTN_NM
+				     , A.TRGTER_TY_CD
+				     , DECODE(A.TRGTER_TY_CD, 'I', '개인','E','기업') AS TRGTER_TY_NM
+				     , DGUARD.DECRYPT('TBL','ENC',A.OWNHOM_TEL) AS OWNHOM_TEL
+				     , DGUARD.DECRYPT('TBL','ENC',A.HP_NO) AS HP_NO
+				     , A.WRC_TEL
+				     , A.ETC_TEL
+				     , A.OCCP_CD
+				     , FN_CD_NM( A.OCCP_CD) OCCP_NM
+				     , A.WRC_NM
+				     , DECODE(    A.WRC_ADDR, NULL, '',    A.WRC_ADDR || ' 우 : ' || A.WRC_ZIP   ) AS WRC_ADDR
+				     , DECODE(  A.ADRES_ADDR, NULL, '',  A.ADRES_ADDR || ' 우 : ' || A.ADRES_ZIP ) AS ADRES_ADDR
+				     , DECODE(  A.REGBS_ADDR, NULL, '',  A.REGBS_ADDR || ' 우 : ' || A.REGBS_ZIP ) AS REGBS_ADDR
+				     , DECODE( A.DWLSIT_ADDR, NULL, '', A.DWLSIT_ADDR || ' 우 : ' || A.DWLSIT_ZIP) AS DWLSIT_ADDR
+				     , A.TRGTER_CPRN
+					 , A.TRGTER_CRN
+					 , A.RPRSNTV_NM
+					 , A.EMAIL
+					 , A.CLSF
+					 , A.NLTY_CD
+					 , (SELECT CD_NM FROM CMN_CD WHERE ESNTL_CD = A.NLTY_CD) NLTY_NM
+					 , A.PASPORT_NO
+					 , A.ARREST_YN
+					 , A.ARREST_DT
+					 , A.ARREST_PLACE_CD
+					 , (SELECT CD_NM FROM CMN_CD WHERE ESNTL_CD = A.ARREST_PLACE_CD) ARREST_PLACE_NM
+					 , A.ARRST_TY_CD
+					 , A.ARREST_USER_ID
+					 , A.CNSLAT_DSPTH_CD
+					 , (SELECT CD_NM FROM CMN_CD WHERE ESNTL_CD = A.CNSLAT_DSPTH_CD) CNSLAT_DSPTH_NM
+					 , A.CNSLAT_DSPTH_DT
+					 , A.AGENT_SE_CD
+					 , DECODE(A.AGENT_SE_CD , 'C', '변호인','M','위임인') AS AGENT_SE_NM
+					 , A.AGENT_NM
+					 , A.AGENT_TEL					
+					 , B.PROGRS_STTUS_CD
+					 , B.CHARGER_ID
+					 , B.RC_SE_CD
+				  FROM RC_TMPR_TRGTER A
+				     , RC_TMPR B
+				 WHERE A.RC_NO = B.RC_NO
+				   AND A.RC_NO = #rc_no#
+				   AND A.USE_YN = 'Y'
+				   AND B.DEL_YN = 'N'
+			  ORDER BY TRGTER_GROUP DESC, A.SORT_ORDR, A.TRGTER_SN ASC
+				) X
+	</select>
+
+	<!-- 접수사건 대상자 등록 -->
+	<insert id="insertRcTmprTrgter" parameterClass="java.util.HashMap">
+		INSERT INTO
+	 RC_TMPR_TRGTER (
+					  RC_NO 		--접수 번호
+					, TRGTER_SN 	--대상자 일련번호
+					, TRGTER_SE_CD 	--대상자 구분 코드
+					, TRGTER_CL_CD 	--대상자 분류 코드
+					, TRGTER_TY_CD 	--대상자 유형 코드
+					, TRGTER_NM 	--대상자 성명
+					, TRGTER_ENG_NM --대상자 영문 성명
+					, SEXDSTN_CD 	--성별 코드
+					, TRGTER_RRN 	--대상자 주민등록번호
+					, TRGTER_AGE 	--대상자 나이
+					, OWNHOM_TEL 	--자택 전화
+					, HP_NO 		--휴대폰 번호
+					, WRC_TEL 		--직장 전화
+					, ETC_TEL 		--기타 전화
+					, OCCP_CD 		--직업 코드
+					, TRGTER_CPRN 	--대상자 법인등록번호
+					, TRGTER_CRN 	--대상자 사업자등록번호
+					, RPRSNTV_NM    --기업 대표자 명 
+					, WRC_NM 		--직장 명
+					, WRC_ZIP 		--직장 우편번호
+					, WRC_ADDR 		--직장 주소
+					, ADRES_ZIP 	--주소지 우편번호
+					, ADRES_ADDR 	--주소지 주소
+					, REGBS_ZIP 	--등록지 우편번호
+					, REGBS_ADDR 	--등록지 주소
+					, DWLSIT_ZIP 	--주거지 우편번호
+					, DWLSIT_ADDR 	--주거지 주소
+					, EMAIL 		--이메일
+					, CLSF 		    --직급
+					, NLTY_CD 		--국적 코드
+					, PASPORT_NO 	--여권 번호
+					, ARREST_YN 	--검거 여부
+					, ARREST_DT 	--검거 일시
+					, ARREST_PLACE_CD --검거 장소 코드
+					, ARRST_TY_CD 	--체포 유형 코드
+					, ARREST_USER_ID  --검거 사용자 ID
+					, CNSLAT_DSPTH_CD --영사관 통보 코드
+					, CNSLAT_DSPTH_DT --영사관 통보 일시					
+					, DOC_ID 		--문서 ID
+					, USE_YN 		--사용 여부
+					, AGENT_SE_CD	--위임인 구분코드
+					, AGENT_NM		--위임임 성명
+					, AGENT_TEL		--위임인 전화번호
+					, WRITNG_ID 	--작성자 ID
+					, WRITNG_DT 	--작성 일시
+					, UPDT_ID 		--수정 ID
+					, UPDT_DT 		--수정 일시
+					, FILE_ID		--파일명
+		   ) VALUES (
+					  #rc_no# --접수 번호
+					, (SELECT (NVL(MAX(TRGTER_SN),0)+1) FROM RC_TMPR_TRGTER WHERE RC_NO = #rc_no#)
+					, #trgter_se_cd# --대상자 구분 코드
+					, #trgter_cl_cd# --대상자 분류 코드
+					, #trgter_ty_cd# --대상자 유형 코드
+					, #trgter_nm# 	 --대상자 성명
+					, #trgter_eng_nm# --대상자 영문 성명
+					, #sexdstn_cd# --성별 코드
+					, DGUARD.ENCRYPT('TBL','ENC',#trgter_rrn#) --대상자 주민등록번호
+					, #trgter_age# --대상자 나이
+					, DGUARD.ENCRYPT('TBL','ENC',#ownhom_tel#) --자택 전화
+					, DGUARD.ENCRYPT('TBL','ENC',#hp_no#) --휴대폰 번호
+					, #wrc_tel# --직장 전화
+					, #etc_tel# --기타 전화
+					, #occp_cd# --직업 코드
+					, #trgter_cprn# --대상자 법인등록번호
+					, #trgter_crn#  --대상자 사업자등록번호
+					, #rprsntv_nm#  --기업 대표자 명 
+					, #wrc_nm#      --직장 명
+					, #wrc_zip#     --직장 우편번호
+					, #wrc_addr#    --직장 주소
+					, #adres_zip#   --주소지 우편번호
+					, #adres_addr#  --주소지 주소
+					, #regbs_zip#   --등록지 우편번호
+					, #regbs_addr#  --등록지 주소
+					, #dwlsit_zip#  --주거지 우편번호
+					, #dwlsit_addr# --주거지 주소
+					, #email# --이메일
+					, #clsf#  --직급
+					, #nlty_cd#    --국적 코드
+					, #pasport_no# --여권 번호
+					, #arrest_yn#  --검거 여부
+					, TO_DATE(#arrest_dt#, 'YYYY-MM-DD HH24:MI:SS') --검거 일시
+					, #arrest_place_cd# --검거 장소 코드
+					, #arrst_ty_cd#     --체포 유형 코드
+					, #arrest_user_id#  --검거 사용자 id
+					, #cnslat_dspth_cd# --영사관 통보 코드
+					, TO_DATE(#cnslat_dspth_dt#, 'YYYY-MM-DD HH24:MI:SS') --영사관 일시
+					, #doc_id# 		--문서 id
+					,'Y' 			--사용 여부
+					, #agent_se_cd#	--위임인 구분코드
+					, #agent_nm#	--위임임 성명
+					, #agent_tel#	--위임인 전화번호
+					, #esntl_id# 	--작성 id
+					, SYSDATE 		--작성 일시
+					, #esntl_id# 	--수정 id
+					, SYSDATE       --수정 일시
+					, #file_id#
+					)
+	</insert>
+
+	<!-- 내사 착수 보고 등록-->
+	<insert id="insertRcItivOutset" parameterClass="java.util.HashMap">
+		INSERT INTO
+	 RC_ITIV_OUTSET (
+					  RC_NO 		--접수 번호
+					, OUTSET_RESN 	--착수 사유
+					, DOC_ID 		--문서 ID
+					, FILE_ID
+					, WRITNG_ID 	--작성 ID
+					, WRITNG_DT 	--작성 일시
+					, UPDT_ID 		--수정 ID
+					, UPDT_DT 		--수정 일시
+					)
+			 VALUES (
+					  #rc_no#
+					, #outset_resn#
+					, #doc_id#
+					, #file_id#
+					, #esntl_id#
+					, SYSDATE
+					, #esntl_id#
+					, SYSDATE
+					)
+	</insert>
+
+	<!-- 내사 착수 보고 등록-->
+	<insert id="insertRcItivResult" parameterClass="java.util.HashMap">
+		INSERT INTO
+	 RC_ITIV_RESULT (
+					  ITIV_NO 		--내사 번호
+					, ITIV_RESULT_CD--내사결과 코드
+					, ITIV_CN 		--내사결과 사유
+					, DOC_ID 		--문서 ID
+					, FILE_ID
+					, WRITNG_ID 	--작성 ID
+					, WRITNG_DT 	--작성 일시
+					, UPDT_ID 		--수정 ID
+					, UPDT_DT 		--수정 일시
+					)
+			 VALUES (
+					  #itiv_no#
+					, #itiv_result_cd#
+					, #itiv_cn#
+					, #doc_id#
+					, #file_id#
+					, #esntl_id#
+					, SYSDATE
+					, #esntl_id#
+					, SYSDATE
+		)
+	</insert>
+
+	<!-- 사건정보 수정 -->
+	<update id="updateCaseInfo" parameterClass="java.util.HashMap">
+		UPDATE RC_TMPR
+		   SET UPDT_ID = #esntl_id#
+			 , UPDT_DT = SYSDATE
+		 	 , OCCRRNC_BEGIN_DT = TO_DATE(#occrrnc_begin_dt#, 'YYYY-MM-DD HH24:MI:SS')  --발생 시작 일시
+ 			 , OCCRRNC_END_DT = TO_DATE(  #occrrnc_end_dt#, 'YYYY-MM-DD HH24:MI:SS') 	--발생 종료 일시
+			 , RC_STLE_CD = #rc_stle_cd# 		--접수 형태 코드
+			 , OCCRRNC_ZIP = #occrrnc_zip# 		--발생 우편번호
+			 , OCCRRNC_ADDR = #occrrnc_addr# 	--발생 주소
+			 , CMPTNC_EXMN_CD =#cmptnc_exmn_cd#	--관할 검찰 코드
+			 , CNSLT_MTH_CD =#cnslt_mth_cd#		--상담 방법 코드
+			 , CNSLT_DT = TO_DATE(#cnslt_dt#, 'YYYY-MM-DD HH24:MI:SS') --상담 일시
+			 , CRMNL_FACT =#crmnl_fact#			--범죄 사실
+			 , ETC_CN =#etc_cn#					--기타 내용
+			 , FILE_ID =#file_id#				--파일 ID
+		 WHERE RC_NO = #rc_no#
+	</update>
+
+	<!-- 대상자 정보 수정 -->
+	<update id="updateTargetInfo" parameterClass="java.util.HashMap">
+		UPDATE RC_TMPR_TRGTER
+		   SET UPDT_ID      = #esntl_id#
+			 , UPDT_DT      = SYSDATE
+		     <isEqual property="trgter_ty_cd" compareValue="I">
+			 , TRGTER_SE_CD = #trgter_se_cd# 	--대상자 구분 코드
+			 , TRGTER_TY_CD = #trgter_ty_cd# 	--대상자 유형 코드
+			 , TRGTER_NM 	= #trgter_nm# 	 	--대상자 성명
+			 , TRGTER_ENG_NM= #trgter_eng_nm# 	--대상자 영문 성명
+			 , TRGTER_RRN 	= DGUARD.ENCRYPT('TBL', 'ENC', #trgter_rrn_front# || '-' || #trgter_rrn_end#) --, TRGTER_RRN 	= DGUARD.ENCRYPT('TBL','ENC','trgter_rrn') 	--대상자 주민등록번호 by dgkim
+			 , TRGTER_AGE 	= #trgter_age# 		--대상자 나이
+			 , SEXDSTN_CD 	= #sexdstn_cd# 		--성별 코드
+			 , TRGTER_CL_CD = #trgter_cl_cd# 	--대상자 분류 코드
+			 , HP_NO 		= DGUARD.ENCRYPT('TBL','ENC',#hp_no#) 			--휴대폰 번호
+			 , OWNHOM_TEL 	= DGUARD.ENCRYPT('TBL','ENC',#ownhom_tel#) 		--자택 전화
+			 , WRC_TEL 		= #wrc_tel# 		--직장 전화
+			 , ETC_TEL 		= #etc_tel# 		--기타 전화
+			 , OCCP_CD 		= #occp_cd# 		--직업 코드
+			 , WRC_NM 		= #wrc_nm# 			--직장 명
+			 , WRC_ZIP 		= #wrc_zip# 		--직장 우편번호
+			 , WRC_ADDR 	= #wrc_addr# 		--직장 주소
+			 , AGENT_SE_CD	= #agent_se_cd#		--대리인 구분코드
+			 , AGENT_NM		= #agent_nm#		--대리인 성명
+			 , AGENT_TEL	= #agent_tel#		--대리인 전화번호
+			 , ADRES_ZIP 	= #adres_zip# 		--주소지 우편번호
+			 , ADRES_ADDR 	= #adres_addr# 		--주소지 주소
+			 , REGBS_ZIP 	= #regbs_zip# 		--등록지 우편번호
+			 , REGBS_ADDR 	= #regbs_addr# 		--등록지 주소
+			 , DWLSIT_ZIP 	= #dwlsit_zip# 		--주거지 우편번호
+			 , DWLSIT_ADDR 	= #dwlsit_addr# 	--주거지 주소
+			 , EMAIL 		= #email# 			--이메일
+			 , CLSF 		= #clsf# 			--직급
+			 , PASPORT_NO 	= #pasport_no# 		--여권 번호
+			 , NLTY_CD 		= #nlty_cd# 		--국적 코드
+			 , TRGTER_CPRN 	= '' 	--법인등록번호
+			 , TRGTER_CRN 	= ''	--사업자등록번호
+			 , RPRSNTV_NM 	= ''	--기업대표자
+		     </isEqual>
+		     <isEqual property="trgter_ty_cd" compareValue="E">
+			 , TRGTER_SE_CD = #trgter_se_cd# 	--대상자 구분 코드
+			 , TRGTER_TY_CD = #trgter_ty_cd# 	--대상자 유형 코드
+			 , TRGTER_NM 	= #trgter_nm# 	 	--기업명
+			 , TRGTER_ENG_NM= #trgter_eng_nm#	--기업명 영문
+			 , TRGTER_CPRN 	= #trgter_cprn# 	--법인등록번호
+			 , TRGTER_CRN 	= #trgter_crn# 		--사업자등록번호
+			 , RPRSNTV_NM 	= #rprsntv_nm# 		--기업대표자
+			 , WRC_TEL 		= #wrc_tel# 		--직장 전화
+			 , ETC_TEL 		= #etc_tel# 		--기타 전화
+			 , AGENT_SE_CD	= #agent_se_cd#		--대리인 구분코드
+			 , AGENT_NM		= #agent_nm#		--대리인 성명
+			 , AGENT_TEL	= #agent_tel#		--대리인 전화번호
+			 , ADRES_ZIP 	= #adres_zip# 		--주소지 우편번호
+			 , ADRES_ADDR 	= #adres_addr# 		--주소지 주소
+			 , EMAIL 		= #email# 			--이메일
+			 , CLSF 		= #clsf# 			--직급
+			 , TRGTER_CL_CD = '' --대상자 분류 코드
+			 , SEXDSTN_CD 	= '' --성별 코드
+			 , TRGTER_RRN 	= '' --대상자 주민등록번호
+			 , TRGTER_AGE 	= '' --대상자 나이
+			 , OWNHOM_TEL 	= '' --자택 전화
+			 , HP_NO 		= '' --휴대폰 번호
+			 , OCCP_CD 		= '' --직업 코드
+			 , WRC_NM 		= '' --직장 명
+			 , WRC_ZIP 		= '' --직장 우편번호
+			 , WRC_ADDR 	= '' --직장 주소
+			 , REGBS_ZIP 	= '' --등록지 우편번호
+			 , REGBS_ADDR 	= '' --등록지 주소
+			 , DWLSIT_ZIP 	= '' --주거지 우편번호
+			 , DWLSIT_ADDR 	= '' --주거지 주소
+			 , NLTY_CD 		= '' --국적 코드
+			 , PASPORT_NO 	= '' --여권 번호
+		     </isEqual>
+		 WHERE RC_NO = #rc_no#
+		   AND TRGTER_SN = #trgter_sn#
+		   AND USE_YN = 'Y'
+	</update>
+
+	<!-- 접수 진행상태 수정 -->
+	<update id="updateRcTmprSttus" parameterClass="java.util.HashMap">
+		UPDATE RC_TMPR
+		   SET UPDT_ID = #esntl_id#
+			 , UPDT_DT = SYSDATE
+			 , PROGRS_STTUS_CD = #progrs_sttus_cd#
+			 <isNotEmpty property="case_end_se_change_cd">		<!-- 사건종결 구분코드 -->
+			 , CASE_END_SE_CHANGE_CD = #case_end_se_change_cd#
+			 </isNotEmpty>
+			 <isEqual property="reprt_se"  compareValue="TRR">	<!-- 보고서 화면 구분 : 임시결과보고 -->
+			 <isNotEmpty property="ed_dsps_cd">
+			 , ED_DSPS_CD = #ed_dsps_cd#	-- 임시사건 종결처분코드
+			 </isNotEmpty>
+			 , TMPR_CASE_RESULT_REPORT_DT = SYSDATE --임시사건 결과보고일시
+			 </isEqual>
+		 WHERE RC_NO = #rc_no#
+	</update>
+
+	<!-- 접수 진행상태 수정
+	<update id="updateRcTmprSttus" parameterClass="java.util.HashMap">
+		UPDATE RC_TMPR
+		   SET UPDT_ID = #esntl_id#
+			 , UPDT_DT = SYSDATE
+			<isEqual property="crud" compareValue="D">
+		 	 , USE_YN = 'N'
+		 	</isEqual>
+		 	<isEqual property="crud" compareValue="U">
+			<isNotEmpty property="progrs_sttus_cd">
+			 , PROGRS_STTUS_CD = #progrs_sttus_cd#
+			</isNotEmpty>
+			<isNotEmpty property="rc_se_cd">
+			 , RC_SE_CD = #rc_se_cd#
+			</isNotEmpty>
+			<isNotEmpty property="itiv_no">
+			 , ITIV_NO = #itiv_no#
+			</isNotEmpty>
+			</isEqual>
+		 WHERE RC_NO = #rc_no#
+	</update>
+	-->
+
+	<!-- 내사 착수 보고 수정-->
+	<update id="updateRcItivOutset" parameterClass="java.util.HashMap">
+		UPDATE RC_ITIV_OUTSET
+		   SET UPDT_ID 	= #esntl_id#
+			 , UPDT_DT 	= SYSDATE
+			 , OUTSET_REPORT_YN = #outset_report_yn#
+			 , OUTSET_REPORT_DT = SYSDATE
+	 		<isNotEmpty property="outset_resn" >
+			 , OUTSET_RESN = #outset_resn#
+	        </isNotEmpty>
+	       	<isNotEmpty property="sanctn_id" >
+	         , SANCTN_ID = #sanctn_id#
+	        </isNotEmpty>
+		 WHERE RC_NO = #rc_no#
+	</update>
+	
+	<!-- 내사 착수일  수정-->
+	<update id="updateRcItivOutsetDt" parameterClass="java.util.HashMap">
+		UPDATE RC_ITIV_OUTSET
+		   SET UPDT_ID 	= #esntl_id#
+			 , UPDT_DT 	= SYSDATE
+			 , OUTSET_DT= SYSDATE
+		 WHERE RC_NO = #rc_no#
+	</update>
+
+	<!-- 내사 결과 보고 수정-->
+	<update id="updateRcItivResult" parameterClass="java.util.HashMap">
+		UPDATE RC_ITIV_RESULT
+		   SET UPDT_ID 	= #esntl_id#
+			  , UPDT_DT = SYSDATE
+			  , ITIV_RESULT_CD = #itiv_result_cd#
+			  , ED_DSPS_CD = #ed_dsps_cd#
+			  , ITIV_RESULT_REPORT_DT = SYSDATE
+	 		<isNotEmpty property="itiv_cn" >
+			  , ITIV_CN = #itiv_cn#
+	        </isNotEmpty>
+	       	<isNotEmpty property="sanctn_id" >
+	          , SANCTN_ID = #sanctn_id#
+	        </isNotEmpty>
+		 WHERE ITIV_NO = #itiv_no#
+	</update>
+	
+	<!-- 
+		내사 결과 보고 일시 수정 
+		by dgkim
+	-->
+	<update id="updateRcItivResultDt" parameterClass="java.util.HashMap">
+		UPDATE RC_ITIV_RESULT
+		SET UPDT_ID = #esntl_id#
+			, UPDT_DT = SYSDATE
+			, ITIV_RESULT_REPORT_DT = SYSDATE
+		WHERE ITIV_NO = #itiv_no#
+	</update>
+
+	<!-- 위반사항 삭제 -->
+	<delete id="deleteRcTmprViolt" parameterClass="java.util.HashMap">
+		DELETE RC_TMPR_VIOLT
+		 WHERE RC_NO = #rc_no#
+	</delete>
+
+	<!-- 대상자 삭제 -->
+	<delete id="deleteTargetInfo" parameterClass="java.util.HashMap">
+		DELETE RC_TMPR_TRGTER
+		 WHERE RC_NO = #rc_no#
+		   AND TRGTER_SN = #trgter_sn#
+	</delete>
+
+	<!-- 접수, 사건, 내사번호 조회 -->
+	<select id="selectSnNoDetail" parameterClass="java.util.HashMap" resultClass="java.util.HashMap" remapResults = "true">
+		SELECT RC_NO, CASE_NO, ITIV_NO
+		FROM RC_TMPR
+		WHERE 1=1
+ 		<isNotEmpty property="rc_no" >
+			AND RC_NO = #rc_no#
+        </isNotEmpty>
+ 		<isEmpty property="rc_no" >
+	 		<isNotEmpty property="case_no" >
+				AND CASE_NO = #case_no#
+	        </isNotEmpty>
+	 		<isEmpty property="case_no" >
+				AND ITIV_NO = #itiv_no#
+	        </isEmpty>
+        </isEmpty>
+ 		<isNotEmpty property="charger_id" >
+			AND CHARGER_ID = #charger_id#
+        </isNotEmpty>
+ 		<isNotEmpty property="charger_dept_cd" >
+			AND CHARGER_DEPT_CD = #charger_dept_cd#
+        </isNotEmpty>
+
+	</select>
+
+	<!-- 사건테이블에 결재 ID update -->
+	<update id="updateRcTemprSanctn" parameterClass="java.util.HashMap">
+		UPDATE RC_TMPR
+		   SET SANCTN_ID = #sanctn_id#
+			 , UPDT_ID 	 = #esntl_id#
+			 , UPDT_DT 	 = SYSDATE
+		 WHERE RC_NO 	 = #rc_no#
+	</update>
+	
+	<select id="selectSanctnId" parameterClass="String" resultClass="String">
+		SELECT SANCTN_ID 
+		  FROM RC_TMPR  
+		 WHERE RC_NO = #rc_no#
+	</select>
+	
+	<select id="selectOutsetConfm" parameterClass="String" resultClass="java.util.HashMap">
+		SELECT STTUS_CD, CONFM_JOB_SE_CD
+		  FROM(
+		       SELECT STTUS_CD, CONFM_JOB_SE_CD
+				 FROM CMN_SANCTN_CONFM
+				WHERE SANCTN_ID  = ( SELECT SANCTN_ID FROM RC_TMPR WHERE RC_NO= #rc_no# )
+			 ORDER BY CONFM_SN DESC ) 
+		 WHERE ROWNUM = 1
+	</select>
+</sqlMap>

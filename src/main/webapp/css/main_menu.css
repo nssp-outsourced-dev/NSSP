@@ -1,0 +1,159 @@
+@charset "utf-8";
+/* CSS Document */
+
+/****왼쪽 메뉴  Hidden/ show s****/
+
+input[type="checkbox"]#menu_state {
+  display: none; 
+}
+input[type="checkbox"]:checked ~ nav.main {
+  width:100px;
+}
+input[type="checkbox"]:checked ~ nav.main label[for="menu_state"] i::before {
+  content: "\f053"; 
+}
+input[type="checkbox"]:checked ~ nav.main ul {
+  width: 100%;
+}
+input[type="checkbox"]:checked ~ nav.main ul li a i {
+  border-right: 1px solid #2f343e;
+}
+input[type="checkbox"]:checked ~ nav.main ul li a span {
+  opacity: 1;
+  transition: opacity 0.25s ease-in-out;
+}
+input[type="checkbox"]:checked ~ nav.main .left_title { width: 100%; float: left; height:100px; 
+	 position: relative;   transition: opacity 0.1s ease-in-out;  opacity: 1; background-color: #36404a
+}
+input[type="checkbox"]:checked ~ nav.main .left_title .icon{  width:45px; height: 45px; text-align: center; line-height: 40px; border-radius: 50px; position: absolute; top:40px; left: 0px; opacity: 1;
+}
+input[type="checkbox"]:checked ~ main {
+ padding-left: 180px; width: 100% ;   transition: opacity 0.25s ease-in-out;box-sizing: border-box
+}
+nav.main {
+  position: fixed;
+  z-index:99;
+  top: 60px;
+  left: 0px;
+  bottom: 0;
+  background: #586ed5;
+  color: #9aa3a8;
+  width: 0px;
+  font-family: 'Montserrat', sans-serif;
+  font-weight: lighter;
+  transition: all 0.15s ease-in-out;  color: #fff;
+}
+
+
+
+nav.main label[for="menu_state"] i{
+  cursor: pointer;
+  position: absolute;
+  top: 20px;
+  right:-25px;
+ background: #36404a;
+  font-size: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 25px;
+  width: 25px;
+  transition: width 0.15s ease-in-out;background: url("../img/ar_icon.png"); background-color: #36404a; background-position: center center;
+  z-index: 1; color: #fff;  text-indent: -999px
+}
+nav.main label[for="menu_state"]  i::before {
+ 
+  cursor: pointer;
+  position: absolute;
+  top: 0px;
+  right:0px;
+ background: #36404a;
+  font-size: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 25px;
+  width: 25px;
+  transition: width 0.15s ease-in-out;
+  z-index: 1; color: #fff;  background: url("../img/al_icon.png"); background-color: #36404a;background-position: center center;
+}
+nav.main label[for="menu_state"] i:hover {
+
+}
+nav.main ul {
+  overflow: hidden;
+  display: block;
+  width: 0px;
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+}
+nav.main ul li {
+  position: relative; padding: 15px 0px; float: left
+}
+nav.main ul li.unread:after {
+  content: attr(data-content);
+  position: absolute;
+  top: 10px;
+  left: 25px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 15px;
+  height: 15px;
+  border-radius: 50%;
+  color: #fff;
+
+  font-size: 8px;
+}
+nav.main ul li:not(:last-child) {
+  border-bottom: none;
+}
+
+nav.main ul li.active a {
+  background: #2a3e66;
+  color: #fff;
+}
+nav.main ul li a {
+  position: relative;
+  display: block;
+  white-space: nowrap;
+  text-decoration: none;
+  color: #fff;
+  width: 100%;
+  transition: all 0.15s ease-in-out;
+}
+nav.main ul li a:hover {
+  background: #18aae8;
+  color: #fff;
+}
+nav.main ul li a * {
+  height: 100%;
+  display: inline-block;   color: #fff;
+}
+nav.main ul li a i {
+  text-align: center;
+  width: 50px;
+  z-index: 999999;
+}
+nav.main ul li a i.fa {
+  line-height: 50px;
+}
+nav.main ul li a img{ width: 28px; height: 31px; padding-left: 8px
+}
+nav.main ul li a span {
+ 
+  opacity: 0;
+  line-height: 50px;
+  transition: opacity 0.1s ease-in-out;
+}
+
+nav.main ul li{width: 100%; float: left; text-align: center; cursor:pointer;
+}
+nav.main ul li:hover{width: 100%; float: left; text-align: center; background-color: #333d46
+}
+nav.main ul li .icon {width: 100%; float: left; text-align: center; margin-bottom: 5px
+}
+
+nav.main ul li .tx{width: 100%; float: left; text-align: center; color:#fff; font-size: 12px
+}

@@ -1,0 +1,50 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<meta http-equiv="X-UA-Compatible" content="IE=Edge;" />
+	<title>GPKI 사용자용 표준보안API</title>
+	<script type="text/javascript" src="./client/json2.js"></script>
+	<script type="text/javascript" src="./client/jquery-1.7.1.min.js"></script>
+	<script type="text/javascript" src="./client/var.js"></script>
+	<script type="text/javascript" src="./client/GPKIErrorText.js"></script>
+	<script type="text/javascript" src="./client/GPKISecureWebNP.js"></script>
+	<link rel="stylesheet" type="text/css" href="./css/style.css" />
+</head>
+
+<body>
+	<div class="wrap">
+		<div class="header">
+			<h1><a href="index.html"><strong>GPKI 사용자용 표준보안API</strong></a></h1>
+		</div>
+		<div class="content">
+			<div class="course course1">
+				<div class="title">
+					<h2><span class="subject">1. 사용자 인증 및 보안 세션 만들기</span></h2><br/>
+				</div>
+				<div class="list_01">
+					<ul id="gpkilink">
+						<li>
+							<span class="subject">- 서버 인증서 인증 후 보안세션 만들기 (보안 세션만 생성)</span><span class="sub"><br /></span>
+							<span>
+								&nbsp;&nbsp;&nbsp;사용자 인증서 로그인 없이 보안 세션을 구성하고자 하는 경우 제공되는 기능입니다.<br/>
+								&nbsp;&nbsp;&nbsp;Form 객체를 파라미터로 받아 로그인 메시지를 생성하여 서버에 전송합니다.<br/>
+								&nbsp;&nbsp;&nbsp;Form 객체 내의 파라미터 값들을 서버인증서로 암호화합니다.<br/>
+								&nbsp;&nbsp;&nbsp;또한, 로그인 이후 보안 세션 구성을 위한 세션키도 암호화 하여 서버와 공유 합니다.<br/>
+							</span>
+							<br/>
+							<div class="list_final_item">
+								<ul><li><a href="createSecureSession_2_1">* 공개키 암호 메시지 만들기</a></li></ul>
+							</div>
+						</li>
+					</ul>
+				</div>
+			</div>
+			<div class="sp"></div>
+			<script type="text/javascript">
+				$(document).ready(replaceServerScriptExt());
+			</script>
+		</div>
+	</div>
+</body>
+</html>

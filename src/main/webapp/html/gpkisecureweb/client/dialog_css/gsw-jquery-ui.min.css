@@ -1,0 +1,1355 @@
+/*! jQuery UI - v1.11.2 - 2015-01-22
+* http://jqueryui.com
+* Includes: core.css, draggable.css, resizable.css, selectable.css, sortable.css, accordion.css, autocomplete.css, button.css, datepicker.css, dialog.css, menu.css, progressbar.css, selectmenu.css, slider.css, spinner.css, tabs.css, tooltip.css, theme.css
+* To view and modify this theme, visit http://jqueryui.com/themeroller/?ffDefault=Trebuchet%20MS%2CTahoma%2CVerdana%2CArial%2Csans-serif&fwDefault=bold&fsDefault=1.1em&cornerRadius=4px&bgColorHeader=f6a828&bgTextureHeader=gloss_wave&bgImgOpacityHeader=35&borderColorHeader=e78f08&fcHeader=ffffff&iconColorHeader=ffffff&bgColorContent=eeeeee&bgTextureContent=highlight_soft&bgImgOpacityContent=100&borderColorContent=dddddd&fcContent=333333&iconColorContent=222222&bgColorDefault=f6f6f6&bgTextureDefault=glass&bgImgOpacityDefault=100&borderColorDefault=cccccc&fcDefault=1c94c4&iconColorDefault=ef8c08&bgColorHover=fdf5ce&bgTextureHover=glass&bgImgOpacityHover=100&borderColorHover=fbcb09&fcHover=c77405&iconColorHover=ef8c08&bgColorActive=ffffff&bgTextureActive=glass&bgImgOpacityActive=65&borderColorActive=fbd850&fcActive=eb8f00&iconColorActive=ef8c08&bgColorHighlight=ffe45c&bgTextureHighlight=highlight_soft&bgImgOpacityHighlight=75&borderColorHighlight=fed22f&fcHighlight=363636&iconColorHighlight=228ef1&bgColorError=b81900&bgTextureError=diagonals_thick&bgImgOpacityError=18&borderColorError=cd0a0a&fcError=ffffff&iconColorError=ffd27a&bgColorOverlay=666666&bgTextureOverlay=diagonals_thick&bgImgOpacityOverlay=20&opacityOverlay=50&bgColorShadow=000000&bgTextureShadow=flat&bgImgOpacityShadow=10&opacityShadow=20&thicknessShadow=5px&offsetTopShadow=-5px&offsetLeftShadow=-5px&cornerRadiusShadow=5px
+* Copyright 2015 jQuery Foundation and other contributors; Licensed MIT */
+
+/* Layout helpers
+----------------------------------*/
+
+html,body{height:100%}
+.GWSdialog-progress{
+	background:#fff url(../dialog_img/setup_content.gif)no-repeat 20px 20px;
+	width:420px;
+	background-color:#ffffff;
+	background-image:url(../dialog_img/setup_content.gif);
+	background-position:20px 20px;
+	background-repeat: no-repeat;
+	padding:20px 20px 20px 160px !important;
+	display:none;
+	z-index:15000;
+}
+.GWSdialog-progress-font{
+	display:block; 
+	color:#193b65; 
+	padding:15px 0 25px; 
+	font-weight:normal;
+	font-size:12px;
+	text-align:center;
+}
+.GWSdialog-progress-set{
+	padding:35px 0 0 40px; 
+}
+.GWSdialog-mask{
+	position:absolute;
+	z-index:10000;
+	background-color:#000;
+	display:none;
+	left:0;
+	top:0;
+}
+.GWSdialog-downloadChecker{
+	background:#fff url(../dialog_img/setup_content.gif)no-repeat 20px 30px;
+	width:420px;
+	background-color:#ffffff;
+	background-image:url(../dialog_img/setup_content.gif);
+	background-position: 20px 30px;
+	background-repeat: no-repeat;
+	padding:20px 20px 20px 130px !important;
+	display:none;
+	z-index:15000;
+	font-size:12px;
+	font-weight:normal;
+}
+.GWSdialog-downloadChecker-icon{
+	width:152px; 
+	height:21px; 
+	margin-left:60px; 
+	display:block;
+	cursor: hand;
+}
+.GWSdialog-downloadChecker-font{
+	display:block; 
+	color:#193b65;
+	font-size:12px; 
+	margin:15px 0 15px 64px; 
+	font-weight:nomal;
+}
+.GWSdialog-blue-button{
+	display:inline-block; 
+	background-color:#1f84c7;
+	padding-top:5px;
+	*padding-top:10px;
+	text-align:center;
+	line-hight:26px;
+	font-size:12px; 
+	font-weight:bold;
+	color:#fff; 
+	width:80px; 
+	height:26px; 
+	margin-left:3px; 
+	margin-bottom:3px;
+	cursor: pointer;
+}
+.GWSdialog-blue-button:hover{
+	background:#165c8b;
+	cursor: pointer;
+}
+.GWSdialog-grey-button3{
+	display:inline-block; 
+	background-color:#d1d1d1;
+	padding-top:5px;
+	*padding-top:10px; 
+	text-align:center; 
+	line-hight:26px; 
+	font-size:12px; 
+	font-weight:bold; 
+	color:#fff; 
+	width:100px; 
+	height:26px; 
+	margin-left:10px; 
+	margin-bottom:3px;
+	cursor: pointer;
+}
+.GWSdialog-grey-button3:hover{
+	background:#929292;
+	cursor: pointer;
+}
+.GWSdialog-grey-button{
+	display:inline-block; 
+	background-color:#d1d1d1;
+	padding-top:5px;
+	*padding-top:10px; 
+	text-align:center; 
+	line-hight:26px;
+	font-size:12px;  
+	font-weight:bold; 
+	color:#fff; 
+	width:80px; 
+	height:26px; 
+	margin-left:10px; 
+	margin-bottom:3px;
+	cursor: pointer;
+}
+.GWSdialog-grey-button:hover{
+	background:#929292;
+	cursor: pointer;
+}
+.GWSdialog-button-set{
+	display:block;
+	padding-left:50px;
+}
+.GWSdialog-div{
+	background:#fff url(../dialog_img/setup_content2.gif)no-repeat 20px 20px;
+	width:420px;
+	background-color:#ffffff;
+	background-image:url(../dialog_img/setup_content2.gif);
+	background-position: 20px 20px;
+	background-repeat: no-repeat;
+	padding:20px 20px 20px 160px !important;
+	font-size:12px;
+	font-weight;normal;
+	display:none;
+	z-index:15000;
+}
+.GWSui-helper-hidden {
+	display: none;
+}
+.GWSui-helper-hidden-accessible {
+	border: 0;
+	clip: rect(0 0 0 0);
+	height: 1px;
+	margin: -1px;
+	overflow: hidden;
+	padding: 0;
+	position: absolute;
+	width: 1px;
+}
+.GWSui-helper-reset {
+	margin: 0;
+	padding: 0;
+	border: 0;
+	outline: 0;
+	line-height: 1.3;
+	text-decoration: none;
+	font-size:12px; 
+	list-style: none;
+}
+.GWSui-helper-clearfix:before,
+.GWSui-helper-clearfix:after {
+	content: "";
+	display: table;
+	border-collapse: collapse;
+}
+.GWSui-helper-clearfix:after {
+	clear: both;
+}
+.GWSui-helper-clearfix {
+	min-height: 0; /* support: IE7 */
+}
+.GWSui-helper-zfix {
+	width: 100%;
+	height: 100%;
+	top: 0;
+	left: 0;
+	position: absolute;
+	opacity: 0;
+	filter:Alpha(Opacity=0); /* support: IE8 */
+}
+
+.GWSui-front {
+	z-index: 100;
+}
+
+.GWSdialog-load-progress{
+	background:#fff url(../dialog_img/setup_loadbar.gif)no-repeat;
+	background-color:#ffffff;
+	background-image:url(../dialog_img/setup_loadbar.gif);
+	background-repeat: no-repeat;
+	width:244px;
+	height:7px;
+}
+.GWSdialog-MacPath-img{
+	background:#fff url(../dialog_img/mac_path.png)no-repeat;
+	background-color:#ffffff;
+	background-image:url(../dialog_img/mac_path.png);
+	background-repeat: no-repeat;
+	width:300px;
+	height:200px;
+}
+/* Interaction Cues
+----------------------------------*/
+.GWSui-state-disabled {
+	cursor: default !important;
+}
+
+
+/* Icons
+----------------------------------*/
+
+/* states and images */
+.GWSui-icon {
+	display: block;
+	text-indent: -99999px;
+	overflow: hidden;
+	background-repeat: no-repeat;
+}
+
+
+/* Misc visuals
+----------------------------------*/
+
+/* Overlays */
+.GWSui-widget-overlay {
+	position: fixed;
+	_position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+}
+.GWSui-draggable-handle {
+	-ms-touch-action: none;
+	touch-action: none;
+}
+.GWSui-resizable {
+	position: relative;
+}
+.GWSui-resizable-handle {
+	position: absolute;
+	font-size: 0.1px;
+	display: block;
+	-ms-touch-action: none;
+	touch-action: none;
+}
+.GWSui-resizable-disabled .GWSui-resizable-handle,
+.GWSui-resizable-autohide .GWSui-resizable-handle {
+	display: none;
+}
+.GWSui-resizable-n {
+	cursor: n-resize;
+	height: 7px;
+	width: 100%;
+	top: -5px;
+	left: 0;
+}
+.GWSui-resizable-s {
+	cursor: s-resize;
+	height: 7px;
+	width: 100%;
+	bottom: -5px;
+	left: 0;
+}
+.GWSui-resizable-e {
+	cursor: e-resize;
+	width: 7px;
+	right: -5px;
+	top: 0;
+	height: 100%;
+}
+.GWSui-resizable-w {
+	cursor: w-resize;
+	width: 7px;
+	left: -5px;
+	top: 0;
+	height: 100%;
+}
+.GWSui-resizable-se {
+	cursor: se-resize;
+	width: 12px;
+	height: 12px;
+	right: 1px;
+	bottom: 1px;
+}
+.GWSui-resizable-sw {
+	cursor: sw-resize;
+	width: 9px;
+	height: 9px;
+	left: -5px;
+	bottom: -5px;
+}
+.GWSui-resizable-nw {
+	cursor: nw-resize;
+	width: 9px;
+	height: 9px;
+	left: -5px;
+	top: -5px;
+}
+.GWSui-resizable-ne {
+	cursor: ne-resize;
+	width: 9px;
+	height: 9px;
+	right: -5px;
+	top: -5px;
+}
+.GWSui-selectable {
+	-ms-touch-action: none;
+	touch-action: none;
+}
+.GWSui-selectable-helper {
+	position: absolute;
+	z-index: 100;
+	border: 1px dotted black;
+}
+.GWSui-sortable-handle {
+	-ms-touch-action: none;
+	touch-action: none;
+}
+.GWSui-accordion .GWSui-accordion-header {
+	display: block;
+	cursor: pointer;
+	position: relative;
+	margin: 2px 0 0 0;
+	padding: .5em .5em .5em .7em;
+	min-height: 0; /* support: IE7 */
+	font-size: 100%;
+}
+.GWSui-accordion .GWSui-accordion-icons {
+	padding-left: 2.2em;
+}
+.GWSui-accordion .GWSui-accordion-icons .GWSui-accordion-icons {
+	padding-left: 2.2em;
+}
+.GWSui-accordion .GWSui-accordion-header .GWSui-accordion-header-icon {
+	position: absolute;
+	left: .5em;
+	top: 50%;
+	margin-top: -8px;
+}
+.GWSui-accordion .GWSui-accordion-content {
+	padding: 1em 2.2em;
+	border-top: 0;
+	overflow: auto;
+}
+.GWSui-autocomplete {
+	position: absolute;
+	top: 0;
+	left: 0;
+	cursor: default;
+}
+.GWSui-button {
+	display: inline-block;
+	position: relative;
+	padding: 0;
+	line-height: normal;
+	margin-right: .1em;
+	cursor: pointer;
+	vertical-align: middle;
+	text-align: center;
+	overflow: visible; /* removes extra width in IE */
+}
+.GWSui-button,
+.GWSui-button:link,
+.GWSui-button:visited,
+.GWSui-button:hover,
+.GWSui-button:active {
+	text-decoration: none;
+}
+/* to make room for the icon, a width needs to be set here */
+.GWSui-button-icon-only {
+	width: 2.2em;
+}
+/* button elements seem to need a little more width */
+button.GWSui-button-icon-only {
+	width: 2.4em;
+}
+.GWSui-button-icons-only {
+	width: 3.4em;
+}
+button.GWSui-button-icons-only {
+	width: 3.7em;
+}
+
+/* button text element */
+.GWSui-button .GWSui-button-text {
+	display: block;
+	line-height: normal;
+}
+.GWSui-button-text-only .GWSui-button-text {
+	padding: .4em 1em;
+}
+.GWSui-button-icon-only .GWSui-button-text,
+.GWSui-button-icons-only .GWSui-button-text {
+	padding: .4em;
+	text-indent: -9999999px;
+}
+.GWSui-button-text-icon-primary .GWSui-button-text,
+.GWSui-button-text-icons .GWSui-button-text {
+	padding: .4em 1em .4em 2.1em;
+}
+.GWSui-button-text-icon-secondary .GWSui-button-text,
+.GWSui-button-text-icons .GWSui-button-text {
+	padding: .4em 2.1em .4em 1em;
+}
+.GWSui-button-text-icons .GWSui-button-text {
+	padding-left: 2.1em;
+	padding-right: 2.1em;
+}
+/* no icon support for input elements, provide padding by default */
+input.GWSui-button {
+	padding: .4em 1em;
+}
+
+/* button icon element(s) */
+.GWSui-button-icon-only .GWSui-icon,
+.GWSui-button-text-icon-primary .GWSui-icon,
+.GWSui-button-text-icon-secondary .GWSui-icon,
+.GWSui-button-text-icons .GWSui-icon,
+.GWSui-button-icons-only .GWSui-icon {
+	position: absolute;
+	top: 50%;
+	margin-top: -8px;
+}
+.GWSui-button-icon-only .GWSui-icon {
+	left: 50%;
+	margin-left: -8px;
+}
+.GWSui-button-text-icon-primary .GWSui-button-icon-primary,
+.GWSui-button-text-icons .GWSui-button-icon-primary,
+.GWSui-button-icons-only .GWSui-button-icon-primary {
+	left: .5em;
+}
+.GWSui-button-text-icon-secondary .GWSui-button-icon-secondary,
+.GWSui-button-text-icons .GWSui-button-icon-secondary,
+.GWSui-button-icons-only .GWSui-button-icon-secondary {
+	right: .5em;
+}
+
+/* button sets */
+.GWSui-buttonset {
+	margin-right: 7px;
+}
+.GWSui-buttonset .GWSui-button {
+	margin-left: 0;
+	margin-right: -.3em;
+}
+
+/* workarounds */
+/* reset extra padding in Firefox, see h5bp.com/l */
+input.GWSui-button::-moz-focus-inner,
+button.GWSui-button::-moz-focus-inner {
+	border: 0;
+	padding: 0;
+}
+.GWSui-datepicker {
+	width: 17em;
+	padding: .2em .2em 0;
+	display: none;
+}
+.GWSui-datepicker .GWSui-datepicker-header {
+	position: relative;
+	padding: .2em 0;
+}
+.GWSui-datepicker .GWSui-datepicker-prev,
+.GWSui-datepicker .GWSui-datepicker-next {
+	position: absolute;
+	top: 2px;
+	width: 1.8em;
+	height: 1.8em;
+}
+.GWSui-datepicker .GWSui-datepicker-prev-hover,
+.GWSui-datepicker .GWSui-datepicker-next-hover {
+	top: 1px;
+}
+.GWSui-datepicker .GWSui-datepicker-prev {
+	left: 2px;
+}
+.GWSui-datepicker .GWSui-datepicker-next {
+	right: 2px;
+}
+.GWSui-datepicker .GWSui-datepicker-prev-hover {
+	left: 1px;
+}
+.GWSui-datepicker .GWSui-datepicker-next-hover {
+	right: 1px;
+}
+.GWSui-datepicker .GWSui-datepicker-prev span,
+.GWSui-datepicker .GWSui-datepicker-next span {
+	display: block;
+	position: absolute;
+	left: 50%;
+	margin-left: -8px;
+	top: 50%;
+	margin-top: -8px;
+}
+.GWSui-datepicker .GWSui-datepicker-title {
+	margin: 0 2.3em;
+	line-height: 1.8em;
+	text-align: center;
+}
+.GWSui-datepicker .GWSui-datepicker-title select {
+	font-size: 1em;
+	margin: 1px 0;
+}
+.GWSui-datepicker select.GWSui-datepicker-month,
+.GWSui-datepicker select.GWSui-datepicker-year {
+	width: 45%;
+}
+.GWSui-datepicker table {
+	width: 100%;
+	font-size: .9em;
+	border-collapse: collapse;
+	margin: 0 0 .4em;
+}
+.GWSui-datepicker th {
+	padding: .7em .3em;
+	text-align: center;
+	font-weight: bold;
+	border: 0;
+}
+.GWSui-datepicker td {
+	border: 0;
+	padding: 1px;
+}
+.GWSui-datepicker td span,
+.GWSui-datepicker td a {
+	display: block;
+	padding: .2em;
+	text-align: right;
+	text-decoration: none;
+}
+.GWSui-datepicker .GWSui-datepicker-buttonpane {
+	background-image: none;
+	margin: .7em 0 0 0;
+	padding: 0 .2em;
+	border-left: 0;
+	border-right: 0;
+	border-bottom: 0;
+}
+.GWSui-datepicker .GWSui-datepicker-buttonpane button {
+	float: right;
+	margin: .5em .2em .4em;
+	cursor: pointer;
+	padding: .2em .6em .3em .6em;
+	width: auto;
+	overflow: visible;
+}
+.GWSui-datepicker .GWSui-datepicker-buttonpane button.GWSui-datepicker-current {
+	float: left;
+}
+
+/* with multiple calendars */
+.GWSui-datepicker.GWSui-datepicker-multi {
+	width: auto;
+}
+.GWSui-datepicker-multi .GWSui-datepicker-group {
+	float: left;
+}
+.GWSui-datepicker-multi .GWSui-datepicker-group table {
+	width: 95%;
+	margin: 0 auto .4em;
+}
+.GWSui-datepicker-multi-2 .GWSui-datepicker-group {
+	width: 50%;
+}
+.GWSui-datepicker-multi-3 .GWSui-datepicker-group {
+	width: 33.3%;
+}
+.GWSui-datepicker-multi-4 .GWSui-datepicker-group {
+	width: 25%;
+}
+.GWSui-datepicker-multi .GWSui-datepicker-group-last .GWSui-datepicker-header,
+.GWSui-datepicker-multi .GWSui-datepicker-group-middle .GWSui-datepicker-header {
+	border-left-width: 0;
+}
+.GWSui-datepicker-multi .GWSui-datepicker-buttonpane {
+	clear: left;
+}
+.GWSui-datepicker-row-break {
+	clear: both;
+	width: 100%;
+	font-size: 0;
+}
+
+/* RTL support */
+.GWSui-datepicker-rtl {
+	direction: rtl;
+}
+.GWSui-datepicker-rtl .GWSui-datepicker-prev {
+	right: 2px;
+	left: auto;
+}
+.GWSui-datepicker-rtl .GWSui-datepicker-next {
+	left: 2px;
+	right: auto;
+}
+.GWSui-datepicker-rtl .GWSui-datepicker-prev:hover {
+	right: 1px;
+	left: auto;
+}
+.GWSui-datepicker-rtl .GWSui-datepicker-next:hover {
+	left: 1px;
+	right: auto;
+}
+.GWSui-datepicker-rtl .GWSui-datepicker-buttonpane {
+	clear: right;
+}
+.GWSui-datepicker-rtl .GWSui-datepicker-buttonpane button {
+	float: left;
+}
+.GWSui-datepicker-rtl .GWSui-datepicker-buttonpane button.GWSui-datepicker-current,
+.GWSui-datepicker-rtl .GWSui-datepicker-group {
+	float: right;
+}
+.GWSui-datepicker-rtl .GWSui-datepicker-group-last .GWSui-datepicker-header,
+.GWSui-datepicker-rtl .GWSui-datepicker-group-middle .GWSui-datepicker-header {
+	border-right-width: 0;
+	border-left-width: 1px;
+}
+.GWSui-dialog {
+	overflow: hidden;
+	position: absolute;
+	top: 0;
+	left: 0;
+	padding: 0;
+	outline: 0;
+}
+.GWSui-dialog .GWSui-dialog-titlebar {
+	padding: .4em 1em;
+	position: relative;
+	width: 85%;
+	z-index: 201;
+}
+.GWSui-dialog .GWSui-dialog-title {
+	float: left;
+	margin: .1em 0;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+.GWSui-dialog .GWSui-dialog-titlebar-close {
+	position: absolute;
+	right: .3em;
+	top: 50%;
+	width: 20px;
+	margin: -10px 0 0 0;
+	padding: 1px;
+	height: 20px;
+}
+.GWSui-dialog .GWSui-dialog-content {
+	position: relative;
+	top:-34px;
+	border: 0;
+	padding: 0;
+/*	background: #ff0; */
+	overflow: hidden;
+	z-index: 200;
+	margin-bottom: -36px;
+}
+.GWSui-dialog .GWSui-dialog-buttonpane {
+	text-align: left;
+	border-width: 1px 0 0 0;
+	background-image: none;
+	margin-top: .5em;
+	padding: .3em 1em .5em .4em;
+}
+.GWSui-dialog .GWSui-dialog-buttonpane .GWSui-dialog-buttonset {
+	float: right;
+}
+.GWSui-dialog .GWSui-dialog-buttonpane button {
+	margin: .5em .4em .5em 0;
+	cursor: pointer;
+}
+.GWSui-dialog .GWSui-resizable-se {
+	width: 12px;
+	height: 12px;
+	right: -5px;
+	bottom: -5px;
+	background-position: 16px 16px;
+}
+.GWSui-draggable .GWSui-dialog-titlebar {
+	cursor: move;
+}
+.GWSui-menu {
+	list-style: none;
+	padding: 0;
+	margin: 0;
+	display: block;
+	outline: none;
+}
+.GWSui-menu .GWSui-menu {
+	position: absolute;
+}
+.GWSui-menu .GWSui-menu-item {
+	position: relative;
+	margin: 0;
+	padding: 3px 1em 3px .4em;
+	cursor: pointer;
+	min-height: 0; /* support: IE7 */
+	/* support: IE10, see #8844 */
+}
+.GWSui-menu .GWSui-menu-divider {
+	margin: 5px 0;
+	height: 0;
+	font-size: 0;
+	line-height: 0;
+	border-width: 1px 0 0 0;
+}
+.GWSui-menu .GWSui-state-focus,
+.GWSui-menu .GWSui-state-active {
+	margin: -1px;
+}
+
+/* icon support */
+.GWSui-menu-icons {
+	position: relative;
+}
+.GWSui-menu-icons .GWSui-menu-item {
+	padding-left: 2em;
+}
+
+/* left-aligned */
+.GWSui-menu .GWSui-icon {
+	position: absolute;
+	top: 0;
+	bottom: 0;
+	left: .2em;
+	margin: auto 0;
+}
+
+/* right-aligned */
+.GWSui-menu .GWSui-menu-icon {
+	left: auto;
+	right: 0;
+}
+.GWSui-progressbar {
+	height: 2em;
+	text-align: left;
+	overflow: hidden;
+}
+.GWSui-progressbar .GWSui-progressbar-value {
+	margin: -1px;
+	height: 100%;
+}
+.GWSui-progressbar .GWSui-progressbar-overlay {
+	height: 100%;
+	filter: alpha(opacity=25); /* support: IE8 */
+	opacity: 0.25;
+}
+.GWSui-progressbar-indeterminate .GWSui-progressbar-value {
+	background-image: none;
+}
+.GWSui-selectmenu-menu {
+	padding: 0;
+	margin: 0;
+	position: absolute;
+	top: 0;
+	left: 0;
+	display: none;
+}
+.GWSui-selectmenu-menu .GWSui-menu {
+	overflow: auto;
+	/* Support: IE7 */
+	overflow-x: hidden;
+	padding-bottom: 1px;
+}
+.GWSui-selectmenu-menu .GWSui-menu .GWSui-selectmenu-optgroup {
+	font-size: 1em;
+	font-weight: bold;
+	line-height: 1.5;
+	padding: 2px 0.4em;
+	margin: 0.5em 0 0 0;
+	height: auto;
+	border: 0;
+}
+.GWSui-selectmenu-open {
+	display: block;
+}
+.GWSui-selectmenu-button {
+	display: inline-block;
+	overflow: hidden;
+	position: relative;
+	text-decoration: none;
+	cursor: pointer;
+}
+.GWSui-selectmenu-button span.GWSui-icon {
+	right: 0.5em;
+	left: auto;
+	margin-top: -8px;
+	position: absolute;
+	top: 50%;
+}
+.GWSui-selectmenu-button span.GWSui-selectmenu-text {
+	text-align: left;
+	padding: 0.4em 2.1em 0.4em 1em;
+	display: block;
+	line-height: 1.4;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+.GWSui-slider {
+	position: relative;
+	text-align: left;
+}
+.GWSui-slider .GWSui-slider-handle {
+	position: absolute;
+	z-index: 2;
+	width: 1.2em;
+	height: 1.2em;
+	cursor: default;
+	-ms-touch-action: none;
+	touch-action: none;
+}
+.GWSui-slider .GWSui-slider-range {
+	position: absolute;
+	z-index: 1;
+	font-size: .7em;
+	display: block;
+	border: 0;
+	background-position: 0 0;
+}
+
+/* support: IE8 - See #6727 */
+.GWSui-slider.GWSui-state-disabled .GWSui-slider-handle,
+.GWSui-slider.GWSui-state-disabled .GWSui-slider-range {
+	filter: inherit;
+}
+
+.GWSui-slider-horizontal {
+	height: .8em;
+}
+.GWSui-slider-horizontal .GWSui-slider-handle {
+	top: -.3em;
+	margin-left: -.6em;
+}
+.GWSui-slider-horizontal .GWSui-slider-range {
+	top: 0;
+	height: 100%;
+}
+.GWSui-slider-horizontal .GWSui-slider-range-min {
+	left: 0;
+}
+.GWSui-slider-horizontal .GWSui-slider-range-max {
+	right: 0;
+}
+
+.GWSui-slider-vertical {
+	width: .8em;
+	height: 100px;
+}
+.GWSui-slider-vertical .GWSui-slider-handle {
+	left: -.3em;
+	margin-left: 0;
+	margin-bottom: -.6em;
+}
+.GWSui-slider-vertical .GWSui-slider-range {
+	left: 0;
+	width: 100%;
+}
+.GWSui-slider-vertical .GWSui-slider-range-min {
+	bottom: 0;
+}
+.GWSui-slider-vertical .GWSui-slider-range-max {
+	top: 0;
+}
+.GWSui-spinner {
+	position: relative;
+	display: inline-block;
+	overflow: hidden;
+	padding: 0;
+	vertical-align: middle;
+}
+.GWSui-spinner-input {
+	border: none;
+	background: none;
+	color: inherit;
+	padding: 0;
+	margin: .2em 0;
+	vertical-align: middle;
+	margin-left: .4em;
+	margin-right: 22px;
+}
+.GWSui-spinner-button {
+	width: 16px;
+	height: 50%;
+	font-size: .5em;
+	padding: 0;
+	margin: 0;
+	text-align: center;
+	position: absolute;
+	cursor: default;
+	display: block;
+	overflow: hidden;
+	right: 0;
+}
+/* more specificity required here to override default borders */
+.GWSui-spinner a.GWSui-spinner-button {
+	border-top: none;
+	border-bottom: none;
+	border-right: none;
+}
+/* vertically center icon */
+.GWSui-spinner .GWSui-icon {
+	position: absolute;
+	margin-top: -8px;
+	top: 50%;
+	left: 0;
+}
+.GWSui-spinner-up {
+	top: 0;
+}
+.GWSui-spinner-down {
+	bottom: 0;
+}
+
+/* TR overrides */
+.GWSui-spinner .GWSui-icon-triangle-1-s {
+	/* need to fix icons sprite */
+	background-position: -65px -16px;
+}
+.GWSui-tabs {
+	position: relative;/* position: relative prevents IE scroll bug (element with position: relative inside container with overflow: auto appear as "fixed") */
+	padding: .2em;
+}
+.GWSui-tabs .GWSui-tabs-nav {
+	margin: 0;
+	padding: .2em .2em 0;
+}
+.GWSui-tabs .GWSui-tabs-nav li {
+	list-style: none;
+	float: left;
+	position: relative;
+	top: 0;
+	margin: 1px .2em 0 0;
+	border-bottom-width: 0;
+	padding: 0;
+	white-space: nowrap;
+}
+.GWSui-tabs .GWSui-tabs-nav .GWSui-tabs-anchor {
+	float: left;
+	padding: .5em 1em;
+	text-decoration: none;
+}
+.GWSui-tabs .GWSui-tabs-nav li.GWSui-tabs-active {
+	margin-bottom: -1px;
+	padding-bottom: 1px;
+}
+.GWSui-tabs .GWSui-tabs-nav li.GWSui-tabs-active .GWSui-tabs-anchor,
+.GWSui-tabs .GWSui-tabs-nav li.GWSui-state-disabled .GWSui-tabs-anchor,
+.GWSui-tabs .GWSui-tabs-nav li.GWSui-tabs-loading .GWSui-tabs-anchor {
+	cursor: text;
+}
+.GWSui-tabs-collapsible .GWSui-tabs-nav li.GWSui-tabs-active .GWSui-tabs-anchor {
+	cursor: pointer;
+}
+.GWSui-tabs .GWSui-tabs-panel {
+	display: block;
+	border-width: 0;
+	padding: 1em 1.4em;
+	background: none;
+}
+.GWSui-tooltip {
+	padding: 8px;
+	position: absolute;
+	z-index: 9999;
+	max-width: 300px;
+	-webkit-box-shadow: 0 0 5px #aaa;
+	box-shadow: 0 0 5px #aaa;
+}
+body .GWSui-tooltip {
+	border-width: 2px;
+}
+
+/* Component containers
+----------------------------------*/
+.GWSui-widget {
+	font-family: Trebuchet MS,Tahoma,Verdana,Arial,sans-serif;
+	font-size: 1.1em;
+	radius:8px;
+	box-shadow:5px 8px 15px #7e7e7e;
+	-webkit-box-shadow:5px 8px 15px #7e7e7e;
+	-moz-box-shadow:5px 8px 15px #7e7e7e;
+}
+.GWSui-widget .GWSui-widget {
+	font-size: 1em;
+}
+.GWSui-widget input,
+.GWSui-widget select,
+.GWSui-widget textarea,
+.GWSui-widget button {
+	font-family: Trebuchet MS,Tahoma,Verdana,Arial,sans-serif;
+	font-size: 1em;
+}
+.GWSui-widget-content {
+/*	border: 1px solid #dddddd;
+	background: #eeeeee url("images/ui-bg_highlight-soft_100_eeeeee_1x100.png") 50% top repeat-x;
+	color: #333333; */
+}
+.GWSui-widget-content a {
+	color: #333333;
+}
+.GWSui-widget-header {
+/*	border: 1px solid #e78f08;
+	background: #f6a828 url("images/ui-bg_gloss-wave_35_f6a828_500x100.png") 50% 50% repeat-x;
+	color: #ffffff;
+	font-weight: bold; */
+}
+.GWSui-widget-header a {
+	color: #ffffff;
+}
+
+/* Interaction states
+----------------------------------*/
+.GWSui-state-default,
+.GWSui-widget-content .GWSui-state-default,
+.GWSui-widget-header .GWSui-state-default {
+	border: 1px solid #cccccc;
+	background: #f6f6f6 50% 50% repeat-x;
+	font-weight: bold;
+	color: #1c94c4;
+}
+.GWSui-state-default a,
+.GWSui-state-default a:link,
+.GWSui-state-default a:visited {
+	color: #1c94c4;
+	text-decoration: none;
+}
+.GWSui-state-hover,
+.GWSui-widget-content .GWSui-state-hover,
+.GWSui-widget-header .GWSui-state-hover,
+.GWSui-state-focus,
+.GWSui-widget-content .GWSui-state-focus,
+.GWSui-widget-header .GWSui-state-focus {
+	border: 1px solid #fbcb09;
+	background: #fdf5ce 50% 50% repeat-x;
+	font-weight: bold;
+	color: #c77405;
+}
+.GWSui-state-hover a,
+.GWSui-state-hover a:hover,
+.GWSui-state-hover a:link,
+.GWSui-state-hover a:visited,
+.GWSui-state-focus a,
+.GWSui-state-focus a:hover,
+.GWSui-state-focus a:link,
+.GWSui-state-focus a:visited {
+	color: #c77405;
+	text-decoration: none;
+}
+.GWSui-state-active,
+.GWSui-widget-content .GWSui-state-active,
+.GWSui-widget-header .GWSui-state-active {
+	border: 1px solid #fbd850;
+	background: #ffffff 50% 50% repeat-x;
+	font-weight: bold;
+	color: #eb8f00;
+}
+.GWSui-state-active a,
+.GWSui-state-active a:link,
+.GWSui-state-active a:visited {
+	color: #eb8f00;
+	text-decoration: none;
+}
+
+/* Interaction Cues
+----------------------------------*/
+.GWSui-state-highlight,
+.GWSui-widget-content .GWSui-state-highlight,
+.GWSui-widget-header .GWSui-state-highlight {
+	border: 1px solid #fed22f;
+	background: #ffe45c 50% top repeat-x;
+	color: #363636;
+}
+.GWSui-state-highlight a,
+.GWSui-widget-content .GWSui-state-highlight a,
+.GWSui-widget-header .GWSui-state-highlight a {
+	color: #363636;
+}
+.GWSui-state-error,
+.GWSui-widget-content .GWSui-state-error,
+.GWSui-widget-header .GWSui-state-error {
+	border: 1px solid #cd0a0a;
+	background: #b81900 50% 50% repeat;
+	color: #ffffff;
+}
+.GWSui-state-error a,
+.GWSui-widget-content .GWSui-state-error a,
+.GWSui-widget-header .GWSui-state-error a {
+	color: #ffffff;
+}
+.GWSui-state-error-text,
+.GWSui-widget-content .GWSui-state-error-text,
+.GWSui-widget-header .GWSui-state-error-text {
+	color: #ffffff;
+}
+.GWSui-priority-primary,
+.GWSui-widget-content .GWSui-priority-primary,
+.GWSui-widget-header .GWSui-priority-primary {
+	font-weight: bold;
+}
+.GWSui-priority-secondary,
+.GWSui-widget-content .GWSui-priority-secondary,
+.GWSui-widget-header .GWSui-priority-secondary {
+	opacity: .7;
+	filter:Alpha(Opacity=70); /* support: IE8 */
+	font-weight: normal;
+}
+.GWSui-state-disabled,
+.GWSui-widget-content .GWSui-state-disabled,
+.GWSui-widget-header .GWSui-state-disabled {
+	opacity: .35;
+	filter:Alpha(Opacity=35); /* support: IE8 */
+	background-image: none;
+}
+.GWSui-state-disabled .GWSui-icon {
+	filter:Alpha(Opacity=35); /* support: IE8 - See #6059 */
+}
+
+/* Icons
+----------------------------------*/
+
+
+
+/* positioning */
+.GWSui-icon-blank { background-position: 16px 16px; }
+.GWSui-icon-carat-1-n { background-position: 0 0; }
+.GWSui-icon-carat-1-ne { background-position: -16px 0; }
+.GWSui-icon-carat-1-e { background-position: -32px 0; }
+.GWSui-icon-carat-1-se { background-position: -48px 0; }
+.GWSui-icon-carat-1-s { background-position: -64px 0; }
+.GWSui-icon-carat-1-sw { background-position: -80px 0; }
+.GWSui-icon-carat-1-w { background-position: -96px 0; }
+.GWSui-icon-carat-1-nw { background-position: -112px 0; }
+.GWSui-icon-carat-2-n-s { background-position: -128px 0; }
+.GWSui-icon-carat-2-e-w { background-position: -144px 0; }
+.GWSui-icon-triangle-1-n { background-position: 0 -16px; }
+.GWSui-icon-triangle-1-ne { background-position: -16px -16px; }
+.GWSui-icon-triangle-1-e { background-position: -32px -16px; }
+.GWSui-icon-triangle-1-se { background-position: -48px -16px; }
+.GWSui-icon-triangle-1-s { background-position: -64px -16px; }
+.GWSui-icon-triangle-1-sw { background-position: -80px -16px; }
+.GWSui-icon-triangle-1-w { background-position: -96px -16px; }
+.GWSui-icon-triangle-1-nw { background-position: -112px -16px; }
+.GWSui-icon-triangle-2-n-s { background-position: -128px -16px; }
+.GWSui-icon-triangle-2-e-w { background-position: -144px -16px; }
+.GWSui-icon-arrow-1-n { background-position: 0 -32px; }
+.GWSui-icon-arrow-1-ne { background-position: -16px -32px; }
+.GWSui-icon-arrow-1-e { background-position: -32px -32px; }
+.GWSui-icon-arrow-1-se { background-position: -48px -32px; }
+.GWSui-icon-arrow-1-s { background-position: -64px -32px; }
+.GWSui-icon-arrow-1-sw { background-position: -80px -32px; }
+.GWSui-icon-arrow-1-w { background-position: -96px -32px; }
+.GWSui-icon-arrow-1-nw { background-position: -112px -32px; }
+.GWSui-icon-arrow-2-n-s { background-position: -128px -32px; }
+.GWSui-icon-arrow-2-ne-sw { background-position: -144px -32px; }
+.GWSui-icon-arrow-2-e-w { background-position: -160px -32px; }
+.GWSui-icon-arrow-2-se-nw { background-position: -176px -32px; }
+.GWSui-icon-arrowstop-1-n { background-position: -192px -32px; }
+.GWSui-icon-arrowstop-1-e { background-position: -208px -32px; }
+.GWSui-icon-arrowstop-1-s { background-position: -224px -32px; }
+.GWSui-icon-arrowstop-1-w { background-position: -240px -32px; }
+.GWSui-icon-arrowthick-1-n { background-position: 0 -48px; }
+.GWSui-icon-arrowthick-1-ne { background-position: -16px -48px; }
+.GWSui-icon-arrowthick-1-e { background-position: -32px -48px; }
+.GWSui-icon-arrowthick-1-se { background-position: -48px -48px; }
+.GWSui-icon-arrowthick-1-s { background-position: -64px -48px; }
+.GWSui-icon-arrowthick-1-sw { background-position: -80px -48px; }
+.GWSui-icon-arrowthick-1-w { background-position: -96px -48px; }
+.GWSui-icon-arrowthick-1-nw { background-position: -112px -48px; }
+.GWSui-icon-arrowthick-2-n-s { background-position: -128px -48px; }
+.GWSui-icon-arrowthick-2-ne-sw { background-position: -144px -48px; }
+.GWSui-icon-arrowthick-2-e-w { background-position: -160px -48px; }
+.GWSui-icon-arrowthick-2-se-nw { background-position: -176px -48px; }
+.GWSui-icon-arrowthickstop-1-n { background-position: -192px -48px; }
+.GWSui-icon-arrowthickstop-1-e { background-position: -208px -48px; }
+.GWSui-icon-arrowthickstop-1-s { background-position: -224px -48px; }
+.GWSui-icon-arrowthickstop-1-w { background-position: -240px -48px; }
+.GWSui-icon-arrowreturnthick-1-w { background-position: 0 -64px; }
+.GWSui-icon-arrowreturnthick-1-n { background-position: -16px -64px; }
+.GWSui-icon-arrowreturnthick-1-e { background-position: -32px -64px; }
+.GWSui-icon-arrowreturnthick-1-s { background-position: -48px -64px; }
+.GWSui-icon-arrowreturn-1-w { background-position: -64px -64px; }
+.GWSui-icon-arrowreturn-1-n { background-position: -80px -64px; }
+.GWSui-icon-arrowreturn-1-e { background-position: -96px -64px; }
+.GWSui-icon-arrowreturn-1-s { background-position: -112px -64px; }
+.GWSui-icon-arrowrefresh-1-w { background-position: -128px -64px; }
+.GWSui-icon-arrowrefresh-1-n { background-position: -144px -64px; }
+.GWSui-icon-arrowrefresh-1-e { background-position: -160px -64px; }
+.GWSui-icon-arrowrefresh-1-s { background-position: -176px -64px; }
+.GWSui-icon-arrow-4 { background-position: 0 -80px; }
+.GWSui-icon-arrow-4-diag { background-position: -16px -80px; }
+.GWSui-icon-extlink { background-position: -32px -80px; }
+.GWSui-icon-newwin { background-position: -48px -80px; }
+.GWSui-icon-refresh { background-position: -64px -80px; }
+.GWSui-icon-shuffle { background-position: -80px -80px; }
+.GWSui-icon-transfer-e-w { background-position: -96px -80px; }
+.GWSui-icon-transferthick-e-w { background-position: -112px -80px; }
+.GWSui-icon-folder-collapsed { background-position: 0 -96px; }
+.GWSui-icon-folder-open { background-position: -16px -96px; }
+.GWSui-icon-document { background-position: -32px -96px; }
+.GWSui-icon-document-b { background-position: -48px -96px; }
+.GWSui-icon-note { background-position: -64px -96px; }
+.GWSui-icon-mail-closed { background-position: -80px -96px; }
+.GWSui-icon-mail-open { background-position: -96px -96px; }
+.GWSui-icon-suitcase { background-position: -112px -96px; }
+.GWSui-icon-comment { background-position: -128px -96px; }
+.GWSui-icon-person { background-position: -144px -96px; }
+.GWSui-icon-print { background-position: -160px -96px; }
+.GWSui-icon-trash { background-position: -176px -96px; }
+.GWSui-icon-locked { background-position: -192px -96px; }
+.GWSui-icon-unlocked { background-position: -208px -96px; }
+.GWSui-icon-bookmark { background-position: -224px -96px; }
+.GWSui-icon-tag { background-position: -240px -96px; }
+.GWSui-icon-home { background-position: 0 -112px; }
+.GWSui-icon-flag { background-position: -16px -112px; }
+.GWSui-icon-calendar { background-position: -32px -112px; }
+.GWSui-icon-cart { background-position: -48px -112px; }
+.GWSui-icon-pencil { background-position: -64px -112px; }
+.GWSui-icon-clock { background-position: -80px -112px; }
+.GWSui-icon-disk { background-position: -96px -112px; }
+.GWSui-icon-calculator { background-position: -112px -112px; }
+.GWSui-icon-zoomin { background-position: -128px -112px; }
+.GWSui-icon-zoomout { background-position: -144px -112px; }
+.GWSui-icon-search { background-position: -160px -112px; }
+.GWSui-icon-wrench { background-position: -176px -112px; }
+.GWSui-icon-gear { background-position: -192px -112px; }
+.GWSui-icon-heart { background-position: -208px -112px; }
+.GWSui-icon-star { background-position: -224px -112px; }
+.GWSui-icon-link { background-position: -240px -112px; }
+.GWSui-icon-cancel { background-position: 0 -128px; }
+.GWSui-icon-plus { background-position: -16px -128px; }
+.GWSui-icon-plusthick { background-position: -32px -128px; }
+.GWSui-icon-minus { background-position: -48px -128px; }
+.GWSui-icon-minusthick { background-position: -64px -128px; }
+.GWSui-icon-close { background-position: -80px -128px; }
+.GWSui-icon-closethick { background-position: -96px -128px; }
+.GWSui-icon-key { background-position: -112px -128px; }
+.GWSui-icon-lightbulb { background-position: -128px -128px; }
+.GWSui-icon-scissors { background-position: -144px -128px; }
+.GWSui-icon-clipboard { background-position: -160px -128px; }
+.GWSui-icon-copy { background-position: -176px -128px; }
+.GWSui-icon-contact { background-position: -192px -128px; }
+.GWSui-icon-image { background-position: -208px -128px; }
+.GWSui-icon-video { background-position: -224px -128px; }
+.GWSui-icon-script { background-position: -240px -128px; }
+.GWSui-icon-alert { background-position: 0 -144px; }
+.GWSui-icon-info { background-position: -16px -144px; }
+.GWSui-icon-notice { background-position: -32px -144px; }
+.GWSui-icon-help { background-position: -48px -144px; }
+.GWSui-icon-check { background-position: -64px -144px; }
+.GWSui-icon-bullet { background-position: -80px -144px; }
+.GWSui-icon-radio-on { background-position: -96px -144px; }
+.GWSui-icon-radio-off { background-position: -112px -144px; }
+.GWSui-icon-pin-w { background-position: -128px -144px; }
+.GWSui-icon-pin-s { background-position: -144px -144px; }
+.GWSui-icon-play { background-position: 0 -160px; }
+.GWSui-icon-pause { background-position: -16px -160px; }
+.GWSui-icon-seek-next { background-position: -32px -160px; }
+.GWSui-icon-seek-prev { background-position: -48px -160px; }
+.GWSui-icon-seek-end { background-position: -64px -160px; }
+.GWSui-icon-seek-start { background-position: -80px -160px; }
+/* ui-icon-seek-first is deprecated, use ui-icon-seek-start instead */
+.GWSui-icon-seek-first { background-position: -80px -160px; }
+.GWSui-icon-stop { background-position: -96px -160px; }
+.GWSui-icon-eject { background-position: -112px -160px; }
+.GWSui-icon-volume-off { background-position: -128px -160px; }
+.GWSui-icon-volume-on { background-position: -144px -160px; }
+.GWSui-icon-power { background-position: 0 -176px; }
+.GWSui-icon-signal-diag { background-position: -16px -176px; }
+.GWSui-icon-signal { background-position: -32px -176px; }
+.GWSui-icon-battery-0 { background-position: -48px -176px; }
+.GWSui-icon-battery-1 { background-position: -64px -176px; }
+.GWSui-icon-battery-2 { background-position: -80px -176px; }
+.GWSui-icon-battery-3 { background-position: -96px -176px; }
+.GWSui-icon-circle-plus { background-position: 0 -192px; }
+.GWSui-icon-circle-minus { background-position: -16px -192px; }
+.GWSui-icon-circle-close { background-position: -32px -192px; }
+.GWSui-icon-circle-triangle-e { background-position: -48px -192px; }
+.GWSui-icon-circle-triangle-s { background-position: -64px -192px; }
+.GWSui-icon-circle-triangle-w { background-position: -80px -192px; }
+.GWSui-icon-circle-triangle-n { background-position: -96px -192px; }
+.GWSui-icon-circle-arrow-e { background-position: -112px -192px; }
+.GWSui-icon-circle-arrow-s { background-position: -128px -192px; }
+.GWSui-icon-circle-arrow-w { background-position: -144px -192px; }
+.GWSui-icon-circle-arrow-n { background-position: -160px -192px; }
+.GWSui-icon-circle-zoomin { background-position: -176px -192px; }
+.GWSui-icon-circle-zoomout { background-position: -192px -192px; }
+.GWSui-icon-circle-check { background-position: -208px -192px; }
+.GWSui-icon-circlesmall-plus { background-position: 0 -208px; }
+.GWSui-icon-circlesmall-minus { background-position: -16px -208px; }
+.GWSui-icon-circlesmall-close { background-position: -32px -208px; }
+.GWSui-icon-squaresmall-plus { background-position: -48px -208px; }
+.GWSui-icon-squaresmall-minus { background-position: -64px -208px; }
+.GWSui-icon-squaresmall-close { background-position: -80px -208px; }
+.GWSui-icon-grip-dotted-vertical { background-position: 0 -224px; }
+.GWSui-icon-grip-dotted-horizontal { background-position: -16px -224px; }
+.GWSui-icon-grip-solid-vertical { background-position: -32px -224px; }
+.GWSui-icon-grip-solid-horizontal { background-position: -48px -224px; }
+.GWSui-icon-gripsmall-diagonal-se { background-position: -64px -224px; }
+.GWSui-icon-grip-diagonal-se { background-position: -80px -224px; }
+
+
+/* Misc visuals
+----------------------------------*/
+
+/* Corner radius */
+.GWSui-corner-all,
+.GWSui-corner-top,
+.GWSui-corner-left,
+.GWSui-corner-tl {
+	border-top-left-radius: 4px;
+}
+.GWSui-corner-all,
+.GWSui-corner-top,
+.GWSui-corner-right,
+.GWSui-corner-tr {
+	border-top-right-radius: 4px;
+}
+.GWSui-corner-all,
+.GWSui-corner-bottom,
+.GWSui-corner-left,
+.GWSui-corner-bl {
+	border-bottom-left-radius: 4px;
+}
+.GWSui-corner-all,
+.GWSui-corner-bottom,
+.GWSui-corner-right,
+.GWSui-corner-br {
+	border-bottom-right-radius: 4px;
+}
+
+/* Overlays */
+.GWSui-widget-overlay {
+	background: #666666 50% 50% repeat;
+	opacity: .5;
+	filter: Alpha(Opacity=50); /* support: IE8 */
+}
+.GWSui-widget-shadow {
+	margin: -5px 0 0 -5px;
+	padding: 5px;
+	background: #000000 50% 50% repeat-x;
+	opacity: .2;
+	filter: Alpha(Opacity=20); /* support: IE8 */
+	border-radius: 5px;
+}

@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC '-//ibatis.apache.org//DTD Sql Map 2.0//EN' 'http://ibatis.apache.org/dtd/sql-map-2.dtd'>
+<sqlMap namespace="cmmn.file">
+
+	<select id="selectFileList" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		SELECT
+		FD.FILE_ID,
+		FD.FILE_SN,
+		FD.FILE_NM,
+		FD.FILE_DC,
+		FD.FILE_SIZE,
+		FD.SYS_FILE_NM,
+		FD.SYS_FILE_PATH,
+		FD.USE_YN,
+		FD.SORT_NO,
+		FD.WRITNG_ID,
+		FD.WRITNG_DT,
+		FD.UPDT_ID,
+		FD.UPDT_DT
+		FROM CMN_FILE_DETAIL FD
+		WHERE FD.FILE_ID = #file_id#
+		AND FD.USE_YN = 'Y'
+		ORDER BY FD.SORT_NO ASC
+	</select>
+
+	<select id="selectFileDetail" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		SELECT
+		FD.FILE_ID,
+		FD.FILE_SN,
+		FD.FILE_NM,
+		FD.FILE_DC,
+		FD.FILE_SIZE,
+		FD.SYS_FILE_NM,
+		FD.SYS_FILE_PATH,
+		FD.USE_YN,
+		FD.SORT_NO,
+		FD.WRITNG_ID,
+		FD.WRITNG_DT,
+		FD.UPDT_ID,
+		FD.UPDT_DT
+		FROM CMN_FILE_DETAIL FD
+		WHERE FD.FILE_ID = #file_id#
+		AND FD.FILE_SN = #file_sn#
+	</select>
+
+	<select id="selectFileManage" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		SELECT
+		FILE_ID,
+		REGIST_PATH,
+		USE_YN,
+		WRITNG_ID,
+		WRITNG_DT,
+		UPDT_ID,
+		UPDT_DT
+		FROM CMN_FILE_MANAGE
+		WHERE FILE_ID = #file_id#
+	</select>
+
+	<select id="selectFileID" resultClass="String">
+		SELECT LPAD(SQ_FILE_ID.NEXTVAL, 20, '0') FROM DUAL
+	</select>
+
+	<select id="selectFileSn" parameterClass="java.util.HashMap" resultClass="String">
+		SELECT NVL(MAX(FILE_SN)+1, 1)
+		FROM CMN_FILE_DETAIL
+		WHERE FILE_ID = #file_id#
+	</select>
+
+	<insert id="insertFileManage" parameterClass="java.util.HashMap">
+		INSERT INTO CMN_FILE_MANAGE(
+			FILE_ID,
+			REGIST_PATH,
+			USE_YN,
+			WRITNG_ID,
+			WRITNG_DT,
+			UPDT_ID,
+			UPDT_DT
+		) VALUES(
+			#file_id#,
+			#regist_path#,
+			'Y',
+			#esntl_id#,
+			SYSDATE,
+			#esntl_id#,
+			SYSDATE
+		)
+	</insert>
+
+	<insert id="insertFileDetail" parameterClass="java.util.HashMap">
+		INSERT INTO CMN_FILE_DETAIL(
+			FILE_ID,
+			FILE_SN,
+			FILE_NM,
+			FILE_DC,
+			FILE_SIZE,
+			SYS_FILE_NM,
+			SYS_FILE_PATH,
+			USE_YN,
+			SORT_NO,
+			WRITNG_ID,
+			WRITNG_DT,
+			UPDT_ID,
+			UPDT_DT,
+			FORMAT_ID
+		) VALUES(
+			#file_id#,
+			#file_sn#,
+			#file_nm#,
+			#file_dc#,
+			#file_size#,
+			#sys_file_nm#,
+			#sys_file_path#,
+			'Y',
+			(
+				SELECT NVL(MAX(SORT_NO)+1, 1)
+				FROM CMN_FILE_DETAIL
+				WHERE FILE_ID = #file_id#
+			),
+			#esntl_id#,
+			SYSDATE,
+			#esntl_id#,
+			SYSDATE,
+			#format_id#
+		)
+	</insert>
+
+	<update id="updateFileDetail" parameterClass="java.util.HashMap">
+		UPDATE CMN_FILE_DETAIL SET
+			USE_YN = #use_at#,
+			UPDT_ID = #esntl_id#,
+			UPDT_DT = SYSDATE
+		WHERE FILE_ID = #file_id#
+		<isNotEmpty property="file_sn" prepend="AND">
+			FILE_SN = #file_sn#
+		</isNotEmpty>
+	</update>
+
+	<select id="selectUserTitle" parameterClass="java.util.HashMap" resultClass="String">
+		SELECT
+		FN_DEPT_NM(U.DEPT_CD) || '_' ||
+		U.USER_NM || '_' ||
+		TO_CHAR(SYSDATE, 'YYYYMMDD') AS FILE_TITLE
+		FROM CMN_USER U
+		WHERE U.ESNTL_ID = #esntl_id#
+	</select>
+
+	<select id="selectBioFileDetail" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		SELECT
+			CT.ESNTL_ID,
+			<isNotEmpty property="file_ty">
+	       		<isEqual property="file_ty" compareValue="finger">
+	       			CT.FNGPRT_FILE_INFO AS FILE_INFO,
+	       		</isEqual>
+	       		<isEqual property="file_ty" compareValue="face">
+	       			CT.IMAGE_FILE_INFO AS FILE_INFO,
+	       		</isEqual>       		
+	       	</isNotEmpty>
+	       	CT.IMAGE_UPDT_DT	
+		FROM CMN_USER_TMPLAT CT
+		WHERE CT.ESNTL_ID = #esntl_id#
+	</select>
+
+</sqlMap>

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration>
+	<Appenders>
+		<Console name="console" target="SYSTEM_OUT">
+			<PatternLayout pattern="%d %5p [%c] %m%n" />
+		</Console>
+	</Appenders>
+	<Loggers>
+		<Root level="Debug">
+			<AppenderRef ref="console" />
+		</Root>
+		<logger name="org.springframework" level="warn" additivity="false">
+			<AppenderRef ref="console" />
+		</logger>
+		<logger name="org.springmodules" level="warn" additivity="false">
+			<AppenderRef ref="console" />
+		</logger>
+		<logger name="org.apache" level="warn" additivity="false">
+			<AppenderRef ref="console" />
+		</logger>
+		<logger name="org.ibatis" level="error" additivity="false">
+			<AppenderRef ref="console" />
+		</logger>
+	</Loggers>
+</Configuration>

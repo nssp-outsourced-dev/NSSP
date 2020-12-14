@@ -1,0 +1,320 @@
+2019-03-20 15:27:34,561 [Thread-0] INFO  PropertiesManager  - --- Contents in Configuration Properties ---
+2019-03-20 15:27:34,561 [Thread-0] INFO  PropertiesManager  - ErrorNotifyToSender=false
+2019-03-20 15:27:34,561 [Thread-0] INFO  PropertiesManager  - MailFrom=
+2019-03-20 15:27:34,561 [Thread-0] INFO  PropertiesManager  - SMTPServer=mail.forcs.com
+2019-03-20 15:27:34,561 [Thread-0] INFO  PropertiesManager  - SMTPServerPort=25
+2019-03-20 15:27:34,561 [Thread-0] INFO  PropertiesManager  - SMTPUserID=
+2019-03-20 15:27:34,561 [Thread-0] INFO  PropertiesManager  - SMTPUserPassword=
+2019-03-20 15:27:34,561 [Thread-0] INFO  PropertiesManager  - EnableSSL=false
+2019-03-20 15:27:34,561 [Thread-0] INFO  PropertiesManager  - PrefixSubjectMessage=
+2019-03-20 15:27:34,561 [Thread-0] INFO  PropertiesManager  - RepositoryFileRootPath=%SCH_HOME%/Repository/
+2019-03-20 15:27:34,561 [Thread-0] INFO  PropertiesManager  - RepositoryFileDeleteTime=0
+2019-03-20 15:27:34,561 [Thread-0] INFO  PropertiesManager  - RepositoryUniqueFileName=false
+2019-03-20 15:27:34,561 [Thread-0] INFO  PropertiesManager  - SchedulingInfoFilePath=%SCH_HOME%/ScheduledTask
+2019-03-20 15:27:34,561 [Thread-0] INFO  PropertiesManager  - TempRepositoryFilePath=%SCH_HOME%/TempRepository
+2019-03-20 15:27:34,561 [Thread-0] INFO  PropertiesManager  - ExternalProgramFilePath=%SCH_HOME%/External
+2019-03-20 15:27:34,561 [Thread-0] INFO  PropertiesManager  - ViewerType=ActiveX
+2019-03-20 15:27:34,561 [Thread-0] INFO  PropertiesManager  - ViewerConcurrentCount=n
+2019-03-20 15:27:34,561 [Thread-0] INFO  PropertiesManager  - TaskHoliday=false
+2019-03-20 15:27:34,561 [Thread-0] INFO  PropertiesManager  - --------------------------------------------
+2019-03-20 15:27:34,561 [Thread-0] WARN  PropertiesManager  - [Key : ViewerDebug] Configuration value doesn't exist. Default value(false) will be used.
+2019-03-20 15:27:34,561 [Thread-0] WARN  PropertiesManager  - [Key : SMTPUserID_encrypted] Configuration value doesn't exist. Default value(null) will be used.
+2019-03-20 15:27:34,561 [Thread-0] WARN  PropertiesManager  - [Key : SMTPUserPassword_encrypted] Configuration value doesn't exist. Default value(null) will be used.
+2019-03-20 15:27:34,561 [Thread-0] WARN  PropertiesManager  - [Key : ViewerTimeout] Configuration value doesn't exist. Default value(0) will be used.
+2019-03-20 15:27:34,561 [Thread-0] WARN  PropertiesManager  - [Key : TaskRetry] Configuration value doesn't exist. Default value(true) will be used.
+2019-03-20 15:27:34,561 [Thread-0] WARN  PropertiesManager  - [Key : MailSendRetryCount] Configuration value doesn't exist. Default value(0) will be used.
+2019-03-20 15:27:34,561 [Thread-0] WARN  PropertiesManager  - [Key : MailSendRetryPeriodTime] Configuration value doesn't exist. Default value(30) will be used.
+2019-03-20 15:27:34,561 [Thread-0] INFO  PropertiesManager  - D:\webapps\oz70\WEB-INF\ozmng\ScheduledTask directory is newly created.
+2019-03-20 15:27:34,561 [Thread-0] INFO  PropertiesManager  - D:\webapps\oz70\WEB-INF\ozmng\TempRepository directory is newly created.
+2019-03-20 15:27:34,561 [Thread-0] WARN  PropertiesManager  - [Key : SMTPConnectionTimeout] Configuration value doesn't exist. Default value(0) will be used.
+2019-03-20 15:27:34,561 [Thread-0] WARN  PropertiesManager  - [Key : SMTPSendTimeout] Configuration value doesn't exist. Default value(0) will be used.
+2019-03-20 15:27:34,561 [Thread-0] WARN  PropertiesManager  - [Key : IdleTime.Classname] Configuration value doesn't exist. Default value() will be used.
+2019-03-20 15:27:34,561 [Thread-0] WARN  PropertiesManager  - [Key : IdleTime.Overtime] Configuration value doesn't exist. Default value(0) will be used.
+2019-03-20 15:27:34,561 [Thread-0] WARN  PropertiesManager  - [Key : html5SVGServerURL] Configuration value doesn't exist. Default value() will be used.
+2019-03-20 15:27:34,561 [Thread-0] INFO  PropertiesManager  - D:\webapps\oz70\WEB-INF\ozmng\SVGViewerRepository directory is newly created.
+2019-03-20 15:27:34,561 [Thread-0] DEBUG PropertiesManager  - SVGViewer repository clean service init.
+2019-03-20 15:27:34,561 [Thread-0] DEBUG PropertiesManager  - SVGViewerRepositoryClean init...
+2019-03-20 15:27:34,561 [Thread-0] INFO  XML-License-Loader  - [.xml] loader
+2019-03-20 15:27:34,561 [Thread-0] DEBUG XML-Parser-Configurator  - try to get DOM10_SUN parser factory...
+2019-03-20 15:27:34,561 [Thread-0] DEBUG XML-Parser-Configurator  - Class.forName(com.sun.xml.parser.DocumentBuilderFactoryImpl).newInstance()
+2019-03-20 15:27:34,576 [Thread-0] ERROR XML-License-Loader  - [Error Code :13001006] [Licese File Name D:\webapps\oz70\WEB-INF\ozmng/license/ozlicense.xml] Can't find license file.
+java.io.FileNotFoundException: D:\webapps\oz70\WEB-INF\ozmng\license\ozlicense.xml (지정된 파일을 찾을 수 없습니다)
+	at java.io.FileInputStream.open0(Native Method)
+	at java.io.FileInputStream.open(Unknown Source)
+	at java.io.FileInputStream.<init>(Unknown Source)
+	at java.io.FileInputStream.<init>(Unknown Source)
+	at oz.system2.cozbb.a(DashoA12957:95)
+	at oz.system2.cozaj.a(DashoA12957:164)
+	at oz.scheduler.main.OZScheduler.lalala(DashoA12957:377)
+	at oz.scheduler.main.PropertiesManager.c(DashoA12957:1186)
+	at oz.scheduler.main.PropertiesManager.startLoader(DashoA12957:1112)
+	at oz.scheduler.main.OZScheduler.a(DashoA12957:108)
+	at oz.scheduler.main.OZScheduler.main(DashoA12957:66)
+	at oz.server.OZServiceBootstrap.doStartScheduler(OZServiceBootstrap.java:47)
+	at oz.server.OZServiceBootstrap.main(OZServiceBootstrap.java:107)
+2019-03-20 15:27:34,576 [Thread-0] ERROR OZScheduler  - [Licese File Name D:\webapps\oz70\WEB-INF\ozmng/license/ozlicense.xml] Can't find license file.
+2019-03-20 15:28:49,741 [Thread-0] INFO  PropertiesManager  - --- Contents in Configuration Properties ---
+2019-03-20 15:28:49,741 [Thread-0] INFO  PropertiesManager  - ErrorNotifyToSender=false
+2019-03-20 15:28:49,741 [Thread-0] INFO  PropertiesManager  - MailFrom=
+2019-03-20 15:28:49,741 [Thread-0] INFO  PropertiesManager  - SMTPServer=mail.forcs.com
+2019-03-20 15:28:49,741 [Thread-0] INFO  PropertiesManager  - SMTPServerPort=25
+2019-03-20 15:28:49,741 [Thread-0] INFO  PropertiesManager  - SMTPUserID=
+2019-03-20 15:28:49,741 [Thread-0] INFO  PropertiesManager  - SMTPUserPassword=
+2019-03-20 15:28:49,741 [Thread-0] INFO  PropertiesManager  - EnableSSL=false
+2019-03-20 15:28:49,741 [Thread-0] INFO  PropertiesManager  - PrefixSubjectMessage=
+2019-03-20 15:28:49,741 [Thread-0] INFO  PropertiesManager  - RepositoryFileRootPath=%SCH_HOME%/Repository/
+2019-03-20 15:28:49,741 [Thread-0] INFO  PropertiesManager  - RepositoryFileDeleteTime=0
+2019-03-20 15:28:49,741 [Thread-0] INFO  PropertiesManager  - RepositoryUniqueFileName=false
+2019-03-20 15:28:49,741 [Thread-0] INFO  PropertiesManager  - SchedulingInfoFilePath=%SCH_HOME%/ScheduledTask
+2019-03-20 15:28:49,741 [Thread-0] INFO  PropertiesManager  - TempRepositoryFilePath=%SCH_HOME%/TempRepository
+2019-03-20 15:28:49,741 [Thread-0] INFO  PropertiesManager  - ExternalProgramFilePath=%SCH_HOME%/External
+2019-03-20 15:28:49,741 [Thread-0] INFO  PropertiesManager  - ViewerType=ActiveX
+2019-03-20 15:28:49,741 [Thread-0] INFO  PropertiesManager  - ViewerConcurrentCount=n
+2019-03-20 15:28:49,741 [Thread-0] INFO  PropertiesManager  - TaskHoliday=false
+2019-03-20 15:28:49,741 [Thread-0] INFO  PropertiesManager  - --------------------------------------------
+2019-03-20 15:28:49,741 [Thread-0] WARN  PropertiesManager  - [Key : ViewerDebug] Configuration value doesn't exist. Default value(false) will be used.
+2019-03-20 15:28:49,741 [Thread-0] WARN  PropertiesManager  - [Key : SMTPUserID_encrypted] Configuration value doesn't exist. Default value(null) will be used.
+2019-03-20 15:28:49,741 [Thread-0] WARN  PropertiesManager  - [Key : SMTPUserPassword_encrypted] Configuration value doesn't exist. Default value(null) will be used.
+2019-03-20 15:28:49,741 [Thread-0] WARN  PropertiesManager  - [Key : ViewerTimeout] Configuration value doesn't exist. Default value(0) will be used.
+2019-03-20 15:28:49,741 [Thread-0] WARN  PropertiesManager  - [Key : TaskRetry] Configuration value doesn't exist. Default value(true) will be used.
+2019-03-20 15:28:49,741 [Thread-0] WARN  PropertiesManager  - [Key : MailSendRetryCount] Configuration value doesn't exist. Default value(0) will be used.
+2019-03-20 15:28:49,741 [Thread-0] WARN  PropertiesManager  - [Key : MailSendRetryPeriodTime] Configuration value doesn't exist. Default value(30) will be used.
+2019-03-20 15:28:49,741 [Thread-0] WARN  PropertiesManager  - [Key : SMTPConnectionTimeout] Configuration value doesn't exist. Default value(0) will be used.
+2019-03-20 15:28:49,741 [Thread-0] WARN  PropertiesManager  - [Key : SMTPSendTimeout] Configuration value doesn't exist. Default value(0) will be used.
+2019-03-20 15:28:49,741 [Thread-0] WARN  PropertiesManager  - [Key : IdleTime.Classname] Configuration value doesn't exist. Default value() will be used.
+2019-03-20 15:28:49,741 [Thread-0] WARN  PropertiesManager  - [Key : IdleTime.Overtime] Configuration value doesn't exist. Default value(0) will be used.
+2019-03-20 15:28:49,741 [Thread-0] WARN  PropertiesManager  - [Key : html5SVGServerURL] Configuration value doesn't exist. Default value() will be used.
+2019-03-20 15:28:49,741 [Thread-0] DEBUG PropertiesManager  - SVGViewer repository clean service init.
+2019-03-20 15:28:49,741 [Thread-0] DEBUG PropertiesManager  - SVGViewerRepositoryClean init...
+2019-03-20 15:28:49,741 [Thread-0] INFO  XML-License-Loader  - [.xml] loader
+2019-03-20 15:28:49,741 [Thread-0] DEBUG XML-Parser-Configurator  - try to get DOM10_SUN parser factory...
+2019-03-20 15:28:49,741 [Thread-0] DEBUG XML-Parser-Configurator  - Class.forName(com.sun.xml.parser.DocumentBuilderFactoryImpl).newInstance()
+2019-03-20 15:28:49,757 [Thread-0] ERROR XML-License-Loader  - [Error Code :13001006] [Licese File Name D:\webapps\oz70\WEB-INF\ozmng/license/ozlicense.xml] Can't find license file.
+java.io.FileNotFoundException: D:\webapps\oz70\WEB-INF\ozmng\license\ozlicense.xml (지정된 파일을 찾을 수 없습니다)
+	at java.io.FileInputStream.open0(Native Method)
+	at java.io.FileInputStream.open(Unknown Source)
+	at java.io.FileInputStream.<init>(Unknown Source)
+	at java.io.FileInputStream.<init>(Unknown Source)
+	at oz.system2.cozbb.a(DashoA12957:95)
+	at oz.system2.cozaj.a(DashoA12957:164)
+	at oz.scheduler.main.OZScheduler.lalala(DashoA12957:377)
+	at oz.scheduler.main.PropertiesManager.c(DashoA12957:1186)
+	at oz.scheduler.main.PropertiesManager.startLoader(DashoA12957:1112)
+	at oz.scheduler.main.OZScheduler.a(DashoA12957:108)
+	at oz.scheduler.main.OZScheduler.main(DashoA12957:66)
+	at oz.server.OZServiceBootstrap.doStartScheduler(OZServiceBootstrap.java:47)
+	at oz.server.OZServiceBootstrap.main(OZServiceBootstrap.java:107)
+2019-03-20 15:28:49,757 [Thread-0] ERROR OZScheduler  - [Licese File Name D:\webapps\oz70\WEB-INF\ozmng/license/ozlicense.xml] Can't find license file.
+2019-03-20 15:38:12,099 [Thread-0] INFO  PropertiesManager  - --- Contents in Configuration Properties ---
+2019-03-20 15:38:12,099 [Thread-0] INFO  PropertiesManager  - ErrorNotifyToSender=false
+2019-03-20 15:38:12,099 [Thread-0] INFO  PropertiesManager  - MailFrom=
+2019-03-20 15:38:12,099 [Thread-0] INFO  PropertiesManager  - SMTPServer=mail.forcs.com
+2019-03-20 15:38:12,099 [Thread-0] INFO  PropertiesManager  - SMTPServerPort=25
+2019-03-20 15:38:12,099 [Thread-0] INFO  PropertiesManager  - SMTPUserID=
+2019-03-20 15:38:12,099 [Thread-0] INFO  PropertiesManager  - SMTPUserPassword=
+2019-03-20 15:38:12,099 [Thread-0] INFO  PropertiesManager  - EnableSSL=false
+2019-03-20 15:38:12,099 [Thread-0] INFO  PropertiesManager  - PrefixSubjectMessage=
+2019-03-20 15:38:12,099 [Thread-0] INFO  PropertiesManager  - RepositoryFileRootPath=%SCH_HOME%/Repository/
+2019-03-20 15:38:12,099 [Thread-0] INFO  PropertiesManager  - RepositoryFileDeleteTime=0
+2019-03-20 15:38:12,099 [Thread-0] INFO  PropertiesManager  - RepositoryUniqueFileName=false
+2019-03-20 15:38:12,099 [Thread-0] INFO  PropertiesManager  - SchedulingInfoFilePath=%SCH_HOME%/ScheduledTask
+2019-03-20 15:38:12,099 [Thread-0] INFO  PropertiesManager  - TempRepositoryFilePath=%SCH_HOME%/TempRepository
+2019-03-20 15:38:12,099 [Thread-0] INFO  PropertiesManager  - ExternalProgramFilePath=%SCH_HOME%/External
+2019-03-20 15:38:12,099 [Thread-0] INFO  PropertiesManager  - ViewerType=ActiveX
+2019-03-20 15:38:12,099 [Thread-0] INFO  PropertiesManager  - ViewerConcurrentCount=n
+2019-03-20 15:38:12,099 [Thread-0] INFO  PropertiesManager  - TaskHoliday=false
+2019-03-20 15:38:12,099 [Thread-0] INFO  PropertiesManager  - --------------------------------------------
+2019-03-20 15:38:12,099 [Thread-0] WARN  PropertiesManager  - [Key : ViewerDebug] Configuration value doesn't exist. Default value(false) will be used.
+2019-03-20 15:38:12,099 [Thread-0] WARN  PropertiesManager  - [Key : SMTPUserID_encrypted] Configuration value doesn't exist. Default value(null) will be used.
+2019-03-20 15:38:12,099 [Thread-0] WARN  PropertiesManager  - [Key : SMTPUserPassword_encrypted] Configuration value doesn't exist. Default value(null) will be used.
+2019-03-20 15:38:12,099 [Thread-0] WARN  PropertiesManager  - [Key : ViewerTimeout] Configuration value doesn't exist. Default value(0) will be used.
+2019-03-20 15:38:12,099 [Thread-0] WARN  PropertiesManager  - [Key : TaskRetry] Configuration value doesn't exist. Default value(true) will be used.
+2019-03-20 15:38:12,099 [Thread-0] WARN  PropertiesManager  - [Key : MailSendRetryCount] Configuration value doesn't exist. Default value(0) will be used.
+2019-03-20 15:38:12,099 [Thread-0] WARN  PropertiesManager  - [Key : MailSendRetryPeriodTime] Configuration value doesn't exist. Default value(30) will be used.
+2019-03-20 15:38:12,099 [Thread-0] WARN  PropertiesManager  - [Key : SMTPConnectionTimeout] Configuration value doesn't exist. Default value(0) will be used.
+2019-03-20 15:38:12,099 [Thread-0] WARN  PropertiesManager  - [Key : SMTPSendTimeout] Configuration value doesn't exist. Default value(0) will be used.
+2019-03-20 15:38:12,099 [Thread-0] WARN  PropertiesManager  - [Key : IdleTime.Classname] Configuration value doesn't exist. Default value() will be used.
+2019-03-20 15:38:12,099 [Thread-0] WARN  PropertiesManager  - [Key : IdleTime.Overtime] Configuration value doesn't exist. Default value(0) will be used.
+2019-03-20 15:38:12,099 [Thread-0] WARN  PropertiesManager  - [Key : html5SVGServerURL] Configuration value doesn't exist. Default value() will be used.
+2019-03-20 15:38:12,099 [Thread-0] DEBUG PropertiesManager  - SVGViewer repository clean service init.
+2019-03-20 15:38:12,099 [Thread-0] DEBUG PropertiesManager  - SVGViewerRepositoryClean init...
+2019-03-20 15:38:12,099 [Thread-0] INFO  XML-License-Loader  - [.xml] loader
+2019-03-20 15:38:12,099 [Thread-0] DEBUG XML-Parser-Configurator  - try to get DOM10_SUN parser factory...
+2019-03-20 15:38:12,099 [Thread-0] DEBUG XML-Parser-Configurator  - Class.forName(com.sun.xml.parser.DocumentBuilderFactoryImpl).newInstance()
+2019-03-20 15:38:12,115 [Thread-0] ERROR XML-License-Loader  - [Error Code :13001006] [Licese File Name D:\webapps\oz70\WEB-INF\ozmng/license/ozlicense.xml] Can't find license file.
+java.io.FileNotFoundException: D:\webapps\oz70\WEB-INF\ozmng\license\ozlicense.xml (지정된 파일을 찾을 수 없습니다)
+	at java.io.FileInputStream.open0(Native Method)
+	at java.io.FileInputStream.open(FileInputStream.java:195)
+	at java.io.FileInputStream.<init>(FileInputStream.java:138)
+	at java.io.FileInputStream.<init>(FileInputStream.java:93)
+	at oz.system2.cozbb.a(DashoA12957:95)
+	at oz.system2.cozaj.a(DashoA12957:164)
+	at oz.scheduler.main.OZScheduler.lalala(DashoA12957:377)
+	at oz.scheduler.main.PropertiesManager.c(DashoA12957:1186)
+	at oz.scheduler.main.PropertiesManager.startLoader(DashoA12957:1112)
+	at oz.scheduler.main.OZScheduler.a(DashoA12957:108)
+	at oz.scheduler.main.OZScheduler.main(DashoA12957:66)
+	at oz.server.OZServiceBootstrap.doStartScheduler(OZServiceBootstrap.java:47)
+	at oz.server.OZServiceBootstrap.main(OZServiceBootstrap.java:107)
+2019-03-20 15:38:12,115 [Thread-0] ERROR OZScheduler  - [Licese File Name D:\webapps\oz70\WEB-INF\ozmng/license/ozlicense.xml] Can't find license file.
+2019-03-20 15:39:34,836 [Thread-0] INFO  PropertiesManager  - --- Contents in Configuration Properties ---
+2019-03-20 15:39:34,836 [Thread-0] INFO  PropertiesManager  - ErrorNotifyToSender=false
+2019-03-20 15:39:34,836 [Thread-0] INFO  PropertiesManager  - MailFrom=
+2019-03-20 15:39:34,836 [Thread-0] INFO  PropertiesManager  - SMTPServer=mail.forcs.com
+2019-03-20 15:39:34,836 [Thread-0] INFO  PropertiesManager  - SMTPServerPort=25
+2019-03-20 15:39:34,836 [Thread-0] INFO  PropertiesManager  - SMTPUserID=
+2019-03-20 15:39:34,836 [Thread-0] INFO  PropertiesManager  - SMTPUserPassword=
+2019-03-20 15:39:34,836 [Thread-0] INFO  PropertiesManager  - EnableSSL=false
+2019-03-20 15:39:34,836 [Thread-0] INFO  PropertiesManager  - PrefixSubjectMessage=
+2019-03-20 15:39:34,836 [Thread-0] INFO  PropertiesManager  - RepositoryFileRootPath=%SCH_HOME%/Repository/
+2019-03-20 15:39:34,836 [Thread-0] INFO  PropertiesManager  - RepositoryFileDeleteTime=0
+2019-03-20 15:39:34,836 [Thread-0] INFO  PropertiesManager  - RepositoryUniqueFileName=false
+2019-03-20 15:39:34,836 [Thread-0] INFO  PropertiesManager  - SchedulingInfoFilePath=%SCH_HOME%/ScheduledTask
+2019-03-20 15:39:34,836 [Thread-0] INFO  PropertiesManager  - TempRepositoryFilePath=%SCH_HOME%/TempRepository
+2019-03-20 15:39:34,836 [Thread-0] INFO  PropertiesManager  - ExternalProgramFilePath=%SCH_HOME%/External
+2019-03-20 15:39:34,836 [Thread-0] INFO  PropertiesManager  - ViewerType=ActiveX
+2019-03-20 15:39:34,836 [Thread-0] INFO  PropertiesManager  - ViewerConcurrentCount=n
+2019-03-20 15:39:34,836 [Thread-0] INFO  PropertiesManager  - TaskHoliday=false
+2019-03-20 15:39:34,836 [Thread-0] INFO  PropertiesManager  - --------------------------------------------
+2019-03-20 15:39:34,836 [Thread-0] WARN  PropertiesManager  - [Key : ViewerDebug] Configuration value doesn't exist. Default value(false) will be used.
+2019-03-20 15:39:34,836 [Thread-0] WARN  PropertiesManager  - [Key : SMTPUserID_encrypted] Configuration value doesn't exist. Default value(null) will be used.
+2019-03-20 15:39:34,836 [Thread-0] WARN  PropertiesManager  - [Key : SMTPUserPassword_encrypted] Configuration value doesn't exist. Default value(null) will be used.
+2019-03-20 15:39:34,836 [Thread-0] WARN  PropertiesManager  - [Key : ViewerTimeout] Configuration value doesn't exist. Default value(0) will be used.
+2019-03-20 15:39:34,836 [Thread-0] WARN  PropertiesManager  - [Key : TaskRetry] Configuration value doesn't exist. Default value(true) will be used.
+2019-03-20 15:39:34,836 [Thread-0] WARN  PropertiesManager  - [Key : MailSendRetryCount] Configuration value doesn't exist. Default value(0) will be used.
+2019-03-20 15:39:34,836 [Thread-0] WARN  PropertiesManager  - [Key : MailSendRetryPeriodTime] Configuration value doesn't exist. Default value(30) will be used.
+2019-03-20 15:39:34,836 [Thread-0] WARN  PropertiesManager  - [Key : SMTPConnectionTimeout] Configuration value doesn't exist. Default value(0) will be used.
+2019-03-20 15:39:34,836 [Thread-0] WARN  PropertiesManager  - [Key : SMTPSendTimeout] Configuration value doesn't exist. Default value(0) will be used.
+2019-03-20 15:39:34,836 [Thread-0] WARN  PropertiesManager  - [Key : IdleTime.Classname] Configuration value doesn't exist. Default value() will be used.
+2019-03-20 15:39:34,836 [Thread-0] WARN  PropertiesManager  - [Key : IdleTime.Overtime] Configuration value doesn't exist. Default value(0) will be used.
+2019-03-20 15:39:34,836 [Thread-0] WARN  PropertiesManager  - [Key : html5SVGServerURL] Configuration value doesn't exist. Default value() will be used.
+2019-03-20 15:39:34,836 [Thread-0] DEBUG PropertiesManager  - SVGViewer repository clean service init.
+2019-03-20 15:39:34,836 [Thread-0] DEBUG PropertiesManager  - SVGViewerRepositoryClean init...
+2019-03-20 15:39:34,836 [Thread-0] INFO  XML-License-Loader  - [.xml] loader
+2019-03-20 15:39:34,836 [Thread-0] DEBUG XML-Parser-Configurator  - try to get DOM10_SUN parser factory...
+2019-03-20 15:39:34,836 [Thread-0] DEBUG XML-Parser-Configurator  - Class.forName(com.sun.xml.parser.DocumentBuilderFactoryImpl).newInstance()
+2019-03-20 15:39:34,867 [Thread-0] ERROR XML-License-Loader  - [Error Code :13001006] [Licese File Name D:\webapps\oz70\WEB-INF\ozmng/license/ozlicense.xml] Can't find license file.
+java.io.FileNotFoundException: D:\webapps\oz70\WEB-INF\ozmng\license\ozlicense.xml (지정된 파일을 찾을 수 없습니다)
+	at java.io.FileInputStream.open0(Native Method)
+	at java.io.FileInputStream.open(FileInputStream.java:195)
+	at java.io.FileInputStream.<init>(FileInputStream.java:138)
+	at java.io.FileInputStream.<init>(FileInputStream.java:93)
+	at oz.system2.cozbb.a(DashoA12957:95)
+	at oz.system2.cozaj.a(DashoA12957:164)
+	at oz.scheduler.main.OZScheduler.lalala(DashoA12957:377)
+	at oz.scheduler.main.PropertiesManager.c(DashoA12957:1186)
+	at oz.scheduler.main.PropertiesManager.startLoader(DashoA12957:1112)
+	at oz.scheduler.main.OZScheduler.a(DashoA12957:108)
+	at oz.scheduler.main.OZScheduler.main(DashoA12957:66)
+	at oz.server.OZServiceBootstrap.doStartScheduler(OZServiceBootstrap.java:47)
+	at oz.server.OZServiceBootstrap.main(OZServiceBootstrap.java:107)
+2019-03-20 15:39:34,867 [Thread-0] ERROR OZScheduler  - [Licese File Name D:\webapps\oz70\WEB-INF\ozmng/license/ozlicense.xml] Can't find license file.
+2019-03-20 15:40:13,395 [Thread-0] INFO  PropertiesManager  - --- Contents in Configuration Properties ---
+2019-03-20 15:40:13,395 [Thread-0] INFO  PropertiesManager  - ErrorNotifyToSender=false
+2019-03-20 15:40:13,395 [Thread-0] INFO  PropertiesManager  - MailFrom=
+2019-03-20 15:40:13,395 [Thread-0] INFO  PropertiesManager  - SMTPServer=mail.forcs.com
+2019-03-20 15:40:13,395 [Thread-0] INFO  PropertiesManager  - SMTPServerPort=25
+2019-03-20 15:40:13,395 [Thread-0] INFO  PropertiesManager  - SMTPUserID=
+2019-03-20 15:40:13,395 [Thread-0] INFO  PropertiesManager  - SMTPUserPassword=
+2019-03-20 15:40:13,395 [Thread-0] INFO  PropertiesManager  - EnableSSL=false
+2019-03-20 15:40:13,395 [Thread-0] INFO  PropertiesManager  - PrefixSubjectMessage=
+2019-03-20 15:40:13,395 [Thread-0] INFO  PropertiesManager  - RepositoryFileRootPath=%SCH_HOME%/Repository/
+2019-03-20 15:40:13,395 [Thread-0] INFO  PropertiesManager  - RepositoryFileDeleteTime=0
+2019-03-20 15:40:13,395 [Thread-0] INFO  PropertiesManager  - RepositoryUniqueFileName=false
+2019-03-20 15:40:13,395 [Thread-0] INFO  PropertiesManager  - SchedulingInfoFilePath=%SCH_HOME%/ScheduledTask
+2019-03-20 15:40:13,395 [Thread-0] INFO  PropertiesManager  - TempRepositoryFilePath=%SCH_HOME%/TempRepository
+2019-03-20 15:40:13,395 [Thread-0] INFO  PropertiesManager  - ExternalProgramFilePath=%SCH_HOME%/External
+2019-03-20 15:40:13,395 [Thread-0] INFO  PropertiesManager  - ViewerType=ActiveX
+2019-03-20 15:40:13,395 [Thread-0] INFO  PropertiesManager  - ViewerConcurrentCount=n
+2019-03-20 15:40:13,395 [Thread-0] INFO  PropertiesManager  - TaskHoliday=false
+2019-03-20 15:40:13,395 [Thread-0] INFO  PropertiesManager  - --------------------------------------------
+2019-03-20 15:40:13,395 [Thread-0] WARN  PropertiesManager  - [Key : ViewerDebug] Configuration value doesn't exist. Default value(false) will be used.
+2019-03-20 15:40:13,395 [Thread-0] WARN  PropertiesManager  - [Key : SMTPUserID_encrypted] Configuration value doesn't exist. Default value(null) will be used.
+2019-03-20 15:40:13,395 [Thread-0] WARN  PropertiesManager  - [Key : SMTPUserPassword_encrypted] Configuration value doesn't exist. Default value(null) will be used.
+2019-03-20 15:40:13,395 [Thread-0] WARN  PropertiesManager  - [Key : ViewerTimeout] Configuration value doesn't exist. Default value(0) will be used.
+2019-03-20 15:40:13,395 [Thread-0] WARN  PropertiesManager  - [Key : TaskRetry] Configuration value doesn't exist. Default value(true) will be used.
+2019-03-20 15:40:13,395 [Thread-0] WARN  PropertiesManager  - [Key : MailSendRetryCount] Configuration value doesn't exist. Default value(0) will be used.
+2019-03-20 15:40:13,395 [Thread-0] WARN  PropertiesManager  - [Key : MailSendRetryPeriodTime] Configuration value doesn't exist. Default value(30) will be used.
+2019-03-20 15:40:13,395 [Thread-0] WARN  PropertiesManager  - [Key : SMTPConnectionTimeout] Configuration value doesn't exist. Default value(0) will be used.
+2019-03-20 15:40:13,395 [Thread-0] WARN  PropertiesManager  - [Key : SMTPSendTimeout] Configuration value doesn't exist. Default value(0) will be used.
+2019-03-20 15:40:13,395 [Thread-0] WARN  PropertiesManager  - [Key : IdleTime.Classname] Configuration value doesn't exist. Default value() will be used.
+2019-03-20 15:40:13,395 [Thread-0] WARN  PropertiesManager  - [Key : IdleTime.Overtime] Configuration value doesn't exist. Default value(0) will be used.
+2019-03-20 15:40:13,395 [Thread-0] WARN  PropertiesManager  - [Key : html5SVGServerURL] Configuration value doesn't exist. Default value() will be used.
+2019-03-20 15:40:13,395 [Thread-0] DEBUG PropertiesManager  - SVGViewer repository clean service init.
+2019-03-20 15:40:13,395 [Thread-0] DEBUG PropertiesManager  - SVGViewerRepositoryClean init...
+2019-03-20 15:40:13,395 [Thread-0] INFO  XML-License-Loader  - [.xml] loader
+2019-03-20 15:40:13,395 [Thread-0] DEBUG XML-Parser-Configurator  - try to get DOM10_SUN parser factory...
+2019-03-20 15:40:13,395 [Thread-0] DEBUG XML-Parser-Configurator  - Class.forName(com.sun.xml.parser.DocumentBuilderFactoryImpl).newInstance()
+2019-03-20 15:40:13,473 [Thread-0] INFO  OZHTML5Manager  - *****************************************************
+2019-03-20 15:40:13,473 [Thread-0] INFO  OZHTML5Manager  - * OZHTML5Manager [Ver. : 7.0.0101.20190306 15:20.33] is started. *
+2019-03-20 15:40:13,473 [Thread-0] INFO  OZHTML5Manager  - * Java Version          : 1.8.0_121. *
+2019-03-20 15:40:13,473 [Thread-0] INFO  OZHTML5Manager  - ***** All Right Reserved  [FORCS Co. Ltd.] **
+2019-03-20 15:40:13,473 [Thread-0] INFO  OZHTML5Manager  - * License expiration date : 2019-06-15
+2019-03-20 15:40:13,473 [Thread-0] INFO  OZHTML5Manager  - *****************************************************
+2019-03-20 15:40:13,504 [Thread-1] INFO  SchedulerTCPDaemon  - Scheduler TCP Daemon is ready up.
+2019-03-20 15:41:44,008 [Handler 1] INFO  Scheduler-TCP Handler  - client IP:[ 127.0.0.1] A handler is started. Active handler count is 1
+2019-03-20 15:41:44,008 [Handler 1] DEBUG Scheduler-TCP Handler  - SchedulerMessage [version : 6552] [className : oz.scheduler.cp.message.OZSCHDRequestSVGViewer] received
+2019-03-20 15:41:44,008 [Handler 1] DEBUG OZSCHDRequestSVGViewer  - Reading Message is successfully completed
+2019-03-20 15:41:44,008 [Handler 1] DEBUG OZSCHDRequestSVGViewer  - Function Type [110 : SVGVIEWER_NEWFRAME]
+2019-03-20 15:41:44,055 [Thread-8] DEBUG SVGExcute  - SVGExcute Start NewFrame...
+2019-03-20 15:41:44,055 [Handler 1] DEBUG Scheduler-TCP Handler  - fectching is completed & response is also sended
+2019-03-20 15:41:44,071 [Handler 2] INFO  Scheduler-TCP Handler  - client IP:[ 127.0.0.1] A handler is started. Active handler count is 1
+2019-03-20 15:41:44,071 [Handler 2] DEBUG Scheduler-TCP Handler  - SchedulerMessage [version : 6552] [className : oz.scheduler.cp.message.OZSCHDRequestSVGViewer] received
+2019-03-20 15:41:44,071 [Handler 2] DEBUG OZSCHDRequestSVGViewer  - Reading Message is successfully completed
+2019-03-20 15:41:44,071 [Handler 2] DEBUG OZSCHDRequestSVGViewer  - Function Type [111 : SVGVIEWER_CHECKSTATUS]
+2019-03-20 15:41:44,071 [Handler 2] DEBUG Scheduler-TCP Handler  - fectching is completed & response is also sended
+2019-03-20 15:41:44,305 [Thread-9] DEBUG SVGExcute  - Time out check is false.
+2019-03-20 15:41:44,524 [Thread-8] INFO  SVGExcute  - Making opz Export files was successful.
+2019-03-20 15:41:44,524 [Thread-8] DEBUG SVGExcute  - Remove parameter file :D:\webapps\oz70\WEB-INF\ozmng\SVGViewerRepository\1553064104055-8000\param.oz
+2019-03-20 15:41:44,586 [Handler 3] INFO  Scheduler-TCP Handler  - client IP:[ 127.0.0.1] A handler is started. Active handler count is 1
+2019-03-20 15:41:44,586 [Handler 3] DEBUG Scheduler-TCP Handler  - SchedulerMessage [version : 6552] [className : oz.scheduler.cp.message.OZSCHDRequestSVGViewer] received
+2019-03-20 15:41:44,586 [Handler 3] DEBUG OZSCHDRequestSVGViewer  - Reading Message is successfully completed
+2019-03-20 15:41:44,586 [Handler 3] DEBUG OZSCHDRequestSVGViewer  - Function Type [111 : SVGVIEWER_CHECKSTATUS]
+2019-03-20 15:41:44,602 [Handler 3] DEBUG Scheduler-TCP Handler  - fectching is completed & response is also sended
+2019-03-20 15:41:44,664 [Handler 4] INFO  Scheduler-TCP Handler  - client IP:[ 127.0.0.1] A handler is started. Active handler count is 1
+2019-03-20 15:41:44,664 [Handler 5] INFO  Scheduler-TCP Handler  - client IP:[ 127.0.0.1] A handler is started. Active handler count is 1
+2019-03-20 15:41:44,664 [Handler 4] DEBUG Scheduler-TCP Handler  - SchedulerMessage [version : 6552] [className : oz.scheduler.cp.message.OZSCHDRequestSVGViewer] received
+2019-03-20 15:41:44,664 [Handler 5] DEBUG Scheduler-TCP Handler  - SchedulerMessage [version : 6552] [className : oz.scheduler.cp.message.OZSCHDRequestSVGViewer] received
+2019-03-20 15:41:44,664 [Handler 4] DEBUG OZSCHDRequestSVGViewer  - Reading Message is successfully completed
+2019-03-20 15:41:44,664 [Handler 5] DEBUG OZSCHDRequestSVGViewer  - Reading Message is successfully completed
+2019-03-20 15:41:44,664 [Handler 4] DEBUG OZSCHDRequestSVGViewer  - Function Type [112 : SVGVIEWER_GETPAGE]
+2019-03-20 15:41:44,664 [Handler 5] DEBUG OZSCHDRequestSVGViewer  - Function Type [112 : SVGVIEWER_GETPAGE]
+2019-03-20 15:41:44,680 [Thread-12] DEBUG SVGExcute  - Time out check is false.
+2019-03-20 15:41:44,680 [Thread-13] DEBUG SVGExcute  - Time out check is false.
+2019-03-20 15:41:44,914 [Handler 5] INFO  SVGExcute  - Making Export files was successful.
+2019-03-20 15:41:44,914 [Handler 4] INFO  SVGExcute  - Making Export files was successful.
+2019-03-20 15:41:44,914 [Handler 5] DEBUG Scheduler-TCP Handler  - fectching is completed & response is also sended
+2019-03-20 15:41:44,914 [Handler 4] DEBUG Scheduler-TCP Handler  - fectching is completed & response is also sended
+2019-03-20 15:47:49,700 [Handler 6] INFO  Scheduler-TCP Handler  - client IP:[ 127.0.0.1] A handler is started. Active handler count is 1
+2019-03-20 15:47:49,700 [Handler 6] DEBUG Scheduler-TCP Handler  - SchedulerMessage [version : 6552] [className : oz.scheduler.cp.message.OZSCHDRequestSVGViewer] received
+2019-03-20 15:47:49,700 [Handler 6] DEBUG OZSCHDRequestSVGViewer  - Reading Message is successfully completed
+2019-03-20 15:47:49,700 [Handler 6] DEBUG OZSCHDRequestSVGViewer  - Function Type [110 : SVGVIEWER_NEWFRAME]
+2019-03-20 15:47:49,700 [Thread-23] DEBUG SVGExcute  - SVGExcute Start NewFrame...
+2019-03-20 15:47:49,700 [Handler 6] DEBUG Scheduler-TCP Handler  - fectching is completed & response is also sended
+2019-03-20 15:47:49,700 [Thread-24] DEBUG SVGExcute  - Time out check is false.
+2019-03-20 15:47:49,716 [Handler 7] INFO  Scheduler-TCP Handler  - client IP:[ 127.0.0.1] A handler is started. Active handler count is 1
+2019-03-20 15:47:49,716 [Handler 7] DEBUG Scheduler-TCP Handler  - SchedulerMessage [version : 6552] [className : oz.scheduler.cp.message.OZSCHDRequestSVGViewer] received
+2019-03-20 15:47:49,716 [Handler 7] DEBUG OZSCHDRequestSVGViewer  - Reading Message is successfully completed
+2019-03-20 15:47:49,716 [Handler 7] DEBUG OZSCHDRequestSVGViewer  - Function Type [111 : SVGVIEWER_CHECKSTATUS]
+2019-03-20 15:47:49,716 [Handler 7] DEBUG Scheduler-TCP Handler  - fectching is completed & response is also sended
+2019-03-20 15:47:49,810 [Thread-23] INFO  SVGExcute  - Making opz Export files was successful.
+2019-03-20 15:47:49,810 [Thread-23] DEBUG SVGExcute  - Remove parameter file :D:\webapps\oz70\WEB-INF\ozmng\SVGViewerRepository\1553064469700-7ffd\param.oz
+2019-03-20 15:47:50,232 [Handler 8] INFO  Scheduler-TCP Handler  - client IP:[ 127.0.0.1] A handler is started. Active handler count is 1
+2019-03-20 15:47:50,232 [Handler 8] DEBUG Scheduler-TCP Handler  - SchedulerMessage [version : 6552] [className : oz.scheduler.cp.message.OZSCHDRequestSVGViewer] received
+2019-03-20 15:47:50,232 [Handler 8] DEBUG OZSCHDRequestSVGViewer  - Reading Message is successfully completed
+2019-03-20 15:47:50,232 [Handler 8] DEBUG OZSCHDRequestSVGViewer  - Function Type [111 : SVGVIEWER_CHECKSTATUS]
+2019-03-20 15:47:50,247 [Handler 8] DEBUG Scheduler-TCP Handler  - fectching is completed & response is also sended
+2019-03-20 15:47:50,341 [Handler 9] INFO  Scheduler-TCP Handler  - client IP:[ 127.0.0.1] A handler is started. Active handler count is 1
+2019-03-20 15:47:50,341 [Handler 10] INFO  Scheduler-TCP Handler  - client IP:[ 127.0.0.1] A handler is started. Active handler count is 2
+2019-03-20 15:47:50,341 [Handler 9] DEBUG Scheduler-TCP Handler  - SchedulerMessage [version : 6552] [className : oz.scheduler.cp.message.OZSCHDRequestSVGViewer] received
+2019-03-20 15:47:50,357 [Handler 10] DEBUG Scheduler-TCP Handler  - SchedulerMessage [version : 6552] [className : oz.scheduler.cp.message.OZSCHDRequestSVGViewer] received
+2019-03-20 15:47:50,357 [Handler 9] DEBUG OZSCHDRequestSVGViewer  - Reading Message is successfully completed
+2019-03-20 15:47:50,357 [Handler 10] DEBUG OZSCHDRequestSVGViewer  - Reading Message is successfully completed
+2019-03-20 15:47:50,357 [Handler 9] DEBUG OZSCHDRequestSVGViewer  - Function Type [112 : SVGVIEWER_GETPAGE]
+2019-03-20 15:47:50,357 [Handler 10] DEBUG OZSCHDRequestSVGViewer  - Function Type [112 : SVGVIEWER_GETPAGE]
+2019-03-20 15:47:50,372 [Thread-27] DEBUG SVGExcute  - Time out check is false.
+2019-03-20 15:47:50,372 [Thread-28] DEBUG SVGExcute  - Time out check is false.
+2019-03-20 15:47:50,513 [Handler 10] INFO  SVGExcute  - Making Export files was successful.
+2019-03-20 15:47:50,513 [Handler 9] INFO  SVGExcute  - Making Export files was successful.
+2019-03-20 15:47:50,513 [Handler 10] DEBUG Scheduler-TCP Handler  - fectching is completed & response is also sended
+2019-03-20 15:47:50,513 [Handler 9] DEBUG Scheduler-TCP Handler  - fectching is completed & response is also sended

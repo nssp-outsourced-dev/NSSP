@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMapConfig PUBLIC "-//iBATIS.com//DTD SQL Map Config 2.0//EN" "http://www.ibatis.com/dtd/sql-map-config-2.dtd">
+
+<sqlMapConfig>
+	<settings enhancementEnabled="true" useStatementNamespaces="true" />
+	<sqlMap resource="sqlmap/nssp/file_db_sql.xml"/>
+	<sqlMap resource="sqlmap/nssp/mber_db_sql.xml"/>
+	<sqlMap resource="sqlmap/nssp/cd_db_sql.xml"/>
+	<sqlMap resource="sqlmap/nssp/sanctn_db_sql.xml"/>
+	<sqlMap resource="sqlmap/nssp/menu_db_sql.xml"/>
+	<sqlMap resource="sqlmap/nssp/bbs_db_sql.xml"/>
+	<sqlMap resource="sqlmap/nssp/doc_db_sql.xml"/>
+	<sqlMap resource="sqlmap/nssp/alot_db_sql.xml"/>		<!-- 배당 -->
+	<sqlMap resource="sqlmap/nssp/rc_db_sql.xml"/>			<!-- 접수 -->
+	<sqlMap resource="sqlmap/nssp/inv_db_sql.xml"/>
+	<sqlMap resource="sqlmap/nssp/commn_db_sql.xml"/>		<!-- 통신사실 -->
+	<sqlMap resource="sqlmap/nssp/ccdrc_db_sql.xml"/>		<!-- 압수물관리 -->
+	<sqlMap resource="sqlmap/nssp/trnsf_db_sql.xml"/>		<!-- 이송관리 -->
+	<sqlMap resource="sqlmap/nssp/trn_db_sql.xml"/>			<!-- 송치관리 -->
+	<sqlMap resource="sqlmap/nssp/trn_ccdrc_db_sql.xml"/>	<!-- 송치 압수물총목록 -->
+	<sqlMap resource="sqlmap/nssp/trn_rcord_db_sql.xml"/>	<!-- 송치 기록목록 -->
+	<sqlMap resource="sqlmap/nssp/juso_db_sql.xml"/>
+	<sqlMap resource="sqlmap/nssp/dept_db_sql.xml"/>
+	<sqlMap resource="sqlmap/nssp/exmn_db_sql.xml"/>
+	<sqlMap resource="sqlmap/nssp/stats_db_sql.xml"/>
+	<sqlMap resource="sqlmap/nssp/violt_db_sql.xml"/>
+	<sqlMap resource="sqlmap/nssp/sugest_db_sql.xml"/>
+	<sqlMap resource="sqlmap/nssp/invsts_db_sql.xml"/>
+	<sqlMap resource="sqlmap/nssp/hwp_db_sql.xml"/>
+	<sqlMap resource="sqlmap/nssp/hwp_ccdrc_db_sql.xml"/>	<!-- 압수관련 문서 -->
+	<sqlMap resource="sqlmap/nssp/hwp_trn_db_sql.xml"/>		<!-- 송치관련 문서 -->
+	<sqlMap resource="sqlmap/nssp/hwp_rc_db_sql.xml"/>		<!-- 접수/사건 관련 문서 -->
+	<sqlMap resource="sqlmap/nssp/hwp_sugest_db_sql.xml"/>	<!-- 접수/사건 관련 문서 -->
+	<sqlMap resource="sqlmap/nssp/polc_db_sql.xml"/>	<!-- 경찰 -->
+		<!-- 생체로그인 -->
+</sqlMapConfig>

@@ -1,0 +1,177 @@
+@charset "utf-8";
+input[type=button], a{
+}
+
+.btn_box{ position: relative; width: auto; display: inline-block}
+.btn_box_w{ position: relative; width: auto; display: inline-block}
+.btn_save{  padding: 0px 40px 0px 15px; border: 1px solid #3e5481; line-height: 35px; color: #fff; font-size: 14px;  background: url(../img/btn_icon_save.png); background-position: 90% center; background-repeat: no-repeat; background-color: #6581ba;  font-weight: 400}
+
+.icon_y{  padding: 0px 40px 0px 15px;}
+.icon_n{  padding: 0px 15px 0px 15px;}
+
+
+.btn_st1{  border: 1px solid #c7c7c7; line-height: 30px; color: #333; font-size: 14px!important;   font-weight: 400; border-bottom: 1px solid #727272;  border-right: 1px solid #727272 ; cursor: pointer; position: relative; transition: all 0.5s;
+-moz-transition: all 0.5s; /* Firefox 4 */
+-webkit-transition: all 0.5s; /* Safari and Chrome */
+-o-transition: all 0.5s; /* Opera */  background-color: #fff; }
+
+.btn_st1:hover{   border: 1px solid #4464a3; line-height: 30px; color: #5384d0; font-size: 14px!important;  background-color: #fff;  font-weight: 400; border-bottom: 1px solid #1f3d78;  border-right: 1px solid #1f3d78; cursor: pointer;; position: relative; z-index: 9}
+
+a.btn_st1{  border: 1px solid #c7c7c7; line-height: 30px; color: #333; font-size: 14px!important;   font-weight: 400; border-bottom: 1px solid #727272;  border-right: 1px solid #727272 ; cursor: pointer; position: relative; transition: all 0.5s;
+-moz-transition: all 0.5s; /* Firefox 4 */
+-webkit-transition: all 0.5s; /* Safari and Chrome */
+-o-transition: all 0.5s; /* Opera */  background-color: #fff; display: inline-block}
+
+a.btn_st1:hover{   border: 1px solid #4464a3; line-height: 30px; color: #5384d0; font-size: 14px!important;  background-color: #fff;  font-weight: 400; border-bottom: 1px solid #1f3d78;  border-right: 1px solid #1f3d78; cursor: pointer;; position: relative; z-index: 9}
+
+
+
+.btn_st1 .icon_in{  position: absolute; right: 10px; top: 0px; line-height: 35px }
+.btn_st1 .icon_in i{  color: #999; font-size: 20px; line-height: 35px}
+.btn_st1:hover .icon_in i{  color: #5384d0; font-size: 20px; line-height: 35px;}
+
+.btn_box .icon_in2{  position: absolute; right:20px; top: 0px; line-height: 35px; color: #333 }
+.btn_box:hover .icon_in2{  position: absolute; right:20px; top: 0px; line-height: 35px; color: #333!important;z-index:9}
+
+
+
+.btn_box .icon_in{  position: absolute; right: 10px; top: 0px; z-index: 1; line-height: 35px}
+.btn_box .icon_in i{  color: #999; font-size: 20px; line-height: 35px}
+.btn_box:hover .icon_in i{  color: #5384d0; font-size: 20px; line-height: 35px}
+
+
+.btn_st2{  border: 1px solid #3e5481; line-height: 30px; color: #fff; font-size: 14px;   background-color: #6581ba;  font-weight: 400;cursor: pointer; position: relative;transition: all 0.5s;
+-moz-transition: all 0.5s; /* Firefox 4 */
+-webkit-transition: all 0.5s; /* Safari and Chrome */
+-o-transition: all 0.5s; /* Opera */ z-index: 9; }
+.btn_st2:hover{ border: 1px solid #3e5481; line-height: 30px; color: #fff; font-size: 14px;   background-color: #384c73;  font-weight: 400; position: relative}
+
+
+a.btn_st2{  border: 1px solid #3e5481; line-height: 30px; color: #fff; font-size: 14px;   background-color: #6581ba;  font-weight: 400;cursor: pointer; position: relative;transition: all 0.5s; cursor: pointer; position: relative; transition: all 0.5s;
+-moz-transition: all 0.5s; /* Firefox 4 */
+-webkit-transition: all 0.5s; /* Safari and Chrome */
+-o-transition: all 0.5s; /* Opera */  display: inline-block}
+a.btn_st2:hover{ border: 1px solid #3e5481; line-height: 30px; color: #fff; font-size: 14px;   background-color: #384c73;  font-weight: 400; position: relative}
+
+
+
+.btn_st3{  border: 1px solid #c7c7c7; line-height: 27px; color: #333; font-size: 12px;   font-weight: 400; border-bottom: 1px solid #727272;  border-right: 1px solid #727272 ; cursor: pointer; position: relative; transition: all 0.5s;
+-moz-transition: all 0.5s; /* Firefox 4 */
+-webkit-transition: all 0.5s; /* Safari and Chrome */
+-o-transition: all 0.5s; /* Opera */ z-index: 9; }
+
+.btn_st3:hover{   border: 1px solid #4464a3; line-height: 27px; color: #5384d0; font-size: 12px;  background-color: #fff;  font-weight: 400; border-bottom: 1px solid #1f3d78;  border-right: 1px solid #1f3d78; cursor: pointer;; position: relative}
+
+.btn_st4{  border: 1px solid #3e5481; line-height: 27px; color: #fff; font-size: 12px;   background-color: #6581ba;  font-weight: 400;cursor: pointer; position: relative;transition: all 0.5s;
+-moz-transition: all 0.5s; /* Firefox 4 */
+-webkit-transition: all 0.5s; /* Safari and Chrome */
+-o-transition: all 0.5s; /* Opera */  }
+.btn_st4:hover{ border: 1px solid #3e5481; line-height: 27px; color: #fff; font-size: 12px;   background-color: #384c73;  font-weight: 400; position: relative}
+
+.btn_st4 .icon_in2{  position: absolute; right: 10px; top: -1px; z-index: 1;}
+
+
+.btn_st2_2{  border: 1px solid #3e5481; line-height: 30px; color: #fff; font-size: 14px;   background-color: #595959;  font-weight: 400;cursor: pointer; position: relative;transition: all 0.5s;
+-moz-transition: all 0.5s; /* Firefox 4 */
+-webkit-transition: all 0.5s; /* Safari and Chrome */
+-o-transition: all 0.5s; /* Opera */ z-index: 9; }
+.btn_st2_2:hover{ border: 1px solid #3e5481; line-height: 30px; color: #fff; font-size: 14px;   background-color: #333;  font-weight: 400; position: relative}
+
+.btn_st2_3{  border: 1px solid #3e5481; line-height: 24px; color: #fff; font-size: 12px;   background-color: #595959;  font-weight: 400;cursor: pointer; position: relative;transition: all 0.5s;
+-moz-transition: all 0.5s; /* Firefox 4 */
+-webkit-transition: all 0.5s; /* Safari and Chrome */
+-o-transition: all 0.5s; /* Opera */ z-index: 9;  border-radius: 4px}
+.btn_st2_3:hover{ border: 1px solid #3e5481; line-height: 24px; color: #fff; font-size: 12px;   background-color: #333;  font-weight: 400; position: relative}
+
+
+
+.btn_st2 .icon_in{  position: absolute; right: 10px; top: 0px; z-index: 1; line-height: 30px}
+.btn_st2 .icon_in i{  color: #fff; font-size: 20px; line-height: 30px}
+.btn_st2:hover .icon_in i{  color: #fff; font-size: 20px; line-height: 30px}
+
+.btn_st2 .icon_in2{  position: absolute; right: 10px; top: -15px; z-index: 1;}
+
+
+.btn_box_w .icon_in{  position: absolute; right: 10px; top: 0px; z-index: 1; line-height: 30px}
+.btn_box_w .icon_in i{  color: #fff; font-size: 20px; line-height: 30px}
+.btn_box_w:hover .icon_in i{  color: #fff;font-size: 20px; line-height: 30px}
+
+
+
+.btn_td1{  border: 1px solid  #4464a3 ;line-height: 24px; color: #fff; font-size: 12px;   font-weight: 400; border-bottom: 1px solid #727272;  border-right: 1px solid #727272 ; cursor: pointer; position: relative; transition: all 0.5s;
+-moz-transition: all 0.5s; /* Firefox 4 */
+-webkit-transition: all 0.5s; /* Safari and Chrome */
+-o-transition: all 0.5s; /* Opera */  background-color: #8b96e1}
+
+.btn_td1:hover{   border: 1px solid #4464a3; line-height: 24px; color: #fff;font-size: 12px;  background-color:  #5b65ae;  font-weight: 400; border-bottom: 1px solid #1f3d78;  border-right: 1px solid #1f3d78; cursor: pointer;; position: relative; z-index: 9}
+
+.btn_td2{  border: 1px solid  #1093d7;line-height: 24px; color: #fff; font-size: 12px;   font-weight: 400; border-bottom: 1px solid #727272;  border-right: 1px solid #727272 ; cursor: pointer; position: relative; transition: all 0.5s;
+-moz-transition: all 0.5s; /* Firefox 4 */
+-webkit-transition: all 0.5s; /* Safari and Chrome */
+-o-transition: all 0.5s; /* Opera */  background-color: #21b3ff}
+
+.btn_td2:hover{   border: 1px solid #1493d5; line-height: 24px; color: #fff;font-size: 12px;  background-color:  #1aa0e6;  font-weight: 400; border-bottom: 1px solid #1f3d78;  border-right: 1px solid #1f3d78; cursor: pointer;; position: relative; z-index: 9}
+
+
+
+
+
+input.btn_search{  line-height: 28px; color: #fff; font-size: 14px;  font-weight: 400;cursor: pointer; position: relative;transition: all 0.5s;
+-moz-transition: all 0.5s; /* Firefox 4 */
+-webkit-transition: all 0.5s; /* Safari and Chrome */
+-o-transition: all 0.5s; /* Opera */ width: 30px ; background: url("../img/icon_search.png");  background-position: center center; background-repeat: no-repeat; background-color: #eee; box-sizing: border-box ; border: 1px solid #b7b7b7; margin-left: -30px;
+border-bottom-right-radius: 4px;
+border-top-right-radius: 4px;
+-moz-border-bottom-right-radius: 4px;
+-moz-border-top-right-radius: 4px;
+-webkit-border-bottom-right-radius: 4px;
+-webkit-border-top-right-radius: 4px;
+
+
+}
+
+
+
+input.btn_search:hover{background-color: #fff;  border: 1px solid #333; }
+
+input.btn_search2{  line-height: 22px; color: #fff; font-size: 14px;  font-weight: 400;cursor: pointer; position: relative;transition: all 0.5s;
+-moz-transition: all 0.5s; /* Firefox 4 */
+-webkit-transition: all 0.5s; /* Safari and Chrome */
+-o-transition: all 0.5s; /* Opera */ width: 24px ; background: url("../img/icon_search2.png");  background-position: center center; background-repeat: no-repeat; background-color: #eee; box-sizing: border-box ; border: 1px solid #b7b7b7; margin-left: -24px}
+input.btn_search2:hover{background-color: #fff;  border: 1px solid #333; }
+
+
+input.btn_file{  line-height: 28px; color: #fff; font-size: 14px;  font-weight: 400;cursor: pointer; position: relative;transition: all 0.5s;
+-moz-transition: all 0.5s; /* Firefox 4 */
+-webkit-transition: all 0.5s; /* Safari and Chrome */
+-o-transition: all 0.5s; /* Opera */ width: 30px ; background: url("../img/icon_file.png");  background-position: center center; background-repeat: no-repeat; background-color: #eee; box-sizing: border-box ; border: 1px solid #b7b7b7; margin-left: -30px;
+border-bottom-right-radius: 4px;
+border-top-right-radius: 4px;
+-moz-border-bottom-right-radius: 4px;
+-moz-border-top-right-radius: 4px;
+-webkit-border-bottom-right-radius: 4px;
+-webkit-border-top-right-radius: 4px;}
+input.btn_file:hover{ background-color: #fff;  border: 1px solid #333; position: relative; z-index: 99}
+
+
+
+input.btn_text{  line-height: 28px; color: #fff; font-size: 13px;  font-weight: 400;cursor: pointer; position: relative;transition: all 0.5s;
+-moz-transition: all 0.5s; /* Firefox 4 */
+-webkit-transition: all 0.5s; /* Safari and Chrome */
+-o-transition: all 0.5s; /* Opera */;padding: 0px 10px; color: #666;  background-position: center center; background-repeat: no-repeat; background-color: #eee; box-sizing: border-box ; border: 1px solid #b7b7b7; margin-left: -30px ;border-bottom-right-radius: 4px;
+border-top-right-radius: 4px;
+-moz-border-bottom-right-radius: 4px;
+-moz-border-top-right-radius: 4px;
+-webkit-border-bottom-right-radius: 4px;
+-webkit-border-top-right-radius: 4px;}
+input.btn_text:hover{ background-color: #fff;  border: 1px solid #333; position: relative; z-index: 99}
+
+
+
+
+.btn_st_w100{  border: 1px solid #3e5481; line-height: 30px; color: #fff; font-size: 14px;   background-color: #6581ba;  font-weight: 400;cursor: pointer; position: relative;transition: all 0.5s;
+-moz-transition: all 0.5s; /* Firefox 4 */
+-webkit-transition: all 0.5s; /* Safari and Chrome */
+-o-transition: all 0.5s; /* Opera */ width: 100%; text-align: center; float: left  }
+.btn_st_w100:hover{ border: 1px solid #3e5481; line-height: 30px; color: #fff; font-size: 14px;   background-color: #384c73;  font-weight: 400; position: relative}
+

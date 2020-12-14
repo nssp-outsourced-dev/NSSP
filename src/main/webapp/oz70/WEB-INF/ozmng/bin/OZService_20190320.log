@@ -1,0 +1,88 @@
+[2019-03-20 15:27:14] [1208 OZService.c] [debug] OZService log initialized
+[2019-03-20 15:27:14] [495  OZService.c] [debug] Installing service...
+[2019-03-20 15:27:14] [info] Service OZScheduler name OZScheduler
+[2019-03-20 15:27:14] [537  OZService.c] [debug] Setting service description OZScheduler
+[2019-03-20 15:27:14] [info] Service OZScheduler installed
+[2019-03-20 15:27:14] [info] OZService finished.
+[2019-03-20 15:27:32] [1208 OZService.c] [debug] OZService log initialized
+[2019-03-20 15:27:32] [info] Running Service...
+[2019-03-20 15:27:32] [1051 OZService.c] [debug] Inside ServiceMain...
+[2019-03-20 15:27:32] [info] Starting service...
+[2019-03-20 15:27:32] [408  javajni.c] [debug] Jvm Option[0] -Xmixed
+[2019-03-20 15:27:32] [408  javajni.c] [debug] Jvm Option[1] -Xrs
+[2019-03-20 15:27:32] [408  javajni.c] [debug] Jvm Option[2] -Djava.class.path=D:\webapps\oz70\WEB-INF\ozmng\lib\ozsfw70.jar;D:\webapps\oz70\WEB-INF\ozmng\conf;D:\webapps\oz70\WEB-INF\ozmng\lib\OZServiceBootstrap.jar;D:\webapps\oz70\WEB-INF\ozmng\lib\jnet.jar;D:\webapps\oz70\WEB-INF\ozmng\lib\jsse.jar;D:\webapps\oz70\WEB-INF\ozmng\lib\log4j.jar;D:\webapps\oz70\WEB-INF\ozmng\lib\crimson.jar;D:\webapps\oz70\WEB-INF\ozmng\lib\parser.jar;D:\webapps\oz70\WEB-INF\ozmng\lib\xerces.jar;D:\webapps\oz70\WEB-INF\ozmng\lib\dom4j-1.6.1.jar;D:\webapps\oz70\WEB-INF\ozmng\lib\jaxen-1.1.6.jar;D:\webapps\oz70\WEB-INF\ozmng\lib\mail.jar;D:\webapps\oz70\WEB-INF\ozmng\lib\activation.jar;D:\webapps\oz70\WEB-INF\ozmng\lib\OZUSLClientSession.jar;D:\webapps\oz70\WEB-INF\ozmng\lib\OZUSLServerDES128.jar;D:\webapps\oz70\WEB-INF\ozmng\lib\icu4j_2_8.jar;D:\webapps\oz70\WEB-INF\ozmng\lib\ozviewer_lib.jar;D:\webapps\oz70\WEB-INF\ozmng\lib\ozrresource.jar;D:\webapps\oz70\WEB-INF\ozmng\lib\poi-scratchpad-3.0.2.jar;D:\webapps\oz70\WEB-INF\ozmng\lib\uk.co.mmscomputing.imageio.tiff.jar;D:\we
+[2019-03-20 15:27:32] [408  javajni.c] [debug] Jvm Option[3] vfprintf
+[2019-03-20 15:27:32] [408  javajni.c] [debug] Jvm Option[4] -Xms128m
+[2019-03-20 15:27:32] [408  javajni.c] [debug] Jvm Option[5] -Xmx256m
+[2019-03-20 15:27:33] [494  javajni.c] [debug] argv[0] = OZSchedulerStart
+[2019-03-20 15:27:34] [922  OZService.c] [debug] Java started oz/server/OZServiceBootstrap
+[2019-03-20 15:27:34] [info] Service started in 2100 ms.
+[2019-03-20 15:27:34] [1125 OZService.c] [debug] Waitning worker to finish...
+[2019-03-20 15:28:46] [1208 OZService.c] [debug] OZService log initialized
+[2019-03-20 15:28:46] [495  OZService.c] [debug] Installing service...
+[2019-03-20 15:28:46] [info] Service OZScheduler name OZScheduler
+[2019-03-20 15:28:46] [537  OZService.c] [debug] Setting service description OZScheduler
+[2019-03-20 15:28:46] [info] Service OZScheduler installed
+[2019-03-20 15:28:46] [info] OZService finished.
+[2019-03-20 15:28:49] [1208 OZService.c] [debug] OZService log initialized
+[2019-03-20 15:28:49] [info] Running Service...
+[2019-03-20 15:28:49] [1051 OZService.c] [debug] Inside ServiceMain...
+[2019-03-20 15:28:49] [info] Starting service...
+[2019-03-20 15:28:49] [408  javajni.c] [debug] Jvm Option[0] -Xmixed
+[2019-03-20 15:28:49] [408  javajni.c] [debug] Jvm Option[1] -Xrs
+[2019-03-20 15:28:49] [408  javajni.c] [debug] Jvm Option[2] -Djava.class.path=D:\webapps\oz70\WEB-INF\ozmng\lib\ozsfw70.jar;D:\webapps\oz70\WEB-INF\ozmng\conf;D:\webapps\oz70\WEB-INF\ozmng\lib\OZServiceBootstrap.jar;D:\webapps\oz70\WEB-INF\ozmng\lib\jnet.jar;D:\webapps\oz70\WEB-INF\ozmng\lib\jsse.jar;D:\webapps\oz70\WEB-INF\ozmng\lib\log4j.jar;D:\webapps\oz70\WEB-INF\ozmng\lib\crimson.jar;D:\webapps\oz70\WEB-INF\ozmng\lib\parser.jar;D:\webapps\oz70\WEB-INF\ozmng\lib\xerces.jar;D:\webapps\oz70\WEB-INF\ozmng\lib\dom4j-1.6.1.jar;D:\webapps\oz70\WEB-INF\ozmng\lib\jaxen-1.1.6.jar;D:\webapps\oz70\WEB-INF\ozmng\lib\mail.jar;D:\webapps\oz70\WEB-INF\ozmng\lib\activation.jar;D:\webapps\oz70\WEB-INF\ozmng\lib\OZUSLClientSession.jar;D:\webapps\oz70\WEB-INF\ozmng\lib\OZUSLServerDES128.jar;D:\webapps\oz70\WEB-INF\ozmng\lib\icu4j_2_8.jar;D:\webapps\oz70\WEB-INF\ozmng\lib\ozviewer_lib.jar;D:\webapps\oz70\WEB-INF\ozmng\lib\ozrresource.jar;D:\webapps\oz70\WEB-INF\ozmng\lib\poi-scratchpad-3.0.2.jar;D:\webapps\oz70\WEB-INF\ozmng\lib\uk.co.mmscomputing.imageio.tiff.jar;D:\we
+[2019-03-20 15:28:49] [408  javajni.c] [debug] Jvm Option[3] vfprintf
+[2019-03-20 15:28:49] [408  javajni.c] [debug] Jvm Option[4] -Xms128m
+[2019-03-20 15:28:49] [408  javajni.c] [debug] Jvm Option[5] -Xmx256m
+[2019-03-20 15:28:49] [494  javajni.c] [debug] argv[0] = OZSchedulerStart
+[2019-03-20 15:38:07] [1208 OZService.c] [debug] OZService log initialized
+[2019-03-20 15:38:07] [495  OZService.c] [debug] Installing service...
+[2019-03-20 15:38:07] [info] Service OZScheduler name OZScheduler
+[2019-03-20 15:38:07] [537  OZService.c] [debug] Setting service description OZScheduler
+[2019-03-20 15:38:07] [info] Service OZScheduler installed
+[2019-03-20 15:38:07] [info] OZService finished.
+[2019-03-20 15:38:10] [1208 OZService.c] [debug] OZService log initialized
+[2019-03-20 15:38:10] [info] Running Service...
+[2019-03-20 15:38:10] [1051 OZService.c] [debug] Inside ServiceMain...
+[2019-03-20 15:38:10] [info] Starting service...
+[2019-03-20 15:38:10] [408  javajni.c] [debug] Jvm Option[0] -Xmixed
+[2019-03-20 15:38:10] [408  javajni.c] [debug] Jvm Option[1] -Xrs
+[2019-03-20 15:38:10] [408  javajni.c] [debug] Jvm Option[2] -Djava.class.path=D:\webapps\oz70\WEB-INF\ozmng\lib\ozsfw70.jar;D:\webapps\oz70\WEB-INF\ozmng\conf;D:\webapps\oz70\WEB-INF\ozmng\lib\OZServiceBootstrap.jar;D:\webapps\oz70\WEB-INF\ozmng\lib\jnet.jar;D:\webapps\oz70\WEB-INF\ozmng\lib\jsse.jar;D:\webapps\oz70\WEB-INF\ozmng\lib\log4j.jar;D:\webapps\oz70\WEB-INF\ozmng\lib\crimson.jar;D:\webapps\oz70\WEB-INF\ozmng\lib\parser.jar;D:\webapps\oz70\WEB-INF\ozmng\lib\xerces.jar;D:\webapps\oz70\WEB-INF\ozmng\lib\dom4j-1.6.1.jar;D:\webapps\oz70\WEB-INF\ozmng\lib\jaxen-1.1.6.jar;D:\webapps\oz70\WEB-INF\ozmng\lib\mail.jar;D:\webapps\oz70\WEB-INF\ozmng\lib\activation.jar;D:\webapps\oz70\WEB-INF\ozmng\lib\OZUSLClientSession.jar;D:\webapps\oz70\WEB-INF\ozmng\lib\OZUSLServerDES128.jar;D:\webapps\oz70\WEB-INF\ozmng\lib\icu4j_2_8.jar;D:\webapps\oz70\WEB-INF\ozmng\lib\ozviewer_lib.jar;D:\webapps\oz70\WEB-INF\ozmng\lib\ozrresource.jar;D:\webapps\oz70\WEB-INF\ozmng\lib\poi-scratchpad-3.0.2.jar;D:\webapps\oz70\WEB-INF\ozmng\lib\uk.co.mmscomputing.imageio.tiff.jar;D:\we
+[2019-03-20 15:38:10] [408  javajni.c] [debug] Jvm Option[3] vfprintf
+[2019-03-20 15:38:10] [408  javajni.c] [debug] Jvm Option[4] -Xms128m
+[2019-03-20 15:38:10] [408  javajni.c] [debug] Jvm Option[5] -Xmx256m
+[2019-03-20 15:38:11] [494  javajni.c] [debug] argv[0] = OZSchedulerStart
+[2019-03-20 15:38:12] [922  OZService.c] [debug] Java started oz/server/OZServiceBootstrap
+[2019-03-20 15:38:12] [info] Service started in 2127 ms.
+[2019-03-20 15:38:12] [1125 OZService.c] [debug] Waitning worker to finish...
+[2019-03-20 15:39:34] [1208 OZService.c] [debug] OZService log initialized
+[2019-03-20 15:39:34] [info] Running Service...
+[2019-03-20 15:39:34] [1051 OZService.c] [debug] Inside ServiceMain...
+[2019-03-20 15:39:34] [info] Starting service...
+[2019-03-20 15:39:34] [408  javajni.c] [debug] Jvm Option[0] -Xmixed
+[2019-03-20 15:39:34] [408  javajni.c] [debug] Jvm Option[1] -Xrs
+[2019-03-20 15:39:34] [408  javajni.c] [debug] Jvm Option[2] -Djava.class.path=D:\webapps\oz70\WEB-INF\ozmng\lib\ozsfw70.jar;D:\webapps\oz70\WEB-INF\ozmng\conf;D:\webapps\oz70\WEB-INF\ozmng\lib\OZServiceBootstrap.jar;D:\webapps\oz70\WEB-INF\ozmng\lib\jnet.jar;D:\webapps\oz70\WEB-INF\ozmng\lib\jsse.jar;D:\webapps\oz70\WEB-INF\ozmng\lib\log4j.jar;D:\webapps\oz70\WEB-INF\ozmng\lib\crimson.jar;D:\webapps\oz70\WEB-INF\ozmng\lib\parser.jar;D:\webapps\oz70\WEB-INF\ozmng\lib\xerces.jar;D:\webapps\oz70\WEB-INF\ozmng\lib\dom4j-1.6.1.jar;D:\webapps\oz70\WEB-INF\ozmng\lib\jaxen-1.1.6.jar;D:\webapps\oz70\WEB-INF\ozmng\lib\mail.jar;D:\webapps\oz70\WEB-INF\ozmng\lib\activation.jar;D:\webapps\oz70\WEB-INF\ozmng\lib\OZUSLClientSession.jar;D:\webapps\oz70\WEB-INF\ozmng\lib\OZUSLServerDES128.jar;D:\webapps\oz70\WEB-INF\ozmng\lib\icu4j_2_8.jar;D:\webapps\oz70\WEB-INF\ozmng\lib\ozviewer_lib.jar;D:\webapps\oz70\WEB-INF\ozmng\lib\ozrresource.jar;D:\webapps\oz70\WEB-INF\ozmng\lib\poi-scratchpad-3.0.2.jar;D:\webapps\oz70\WEB-INF\ozmng\lib\uk.co.mmscomputing.imageio.tiff.jar;D:\we
+[2019-03-20 15:39:34] [408  javajni.c] [debug] Jvm Option[3] vfprintf
+[2019-03-20 15:39:34] [408  javajni.c] [debug] Jvm Option[4] -Xms128m
+[2019-03-20 15:39:34] [408  javajni.c] [debug] Jvm Option[5] -Xmx256m
+[2019-03-20 15:39:34] [494  javajni.c] [debug] argv[0] = OZSchedulerStart
+[2019-03-20 15:40:10] [1208 OZService.c] [debug] OZService log initialized
+[2019-03-20 15:40:10] [495  OZService.c] [debug] Installing service...
+[2019-03-20 15:40:10] [info] Service OZScheduler name OZScheduler
+[2019-03-20 15:40:10] [537  OZService.c] [debug] Setting service description OZScheduler
+[2019-03-20 15:40:10] [info] Service OZScheduler installed
+[2019-03-20 15:40:10] [info] OZService finished.
+[2019-03-20 15:40:13] [1208 OZService.c] [debug] OZService log initialized
+[2019-03-20 15:40:13] [info] Running Service...
+[2019-03-20 15:40:13] [1051 OZService.c] [debug] Inside ServiceMain...
+[2019-03-20 15:40:13] [info] Starting service...
+[2019-03-20 15:40:13] [408  javajni.c] [debug] Jvm Option[0] -Xmixed
+[2019-03-20 15:40:13] [408  javajni.c] [debug] Jvm Option[1] -Xrs
+[2019-03-20 15:40:13] [408  javajni.c] [debug] Jvm Option[2] -Djava.class.path=D:\webapps\oz70\WEB-INF\ozmng\lib\ozsfw70.jar;D:\webapps\oz70\WEB-INF\ozmng\conf;D:\webapps\oz70\WEB-INF\ozmng\lib\OZServiceBootstrap.jar;D:\webapps\oz70\WEB-INF\ozmng\lib\jnet.jar;D:\webapps\oz70\WEB-INF\ozmng\lib\jsse.jar;D:\webapps\oz70\WEB-INF\ozmng\lib\log4j.jar;D:\webapps\oz70\WEB-INF\ozmng\lib\crimson.jar;D:\webapps\oz70\WEB-INF\ozmng\lib\parser.jar;D:\webapps\oz70\WEB-INF\ozmng\lib\xerces.jar;D:\webapps\oz70\WEB-INF\ozmng\lib\dom4j-1.6.1.jar;D:\webapps\oz70\WEB-INF\ozmng\lib\jaxen-1.1.6.jar;D:\webapps\oz70\WEB-INF\ozmng\lib\mail.jar;D:\webapps\oz70\WEB-INF\ozmng\lib\activation.jar;D:\webapps\oz70\WEB-INF\ozmng\lib\OZUSLClientSession.jar;D:\webapps\oz70\WEB-INF\ozmng\lib\OZUSLServerDES128.jar;D:\webapps\oz70\WEB-INF\ozmng\lib\icu4j_2_8.jar;D:\webapps\oz70\WEB-INF\ozmng\lib\ozviewer_lib.jar;D:\webapps\oz70\WEB-INF\ozmng\lib\ozrresource.jar;D:\webapps\oz70\WEB-INF\ozmng\lib\poi-scratchpad-3.0.2.jar;D:\webapps\oz70\WEB-INF\ozmng\lib\uk.co.mmscomputing.imageio.tiff.jar;D:\we
+[2019-03-20 15:40:13] [408  javajni.c] [debug] Jvm Option[3] vfprintf
+[2019-03-20 15:40:13] [408  javajni.c] [debug] Jvm Option[4] -Xms128m
+[2019-03-20 15:40:13] [408  javajni.c] [debug] Jvm Option[5] -Xmx256m
+[2019-03-20 15:40:13] [494  javajni.c] [debug] argv[0] = OZSchedulerStart
+[2019-03-20 15:40:14] [922  OZService.c] [debug] Java started oz/server/OZServiceBootstrap
+[2019-03-20 15:40:14] [info] Service started in 1092 ms.
+[2019-03-20 15:40:14] [1125 OZService.c] [debug] Waitning worker to finish...

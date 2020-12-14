@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title></title>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+		<script src="http://code.jquery.com/jquery-1.10.2.min.js"></script>
+		<script src="jquery.cookie.js"></script>
+		<script type="text/javascript" src="jquery.navgoco.js"></script>
+		<link rel="stylesheet" type="text/css" href="jquery.navgoco.css" media="screen" />
+
+<script type="text/javascript" id="demo1-javascript">
+$(document).ready(function() {
+	$("#demo1").navgoco({
+		caret: '<span class="caret"></span>',
+		accordion: true,
+		openClass: 'open',
+		save: true,
+		cookie: {
+			name: 'navgoco',
+			expires: false,
+			path: '/'
+		},
+		slide: {
+			duration: 400,
+			easing: 'swing'
+		}
+	});
+
+
+});
+</script>
+
+</head>
+<body>
+
+
+<ul class="nav" id="demo1" style="width:200px">
+    <li><a href="#">Home</a></li>
+    <li  class="active open"><a href="#">News and Events</a>
+        <ul >
+            <li><a href="#">Hot News</a></li>
+            <li><a href="#">RSS Feeds</a></li>
+            <li><a href="#">Peach Events</a></li>
+            <li><a href="#">User Groups</a></li>
+        </ul>
+    </li>
+    <li><a href="#">About</a>
+        <ul>
+            <li><a href="#">Public Relations</a></li>
+            <li><a href="#">Investors</a></li>
+            <li><a href="#">Working at Peach</a></li>
+            <li><a href="#">Environment</a></li>
+            <li><a href="#">Contact Us</a>
+                <ul>
+                    <li><a href="#">Support and Service</a></li>
+                    <li><a href="#">Product Feedback</a></li>
+                    <li><a href="#">Website Feedback</a></li>
+                </ul>
+            </li>
+            <li><a href="#">Working with Peach</a>
+                <ul>
+                    <li><a href="#">Procurement</a></li>
+                    <li><a href="#">Supplier Responsibility</a></li>
+                </ul>
+            </li>
+        </ul>
+    </li>
+    <li><a href="#">Where to Buy</a>
+        <ul>
+            <li><a href="#">Where can I buy Peach products?</a></li>
+            <li><a href="#">Peach Online Store</a></li>
+            <li><a href="#">Peach Store for Business</a></li>
+            <li><a href="#">Peach Store for Education</a></li>
+            <li><a href="#">Peach Online Store Country Selector</a></li>
+            <li><a href="#">Peach Retail</a></li>
+            <li><a href="#">Find a Reseller</a></li>
+            <li><a href="#">Peach Financial Services</a></li>
+            <li><a href="#">Peach Rebates</a></li>
+        </ul>
+    </li>
+</ul>
+
+
+
+
+</body>
+</html>

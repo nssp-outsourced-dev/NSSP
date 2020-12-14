@@ -1,0 +1,58 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>jQuery explr-js Plugin Demo</title>
+<link href="css/jquerysctipttop.css" rel="stylesheet" type="text/css">
+<link href="css/jquery-explr-1.4.css" rel="stylesheet" type="text/css">
+
+</head>
+
+<body>
+<div class="container">
+
+<ul id="tree">
+  <li class="icon-home"> <a href="#">home</a> </li>
+  <li class="icon-user"> <a href="#">About</a> </li>
+  <li class="icon-chain"> <a href="#">Links</a>
+    <ul>
+      <li class="icon-text"> <a href="#">Link 1</a> </li>
+      <li class="icon-text"> <a href="#">Link 2</a> </li>
+      <li class="icon-text"> <a href="#">Link 3</a> </li>
+      <li class="icon-text"> <a href="#">Link 4</a> </li>
+    </ul>
+  </li>
+  <li class="icon-mail"> <a href="#">Contact</a>
+  <ul>
+      <li class="icon-text"> <a href="#">Link 1</a> </li>
+      <li class="icon-text"> <a href="#">Link 2</a> </li>
+      <li class="icon-text"> <a href="#">Link 3</a> </li>
+      <li class="icon-text"> <a href="#">Link 4</a> </li>
+    </ul></li>
+</ul>
+</div>
+<script src="js/jquery-1.12.4.min.js"></script> 
+<script src="js/jquery-explr-1.4.js"></script> 
+<script>
+$(document).ready(function() {
+		        $("#tree").explr();
+	        });
+</script>
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-36251023-1']);
+  _gaq.push(['_setDomainName', 'jqueryscript.net']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+</body>
+</html>

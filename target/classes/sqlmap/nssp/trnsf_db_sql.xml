@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC '-//ibatis.apache.org//DTD Sql Map 2.0//EN' 'http://ibatis.apache.org/dtd/sql-map-2.dtd'>
+<sqlMap namespace="inv.trnsf">
+	
+	<select id="selectTrnsfList" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+	<![CDATA[
+        SELECT B.CASE_NO
+             , B.PRSCT_DE
+             , BT.TRNSF_SN
+             , BT.TRNSF_INSTT_SE_CD
+             , BT.TRNSF_INSTT_NM
+             , BT.TRNSF_INSTT_DEPT
+             , BT.TRNSF_INSTT_CHARGER
+             , BT.TRNSF_DE
+             , BT.TRNSF_RESN_CD
+             , BT.TRNSF_RESN_DC
+             , BT.PRE_PROGRS_STTUS_CD PRE_PROGRS_STTUS_CD
+             , FN_CD_NM(BT.PRE_PROGRS_STTUS_CD) PRE_PROGRS_STTUS_CD_NM
+             , B.PROGRS_STTUS_CD
+             , FN_CD_NM(B.PROGRS_STTUS_CD) PROGRS_STTUS_CD_NM
+             , FN_CASE_VIOLT_UPPER_NMS(B.CASE_NO) VIOLT_NM
+             , FN_CASE_TRGTER_NMS(B.CASE_NO) TRGTER_NMS
+          FROM INV_PRSCT B
+             , INV_PRSCT_TRNSF BT
+         WHERE B.TRNSF_SN = BT.TRNSF_SN(+)
+           AND 'Y' = BT.USE_YN(+)
+		]]>		   
+		<isNotEmpty property="CASE_NO">
+		   AND B.CASE_NO = #CASE_NO#
+		</isNotEmpty>
+		<isNotEmpty property="PRSCT_DE_FROM">
+		   AND B.PRSCT_DE BETWEEN REPLACE(#PRSCT_DE_FROM#, '-') AND REPLACE(NVL(#PRSCT_DE_TO#, #PRSCT_DE_FROM#), '-')
+		</isNotEmpty>
+		<isNotEmpty property="TRNSF_DE_FROM">
+		   AND BT.TRNSF_DE BETWEEN REPLACE(#TRNSF_DE_FROM#, '-') AND REPLACE(NVL(#TRNSF_DE_TO#, #TRNSF_DE_FROM#), '-')
+		</isNotEmpty>
+		 ORDER BY BT.TRNSF_SN, B.CASE_NO
+	</select>
+	
+	<select id="selectTrnsfInfo" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+	SELECT * FROM (
+		SELECT A.TRNSF_SN
+		     , B.RC_NO
+			 , A.TRNSF_INSTT_SE_CD
+			 , A.TRNSF_INSTT_NM
+			 , A.TRNSF_INSTT_DEPT
+			 , A.TRNSF_INSTT_CHARGER
+			 , TO_CHAR(TO_DATE(A.TRNSF_DE, 'YYYY-MM-DD'), 'YYYY-MM-DD') TRNSF_DE
+			 , A.TRNSF_RESN_CD
+			 , A.TRNSF_RESN_DC
+			 , A.PRE_PROGRS_STTUS_CD
+			 , A.USE_YN
+		  FROM INV_PRSCT_TRNSF A
+		     , RC_TMPR B
+		 WHERE A.USE_YN = 'Y'
+		   AND B.USE_YN = 'Y'
+		   AND A.TRNSF_SN = B.TRNSF_SN
+		   AND B.RC_NO = #RC_NO#
+	) RIGHT JOIN DUAL ON 1=1		   
+	</select>	
+
+	<select id="selectNewTrnsSn" resultClass="String">
+		SELECT SQ_TRNSF_SN.NEXTVAL FROM DUAL
+	</select>
+
+	<insert id="insertTrnsf" parameterClass="java.util.HashMap">
+	<![CDATA[
+		INSERT INTO INV_PRSCT_TRNSF
+			( TRNSF_SN
+			, TRNSF_INSTT_SE_CD
+			, TRNSF_INSTT_NM
+			, TRNSF_INSTT_DEPT
+			, TRNSF_INSTT_CHARGER
+			, TRNSF_DE
+			, TRNSF_RESN_CD
+			, TRNSF_RESN_DC
+			, WRITNG_ID
+			, WRITNG_DT
+			, UPDT_ID
+			, UPDT_DT
+			, PRE_PROGRS_STTUS_CD
+			)
+		VALUES
+			( #TRNSF_SN#
+			, #TRNSF_INSTT_SE_CD#
+			, #TRNSF_INSTT_NM#
+			, #TRNSF_INSTT_DEPT#
+			, #TRNSF_INSTT_CHARGER#
+			, REPLACE(#TRNSF_DE#, '-', '')
+			, #TRNSF_RESN_CD#
+			, #TRNSF_RESN_DC#
+			, #WRITNG_ID#
+			, SYSDATE
+			, #UPDT_ID#
+			, SYSDATE
+	]]>
+		<isNotEmpty property="CASE_NO">
+			, (SELECT PROGRS_STTUS_CD FROM INV_PRSCT WHERE CASE_NO = #CASE_NO#)		
+		</isNotEmpty>
+		<isEmpty property="CASE_NO">		
+			<isNotEmpty property="RC_NO">
+			, (SELECT PROGRS_STTUS_CD FROM RC_TMPR WHERE RC_NO = #RC_NO#)		
+			</isNotEmpty>
+		</isEmpty>
+			)
+	</insert>
+
+	<update id="updateInvPrsctForTrnsf" parameterClass="java.util.HashMap">
+		UPDATE INV_PRSCT
+		   SET TRNSF_SN = #TRNSF_SN#
+		     , PROGRS_STTUS_CD = '02114' /* 이송종결 */
+		     , UPDT_ID  = #UPDT_ID#
+		     , UPDT_DT  = SYSDATE		      
+		 WHERE CASE_NO = #CASE_NO#
+		   AND USE_YN = 'Y'
+	</update>
+
+	<update id="updateRcTmprForTrnsf" parameterClass="java.util.HashMap">
+		UPDATE RC_TMPR
+		   SET TRNSF_SN = #TRNSF_SN#
+		     , PROGRS_STTUS_CD = '02114' /* 이송종결 */
+		     , UPDT_ID  = #UPDT_ID#
+		     , UPDT_DT  = SYSDATE		      
+		 WHERE RC_NO = #RC_NO#
+		   AND USE_YN = 'Y'
+	</update>
+
+	<update id="updateTrnsf" parameterClass="java.util.HashMap">
+	<![CDATA[
+		UPDATE INV_PRSCT_TRNSF
+		   SET TRNSF_INSTT_SE_CD   = #TRNSF_INSTT_SE_CD#
+		     , TRNSF_INSTT_NM      = #TRNSF_INSTT_NM#
+		     , TRNSF_INSTT_DEPT    = #TRNSF_INSTT_DEPT#
+		     , TRNSF_INSTT_CHARGER = #TRNSF_INSTT_CHARGER#
+		     , TRNSF_DE            = REPLACE(#TRNSF_DE#, '-', '')
+		     , TRNSF_RESN_CD       = #TRNSF_RESN_CD#
+		     , TRNSF_RESN_DC       = #TRNSF_RESN_DC#
+		     , UPDT_ID             = #UPDT_ID#
+		     , UPDT_DT             = SYSDATE
+		 WHERE TRNSF_SN = #TRNSF_SN#
+		   AND USE_YN = 'Y'
+	]]>
+	</update>
+
+
+	<update id="deleteTrnsf" parameterClass="java.util.HashMap">
+	<![CDATA[
+		UPDATE INV_PRSCT_TRNSF
+		   SET USE_YN = 'N'
+		     , UPDT_ID  = #UPDT_ID#
+		     , UPDT_DT  = SYSDATE
+		 WHERE TRNSF_SN = #TRNSF_SN#
+		   AND USE_YN = 'Y'
+	]]>
+	</update>
+
+	<update id="deleteTrnsfForCase" parameterClass="java.util.HashMap">
+	<![CDATA[
+		UPDATE INV_PRSCT A
+		   SET A.PROGRS_STTUS_CD = (SELECT B.PRE_PROGRS_STTUS_CD FROM INV_PRSCT_TRNSF B WHERE A.TRNSF_SN = B.TRNSF_SN) 
+		 WHERE A.TRNSF_SN = #TRNSF_SN#
+	]]>
+	</update> 	
+
+	<update id="deleteTrnsfForRc" parameterClass="java.util.HashMap">
+	<![CDATA[
+		UPDATE RC_TMPR A
+		   SET A.PROGRS_STTUS_CD = (SELECT B.PRE_PROGRS_STTUS_CD FROM INV_PRSCT_TRNSF B WHERE A.TRNSF_SN = B.TRNSF_SN) 
+		 WHERE A.TRNSF_SN = #TRNSF_SN#
+	]]>
+	</update> 	
+	
+	
+</sqlMap>
+
+

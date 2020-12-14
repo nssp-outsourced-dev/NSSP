@@ -1,0 +1,1 @@
+nohup ./scheduler.sh &

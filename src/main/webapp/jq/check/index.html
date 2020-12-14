@@ -1,0 +1,31 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+	<!-- META INFORMATION -->
+
+	<!-- PAGE INFORMATION & REQUIREMENTS -->
+	<title>Labelauty jQuery Plugin</title>
+
+
+	<script type="text/javascript" src="source/jquery-latest.min.js"></script>
+	<script type="text/javascript" src="source/jquery-labelauty.js"></script>
+
+	<link rel="stylesheet" href="source/jquery-labelauty.css" type="text/css" media="screen" charset="utf-8" />
+	<link rel="stylesheet" href="source/lby-main.css" type="text/css" media="screen" charset="utf-8" />
+
+	<script>
+		$(document).ready(function(){
+			$(".to-labelauty").labelauty({ minimum_width: "155px" });
+			$(".to-labelauty-icon").labelauty({ label: false });
+		});
+	</script>
+</head>
+<body>
+
+	<input class="to-labelauty-icon" type="checkbox" checked/>sss
+					<input class="to-labelauty-icon" type="checkbox" />
+<input class="to-labelauty-icon" type="radio" name="rd2" checked />
+					<input class="to-labelauty-icon" type="radio" name="rd2" />
+</body>
+</html>

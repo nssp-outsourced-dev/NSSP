@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<TASK-HOLIDAY-ROOT>
+<TASK-HOLIDAY name="신정" baseday="yyyy-01-01" type="solar" start="0" end="0" />
+<TASK-HOLIDAY name="설날" baseday="yyyy-01-01" type="lunar" start="1" end="1" />
+<TASK-HOLIDAY name="31절" baseday="yyyy-03-01" type="solar" start="0" end="0" />
+<TASK-HOLIDAY name="근로자의날" baseday="yyyy-05-01" type="solar" start="0" end="0" />
+<TASK-HOLIDAY name="어린이날" baseday="yyyy-05-05" type="solar" start="0" end="0" />
+<TASK-HOLIDAY name="석가탄신일" baseday="yyyy-04-08" type="lunar" start="0" end="0" />
+<TASK-HOLIDAY name="현충일" baseday="yyyy-06-06" type="solar" start="0" end="0" />
+<TASK-HOLIDAY name="광복절" baseday="yyyy-08-15" type="solar" start="0" end="0" />
+<TASK-HOLIDAY name="추석" baseday="yyyy-08-15" type="lunar" start="1" end="1" />
+<TASK-HOLIDAY name="개천절" baseday="yyyy-10-03" type="solar" start="0" end="0" />
+<TASK-HOLIDAY name="성탄절" baseday="yyyy-12-25" type="solar" start="0" end="0" />
+<TASK-HOLIDAYGROUP name="Group1">
+  <ITEM ref="신정" />
+  <ITEM ref="설날" />
+  <ITEM ref="31절" />
+  <ITEM ref="어린이날" />
+  <ITEM ref="석가탄신일" />
+  <ITEM ref="석가탄신일" />
+  <ITEM ref="현충일" />
+  <ITEM ref="광복절" />
+  <ITEM ref="추석" />
+  <ITEM ref="개천절" />
+  <ITEM ref="성탄절" />
+</TASK-HOLIDAYGROUP>
+<TASK-HOLIDAYGROUP name="Group2">
+  <ITEM ref="설날" />
+  <ITEM ref="추석" />
+</TASK-HOLIDAYGROUP>
+</TASK-HOLIDAY-ROOT>
+
+

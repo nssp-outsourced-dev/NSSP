@@ -1,0 +1,309 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC '-//ibatis.apache.org//DTD Sql Map 2.0//EN' 'http://ibatis.apache.org/dtd/sql-map-2.dtd'>
+<sqlMap namespace="hwp">
+
+
+	<!-- 50.임의제출서(압수물) -->
+	<select id="selectHwp00000000000000000050_1" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+	<![CDATA[
+		SELECT (SELECT FN_EXMN_NM(X.CMPTNC_EXMN_CD) FROM RC_TMPR X WHERE A.RC_NO = X.RC_NO) AS EXMN_NM
+		     , NVL(B.TRGTER_NM, C.TRGTER_NM) TRGTER_NM
+		     , NVL(DGUARD.DECRYPT('TBL','ENC',B.TRGTER_RRN), DECODE(C.TRGTER_TY_CD, 'I', DGUARD.DECRYPT('TBL','ENC',C.TRGTER_RRN), C.TRGTER_CPRN)) TRGTER_RRN
+		     , NVL(B.ADRES_ADDR|| NVL2(B.ADRES_ADDR, '('||B.ADRES_ZIP||')', ''), NVL(C.DWLSIT_ADDR, C.ADRES_ADDR) || NVL2(NVL(C.DWLSIT_ADDR, C.ADRES_ADDR), '('||NVL(C.DWLSIT_ZIP, C.ADRES_ZIP)||')', '')) ADDR
+		     , FN_CD_NM(C.OCCP_CD) || NVL2(C.WRC_NM, '('||C.WRC_NM||')', '') JOB
+		     , FN_OZ_DATE(NULL, NULL) CF_TODAY
+		  FROM INV_CCDRC A
+		     , INV_CCDRC_TRGTER B
+		     , RC_TMPR_TRGTER C
+		 WHERE A.USE_YN = 'Y'
+		   AND A.CCDRC_NO = B.CCDRC_NO
+		   AND A.CCDRC_SN = B.CCDRC_SN
+		   AND A.CCDRC_NO = #P_CCDRC_NO#
+		   AND A.CCDRC_SN = (SELECT MIN(CCDRC_SN) FROM INV_CCDRC_TRGTER WHERE CCDRC_NO = '2019-000001')
+		   AND B.SZURE_TRGTER_CD = '00722'
+		   AND B.RC_NO = C.RC_NO (+)
+		   AND B.TRGTER_SN = C.TRGTER_SN (+)
+	]]>
+	</select>
+
+	<select id="selectHwp00000000000000000050_2" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+	<![CDATA[
+		SELECT ROW_NUMBER() OVER(ORDER BY CCDRC_SN) AS RN
+		     , CCDRC_NM
+		     , CCDRC_QY
+		     , NVL(FN_CD_NM(DSPS_CD), DSPS_RM) DSPS_NM
+		     , FN_CCDRC_TRGTER_NM(CCDRC_NO, CCDRC_SN, RC_NO, 'P') P_TRGTER_NM
+		     , '' ETC
+		  FROM INV_CCDRC
+		 WHERE CCDRC_NO = #P_CCDRC_NO#
+		   AND USE_YN = 'Y'
+		   AND RNDM_PRESENTN_YN = 'Y'
+   ]]>
+   </select>
+
+
+	<!-- 51.소유권포기서 -->
+	<select id="selectHwp00000000000000000051" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		SELECT FN_OZ_DATE(NULL, NULL) CF_TODAY
+		  FROM DUAL
+	</select>
+
+	<!-- 158.압수조서 -->
+	<select id="selectHwp00000000000000000158" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+	<![CDATA[
+		SELECT X.CCDRC_NO
+		     , X.RC_NO
+		     , NVL(FN_RC_VIOLT_ROOT_NM(X.RC_NO),' ') AS VIOLT_NM
+		     , X.TRGTER_NM || CASE WHEN REGEXP_INSTR(substr(X.TRGTER_NM,-1,1),'[0-9]') > 0 THEN '명' END AS TRGTER_NM
+		     , (SELECT FN_EXMN_NM(IP.CMPTNC_EXMN_CD) FROM RC_TMPR IP WHERE IP.RC_NO = X.RC_NO) AS CMPTNC_EXMN_NM
+		     , FN_USER_NM(X.WRITNG_ID) AS OZ_NM
+		     , FN_OZ_DATE(null, null) AS OZ_DT
+		     , TO_CHAR(SYSDATE, 'HH24:MI') AS OZ_TIME
+		     , CCDRC_NM
+		     , NVL(FN_OZ_DATE2(SZURE_DE, null), FN_OZ_DATE(null, null)) AS SZURE_DE
+		  FROM ( SELECT IC.CCDRC_NO
+		              , MAX(IC.RC_NO) AS RC_NO
+		              , MAX(WRITNG_ID) AS WRITNG_ID
+		              , FN_RC_TRGTER_NM(MAX(IC.RC_NO), '00697') AS TRGTER_NM
+		              , LISTAGG(IC.CCDRC_NM,',') WITHIN GROUP (ORDER BY IC.CCDRC_SN) AS CCDRC_NM
+		              , MAX(IC.SZURE_DE) AS SZURE_DE
+		           FROM INV_CCDRC IC
+		          WHERE IC.CCDRC_NO = #P_CCDRC_NO#
+		            AND IC.USE_YN = 'Y'
+		          GROUP BY IC.CCDRC_NO ) X
+		 RIGHT OUTER JOIN DUAL ON 1=1
+	]]>
+	</select>
+
+	<!-- 48.압수목록 -->
+	<select id="selectHwp00000000000000000048" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+	<![CDATA[
+		SELECT ROW_NUMBER() OVER(ORDER BY CCDRC_SN) RNUM
+		      , CCDRC_NO, CCDRC_SN, RC_NO, CASE_NO
+		      , MAX(CCDRC_NM      ) AS CCDRC_NM
+		      , MAX(CCDRC_QY      ) AS CCDRC_QY
+		      , MAX(S_TRGTER_NM   ) AS S_TRGTER_NM
+		      , MAX(S_TRGTER_RRN  ) AS S_TRGTER_RRN
+		      , MAX(S_TRGTER_TEL  ) AS S_TRGTER_TEL
+		      , MAX(S_TRGTER_HP_NO) AS S_TRGTER_HP_NO
+		      , MAX(S_ADRES_ZIP   ) AS S_ADRES_ZIP
+		      , MAX(S_ADRES_ADDR  ) AS S_ADRES_ADDR
+		      , MAX(P_TRGTER_NM   ) AS P_TRGTER_NM
+		      , MAX(P_TRGTER_RRN  ) AS P_TRGTER_RRN
+		      , MAX(P_TRGTER_TEL  ) AS P_TRGTER_TEL
+		      , MAX(P_TRGTER_HP_NO) AS P_TRGTER_HP_NO
+		      , MAX(P_ADRES_ZIP   ) AS P_ADRES_ZIP
+		      , MAX(P_ADRES_ADDR  ) AS P_ADRES_ADDR
+		      , MAX(RM) AS RM
+		  FROM (
+		        SELECT X.CCDRC_NO
+		             , X.CCDRC_SN
+		             , X.RC_NO
+		             , FN_CASE_NO(A.RC_NO) CASE_NO
+		             , X.CCDRC_NM
+		             , X.CCDRC_QY
+		             , NVL2(A.TRGTER_SN, B.TRGTER_NM, A.TRGTER_NM) S_TRGTER_NM
+		             , DGUARD.DECRYPT('TBL','ENC',NVL2(A.TRGTER_SN, B.TRGTER_RRN, A.TRGTER_RRN)) S_TRGTER_RRN
+		             , DGUARD.DECRYPT('TBL','ENC',NVL2(A.TRGTER_SN, B.OWNHOM_TEL, A.TRGTER_TEL)) S_TRGTER_TEL
+		             , DGUARD.DECRYPT('TBL','ENC',NVL2(A.TRGTER_SN, B.HP_NO, A.TRGTER_HP_NO)) S_TRGTER_HP_NO
+		             , NVL2(A.TRGTER_SN, NVL(B.ADRES_ZIP, NVL(B.DWLSIT_ZIP, B.REGBS_ZIP)), A.ADRES_ZIP) S_ADRES_ZIP
+		             , NVL2(A.TRGTER_SN, NVL(B.ADRES_ADDR, NVL(B.DWLSIT_ADDR, B.REGBS_ADDR)), A.ADRES_ADDR) S_ADRES_ADDR
+		             , '' P_TRGTER_NM
+		             , '' P_TRGTER_RRN
+		             , '' P_TRGTER_TEL
+		             , '' P_TRGTER_HP_NO
+		             , '' P_ADRES_ZIP
+		             , '' P_ADRES_ADDR
+		             , DECODE(X.RNDM_PRESENTN_YN, 'Y', '임의제출', '') RM
+		          FROM INV_CCDRC_TRGTER A
+		             , RC_TMPR_TRGTER B
+		             , INV_CCDRC X
+		         WHERE X.USE_YN = 'Y'
+		           AND X.CCDRC_NO = #P_CCDRC_NO#
+		           AND X.CCDRC_NO = A.CCDRC_NO (+)
+		           AND X.CCDRC_SN = A.CCDRC_SN (+)
+		           AND A.RC_NO = B.RC_NO (+)
+		           AND A.TRGTER_SN = B.TRGTER_SN (+)
+		           AND A.SZURE_TRGTER_CD IN (SELECT ESNTL_CD FROM CMN_CD WHERE UPPER_CD = '00723') /*소지자 또는 제출자*/
+		         UNION ALL
+		        SELECT X.CCDRC_NO
+		             , X.CCDRC_SN
+		             , X.RC_NO
+		             , FN_CASE_NO(X.RC_NO) CASE_NO
+		             , X.CCDRC_NM
+		             , X.CCDRC_QY
+		             , '' S_TRGTER_NM
+		             , '' S_TRGTER_RRN
+		             , '' S_TRGTER_TEL
+		             , '' S_TRGTER_HP_NO
+		             , '' S_ADRES_ZIP
+		             , '' S_ADRES_ADDR
+		             , NVL2(A.TRGTER_SN, B.TRGTER_NM, A.TRGTER_NM) P_TRGTER_NM
+		             , DGUARD.DECRYPT('TBL','ENC',NVL2(A.TRGTER_SN, B.TRGTER_RRN, A.TRGTER_RRN)) P_TRGTER_RRN
+		             , DGUARD.DECRYPT('TBL','ENC',NVL2(A.TRGTER_SN, B.OWNHOM_TEL, A.TRGTER_TEL)) P_TRGTER_TEL
+		             , DGUARD.DECRYPT('TBL','ENC',NVL2(A.TRGTER_SN, B.HP_NO, A.TRGTER_HP_NO)) P_TRGTER_HP_NO
+		             , NVL2(A.TRGTER_SN, NVL(B.ADRES_ZIP, NVL(B.DWLSIT_ZIP, B.REGBS_ZIP)), A.ADRES_ZIP) P_ADRES_ZIP
+		             , NVL2(A.TRGTER_SN, NVL(B.ADRES_ADDR, NVL(B.DWLSIT_ADDR, B.REGBS_ADDR)), A.ADRES_ADDR) P_ADRES_ADDR
+		             , DECODE(X.RNDM_PRESENTN_YN, 'Y', '임의제출', '') RM
+		          FROM INV_CCDRC_TRGTER A
+		             , RC_TMPR_TRGTER B
+		             , INV_CCDRC X
+		         WHERE X.USE_YN = 'Y'
+		           AND X.CCDRC_NO = #P_CCDRC_NO#
+		           AND X.CCDRC_NO = A.CCDRC_NO (+)
+		           AND X.CCDRC_SN = A.CCDRC_SN (+)
+		           AND A.RC_NO = B.RC_NO (+)
+		           AND A.TRGTER_SN = B.TRGTER_SN (+)
+		           AND '00722' = A.SZURE_TRGTER_CD (+) /*소유자*/
+		      )
+		GROUP BY CCDRC_NO, CCDRC_SN, RC_NO, CASE_NO
+	]]>
+	</select>
+
+	<!-- 52.압수목록 -->
+	<select id="selectHwp00000000000000000052_1" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+	<![CDATA[
+		SELECT
+		CCDRC_NO, RC_NO,
+		(SELECT FN_EXMN_NM(IP.CMPTNC_EXMN_CD) FROM RC_TMPR IP WHERE IP.RC_NO = X.RC_NO) AS CMPTNC_EXMN_NM,
+		(SELECT FN_CD_NM(CLSF_CD) FROM CMN_USER CU WHERE CU.ESNTL_ID = X.WRITNG_ID) "직급명",
+		FN_USER_NM(X.WRITNG_ID) AS OZ_NM,
+		FN_OZ_DATE(null, null) AS OZ_DT
+		FROM
+		(
+		    SELECT
+		    IC.CCDRC_NO, MAX(IC.RC_NO) AS RC_NO,
+			MAX(WRITNG_ID) AS WRITNG_ID
+		    FROM INV_CCDRC IC
+		    WHERE IC.CCDRC_NO = #P_CCDRC_NO# AND IC.USE_YN = 'Y'
+		    GROUP BY IC.CCDRC_NO
+
+		) X
+		RIGHT OUTER JOIN DUAL ON 1=1
+	]]>
+	</select>
+
+	<select id="selectHwp00000000000000000052_2" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+	<![CDATA[
+		SELECT
+		ROW_NUMBER() OVER(ORDER BY IC.CCDRC_NO, IC.CCDRC_SN) AS RN,
+		IC.CCDRC_NM,
+		IC.CCDRC_QY,
+		DECODE(RNDM_PRESENTN_YN, 'Y', '임의제출', '') AS ETC
+		FROM INV_CCDRC IC
+		WHERE IC.CCDRC_NO = #P_CCDRC_NO# AND IC.USE_YN = 'Y'
+	]]>
+	</select>
+
+	<!-- 140.수사보고 -->
+	<!-- 69.수사보고서와 같은 양식 문서 (컬럼명 고정)-->
+	<select id="selectHwp00000000000000000140" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+	<![CDATA[
+		SELECT FN_USER_NM(NVL(UPDT_ID, WRITNG_ID)) WRITNG_NM
+			--, FN_OZ_DATE(NULL, NULL) S_DATE
+			, (
+				SELECT
+					TO_CHAR(NVL2(PRSCT_DE, TO_DATE(PRSCT_DE, 'YYYY-MM-DD'), SYSDATE), 'YYYY.fmMM.DD')
+				FROM 
+					RC_TMPR
+				WHERE 
+					RC_NO = A.RC_NO
+			) AS S_DATE -- 승인 일자로 수정 by dgkim
+			, (
+				SELECT
+					FN_USER_NM(CHARGER_ID)
+				FROM 
+					RC_TMPR
+				WHERE 
+					RC_NO = A.RC_NO
+			) AS CHARGER_NM -- 담당자로 변경 by dgkim
+		FROM INV_CCDRC A
+		WHERE CCDRC_NO = #P_CCDRC_NO#
+			AND CCDRC_SN = (SELECT MAX(X.CCDRC_SN) FROM INV_CCDRC X
+							WHERE USE_YN = 'Y'
+							AND X.CCDRC_NO = A.CCDRC_NO)
+	]]>
+	</select>
+
+	<!-- 198.압수확인서 -->
+	<select id="selectHwp00000000000000000198" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+	<![CDATA[
+		SELECT FN_OZ_DATE(NULL, NULL) CF_TODAY FROM DUAL
+	]]>
+	</select>
+
+	<!-- 199.압수물보관증 -->
+	<select id="selectHwp00000000000000000199_1" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+	<![CDATA[
+		SELECT
+			FN_RC_VIOLT_ROOT_NM(X.RC_NO) AS VIOLT_ROOT_NM,
+			FN_OZ_DATE(null, null) AS CF_TODAY,
+			X.TRGTER_NM || CASE WHEN REGEXP_INSTR(substr(X.TRGTER_NM,-1,1),'[0-9]') > 0 THEN '명' END AS TRGTER_NM,
+			FN_USER_NM(X.CHARGER_ID) AS CHARGER_NM,
+			FN_CNVR_NO(X.CCDRC_NO) AS CCDRC_NO
+		FROM
+		(
+		    SELECT
+	       		IC.RC_NO,
+	       		T.RC_SE_CD,
+	       		T.CHARGER_ID,
+	       		FN_RC_TRGTER_NM (T.RC_NO, '') AS TRGTER_NM,
+	       		IC.CCDRC_NO
+	       	FROM INV_CCDRC IC
+	       	JOIN RC_TMPR T ON IC.RC_NO = T.RC_NO
+        	WHERE IC.CCDRC_NO = #P_CCDRC_NO#
+        	  AND IC.USE_YN = 'Y'
+		) X
+		RIGHT OUTER JOIN DUAL ON 1=1
+	]]>
+	</select>
+	<select id="selectHwp00000000000000000199_2" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		SELECT
+        	ROW_NUMBER() OVER(ORDER BY IC.CCDRC_NO, IC.CCDRC_SN) AS RN,
+        	IC.CCDRC_NM,
+        	IC.CCDRC_QY,
+        	IC.DSPS_DE,
+        	IC.DSPS_RM,
+        	DECODE(RNDM_PRESENTN_YN, 'Y', '임의제출', '') AS ETC
+        FROM INV_CCDRC IC
+        WHERE IC.CCDRC_NO = #P_CCDRC_NO#
+        AND IC.USE_YN = 'Y'
+	</select>
+
+	<!-- 200.압수물폐기조서 -->
+	<select id="selectHwp00000000000000000200_1" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+	<![CDATA[
+		SELECT
+			FN_RC_VIOLT_ROOT_NM(X.RC_NO) AS VIOLT_ROOT_NM,
+			FN_OZ_DATE(null, null) AS CF_TODAY,
+			X.TRGTER_NM || CASE WHEN REGEXP_INSTR(substr(X.TRGTER_NM,-1,1),'[0-9]') > 0 THEN '명' END AS TRGTER_NM,
+			FN_USER_NM(X.CHARGER_ID) AS CHARGER_NM
+		FROM
+		(
+		    SELECT
+	       		IC.RC_NO,
+	       		T.RC_SE_CD,
+	       		T.CHARGER_ID,
+	       		CASE WHEN T.RC_SE_CD = 'F' THEN FN_RC_TRGTER_NM (T.RC_NO, '00697') ELSE FN_RC_TRGTER_NM (T.RC_NO, '01349') END AS TRGTER_NM
+	       	FROM INV_CCDRC IC
+	       	JOIN RC_TMPR T ON IC.RC_NO = T.RC_NO
+        	WHERE IC.CCDRC_NO = #P_CCDRC_NO#
+        	  AND IC.USE_YN = 'Y'
+		) X
+		RIGHT OUTER JOIN DUAL ON 1=1
+	]]>
+	</select>
+	<select id="selectHwp00000000000000000200_2" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		SELECT
+        	ROW_NUMBER() OVER(ORDER BY IC.CCDRC_NO, IC.CCDRC_SN) AS RN,
+        	IC.CCDRC_NM,
+        	IC.CCDRC_QY,
+        	IC.DSPS_DE,
+        	IC.DSPS_RM,
+        	DECODE(RNDM_PRESENTN_YN, 'Y', '임의제출', '') AS ETC
+        FROM INV_CCDRC IC
+        WHERE IC.CCDRC_NO = #P_CCDRC_NO#
+        AND IC.USE_YN = 'Y'
+        AND IC.DSPS_CD =  '00705' <!-- 폐기 -->
+	</select>
+</sqlMap>

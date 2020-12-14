@@ -1,0 +1,1355 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC '-//ibatis.apache.org//DTD Sql Map 2.0//EN' 'http://ibatis.apache.org/dtd/sql-map-2.dtd'>
+<sqlMap namespace="trn">
+
+	<select id="selectCaseListForTrn" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		SELECT A.RC_NO
+		     , FN_CNVR_NO(A.RC_NO) CV_RC_NO
+		     , A.CASE_NO
+		     , FN_CNVR_NO(A.CASE_NO) CV_CASE_NO
+		     , A.PRSCT_DE
+		     , A.PROGRS_STTUS_CD
+		     , FN_CD_NM (A.INV_PROVIS_CD) AS INV_PROVIS_NM
+		     , FN_CD_NM (A.PROGRS_STTUS_CD) AS PROGRS_STTUS_NM
+		     , FN_RC_VIOLT_NM (A.RC_NO) AS VIOLT_NM
+		     , C.TRN_NO
+		     , FN_CNVR_NO(C.TRN_NO) CV_TRN_NO
+		     , C.TRN_DE
+		     , FN_RC_TRGTER_NM(A.RC_NO, '00697') TRGTER_NM
+		  FROM RC_TMPR A
+		 <!-- ,(SELECT RC_NO, COUNT(1) CF_CNT FROM INV_SUGEST
+		        WHERE SUGEST_TY_CD = '01101' /* 건의 유형 코드(수사지휘건의) */
+		        AND SUGEST_RESULT_CD = 'Y'   /* 건의 결과 코드 */
+		        GROUP BY RC_NO ) B --> <![CDATA[
+		     , (SELECT A.RC_NO, COUNT(A.SUGEST_NO) CF_CNT
+		          FROM INV_SUGEST A, RC_TMPR B
+		         WHERE A.USE_YN = 'Y'
+		           AND A.SUGEST_TY_CD = '01101' /* 건의 유형 코드(수사지휘건의) */
+		           AND A.SUGEST_RESULT_CD = 'Y' /* 건의 결과 코드(가) */
+		           AND B.USE_YN = 'Y'
+		           AND A.RC_NO = B.RC_NO
+		           AND (   (B.INV_RESMPT_YN = 'Y' AND B.INV_RESMPT_DE <= A.SUGEST_DE)
+		                 OR B.INV_RESMPT_YN = 'N')
+		         GROUP BY A.RC_NO) B
+		     , TRN_CASE C
+		 WHERE A.USE_YN = 'Y'
+		   AND A.PROGRS_STTUS_CD IN ('02121', '02122') /* 수사지휘 건의, 송치준비중 */
+		   AND A.CHARGER_ID = #CHARGER_ID#
+		   AND A.CHARGER_DEPT_CD = #CHARGER_DEPT_CD#
+		   AND A.RC_NO = B.RC_NO
+		   AND A.RC_NO = C.RC_NO (+)
+		   AND 'Y' = C.USE_YN (+)
+		   AND 'Y' <> C.ED_YN(+)
+		 ORDER BY A.CASE_NO
+	]]>
+	</select>
+
+	<select id="selectTrnCaseList" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		SELECT ROW_NUMBER() OVER (ORDER BY A.TRN_NO) AS RNUM
+		     , A.TRN_NO
+		     , FN_CNVR_NO(A.TRN_NO) CV_TRN_NO
+		     , A.RC_NO
+		     , B.CASE_NO
+		     , A.TRN_DE
+		     , NVL2(A.EVDENC_DC, 'Y', 'N') EVDENC_YN
+		     , A.EVDENC_DC
+		     , A.TRN_RM
+		     , FN_EXMN_NM(A.CMPTNC_EXMN_CD) CMPTNC_EXMN_NM
+		     , FN_USER_NM(B.CHARGER_ID) CHARGER_NM
+		     , A.ED_YN
+		     , A.OCCRRNC_ZERO_NO
+		     , A.ARREST_ZERO_NO
+		  FROM TRN_CASE A
+		     , RC_TMPR B
+		 WHERE A.USE_YN= 'Y'
+		   AND B.USE_YN = 'Y'
+		   AND A.RC_NO = B.RC_NO
+		<isNotEmpty property="CHARGER_ID">
+		   AND B.CHARGER_ID = #CHARGER_ID#
+		</isNotEmpty>
+		<isNotEmpty property="RC_NO">
+		   AND A.RC_NO = #RC_NO#
+		</isNotEmpty>
+		<isNotEmpty property="TRN_NO">
+		   AND A.TRN_NO = #TRN_NO#
+		</isNotEmpty>
+		<isNotEmpty property="TRN_DE_FROM">
+		   AND A.TRN_DE BETWEEN REPLACE(#TRN_DE_FROM#, '-') AND REPLACE(NVL(#TRN_DE_TO#, #TRN_DE_FROM#), '-')
+		</isNotEmpty>
+		 ORDER BY A.TRN_NO
+	</select>
+
+	<!-- 대장/통계 > 송치부 -->
+	<select id="selectTrnCaseStatList" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		SELECT X.*
+		FROM
+		(
+			SELECT A.*,		 
+				COUNT(*) OVER() AS TOT_CNT,
+				<isNotEmpty property="dataField">
+					<isNotEmpty property="sortType">
+						ROW_NUMBER() OVER(ORDER BY A.$dataField$ $sortType$ NULLS LAST) RN
+					</isNotEmpty>
+				</isNotEmpty>
+				<isEmpty property="dataField">		
+					ROW_NUMBER() OVER(ORDER BY A.TRN_NO, A.SORT_ORDR) RN
+				</isEmpty>
+			FROM
+			(
+				SELECT C.SORT_ORDR 
+					 , A.TRN_NO
+					 , A.RC_NO
+					 , B.CASE_NO
+					 , A.TRN_DE
+					 , NVL2(A.EVDENC_DC, 'Y', 'N') EVDENC_YN
+					 , A.EVDENC_DC
+					 , A.TRN_RM
+					 , FN_EXMN_NM(A.CMPTNC_EXMN_CD) CMPTNC_EXMN_NM
+					 , FN_USER_NM(B.CHARGER_ID) CHARGER_NM
+					 , D.TRGTER_NM
+					 , D.SEXDSTN_CD
+					 , D.TRGTER_AGE
+					 , FN_CD_NM(IMPR_STTUS_CD) IMPR_STTUS_NM
+					 , (SELECT LISTAGG(FN_VIOLT_NM(TV.VIOLT_CD),',') WITHIN GROUP (ORDER BY TV.VIOLT_CD)
+					      FROM TRN_VIOLT TV
+					     WHERE TV.TRN_NO = C.TRN_NO
+					       AND TV.RC_NO = C.RC_NO
+					       AND TV.TRGTER_SN = C.TRGTER_SN) VIOLT_NM
+					 , (SELECT LISTAGG(FN_CD_NM(TV.TRN_OPINION_CD),',') WITHIN GROUP (ORDER BY TV.TRN_OPINION_CD)
+					      FROM TRN_VIOLT TV
+					     WHERE TV.TRN_NO = C.TRN_NO
+					       AND TV.RC_NO = C.RC_NO
+					       AND TV.TRGTER_SN = C.TRGTER_SN) TRN_OPINION_NM
+					 , (SELECT LISTAGG(FN_VIOLT_NM (TV.VIOLT_CD) || '('||FN_CD_NM(TV.TRN_OPINION_CD)||')',',') WITHIN GROUP (ORDER BY TV.VIOLT_CD)
+					      FROM TRN_VIOLT TV
+					     WHERE TV.TRN_NO = C.TRN_NO
+					       AND TV.RC_NO = C.RC_NO
+					       AND TV.TRGTER_SN = C.TRGTER_SN) TRN_VIOLT_OPINION
+				  FROM TRN_CASE A
+					 , RC_TMPR B
+					 , TRN_SUSPCT C
+					 , RC_TMPR_TRGTER D
+				 WHERE A.USE_YN= 'Y'
+				   AND B.USE_YN = 'Y'
+				   AND C.USE_YN = 'Y'
+				   AND A.RC_NO = B.RC_NO
+				   AND A.TRN_NO = C.TRN_NO
+				   AND A.RC_NO = C.RC_NO
+				   AND C.RC_NO = D.RC_NO
+				   AND C.TRGTER_SN = D.TRGTER_SN
+				   AND A.ED_YN = 'Y' <!-- 2019-07-24 사건:송치=1:n -->
+				   <!-- AND B.PROGRS_STTUS_CD = '00242' /*송치*/ -->
+				<isNotEmpty property="searchTrgterNm" >
+					AND D.TRGTER_NM = #searchTrgterNm#
+				</isNotEmpty>
+				<isNotEmpty property="searchChager" >
+					AND B.CHARGER_ID = #searchChager#
+				</isNotEmpty>
+				<isNotEmpty property="searchDeptCd" >
+					AND B.CHARGER_DEPT_CD IN (
+						SELECT DC.DEPT_CD
+						FROM CMN_DEPT_CD DC
+						WHERE DC.USE_YN = 'Y' AND DC.DEPT_CD != '00000'
+						START WITH DC.DEPT_CD = #searchDeptCd#
+						CONNECT BY PRIOR DC.DEPT_CD = DC.DEPT_UPPER_CD
+					)
+				</isNotEmpty>
+				<isNotEmpty property="searchTrnNoStart" >
+					AND A.TRN_NO <![CDATA[ >= ]]> #searchTrnNoStart#
+				</isNotEmpty>
+				<isNotEmpty property="searchTrnNoEnd" >
+					AND A.TRN_NO <![CDATA[ <= ]]> #searchTrnNoEnd#
+				</isNotEmpty>
+
+				<isNotEmpty property="searchTrnDeStart" >
+					AND A.TRN_DE <![CDATA[ >= ]]> REPLACE(#searchTrnDeStart#,'-','')
+				</isNotEmpty>
+				<isNotEmpty property="searchTrnDeEnd" >
+					AND A.TRN_DE <![CDATA[ <= ]]> REPLACE(#searchTrnDeEnd#,'-','')
+				</isNotEmpty>
+			) A
+		) X
+		<isNotEmpty property="startRow" >
+			WHERE (RN <![CDATA[ > ]]> #startRow# AND RN <![CDATA[ <= ]]> #endRow#)
+		</isNotEmpty>
+		ORDER BY RN ASC
+	</select>
+
+	<!-- 대장/통계 > 발생통계원표부 -->
+	<select id="selectOccZeroStatList" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		SELECT X.*
+		FROM
+		(
+			SELECT A.*,		
+				COUNT(*) OVER() AS TOT_CNT,
+				<isNotEmpty property="dataField">
+					<isNotEmpty property="sortType">
+						ROW_NUMBER() OVER(ORDER BY A.$dataField$ $sortType$ NULLS LAST) RN
+					</isNotEmpty>
+				</isNotEmpty>
+				<isEmpty property="dataField">		
+					ROW_NUMBER() OVER(ORDER BY OCCRRNC_ZERO_YEAR, OCCRRNC_ZERO_MON, OCCRRNC_ZERO_NUM) RN
+				</isEmpty>
+			FROM
+			(
+				SELECT CASE WHEN B.OCCRRNC_BEGIN_DT = B.OCCRRNC_END_DT
+					   OR B.OCCRRNC_END_DT IS NULL THEN REPLACE(TO_CHAR(B.OCCRRNC_BEGIN_DT, 'YYYY.MM.DD HH24:MI'), ' 00:00', '')
+				       ELSE REPLACE(TO_CHAR(B.OCCRRNC_BEGIN_DT, 'YYYY.MM.DD HH24:MI'), ' 00:00', '')||' ~ '||REPLACE(TO_CHAR(B.OCCRRNC_END_DT, 'YYYY.MM.DD HH24:MI'), ' 00:00', '') END AS OCC_DT 
+					 , '' AS ETC
+					 , A.OCCRRNC_ZERO_NO
+				     , TO_NUMBER(SUBSTR(A.OCCRRNC_ZERO_NO, 1, 4)) OCCRRNC_ZERO_YEAR
+				     , TO_NUMBER(SUBSTR(A.OCCRRNC_ZERO_NO, 6, 2)) OCCRRNC_ZERO_MON
+				     , TO_NUMBER(SUBSTR(A.OCCRRNC_ZERO_NO, 9)) OCCRRNC_ZERO_NUM
+				     , A.TRN_NO
+				     , A.RC_NO
+				     , B.CASE_NO
+				     , FN_RC_VIOLT_NM(B.RC_NO) VIOLT_NM
+				     , FN_CD_NM(B.PROGRS_STTUS_CD) PROGRS_STTUS_NM
+				     , FN_RC_SUSPCT_NM(B.RC_NO) TRGTER_NM
+				     , REPLACE(TO_CHAR(B.OCCRRNC_BEGIN_DT, 'YYYY.MM.DD HH24:MI'), ' 00:00', '') OCCRRNC_BEGIN_DT
+				     , REPLACE(TO_CHAR(B.OCCRRNC_END_DT, 'YYYY.MM.DD HH24:MI'), ' 00:00', '') OCCRRNC_END_DT
+				  FROM TRN_CASE A
+				     , RC_TMPR B
+				 WHERE A.USE_YN = 'Y'
+				   AND B.USE_YN = 'Y'
+				   AND A.RC_NO = B.RC_NO
+				   AND A.ED_YN = 'Y'
+				   AND A.OCCRRNC_ZERO_NO IS NOT NULL
+				<isNotEmpty property="searchTrgterNm" >
+					AND B.RC_NO IN (
+						SELECT TT.RC_NO
+						FROM RC_TMPR_TRGTER TT
+						WHERE TT.TRGTER_NM = #searchTrgterNm#
+					)
+				</isNotEmpty>
+				<isNotEmpty property="searchChager" >
+					AND B.CHARGER_ID = #searchChager#
+				</isNotEmpty>
+				<isNotEmpty property="searchDeptCd" >
+					AND B.CHARGER_DEPT_CD IN (
+						SELECT DC.DEPT_CD
+						FROM CMN_DEPT_CD DC
+						WHERE DC.USE_YN = 'Y' AND DC.DEPT_CD != '00000'
+						START WITH DC.DEPT_CD = #searchDeptCd#
+						CONNECT BY PRIOR DC.DEPT_CD = DC.DEPT_UPPER_CD
+					)
+				</isNotEmpty>
+				<isNotEmpty property="searchNoStart" >
+					AND B.CASE_NO <![CDATA[ >= ]]> #searchNoStart#
+				</isNotEmpty>
+				<isNotEmpty property="searchNoEnd" >
+					AND B.CASE_NO <![CDATA[ <= ]]> #searchNoEnd#
+				</isNotEmpty>
+				<isNotEmpty property="searchDeStart" >
+					AND B.PRSCT_DE <![CDATA[ >= ]]> REPLACE(#searchDeStart#,'-','')
+				</isNotEmpty>
+				<isNotEmpty property="searchDeEnd" >
+					AND B.PRSCT_DE <![CDATA[ <= ]]> REPLACE(#searchDeEnd#,'-','')
+				</isNotEmpty>				 
+			) A
+		) X
+		<isNotEmpty property="startRow" >
+			WHERE (RN <![CDATA[ > ]]> #startRow# AND RN <![CDATA[ <= ]]> #endRow#)
+		</isNotEmpty>
+		ORDER BY RN ASC
+	</select>
+
+	<!-- 대장/통계 > 검거통계원표부 -->
+	<select id="selectArrZeroStatList" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		SELECT X.*
+		FROM
+		(
+			SELECT A.*,								
+				COUNT(*) OVER() AS TOT_CNT,
+				<isNotEmpty property="dataField">
+					<isNotEmpty property="sortType">
+						ROW_NUMBER() OVER(ORDER BY A.$dataField$ $sortType$ NULLS LAST) RN
+					</isNotEmpty>
+				</isNotEmpty>
+				<isEmpty property="dataField">		
+					ROW_NUMBER() OVER(ORDER BY ARREST_ZERO_YEAR, ARREST_ZERO_MON, ARREST_ZERO_NUM) RN
+				</isEmpty>
+			FROM
+			(
+				SELECT '' AS ETC
+					 , A.ARREST_ZERO_NO
+				     , TO_NUMBER(SUBSTR(A.ARREST_ZERO_NO, 1, 4)) ARREST_ZERO_YEAR
+				     , TO_NUMBER(SUBSTR(A.ARREST_ZERO_NO, 6, 2)) ARREST_ZERO_MON
+				     , TO_NUMBER(SUBSTR(A.ARREST_ZERO_NO, 9)) ARREST_ZERO_NUM
+				     , A.TRN_NO
+				     , A.RC_NO
+				     , B.CASE_NO
+				     , FN_RC_VIOLT_NM(B.RC_NO) VIOLT_NM
+				     , FN_CD_NM(B.PROGRS_STTUS_CD) PROGRS_STTUS_NM
+				     , FN_RC_SUSPCT_NM(B.RC_NO) TRGTER_NM
+				     , (SELECT TO_CHAR(MIN(WRITNG_DT), 'YYYY.MM.DD')
+								FROM CMN_DOC_PBLICTE
+								WHERE USE_YN = 'Y'
+								AND FORMAT_ID IN ('00000000000000000032', '00000000000000000033')
+								AND DOC_ID IN (SELECT DOC_ID FROM RC_TMPR X WHERE X.USE_YN = 'Y' AND X.RC_NO = B.RC_NO
+								               UNION ALL
+								               SELECT DOC_ID FROM RC_TMPR_TRGTER Y WHERE Y.USE_YN = 'Y' AND Y.RC_NO = B.RC_NO)) ARR_DT
+				  FROM TRN_CASE A
+				     , RC_TMPR B
+				 WHERE A.USE_YN = 'Y'
+				   AND B.USE_YN = 'Y'
+				   AND A.RC_NO = B.RC_NO
+				   AND A.ED_YN = 'Y'
+				   AND A.ARREST_ZERO_NO IS NOT NULL
+				<isNotEmpty property="searchTrgterNm" >
+					AND B.RC_NO IN (
+						SELECT TT.RC_NO
+						FROM RC_TMPR_TRGTER TT
+						WHERE TT.TRGTER_NM = #searchTrgterNm#
+					)
+				</isNotEmpty>
+				<isNotEmpty property="searchChager" >
+					AND B.CHARGER_ID = #searchChager#
+				</isNotEmpty>
+				<isNotEmpty property="searchDeptCd" >
+					AND B.CHARGER_DEPT_CD IN (
+						SELECT DC.DEPT_CD
+						FROM CMN_DEPT_CD DC
+						WHERE DC.USE_YN = 'Y' AND DC.DEPT_CD != '00000'
+						START WITH DC.DEPT_CD = #searchDeptCd#
+						CONNECT BY PRIOR DC.DEPT_CD = DC.DEPT_UPPER_CD
+					)
+				</isNotEmpty>
+				<isNotEmpty property="searchNoStart" >
+					AND B.CASE_NO <![CDATA[ >= ]]> #searchNoStart#
+				</isNotEmpty>
+				<isNotEmpty property="searchNoEnd" >
+					AND B.CASE_NO <![CDATA[ <= ]]> #searchNoEnd#
+				</isNotEmpty>
+				<isNotEmpty property="searchDeStart" >
+					AND B.PRSCT_DE <![CDATA[ >= ]]> REPLACE(#searchDeStart#,'-','')
+				</isNotEmpty>
+				<isNotEmpty property="searchDeEnd" >
+					AND B.PRSCT_DE <![CDATA[ <= ]]> REPLACE(#searchDeEnd#,'-','')
+				</isNotEmpty>				 
+			) A
+		) X
+		<isNotEmpty property="startRow" >
+			WHERE (RN <![CDATA[ > ]]> #startRow# AND RN <![CDATA[ <= ]]> #endRow#)
+		</isNotEmpty>
+		ORDER BY RN ASC
+	</select>
+
+	<!-- 대장/통계 > 피의자통계원표부 -->
+	<select id="selectSusZeroStatList" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		SELECT X.*
+		FROM
+		(
+			SELECT A.*,				 
+				COUNT(*) OVER() AS TOT_CNT,
+				<isNotEmpty property="dataField">
+					<isNotEmpty property="sortType">
+						ROW_NUMBER() OVER(ORDER BY A.$dataField$ $sortType$ NULLS LAST) RN
+					</isNotEmpty>
+				</isNotEmpty>
+				<isEmpty property="dataField">		
+					ROW_NUMBER() OVER(ORDER BY SUSPCT_ZERO_YEAR, SUSPCT_ZERO_MON, SUSPCT_ZERO_NUM) RN
+				</isEmpty>
+			FROM
+			(
+				SELECT '' AS ETC
+					 , D.SUSPCT_ZERO_NO
+				     , TO_NUMBER(SUBSTR(D.SUSPCT_ZERO_NO, 1, 4)) SUSPCT_ZERO_YEAR
+				     , TO_NUMBER(SUBSTR(D.SUSPCT_ZERO_NO, 6, 2)) SUSPCT_ZERO_MON
+				     , TO_NUMBER(SUBSTR(D.SUSPCT_ZERO_NO, 9)) SUSPCT_ZERO_NUM
+				     , A.TRN_NO
+				     , A.RC_NO
+				     , B.CASE_NO
+				     , FN_RC_VIOLT_NM(B.RC_NO) VIOLT_NM
+				     , FN_CD_NM(B.PROGRS_STTUS_CD) PROGRS_STTUS_NM
+				     , C.TRGTER_NM
+				  FROM TRN_CASE A
+				     , RC_TMPR B
+				     , RC_TMPR_TRGTER C
+				     , TRN_SUSPCT D
+				 WHERE A.USE_YN = 'Y'
+				   AND B.USE_YN = 'Y'
+				   AND A.RC_NO = B.RC_NO
+				   AND A.ED_YN = 'Y'
+				   AND C.USE_YN = 'Y'
+				   AND D.USE_YN = 'Y'
+				   AND A.TRN_NO = D.TRN_NO
+				   AND D.RC_NO = C.RC_NO
+				   AND D.TRGTER_SN = C.TRGTER_SN
+				   AND D.SUSPCT_ZERO_NO IS NOT NULL
+				<isNotEmpty property="searchChager" >
+					AND B.CHARGER_ID = #searchChager#
+				</isNotEmpty>
+				<isNotEmpty property="searchDeptCd" >
+					AND B.CHARGER_DEPT_CD IN (
+						SELECT DC.DEPT_CD
+						FROM CMN_DEPT_CD DC
+						WHERE DC.USE_YN = 'Y' AND DC.DEPT_CD != '00000'
+						START WITH DC.DEPT_CD = #searchDeptCd#
+						CONNECT BY PRIOR DC.DEPT_CD = DC.DEPT_UPPER_CD
+					)
+				</isNotEmpty>
+				<isNotEmpty property="searchTrgterNm" >
+					AND C.TRGTER_NM = #searchTrgterNm#
+				</isNotEmpty>
+				<isNotEmpty property="searchNoStart" >
+					AND B.CASE_NO <![CDATA[ >= ]]> #searchNoStart#
+				</isNotEmpty>
+				<isNotEmpty property="searchNoEnd" >
+					AND B.CASE_NO <![CDATA[ <= ]]> #searchNoEnd#
+				</isNotEmpty>
+				<isNotEmpty property="searchDeStart" >
+					AND B.PRSCT_DE <![CDATA[ >= ]]> REPLACE(#searchDeStart#,'-','')
+				</isNotEmpty>
+				<isNotEmpty property="searchDeEnd" >
+					AND B.PRSCT_DE <![CDATA[ <= ]]> REPLACE(#searchDeEnd#,'-','')
+				</isNotEmpty>				 
+			) A
+		) X
+		<isNotEmpty property="startRow" >
+			WHERE (RN <![CDATA[ > ]]> #startRow# AND RN <![CDATA[ <= ]]> #endRow#)
+		</isNotEmpty>
+		ORDER BY RN ASC
+	</select>
+
+	<select id="selectTrnCaseInfo" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+	<![CDATA[
+		SELECT A.RC_NO
+		     , A.CASE_NO
+		     , A.INV_PROVIS_CD
+		     , FN_CD_NM(A.INV_PROVIS_CD) INV_PROVIS_NM
+		     , A.PROGRS_STTUS_CD
+		     , FN_CD_NM(A.PROGRS_STTUS_CD) PROGRS_STTUS_NM
+		     , B.TRN_NO
+		     , TO_CHAR(TO_DATE(B.TRN_DE,'YYYYMMDD'), 'YYYY-MM-DD') AS TRN_DE
+		     , NVL2(B.EVDENC_DC, 'Y', 'N') EVDENC_YN
+		     , B.EVDENC_DC
+		     , B.CMPTNC_EXMN_CD
+		     , FN_EXMN_NM(B.CMPTNC_EXMN_CD) CMPTNC_EXMN_NM
+		     , B.TRN_RM
+		     , B.DOC_ID
+		     , B.FILE_ID
+		     , B.OCCRRNC_ZERO_NO
+		     , B.ED_YN
+		  FROM RC_TMPR A
+		     , TRN_CASE B
+		 WHERE A.USE_YN = 'Y'
+		   AND A.RC_NO = B.RC_NO (+)
+		   AND 'Y' = B.USE_YN (+)
+		   AND 'N' = B.ED_YN (+)
+		   AND A.CHARGER_ID = #CHARGER_ID# ]]>
+		<isNotEmpty property="RC_NO">
+		   AND A.RC_NO = #RC_NO#
+		</isNotEmpty>
+		<isNotEmpty property="CASE_NO">
+		   AND A.CASE_NO = #CASE_NO#
+		</isNotEmpty>
+		<isNotEmpty property="TRN_NO">
+		   AND B.TRN_NO = #TRN_NO#
+		</isNotEmpty>
+		<!-- 압수물총목록, 기록목록 작성시 -->
+		<isNotEmpty property="SCH_PROGRS_STTUS_CD">
+		   AND A.PROGRS_STTUS_CD = #SCH_PROGRS_STTUS_CD#
+		</isNotEmpty>
+	</select>
+
+	<select id="selectTrnSuspctList" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+	<!-- 	 , NVL2(B.TRN_NO, 'Y', 'N') TRN_YN
+		     , NVL2(B.TRN_NO, 'Y', 'N') CHK -->
+	<![CDATA[
+		SELECT B.TRN_NO
+		     , 'Y' TRN_YN
+		     , 'Y' CHK
+		     , A.RC_NO
+		     , FN_CASE_NO(A.RC_NO) CASE_NO
+		     , A.TRGTER_SN
+		     , A.TRGTER_NM
+		     , A.TRGTER_TY_CD
+		     , DECODE(A.TRGTER_TY_CD, 'I', DGUARD.DECRYPT('TBL','ENC',A.TRGTER_RRN), NVL(A.TRGTER_CPRN, A.TRGTER_CRN)) TRGTER_RRN
+		     , (SELECT TO_CHAR(MAX(ARRST_DT), 'YYYY-MM-DD HH24:MI:SS')
+		          FROM INV_PRSCT_ARRST X
+		         WHERE X.RC_NO = A.RC_NO
+		           AND X.TRGTER_SN = A.TRGTER_SN
+		           AND CONFM_SUGEST_YN = 'Y'
+		           AND USE_YN = 'Y') ARRST_DT
+		     , (SELECT TO_CHAR(MAX(RSL_DT), 'YYYY-MM-DD HH24:MI:SS')
+		          FROM INV_PRSCT_ARRST X
+		         WHERE X.RC_NO = A.RC_NO
+		           AND X.TRGTER_SN = A.TRGTER_SN
+		           AND CONFM_SUGEST_YN = 'Y'
+		           AND USE_YN = 'Y') RSL_DT
+		     , B.IMPR_STTUS_CD
+		     , B.ARSTT_RQEST_NO
+		     , B.FNGPRT_FORMS_NO
+		     , B.SUSPCT_ZERO_NO
+		     , B.COMMN_FACT_RQEST_NO
+		     , (SELECT TRN_NO FROM TRN_CASE X WHERE X.RC_NO = A.RC_NO AND USE_YN = 'Y' AND ED_YN = 'N') TRN_NO_ORG
+		  FROM RC_TMPR_TRGTER A
+		     , TRN_SUSPCT B
+		 WHERE A.RC_NO = B.RC_NO (+)
+		   AND A.TRGTER_SN = B.TRGTER_SN (+)
+		   AND 'Y' = B.USE_YN (+)
+		   AND A.USE_YN = 'Y'
+		   AND A.TRGTER_SE_CD IN (SELECT ESNTL_CD FROM CMN_CD WHERE USE_YN = 'Y' AND CD_DC = 'suspct-Group') /* 피의자그룹(00697) */
+	]]><isNotEmpty property="RC_NO">
+		   AND A.RC_NO = #RC_NO#
+		</isNotEmpty>
+		<isNotEmpty property="TRN_NO">
+		   <!-- 2019-07-24 ED_YN = 'N' 해당 쿼리는 송치종결된 사건을 제외하고 조회한다는 가정 하에 실행됨  -->
+		   AND B.TRN_NO = #TRN_NO#
+		   AND A.RC_NO = (SELECT RC_NO FROM TRN_CASE WHERE TRN_NO = #TRN_NO# AND USE_YN = 'Y' AND ED_YN = 'N')
+		</isNotEmpty>
+		 ORDER BY A.SORT_ORDR, A.TRGTER_SN
+	</select>
+
+	<select id="selectTrnSuspctListOnly" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+	<![CDATA[
+		SELECT B.TRN_NO
+		     , A.RC_NO
+		     , FN_CASE_NO(A.RC_NO) CASE_NO
+		     , A.TRGTER_SN
+		     , A.TRGTER_NM
+		     , DECODE(A.TRGTER_TY_CD, 'I', DGUARD.DECRYPT('TBL','ENC',A.TRGTER_RRN), NVL(A.TRGTER_CPRN, A.TRGTER_CRN)) TRGTER_RRN
+		     , (SELECT TO_CHAR(MAX(ARRST_DT), 'YYYY-MM-DD HH24:MI:SS')
+		          FROM INV_PRSCT_ARRST X
+		         WHERE X.RC_NO = A.RC_NO
+		           AND X.TRGTER_SN = A.TRGTER_SN
+		           AND CONFM_SUGEST_YN = 'Y'
+		           AND USE_YN = 'Y') ARRST_DT
+		     , (SELECT TO_CHAR(MAX(RSL_DT), 'YYYY-MM-DD HH24:MI:SS')
+		          FROM INV_PRSCT_ARRST X
+		         WHERE X.RC_NO = A.RC_NO
+		           AND X.TRGTER_SN = A.TRGTER_SN
+		           AND CONFM_SUGEST_YN = 'Y'
+		           AND USE_YN = 'Y') RSL_DT
+		     , FN_CD_NM(B.IMPR_STTUS_CD) IMPR_STTUS_NM
+		     , B.ARSTT_RQEST_NO
+		     , B.FNGPRT_FORMS_NO
+		     , B.SUSPCT_ZERO_NO
+		     , B.COMMN_FACT_RQEST_NO
+		     , C.VIOLT_CD
+		     , FN_VIOLT_NM(C.VIOLT_CD) VIOLT_NM
+		     , C.TRN_OPINION_CD
+		     , FN_CD_NM(C.TRN_OPINION_CD) TRN_OPINION_NM
+		     , B.SORT_ORDR
+		  FROM RC_TMPR_TRGTER A
+		     , TRN_SUSPCT B
+		     , TRN_VIOLT C
+		 WHERE A.RC_NO = B.RC_NO
+		   AND A.TRGTER_SN = B.TRGTER_SN
+		   AND A.USE_YN = 'Y'
+		   AND B.USE_YN = 'Y'
+		   AND C.USE_YN = 'Y'
+		   AND B.TRN_NO = #hidTrnNo#
+		   AND B.TRN_NO = C.TRN_NO
+		   AND B.RC_NO = C.RC_NO
+		   AND B.TRGTER_SN = C.TRGTER_SN
+		 ORDER BY B.SORT_ORDR, C.SORT_ORDR
+	]]>
+	</select>
+
+	<select id="selectTrnVioltList" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+	<![CDATA[
+	SELECT TRN_NO_ORG
+	   , RC_NO
+	   , TRGTER_SN
+	   , VIOLT_CD
+	   , VIOLT_NM
+	   , TRN_OPINION_CD
+	   , TRN_YN
+	   , CHK
+	   , MIN(SORT_ORDR) SORT_ORDR
+	FROM (
+		SELECT TRN_NO AS TRN_NO_ORG
+		     , RC_NO
+		     , TRGTER_SN
+             , FN_VIOLT_UPPER_CD(VIOLT_CD) VIOLT_CD
+             , FN_VIOLT_NM(FN_VIOLT_UPPER_CD(VIOLT_CD)) VIOLT_NM
+		     , TRN_OPINION_CD
+		     /*, NVL2(TRN_OPINION_CD, 'Y', 'N') TRN_YN
+		     , NVL2(TRN_OPINION_CD, 'Y', 'N') CHK */
+		     , 'Y' TRN_YN
+		     , 'Y' CHK
+		     , SORT_ORDR
+		  FROM TRN_VIOLT
+		 WHERE TRN_NO = #TRN_NO#
+		   AND RC_NO = #RC_NO#
+		   AND TRGTER_SN = #TRGTER_SN#
+		   UNION ALL
+		  SELECT DISTINCT #TRN_NO#
+		       , #RC_NO#
+		       , TO_NUMBER(#TRGTER_SN#)
+               , FN_VIOLT_UPPER_CD(VIOLT_CD)
+               , FN_VIOLT_NM(FN_VIOLT_UPPER_CD(VIOLT_CD)) VIOLT_NM
+		       , ''
+		       , 'N'
+		       , 'N'
+		       , VIOLT_SN + 1000
+		    FROM RC_TMPR_VIOLT
+		   WHERE RC_NO = #RC_NO#
+		     AND FN_VIOLT_UPPER_CD(VIOLT_CD) NOT IN (SELECT VIOLT_CD
+							                            FROM TRN_VIOLT
+							                           WHERE TRN_NO = #TRN_NO#
+							                             AND RC_NO = #RC_NO#
+							                             AND TRGTER_SN = #TRGTER_SN#)
+		) T
+	GROUP BY TRN_NO_ORG
+	   , RC_NO
+	   , TRGTER_SN
+	   , VIOLT_CD
+	   , VIOLT_NM
+	   , TRN_OPINION_CD
+	   , TRN_YN
+	   , CHK
+	ORDER BY SORT_ORDR
+	]]>
+	</select>
+
+	<select id="selectTrnVioltListOnly" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+	<![CDATA[
+		SELECT TRN_NO
+		     , RC_NO
+		     , TRGTER_SN
+		     , VIOLT_CD
+		     , FN_VIOLT_NM(VIOLT_CD) VIOLT_NM
+		     , TRN_OPINION_CD
+		     , FN_CD_NM(TRN_OPINION_CD) TRN_OPINION_NM
+		     , SORT_ORDR
+		  FROM TRN_VIOLT
+		 WHERE TRN_NO = #hidTrnNo#
+		   AND RC_NO = #hidRcNo#
+		   AND TRGTER_SN = #hidTrgterSn#
+		 ORDER BY SORT_ORDR
+	]]>
+	</select>
+
+	<select id="selectTrnZeroNoList" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+	<![CDATA[
+		SELECT TRN_NO, RC_NO, 0 TRGTER_SN, DOC_ID
+		     , (SELECT MAX(PBLICTE_SN) FROM CMN_DOC_PBLICTE X WHERE X.DOC_ID = A.DOC_ID AND FORMAT_ID = '00000000000000000072' AND USE_YN='Y') AS PBLICTE_SN
+		     , '' TRGTER_NM
+		     , '' TRGTER_RRN
+		     , '00000000000000000072' FORMAT_ID
+		     , '발생통계원표' FORMAT_NM
+		     , OCCRRNC_ZERO_NO AS ZERO_NO
+		  FROM TRN_CASE A
+		 WHERE USE_YN = 'Y'
+		   AND TRN_NO = #TRN_NO#
+		 UNION ALL
+		SELECT TRN_NO, RC_NO, 0, DOC_ID
+		     , (SELECT MAX(PBLICTE_SN) FROM CMN_DOC_PBLICTE X WHERE X.DOC_ID = A.DOC_ID AND FORMAT_ID = '00000000000000000073' AND USE_YN='Y') AS PBLICTE_SN
+		     , '' TRGTER_NM
+		     , '' TRGTER_RRN
+		     , '00000000000000000073' FORMAT_ID
+		     , '검거통계원표' FORMAT_NM
+		     , ARREST_ZERO_NO
+		  FROM TRN_CASE A
+		 WHERE USE_YN = 'Y'
+		   AND TRN_NO = #TRN_NO#
+		 UNION ALL
+		SELECT A.TRN_NO, A.RC_NO, A.TRGTER_SN, A.DOC_ID
+		     , (SELECT MAX(PBLICTE_SN) FROM CMN_DOC_PBLICTE X WHERE X.DOC_ID = A.DOC_ID AND FORMAT_ID = '00000000000000000074' AND USE_YN='Y') AS PBLICTE_SN
+		     , C.TRGTER_NM
+		     , DECODE(C.TRGTER_TY_CD, 'I', DGUARD.DECRYPT('TBL','ENC',C.TRGTER_RRN), NVL(C.TRGTER_CPRN, C.TRGTER_CRN))
+		     , '00000000000000000074' FORMAT_ID
+		     , '피의자통계원표' FORMAT_NM
+		     , SUSPCT_ZERO_NO
+		  FROM TRN_SUSPCT A
+		     , TRN_VIOLT B
+		     , RC_TMPR_TRGTER C
+		 WHERE A.USE_YN = 'Y'
+		   AND B.USE_YN = 'Y'
+		   AND A.TRN_NO = B.TRN_NO
+		   AND A.RC_NO = B.RC_NO
+		   AND A.TRGTER_SN = B.TRGTER_SN
+		   AND A.RC_NO = C.RC_NO
+		   AND A.TRGTER_SN = C.TRGTER_SN
+		   AND A.TRN_NO = #TRN_NO#
+		   --AND B.TRN_OPINION_CD IN ('01095', '01096') /* 기소(구속/불구속) */
+		   -- 불기소 피의자도 통계원표가 나오게 수정 by dgkim
+		   AND B.TRN_OPINION_CD IN (
+							'01095' --기소(구속)
+   							, '01096' --기소(불구속)
+   							, '01097' --불기소(혐의없음)
+   							, '01098' --불기소(공소권없음)
+   							, '01099' --불기소(죄가안됨)
+   							, '01366' --불기소(각하)
+							)
+	]]>
+	</select>
+
+	<select id="selectTrnInfoForRe" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		SELECT RC_NO
+		     , DECODE(PROGRS_STTUS_CD, '02123', 'Y', 'N') TRN_YN  /* 송치 */
+		     , (SELECT MAX(TRN_NO) FROM TRN_CASE X WHERE USE_YN = 'Y' AND ED_YN = 'Y' AND X.RC_NO = A.RC_NO) TRN_NO
+		     , (SELECT DOC_ID FROM TRN_CASE WHERE TRN_NO = (SELECT MAX(TRN_NO) FROM TRN_CASE X WHERE USE_YN = 'Y' AND ED_YN = 'Y' AND X.RC_NO = A.RC_NO)) DOC_ID
+		  FROM RC_TMPR A
+		 WHERE USE_YN = 'Y'
+		   AND CASE_NO = #CASE_NO#
+	</select>
+
+	<select id="selectNewTrnNo" resultClass="String">
+	<![CDATA[
+		SELECT TO_CHAR(SYSDATE, 'YYYY')|| '-' || LPAD(NVL(MAX(SUBSTR(TRN_NO,6,6)),0)+1, 6, '0')
+		  FROM TRN_CASE
+		 WHERE TRN_NO LIKE TO_CHAR(SYSDATE, 'YYYY')||'%'
+	]]>
+	</select>
+
+	<insert id="insertTrnCase" parameterClass="java.util.HashMap">
+	<![CDATA[
+		INSERT INTO TRN_CASE
+			( TRN_NO
+			, RC_NO
+			, TRN_DE
+			, EVDENC_DC
+			, CMPTNC_EXMN_CD
+			, TRN_RM
+			, PRE_PROGRS_STTUS_CD
+			, DOC_ID
+			, FILE_ID
+			, WRITNG_ID
+			, WRITNG_DT
+			, UPDT_ID
+			, UPDT_DT
+			)
+		VALUES
+			( #TRN_NO#
+			, #RC_NO#
+			, REPLACE(NVL(#TRN_DE#, TO_CHAR(SYSDATE, 'YYYYMMDD')), '-', '')
+			, #EVDENC_DC#
+			, (SELECT CMPTNC_EXMN_CD FROM RC_TMPR WHERE RC_NO = #RC_NO# AND USE_YN = 'Y')
+			, #TRN_RM#
+			, (SELECT PROGRS_STTUS_CD FROM RC_TMPR WHERE RC_NO = #RC_NO# AND USE_YN = 'Y')
+			, #DOC_ID#
+			, #FILE_ID#
+			, #WRITNG_ID#
+			, SYSDATE
+			, #UPDT_ID#
+			, SYSDATE
+			)
+	]]>
+	</insert>
+
+	<insert id="insertReTrnCase" parameterClass="java.util.HashMap">
+	<![CDATA[
+		INSERT INTO TRN_CASE
+					( TRN_NO
+					, RC_NO
+					, TRN_DE
+					, TRN_RM
+					, CMPTNC_EXMN_CD
+					, OCCRRNC_ZERO_NO
+					, ARREST_ZERO_NO
+					, EVDENC_DC
+					, EVDENC_YN
+					, DOC_ID
+					, FILE_ID
+					, PRE_PROGRS_STTUS_CD
+					, WRITNG_ID
+					, WRITNG_DT )
+			 SELECT #TRN_NO#
+					, RC_NO
+					, TO_CHAR(SYSDATE, 'YYYYMMDD')
+					, TRN_RM
+					, CMPTNC_EXMN_CD
+					, OCCRRNC_ZERO_NO
+					, ARREST_ZERO_NO
+					, EVDENC_DC
+					, NVL2(EVDENC_DC, 'Y', 'N')
+					, #DOC_ID#
+					, #FILE_ID#
+					, PRE_PROGRS_STTUS_CD
+					, #WRITNG_ID#
+					, SYSDATE
+		 	FROM TRN_CASE
+		 	WHERE TRN_NO = #ORG_TRN_NO#
+	]]>
+	</insert>
+
+	<insert id="insertTrnSuspct" parameterClass="java.util.HashMap">
+	<![CDATA[
+		INSERT INTO TRN_SUSPCT
+		     ( TRN_NO
+		     , RC_NO
+		     , TRGTER_SN
+		     , SORT_ORDR
+		     , DOC_ID
+		     , WRITNG_ID
+		     , WRITNG_DT
+		     , UPDT_ID
+		     , UPDT_DT
+		     )
+		SELECT #TRN_NO#
+		     , RC_NO
+		     , TRGTER_SN
+		     , ROW_NUMBER() OVER (ORDER BY SORT_ORDR, TRGTER_SN) RNUM
+		     , LPAD(SQ_DOC_ID.NEXTVAL, 20, '0')
+		     , #WRITNG_ID#
+		     , SYSDATE
+		     , #UPDT_ID#
+		     , SYSDATE
+		  FROM RC_TMPR_TRGTER
+		 WHERE RC_NO = #RC_NO#
+		   AND USE_YN = 'Y'
+		   AND TRGTER_SE_CD IN (SELECT ESNTL_CD FROM CMN_CD WHERE USE_YN = 'Y' AND CD_DC = 'suspct-Group') /* 피의자그룹(00697) */
+	]]>
+	</insert>
+
+	<insert id="insertTrnViolt" parameterClass="java.util.HashMap">
+	<![CDATA[
+		INSERT INTO TRN_VIOLT
+		     ( TRN_NO
+		     , RC_NO
+		     , TRGTER_SN
+		     , VIOLT_CD
+		     , SORT_ORDR
+		     , WRITNG_ID
+		     , WRITNG_DT
+		     )
+		SELECT DISTINCT A.TRN_NO
+		     , A.RC_NO
+		     , A.TRGTER_SN
+		     , FN_VIOLT_UPPER_CD(B.VIOLT_CD)
+		     , B.VIOLT_SN
+		     , #WRITNG_ID#
+		     , SYSDATE
+		  FROM TRN_SUSPCT A
+		     , RC_TMPR_VIOLT B
+		 WHERE A.RC_NO = B.RC_NO
+		   AND B.RC_NO = #RC_NO#
+	]]>
+	</insert>
+
+	<insert id="insertTrnSuspctInfo" parameterClass="java.util.HashMap">
+	<![CDATA[
+		INSERT INTO TRN_SUSPCT
+			( TRN_NO
+			, RC_NO
+			, TRGTER_SN
+			, IMPR_STTUS_CD
+			, TRN_OPINION_CD
+			, ARSTT_RQEST_NO
+			, FNGPRT_FORMS_NO
+			, SUSPCT_ZERO_NO
+			, COMMN_FACT_RQEST_NO
+			, SORT_ORDR
+			, DOC_ID
+			, WRITNG_ID
+			, WRITNG_DT
+			, UPDT_ID
+			, UPDT_DT
+			)
+		VALUES
+			( #TRN_NO_ORG#
+			, #RC_NO#
+			, #TRGTER_SN#
+			, #IMPR_STTUS_CD#
+			, #TRN_OPINION_CD#
+			, #ARSTT_RQEST_NO#
+			, #FNGPRT_FORMS_NO#
+			, #SUSPCT_ZERO_NO#
+			, #COMMN_FACT_RQEST_NO#
+			, #SORT_ORDR#
+			, #DOC_ID#
+			, #WRITNG_ID#
+			, SYSDATE
+			, #UPDT_ID#
+			, SYSDATE
+			)
+	]]>
+	</insert>
+
+	<insert id="insertReTrnSuspct" parameterClass="java.util.HashMap">
+	<![CDATA[
+		INSERT INTO TRN_SUSPCT
+					( TRN_NO
+					, RC_NO
+					, TRGTER_SN
+					, IMPR_STTUS_CD
+					, TRN_OPINION_CD
+					, ARSTT_RQEST_NO
+					, FNGPRT_FORMS_NO
+					, SUSPCT_ZERO_NO
+					, COMMN_FACT_RQEST_NO
+					, DOC_ID
+					, SORT_ORDR
+					, WRITNG_ID
+					, WRITNG_DT
+					)
+				SELECT #TRN_NO#
+					, RC_NO
+					, TRGTER_SN
+					, IMPR_STTUS_CD
+					, TRN_OPINION_CD
+					, ARSTT_RQEST_NO
+					, FNGPRT_FORMS_NO
+					, SUSPCT_ZERO_NO
+					, COMMN_FACT_RQEST_NO
+					, DOC_ID
+					, SORT_ORDR
+					, #WRITNG_ID#
+					, SYSDATE
+				FROM TRN_SUSPCT
+				WHERE TRN_NO = #ORG_TRN_NO#
+				AND USE_YN = 'Y'
+	]]>
+	</insert>
+
+	<insert id="insertTrnVioltInfo" parameterClass="java.util.HashMap">
+	<![CDATA[
+		INSERT INTO TRN_VIOLT
+			( TRN_NO
+			, RC_NO
+			, TRGTER_SN
+			, VIOLT_CD
+			, TRN_OPINION_CD
+			, SORT_ORDR
+			, WRITNG_ID
+			, WRITNG_DT
+			)
+		VALUES
+			( #TRN_NO_ORG#
+			, #RC_NO#
+			, #TRGTER_SN#
+			, #VIOLT_CD#
+			, #TRN_OPINION_CD#
+			, #SORT_ORDR#
+			, #WRITNG_ID#
+			, SYSDATE
+			)
+	]]>
+	</insert>
+
+	<insert id="insertReTrnViolt" parameterClass="java.util.HashMap">
+	<![CDATA[
+		INSERT INTO TRN_VIOLT
+					( TRN_NO
+					, RC_NO
+					, TRGTER_SN
+					, VIOLT_CD
+					, TRN_OPINION_CD
+					, SORT_ORDR
+					, WRITNG_ID
+					, WRITNG_DT )
+				SELECT #TRN_NO#
+					, RC_NO
+					, TRGTER_SN
+					, VIOLT_CD
+					, TRN_OPINION_CD
+					, SORT_ORDR
+					, #WRITNG_ID#
+					, SYSDATE
+				 FROM TRN_VIOLT
+				WHERE TRN_NO = #ORG_TRN_NO#
+				AND USE_YN = 'Y'
+	]]>
+	</insert>
+
+	<update id="mergeTrnViolt" parameterClass="java.util.HashMap">
+	<![CDATA[
+		MERGE INTO TRN_VIOLT
+		USING DUAL
+		   ON (    TRN_NO    = #TRN_NO#
+		       AND RC_NO     = #RC_NO#
+		       AND TRGTER_SN = #TRGTER_SN#
+		       AND VIOLT_CD  = #VIOLT_CD# )
+		 WHEN MATCHED THEN
+		      UPDATE SET TRN_OPINION_CD = #TRN_OPINION_CD#
+		               , UPDT_ID = #UPDT_ID#
+		               , UPDT_DT = SYSDATE
+		 WHEN NOT MATCHED THEN
+		      INSERT ( TRN_NO
+		             , RC_NO
+		             , TRGTER_SN
+		             , VIOLT_CD
+		             , TRN_OPINION_CD
+		             , SORT_ORDR
+		             , WRITNG_ID
+		             , WRITNG_DT
+		             )
+		      VALUES ( #TRN_NO#
+		             , #RC_NO#
+		             , #TRGTER_SN#
+		             , #VIOLT_CD#
+		             , #TRN_OPINION_CD#
+		             , #SORT_ORDR#
+		             , #WRITNG_ID#
+		             , SYSDATE
+		             )
+	]]>
+	</update>
+
+	<update id="updateTrnCase" parameterClass="java.util.HashMap">
+	<![CDATA[
+		UPDATE TRN_CASE
+		   SET TRN_DE = REPLACE(#TRN_DE#, '-' , '')
+		     , EVDENC_DC = #EVDENC_DC#
+		     , CMPTNC_EXMN_CD = #CMPTNC_EXMN_CD#
+		     , TRN_RM = #TRN_RM#
+		     , UPDT_ID = #UPDT_ID#
+		     , UPDT_DT = SYSDATE
+		 WHERE TRN_NO = #TRN_NO#
+	]]>
+	</update>
+
+	<update id="updateTrnSuspct" parameterClass="java.util.HashMap">
+	<![CDATA[
+		UPDATE TRN_SUSPCT
+		   SET IMPR_STTUS_CD = #IMPR_STTUS_CD#
+		     , ARSTT_RQEST_NO = #ARSTT_RQEST_NO#
+		     , FNGPRT_FORMS_NO = #FNGPRT_FORMS_NO#
+		     , COMMN_FACT_RQEST_NO = #COMMN_FACT_RQEST_NO#
+		     , UPDT_ID = #UPDT_ID#
+		     , UPDT_DT = SYSDATE
+		 WHERE TRN_NO = #TRN_NO#
+		   AND RC_NO = #RC_NO#
+		   AND TRGTER_SN = #TRGTER_SN#
+	]]>
+	</update>
+
+	<update id="deleteTrnCase" parameterClass="java.util.HashMap">
+	<![CDATA[
+		UPDATE TRN_CASE
+		   SET USE_YN = 'N'
+		     , UPDT_ID = #UPDT_ID#
+		     , UPDT_DT = SYSDATE
+		 WHERE TRN_NO = #TRN_NO#
+	]]>
+	</update>
+
+	<update id="deleteTrnSuspctForUseYn" parameterClass="java.util.HashMap">
+	<![CDATA[
+		UPDATE TRN_SUSPCT
+		   SET USE_YN = 'N'
+		     , UPDT_ID = #UPDT_ID#
+		     , UPDT_DT = SYSDATE
+		 WHERE TRN_NO = #TRN_NO#
+	]]>
+	</update>
+
+	<update id="deleteTrnVioltForUseYn" parameterClass="java.util.HashMap">
+	<![CDATA[
+		UPDATE TRN_VIOLT
+		   SET USE_YN = 'N'
+		     , UPDT_ID = #UPDT_ID#
+		     , UPDT_DT = SYSDATE
+		 WHERE TRN_NO = #TRN_NO#
+	]]>
+	</update>
+
+	<update id="deleteTrnCcdrcForUseYn" parameterClass="java.util.HashMap">
+	<![CDATA[
+		UPDATE TRN_CCDRC
+		   SET USE_YN = 'N'
+			 , UPDT_ID = #UPDT_ID#
+			 , UPDT_DT = SYSDATE
+		  WHERE TRN_NO = #TRN_NO#
+		    AND USE_YN = 'Y'
+	]]>
+	</update>
+
+	<update id="requstTrnCase" parameterClass="java.util.HashMap">
+	<![CDATA[
+		UPDATE TRN_CASE
+		   SET SANCTN_ID = #SANCTN_ID#
+		     , UPDT_ID = #UPDT_ID#
+		     , UPDT_DT = SYSDATE
+		 WHERE TRN_NO = #TRN_NO#
+	]]>
+	</update>
+
+	<update id="updateTrnCaseForEdYn" parameterClass="java.util.HashMap">
+	<![CDATA[
+		UPDATE TRN_CASE
+		   SET ED_YN = 'Y'
+		     , UPDT_ID = #UPDT_ID#
+		     , UPDT_DT = SYSDATE
+		 WHERE TRN_NO = #TRN_NO#
+		   AND USE_YN = 'Y'
+	]]>
+	</update>
+
+	<update id="updateTrnCaseForReRm" parameterClass="java.util.HashMap">
+	<![CDATA[
+		UPDATE TRN_CASE
+		   SET TRN_RM = TRN_RM || '[재송치]송치번호:'||#TRN_NO#||','||TO_CHAR(SYSDATE, 'YYYY-MM-DD HH24:MI')
+		     , UPDT_ID = #UPDT_ID#
+		     , UPDT_DT = SYSDATE
+		 WHERE TRN_NO = #ORG_TRN_NO#
+		   AND USE_YN = 'Y'
+	]]>
+	</update>
+
+	<update id="updateInvPrsctForTrn" parameterClass="java.util.HashMap">
+	<![CDATA[
+		UPDATE RC_TMPR
+		   SET PROGRS_STTUS_CD = #PROGRS_STTUS_CD#  /* 02122:송치준비중, 02123:송치승인요청 */
+		     , UPDT_ID  = #UPDT_ID#
+		     , UPDT_DT  = SYSDATE
+		 WHERE RC_NO = #RC_NO#
+		   AND USE_YN = 'Y'
+	]]>
+	</update>
+
+	<!-- 00242:송치종결, 00280:기소중지, 00281:참고인중지  -->
+	<!-- 02123:송치종결, 02124:기소중지, 02125:참고인중지  -->
+	<update id="updateInvPrsctForTrnSttus" parameterClass="java.util.HashMap">
+	<![CDATA[
+		UPDATE RC_TMPR
+		   SET PROGRS_STTUS_CD = (SELECT CASE WHEN SIGN(CF_COL_1) =  1 THEN '02124'
+								              WHEN SIGN(CF_COL_2) =  1 THEN '02125'
+								              ELSE '02123' END
+								    FROM (SELECT SUM(DECODE(TRN_OPINION_CD, '01367', 1, 0)) CF_COL_1
+								               , SUM(DECODE(TRN_OPINION_CD, '01368', 1, 0)) CF_COL_2
+								            FROM TRN_VIOLT
+								           WHERE USE_YN = 'Y'
+								              AND TRN_NO = #TRN_NO#
+								            GROUP BY TRN_NO, RC_NO) )
+		     , UPDT_ID  = #UPDT_ID#
+		     , UPDT_DT  = SYSDATE
+		 WHERE RC_NO = #RC_NO#
+		   AND USE_YN = 'Y'
+	]]>
+	</update>
+
+	<update id="deleteTrnCaseForInvPrsct" parameterClass="java.util.HashMap">
+		UPDATE RC_TMPR
+		   SET PROGRS_STTUS_CD = (SELECT PRE_PROGRS_STTUS_CD FROM TRN_CASE WHERE TRN_NO = #TRN_NO#)
+		     , UPDT_ID  = #UPDT_ID#
+		     , UPDT_DT  = SYSDATE
+		 WHERE RC_NO = (SELECT RC_NO FROM TRN_CASE WHERE TRN_NO = #TRN_NO#)
+		   AND USE_YN = 'Y'
+	</update>
+
+
+	<delete id="deleteTrnSuspct" parameterClass="java.util.HashMap">
+	<![CDATA[
+		DELETE FROM TRN_SUSPCT
+		 WHERE TRN_NO = #TRN_NO_ORG#
+	]]>
+	</delete>
+
+	<delete id="deleteTrnViolt" parameterClass="java.util.HashMap">
+	<![CDATA[
+		DELETE FROM TRN_VIOLT
+		 WHERE TRN_NO = #TRN_NO_ORG#
+		   AND RC_NO = #RC_NO#
+		   AND TRGTER_SN = #TRGTER_SN#
+	]]>
+	</delete>
+
+	<!-- 송치피의자가 아닌 대상자의 위반사항 삭제처리 -->
+	<delete id="deleteTrnVioltForNoSuspct" parameterClass="java.util.HashMap">
+	<![CDATA[
+		DELETE FROM TRN_VIOLT
+		 WHERE (TRN_NO, RC_NO, TRGTER_SN) IN (SELECT DISTINCT TRN_NO, RC_NO, TRGTER_SN
+		                                        FROM TRN_VIOLT
+		                                       WHERE TRN_NO = #TRN_NO_ORG#
+		                                       MINUS
+		                                      SELECT DISTINCT TRN_NO, RC_NO, TRGTER_SN
+		                                        FROM TRN_SUSPCT
+		                                       WHERE TRN_NO = #TRN_NO_ORG#)
+	]]>
+	</delete>
+
+	<insert id="insertTrnVioltForSuspct" parameterClass="java.util.HashMap">
+	<![CDATA[
+		INSERT INTO TRN_VIOLT
+		     ( TRN_NO
+		     , RC_NO
+		     , TRGTER_SN
+		     , VIOLT_CD
+		     , SORT_ORDR
+		     , WRITNG_ID
+		     , WRITNG_DT
+		     )
+        SELECT TRN_NO, RC_NO, TRGTER_SN, VIOLT_CD, MIN(VIOLT_SN)
+			, #WRITNG_ID#
+			, SYSDATE
+         FROM (
+				SELECT DISTINCT A.TRN_NO
+				     , A.RC_NO
+				     , A.TRGTER_SN
+				     , FN_VIOLT_UPPER_CD(B.VIOLT_CD) VIOLT_CD
+				     , B.VIOLT_SN
+				  FROM TRN_SUSPCT A
+				     , RC_TMPR_VIOLT B
+				 WHERE A.RC_NO = B.RC_NO
+				   AND (A.TRN_NO, A.RC_NO, A.TRGTER_SN) IN (SELECT DISTINCT TRN_NO, RC_NO, TRGTER_SN
+				                                              FROM TRN_SUSPCT
+				                                             WHERE TRN_NO = #TRN_NO_ORG#
+				                                             MINUS
+				                                            SELECT DISTINCT TRN_NO, RC_NO, TRGTER_SN
+				                                              FROM TRN_VIOLT
+				                                             WHERE TRN_NO = #TRN_NO_ORG#)
+        )
+        GROUP BY TRN_NO, RC_NO, TRGTER_SN, VIOLT_CD
+	]]>
+	</insert>
+
+	<update id="updateTrnCaseForOccrrncZeroNo" parameterClass="java.util.HashMap">
+	<![CDATA[
+		UPDATE TRN_CASE
+		   SET OCCRRNC_ZERO_NO = (SELECT NVL((SELECT ZERO_NO1||'-'||(ZERO_NO2+1)
+		                                        FROM (SELECT SUBSTR(OCCRRNC_ZERO_NO, 1,7) ZERO_NO1, MAX(TO_NUMBER(SUBSTR(OCCRRNC_ZERO_NO, 9))) ZERO_NO2
+		                                                FROM TRN_CASE
+		                                               WHERE OCCRRNC_ZERO_NO LIKE (SELECT TO_CHAR(RC_DT, 'YYYY-MM') FROM RC_TMPR WHERE RC_NO = #RC_NO#)||'%'
+		                                               GROUP BY SUBSTR(OCCRRNC_ZERO_NO, 1,7))),
+		                                    (SELECT TO_CHAR(RC_DT, 'YYYY-MM')||'-1' FROM RC_TMPR WHERE RC_NO = #RC_NO#))
+		                            FROM DUAL)
+		 WHERE TRN_NO = #TRN_NO#
+	]]>
+	</update>
+
+	<update id="updateTrnCaseForArrestZeroNo" parameterClass="java.util.HashMap">
+	<![CDATA[
+		UPDATE TRN_CASE
+		   SET ARREST_ZERO_NO = (SELECT NVL((SELECT ZERO_NO1||'-'||(ZERO_NO2+1)
+		                                       FROM (SELECT SUBSTR(ARREST_ZERO_NO, 1,7) ZERO_NO1, MAX(TO_NUMBER(SUBSTR(ARREST_ZERO_NO, 9))) ZERO_NO2
+		                                               FROM TRN_CASE
+		                                              WHERE TRN_DE LIKE (SELECT SUBSTR(TRN_DE, 1, 6) FROM TRN_CASE WHERE TRN_NO = #TRN_NO#)||'%'
+		                                                AND ARREST_ZERO_NO IS NOT NULL
+		                                              GROUP BY SUBSTR(ARREST_ZERO_NO, 1,7))),
+		                                    (SELECT TO_CHAR(TO_DATE(TRN_DE, 'YYYYMMDD'), 'YYYY-MM')||'-1' FROM TRN_CASE WHERE TRN_NO = #TRN_NO#))
+		                           FROM DUAL)
+		 WHERE TRN_NO = #TRN_NO#
+	]]>
+	</update>
+
+	<select id="selectNewSuspctZeroNo" parameterClass="java.util.HashMap" resultClass="String">
+		<!-- SELECT FN_NEW_SUSPCT_ZERO_NO(#TRN_NO#, #RC_NO#, #TRGTER_SN#) FROM DUAL -->
+		SELECT NVL((SELECT ZERO_NO1 ||'-'||ZERO_NO2
+		              FROM (SELECT SUBSTR(SUSPCT_ZERO_NO, 1, 7) ZERO_NO1, MAX(TO_NUMBER(SUBSTR(SUSPCT_ZERO_NO, 9)))+1 ZERO_NO2
+		                      FROM TRN_SUSPCT
+		                     WHERE SUSPCT_ZERO_NO LIKE (SELECT SUBSTR(TRN_DE, 1, 4) ||'-'||SUBSTR(TRN_DE, 5, 2)||'%' FROM TRN_CASE WHERE TRN_NO = #TRN_NO#)
+		                     GROUP BY SUBSTR(SUSPCT_ZERO_NO, 1, 7))),
+		           (SELECT TO_CHAR(TO_DATE(TRN_DE, 'YYYYMMDD'), 'YYYY-MM') ||'-1' FROM TRN_CASE WHERE TRN_NO = #TRN_NO#))
+		  FROM DUAL
+	</select>
+
+	<update id="updateTrnSuspctForSuspctZeroNo" parameterClass="java.util.HashMap">
+	<![CDATA[
+		UPDATE TRN_SUSPCT
+		   SET SUSPCT_ZERO_NO = #SUSPCT_ZERO_NO#
+		 WHERE TRN_NO = #TRN_NO#
+		   AND RC_NO = #RC_NO#
+		   AND TRGTER_SN = #TRGTER_SN#
+	]]>
+	</update>
+
+	<parameterMap id="trnMap" class="java.util.Map">
+		<parameter property="TRN_NO" javaType="java.lang.String" jdbcType="VARCHAR" mode="IN" />
+		<parameter property="RE_MSG" javaType="java.lang.String" jdbcType="VARCHAR" mode="OUT" />
+	</parameterMap>
+
+	<procedure id="callProcedureTrnCheck" parameterMap="trnMap">
+		{call SP_TRN_CHECK(?, ?)}
+	</procedure>
+
+
+	<insert id="insertDocManageForReTrn" parameterClass="java.util.HashMap">
+		INSERT INTO CMN_DOC_MANAGE
+					( DOC_ID
+					, REGIST_PATH
+					, USE_YN
+					, WRITNG_DEPT_CD
+					, WRITNG_ID
+					, WRITNG_DT )
+			 SELECT  #DOC_ID#
+			 		, '송치번호 '||#ORG_TRN_NO#||'를 재송치'
+			 		, 'Y'
+			 		, WRITNG_DEPT_CD
+			 		, WRITNG_ID
+			 		, SYSDATE
+				FROM CMN_DOC_MANAGE
+				WHERE DOC_ID = #ORG_DOC_ID#
+				AND USE_YN = 'Y'
+	</insert>
+
+	<insert id="insertDocPblicteForReTrn" parameterClass="java.util.HashMap">
+	<![CDATA[
+		INSERT INTO CMN_DOC_PBLICTE
+					( DOC_ID
+					, PBLICTE_SN
+					, FORMAT_ID
+					, DOC_CL_CD
+					, DOC_NO
+					, INPUT_PARAM
+					, INPUT_JSON
+					, USE_YN
+					, WRITNG_ID
+					, WRITNG_DT )
+				SELECT #DOC_ID#
+					, PBLICTE_SN
+					, FORMAT_ID
+					, DOC_CL_CD
+					, DOC_NO
+					, REPLACE(INPUT_PARAM, #ORG_TRN_NO#, #TRN_NO#)
+					, INPUT_JSON
+					, USE_YN
+					, WRITNG_ID
+					, SYSDATE
+				FROM CMN_DOC_PBLICTE
+				WHERE DOC_ID = #ORG_DOC_ID#
+				AND USE_YN = 'Y'
+	]]>
+	</insert>
+
+	<!-- 2019-08-30 의견서 복사 -->
+	<insert id="insertDocPblicteForSugestDoc" parameterClass="java.util.HashMap">
+	<![CDATA[
+		INSERT INTO CMN_DOC_PBLICTE
+		     ( DOC_ID
+		     , PBLICTE_SN
+		     , FORMAT_ID
+		     , DOC_NO
+		     , INPUT_PARAM
+		     , INPUT_JSON
+		     , USE_YN
+		     , WRITNG_ID
+		     , WRITNG_DT
+		     , FILE_PATH
+		     , FILE_NM
+		     , FILE_MG)
+		SELECT #DOC_ID#
+		     , 1
+		     , '00000000000000000068'
+		     , (SELECT TO_CHAR(SYSDATE,'YYYY') || '-' || LPAD(NVL(MAX(SUBSTR(DOC_NO,6,6)),0)+1, 6, '0')
+				FROM CMN_DOC_PBLICTE
+				WHERE DOC_NO LIKE TO_CHAR(SYSDATE,'YYYY') || '%')
+		     , 'P_TRN_NO='||#TRN_NO#
+		     , INPUT_JSON
+		     , USE_YN
+		     , #WRITNG_ID#
+		     , SYSDATE
+		     , FILE_PATH
+		     , FILE_NM
+		     , FILE_MG
+		  FROM CMN_DOC_PBLICTE
+		 WHERE DOC_ID = (
+				SELECT DOC_ID
+				FROM INV_SUGEST
+				WHERE SUGEST_NO = (
+		                SELECT MAX(A.SUGEST_NO) SUGEST_NO
+				          FROM INV_SUGEST A, RC_TMPR B
+				         WHERE A.USE_YN = 'Y'
+				           AND A.SUGEST_TY_CD = '01101' /* 건의 유형 코드(수사지휘건의) */
+				           AND A.SUGEST_RESULT_CD = 'Y' /* 건의 결과 코드(가) */
+				           AND A.RC_NO = #RC_NO#
+				           AND B.USE_YN = 'Y'
+				           AND A.RC_NO = B.RC_NO
+				           AND (   (B.INV_RESMPT_YN = 'Y' AND B.INV_RESMPT_DE <= A.SUGEST_DE)
+				                 OR B.INV_RESMPT_YN = 'N')
+				         GROUP BY A.RC_NO
+				         )
+		        )
+		AND FORMAT_ID = '00000000000000000218'
+		AND FILE_NM IS NOT NULL
+		AND USE_YN = 'Y'
+	]]>
+	</insert>
+
+</sqlMap>
+
+

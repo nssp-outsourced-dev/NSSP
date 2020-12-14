@@ -1,0 +1,17 @@
+tibero_example.vendor=tibero
+tibero_example.portNo=8629
+tibero_example.serverAddress=127.0.0.1
+tibero_example.password=tmax
+tibero_example.user=tibero
+tibero_example.maxconns=20
+tibero_example.initconns=5
+tibero_example.timeout=5
+tibero_example.initSqls=
+tibero_example.closeSqls=
+tibero_example.doConnectionCheck=false
+tibero_example.testQueryString=
+tibero_example.sessionQuery=
+tibero_example.encodecharset=
+tibero_example.decodecharset=
+tibero_example.fetchrow=0
+tibero_example.ignoreQueryError=false

@@ -1,0 +1,241 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC '-//ibatis.apache.org//DTD Sql Map 2.0//EN' 'http://ibatis.apache.org/dtd/sql-map-2.dtd'>
+<sqlMap namespace="trn.rcord">
+
+	<select id="selectTrnRcordList" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+	<![CDATA[
+		SELECT RC_NO
+		     , RCORD_SN
+		     , RCORD_NM
+		     , RCORD_STATER
+		     , RCORD_CO
+		     , RCORD_DE
+		     , SORT_ORDR
+		  FROM TRN_RCORD
+		 WHERE RC_NO = #RC_NO#
+		   AND USE_YN = 'Y'
+		 ORDER BY SORT_ORDR
+	]]>
+	</select>
+
+	<insert id="insertTrnRcordForBring" parameterClass="java.util.HashMap">
+	<![CDATA[
+		INSERT INTO TRN_RCORD (RC_NO, RCORD_SN, RCORD_NM, RCORD_STATER, RCORD_DE, SORT_ORDR, RCORD_SE, WRITNG_ID, WRITNG_DT, UPDT_ID, UPDT_DT)
+		SELECT #RC_NO# NO
+		     , (SELECT NVL(MAX(RCORD_SN), 0) FROM TRN_RCORD WHERE RC_NO = #RC_NO#)+ROWNUM SN
+		     , T.FORMAT_NM
+		     , T.USER_NM
+		     , T.REG_DE
+		     , (SELECT NVL(MAX(SORT_ORDR), 0) FROM TRN_RCORD WHERE RC_NO = #RC_NO#)+ROWNUM ORDR
+		     , DIV
+		     , #WRITNG_ID#
+		     , SYSDATE
+		     , #WRITNG_ID#
+		     , SYSDATE		     
+		  FROM (
+		        SELECT X.FORMAT_NM
+		             , CASE WHEN A.FORMAT_ID IN ('00000000000000000032', '00000000000000000033', '00000000000000000014', '00000000000000000015', '00000000000000000016') THEN ''
+		                    ELSE FN_USER_NM(A.WRITNG_ID) END AS USER_NM
+		             , TO_CHAR(A.WRITNG_DT, 'YYYYMMDD') REG_DE
+		             , A.WRITNG_DT
+		             , 'D' DIV
+		        FROM CMN_DOC_PBLICTE A
+		           , CMN_FORMAT_MANAGE X
+		           , CMN_DOC_MANAGE B
+		        WHERE A.DOC_ID = B.DOC_ID
+		        AND B.USE_YN = 'Y'
+		        AND A.USE_YN = 'Y'
+		        AND X.FORMAT_ID = A.FORMAT_ID
+		        AND A.DOC_ID IN (
+		                        SELECT DOC_ID FROM RC_TMPR WHERE RC_NO = #RC_NO# AND USE_YN = 'Y'
+		                        UNION ALL
+		                        SELECT DOC_ID FROM RC_TMPR_TRGTER WHERE RC_NO = #RC_NO# AND USE_YN = 'Y'
+		                        UNION ALL
+		                        SELECT DOC_ID FROM RC_ITIV_OUTSET WHERE RC_NO = #RC_NO#
+		                        UNION ALL
+		                        SELECT RIR.DOC_ID
+		                        FROM RC_TMPR RT
+		                        INNER JOIN RC_ITIV_RESULT RIR ON RT.ITIV_NO = RIR.ITIV_NO
+		                        WHERE RT.RC_NO = #RC_NO# AND USE_YN = 'Y'
+		                        UNION ALL
+		                        SELECT DOC_ID FROM INV_PRSCT_ARRST WHERE RC_NO = #RC_NO# AND USE_YN = 'Y'
+		                        UNION ALL
+		                        SELECT DOC_ID FROM INV_PRSCT_ATEND WHERE RC_NO = #RC_NO# AND USE_YN = 'Y'
+		                        UNION ALL
+		                        SELECT DOC_ID FROM INV_SZURE_REQST WHERE RC_NO = #RC_NO#
+		                        UNION ALL
+		                        /*
+		                        SELECT RS.DOC_ID
+		                        FROM INV_SZURE_REQST RQ
+		                        INNER JOIN INV_SZURE_RESULT RS ON RQ.ZRLONG_NO = RS.ZRLONG_NO
+		                        WHERE RQ.RC_NO = 'RC_NO'
+		                        UNION ALL
+		                        */
+		                        SELECT DOC_ID FROM INV_ZRLONG_REQST WHERE RC_NO = #RC_NO#
+		                        UNION ALL
+		                        SELECT RS.DOC_ID
+		                        FROM INV_ZRLONG_REQST RQ
+		                        INNER JOIN INV_ZRLONG_RESULT RS ON RQ.ZRLONG_NO = RS.ZRLONG_NO
+		                        WHERE RQ.RC_NO = #RC_NO#
+		                        UNION ALL
+		                        SELECT DOC_ID FROM INV_CCDRC WHERE RC_NO = #RC_NO# AND USE_YN = 'Y'
+		                        UNION ALL
+		                        SELECT DOC_ID FROM INV_COMMN_PRMISN WHERE RC_NO = #RC_NO# AND USE_YN = 'Y'
+		                        UNION ALL
+		                        SELECT DOC_ID FROM TRN_CASE WHERE RC_NO = #RC_NO# AND USE_YN = 'Y'
+		                        UNION ALL
+		                        SELECT DOC_ID FROM TRN_SUSPCT WHERE RC_NO = #RC_NO# AND USE_YN = 'Y'
+		                        UNION ALL
+		                        SELECT DOC_ID FROM INV_SUGEST WHERE RC_NO = #RC_NO# AND USE_YN = 'Y'
+		                        )
+		        UNION ALL
+		        SELECT A.FILE_NM
+		             , CASE WHEN A.FORMAT_ID IN ('00000000000000000032', '00000000000000000033', '00000000000000000014', '00000000000000000015', '00000000000000000016') THEN ''
+		                    ELSE FN_USER_NM(A.WRITNG_ID) END AS USER_NM
+		             , TO_CHAR(A.WRITNG_DT, 'YYYYMMDD') REG_DE
+		             , A.WRITNG_DT
+		             , 'F' DIV
+		        FROM CMN_FILE_DETAIL A
+		           , CMN_FILE_MANAGE B
+		           , CMN_FORMAT_MANAGE X
+		        WHERE A.FILE_ID = B.FILE_ID
+		        AND A.USE_YN = 'Y'
+		        AND B.USE_YN = 'Y'
+		        AND X.FORMAT_ID = A.FORMAT_ID
+		        AND A.FORMAT_ID IS NOT NULL
+		        AND A.FILE_ID IN (
+		                        SELECT FILE_ID FROM RC_TMPR WHERE RC_NO = #RC_NO# AND USE_YN = 'Y'
+		                        UNION ALL
+		                        SELECT FILE_ID FROM RC_TMPR_TRGTER WHERE RC_NO = #RC_NO# AND USE_YN = 'Y'
+		                        UNION ALL
+		                        SELECT FILE_ID FROM RC_ITIV_OUTSET WHERE RC_NO = #RC_NO#
+		                        UNION ALL
+		                        SELECT RIR.FILE_ID
+		                        FROM RC_TMPR RT
+		                        INNER JOIN RC_ITIV_RESULT RIR ON RT.ITIV_NO = RIR.ITIV_NO
+		                        WHERE RT.RC_NO = #RC_NO# AND USE_YN = 'Y'
+		                        UNION ALL
+		                        SELECT FILE_ID FROM INV_PRSCT_ARRST WHERE RC_NO = #RC_NO# AND USE_YN = 'Y'
+		                        UNION ALL
+		                        SELECT FILE_ID FROM INV_PRSCT_ATEND WHERE RC_NO = #RC_NO# AND USE_YN = 'Y'
+		                        UNION ALL
+		                        SELECT FILE_ID FROM INV_SZURE_REQST WHERE RC_NO = #RC_NO#
+		                        UNION ALL
+		                        /*
+		                        SELECT RS.FILE_ID
+		                        FROM INV_SZURE_REQST RQ
+		                        INNER JOIN INV_SZURE_RESULT RS ON RQ.ZRLONG_NO = RS.ZRLONG_NO
+		                        WHERE RQ.RC_NO = 'RC_NO'
+		                        UNION ALL
+		                        */
+		                        SELECT FILE_ID FROM INV_ZRLONG_REQST WHERE RC_NO = #RC_NO#
+		                        UNION ALL
+		                        SELECT RS.FILE_ID
+		                        FROM INV_ZRLONG_REQST RQ
+		                        INNER JOIN INV_ZRLONG_RESULT RS ON RQ.ZRLONG_NO = RS.ZRLONG_NO
+		                        WHERE RQ.RC_NO = #RC_NO#
+		                        UNION ALL
+		                        SELECT FILE_ID FROM INV_CCDRC WHERE RC_NO = #RC_NO# AND USE_YN = 'Y'
+		                        UNION ALL
+		                        SELECT FILE_ID FROM INV_COMMN_PRMISN WHERE RC_NO = #RC_NO# AND USE_YN = 'Y'
+		                        UNION ALL
+		                        SELECT FILE_ID FROM TRN_CASE WHERE RC_NO = #RC_NO# AND USE_YN = 'Y'
+		                        UNION ALL
+		                        SELECT FILE_ID FROM TRN_SUSPCT WHERE RC_NO = #RC_NO# AND USE_YN = 'Y'
+		                        UNION ALL
+		                        SELECT FILE_ID FROM INV_SUGEST WHERE RC_NO = #RC_NO# AND USE_YN = 'Y'
+		                        )
+		        ORDER BY WRITNG_DT
+		) T
+	]]>
+	</insert>
+
+
+	<insert id="insertTrnRcord" parameterClass="java.util.HashMap">
+	<![CDATA[
+		INSERT INTO TRN_RCORD 
+			( RC_NO
+			, RCORD_SN
+			, RCORD_NM
+			, RCORD_STATER
+			, RCORD_CO
+			, RCORD_DE
+			, SORT_ORDR
+			, WRITNG_ID
+			, WRITNG_DT
+			, UPDT_ID
+			, UPDT_DT
+			)
+		VALUES
+			( #RC_NO#
+			, (SELECT NVL(MAX(RCORD_SN), 0)+1 FROM TRN_RCORD WHERE RC_NO = #RC_NO#)
+			, #RCORD_NM#
+			, #RCORD_STATER#
+			, #RCORD_CO#
+			, REPLACE(#RCORD_DE#, '-', '')
+			, #SORT_ORDR#
+			, #WRITNG_ID#
+			, SYSDATE
+			, #UPDT_ID#
+			, SYSDATE
+			)
+	]]>
+	</insert>
+		
+	<update id="updateTrnRcord" parameterClass="java.util.HashMap">
+	<![CDATA[
+		UPDATE TRN_RCORD
+		   SET RCORD_NM = #RCORD_NM#
+		     , RCORD_STATER = #RCORD_STATER#
+		     , RCORD_CO = #RCORD_CO#
+		     , RCORD_DE = REPLACE(#RCORD_DE#, '-', '')
+		     , SORT_ORDR = #SORT_ORDR#
+		     , UPDT_ID = #UPDT_ID#
+		     , UPDT_DT = SYSDATE
+		  WHERE RC_NO = #RC_NO#
+		    AND RCORD_SN = #RCORD_SN#
+		    AND USE_YN = 'Y'
+	]]>
+	</update>
+	
+	<update id="deleteTrnRcordForBring" parameterClass="java.util.HashMap">
+	<![CDATA[
+		UPDATE TRN_RCORD
+		   SET USE_YN = 'N'
+			 , UPDT_ID = #UPDT_ID#
+			 , UPDT_DT = SYSDATE
+		 WHERE RC_NO = #RC_NO#
+		   AND RCORD_SE IN ('F', 'D')
+		   AND USE_YN = 'Y'
+	]]>
+	</update>		
+	
+	<update id="deleteTrnRcord" parameterClass="java.util.HashMap">
+	<![CDATA[
+		UPDATE TRN_RCORD
+		   SET USE_YN = 'N'
+			 , UPDT_ID = #UPDT_ID#
+			 , UPDT_DT = SYSDATE
+		 WHERE RC_NO = #RC_NO#
+		   AND RCORD_SN = #RCORD_SN#
+		   AND USE_YN = 'Y'
+	]]>
+	</update>	
+	
+	<delete id="deleteTrnRcordAll" parameterClass="java.util.HashMap">
+	<![CDATA[
+		DELETE FROM TRN_RCORD
+		 WHERE RC_NO = #RC_NO#
+	]]>
+	</delete>		
+	
+	<select id="selectTrnRcordCount" parameterClass="java.util.HashMap" resultClass="java.lang.Integer">
+		SELECT COUNT(1) 
+		  FROM TRN_RCORD
+		 WHERE RC_NO = #RC_NO#
+		   AND USE_YN = 'Y'
+	</select>
+			
+</sqlMap>
+
+

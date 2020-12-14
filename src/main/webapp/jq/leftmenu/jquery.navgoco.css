@@ -1,0 +1,110 @@
+.nav, .nav ul, .nav li {
+	list-style: none;
+}
+
+.nav ul {
+	padding: 0;
+	margin: 0 0 0 0px;
+}
+
+.nav {
+	padding: 0px;
+	margin: 0px;
+}
+
+.nav > li {
+	margin: 0px 0 !important;border-bottom: 1px solid #4c61cb; border-top: 1px solid #4c61cb
+}
+
+.nav > li li {
+	padding: 0px;
+}
+
+.nav a {
+	color: #fff!important;
+	display: block;
+	outline: none;
+	text-decoration: none;; background-position:228px center; background-repeat: no-repeat;  
+}
+
+.nav a .caret {
+	float: right;
+	width:13px;
+	height: 13px;
+	display: inline-block;
+	vertical-align: top; margin-right: 20px; margin-top: 7px;
+	content: ""; background: url(../../img/left_ar2.png);  
+}
+
+.nav a:hover .caret {
+	border-top-color: #fff; 
+}
+
+.nav li.open > a > .caret {
+	float: right;
+	width:13px;
+	height: 13px;
+	display: inline-block;
+	vertical-align: top; margin-right: 20px; margin-top: 7px;
+	content: ""; background: url(../../img/left_ar1.png) 
+}
+
+.nav li.open > a:hover > .caret {
+	border-bottom-color: #fff;
+}
+
+.nav a:hover, .nav li.active > a {
+	background-color: #3b4299;
+	color: #fff;
+}
+
+.nav a:hover {
+	background-color: #3b4199;
+	color: #fff;
+}
+.nav > li.active > a  {
+background: url("../../img/ar_icon.png"); background-repeat: no-repeat; background-position: 85% center ;	background-color: #3b4199; 
+}
+
+.nav  li>a {
+	font-size: 12px;
+	line-height: 35px;
+	padding: 0px 20px;
+}
+ul.menu2 li a{
+	font-size: 12px;
+	line-height: 35px;
+	 background-color: #395388;
+}
+ul.menu2 li a:hover{
+	font-size: 12px;
+	line-height: 35px;
+	 background-color: #1f3257;background-color: #395388;
+}
+
+ul.menu3 li a{
+	font-size: 12px;
+	line-height: 35px;
+	padding: 0px 0px 0px 30px;  background-color: #ddd
+}
+
+ul.menu2 li a.menu_on{ font-size: 12px;
+	line-height: 35px;
+	 background-color: #5384d0;
+}
+
+
+
+ li a.menu_on .ar_icon{ position: absolute; right: 30px; top: 10px;    background:#fff;
+    width :0px;
+    height:0PX;
+    border-right: 15px solid transparent;
+    border-top: 15px solid #f1f1f1; transform:rotate(45deg)
+}
+
+
+.nav > li > a {
+	font-size: 14px;
+	line-height: 35px;
+	padding: 5px 10px;color: #fff!important;
+}

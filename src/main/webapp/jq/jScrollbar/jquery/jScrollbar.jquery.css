@@ -1,0 +1,92 @@
+.clr {
+	clear:both;
+	height:0
+}
+
+
+/***************/
+/** EXEMPLE 3 **/
+/***************/
+.jScrollbar3 {
+	width:100%;
+	overflow:hidden;
+	position:relative;
+}
+.jScrollbar_h1 {
+		height:calc(100vh - 320px);
+}
+.jScrollbar_h2 {
+		height:229px;
+}
+	.jScrollbar3 .jScrollbar_mask {
+		width: calc(100% - 5px);
+		position:relative;
+		top:0;
+		float:left;
+	}
+		.jScrollbar3 .jScrollbar_mask p {
+			margin:0;
+			padding:0;
+			color:#242424;
+			font-size:12px;width:10px;
+		}
+	.jScrollbar3 .jScrollbar_draggable {
+		float:left;
+		width:5px;
+		height:100%;
+		overflow:hidden;
+		background:none;
+		background-color:#ddd;
+		
+		position:relative
+	}
+	.jScrollbar3 .jScrollbar_draggable a.draggable {
+		position:relative;
+		background-color:#999;
+		display:block;
+		height:30%;
+		width:5px;
+		margin-left:0;
+		cursor:s-resize
+	}
+
+/***************/
+/** EXEMPLE 4 **/
+/***************/
+.jScrollbar4 {
+	width:100%;
+	height:300px;
+	overflow:hidden;
+	position:relative;
+}
+	.jScrollbar3 .jScrollbar_mask {
+		width: calc(100% - 5px);
+		position:relative;
+		top:0;
+		float:left;
+	}
+		.jScrollbar3 .jScrollbar_mask p {
+			margin:0;
+			padding:0;
+			color:#242424;
+			font-size:12px;width:5px;
+		}
+	.jScrollbar3 .jScrollbar_draggable {
+		float:left;
+		width:5px;
+		height:100%;
+		overflow:hidden;
+		background:none;
+		background-color:#ddd;
+		
+		position:relative
+	}
+	.jScrollbar3 .jScrollbar_draggable a.draggable {
+		position:relative;
+		background-color:#999;
+		display:block;
+		height:30%;
+		width:5px;
+		margin-left:0;
+		cursor:s-resize
+	}

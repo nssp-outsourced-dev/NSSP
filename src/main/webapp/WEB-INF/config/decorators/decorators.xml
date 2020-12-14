@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<decorators defaultdir="/WEB-INF/jsp/">
+
+	<decorator name="layout" page="layout.jsp">
+		<pattern>/*</pattern>
+	</decorator>
+
+	<excludes>
+		<pattern>/index*</pattern>
+
+		<!-- html -->
+		<pattern>/html/**</pattern>
+		<pattern>*/samples/*</pattern>
+
+		<pattern>/gpkisecureweb/**</pattern>
+
+		<!-- main -->
+		<pattern>/main/intro/</pattern>
+
+		<!-- login -->
+		<pattern>/member/login/</pattern>
+		<pattern>/member/faceLogin/</pattern>
+		<pattern>/member/faceTest/</pattern>
+		<!-- <pattern>/member/actionGPKIreg/</pattern> -->
+		<pattern>/member/actionCrtfctLogin/</pattern>
+		<pattern>/member/actionGPKIjoinDN/</pattern>
+
+		<!-- iframe -->
+		<pattern>*Iframe/*</pattern>
+
+		<!-- popup -->
+		<pattern>*Popup/*</pattern>
+
+		<!-- action -->
+		<pattern>*Action/*</pattern>
+
+		<!-- json -->
+		<pattern>*Json/*</pattern>
+
+		<!-- Ajax -->
+		<pattern>*Ajax/*</pattern>
+
+		<!-- Binary -->
+		<pattern>*Binary/*</pattern>
+	</excludes>
+</decorators>

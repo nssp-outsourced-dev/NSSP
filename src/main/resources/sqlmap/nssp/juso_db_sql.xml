@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC '-//ibatis.apache.org//DTD Sql Map 2.0//EN' 'http://ibatis.apache.org/dtd/sql-map-2.dtd'>
+<sqlMap namespace="juso">
+
+	<select id="selectJusoList" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		/*2019-02-28 도로명 주소*/
+		SELECT A.*
+		FROM (
+			SELECT DISTINCT
+			       A.BS_ZN_NO AS NEW_ZIP_CD,
+			       COUNT(*) OVER () AS TOT_CNT,
+			       ROW_NUMBER() OVER(ORDER BY B.RN_MGT_SN,A.BUID_MN_NM,A.BUID_SL_NO) AS NUM,
+			       B.SI_NM||' '||DECODE(B.SGG_NM,'','', B.SGG_NM||' ')||DECODE(B.EMD_CI,'0',B.EMD_NM||' ')||
+	               B.RN||' '||DECODE(A.UDRT_YN,0,'',1,'지하 ',2,'공중 ')||
+	               A.BUID_MN_NM||DECODE(A.BUID_SL_NO,0,'','-'||A.BUID_SL_NO) AS RN,
+	               CASE WHEN (B.EMD_CI = '0' AND D.BD_KD_CD = '0') THEN ''
+	                    WHEN (B.EMD_CI = '0' AND D.BD_KD_CD = '1') THEN DECODE(D.SGG_BD_NM, '', '', '(' || D.SGG_BD_NM || ')' )
+	                    WHEN (B.EMD_CI = '1' AND D.BD_KD_CD = '0') THEN '('||B.EMD_NM||')'
+	                    WHEN (B.EMD_CI = '1' AND D.BD_KD_CD = '1') THEN '('||B.EMD_NM || DECODE(D.SGG_BD_NM, '', '', ',' || D.SGG_BD_NM ) ||')'
+	               END AS ADDR_ADD,
+			       B.RN_MGT_SN,
+			       A.BD_MGT_SN,
+			       D.ADM_NM,
+			       B.EMD_CI,
+			       D.BD_NM,
+			       D.SGG_BD_NM,
+			       D.BD_KD_CD,
+			       C.SI_NM,
+	               C.SGG_NM,
+	               C.EMD_NM,
+	               C.LNBR_MN_NM,
+	               C.LNBR_SL_NO,
+	               C.SI_NM||' '||C.SGG_NM||' '||C.EMD_NM||' '||C.LNBR_MN_NM||
+                   CASE WHEN C.LNBR_SL_NO IS NOT NULL AND C.LNBR_SL_NO != 0  THEN '-'||C.LNBR_SL_NO END ||' '||
+                   CASE WHEN D.SGG_BD_NM IS NOT NULL THEN '('||D.SGG_BD_NM||(CASE WHEN D.ADM_NM IS NOT NULL THEN ', '||D.ADM_NM END)||')'
+                   		ELSE (CASE WHEN D.ADM_NM IS NOT NULL THEN '('||D.ADM_NM||')' END)
+                   END AS JIBEON_ADDR
+			  FROM CMN_ROADNM_ADDR A
+			  JOIN CMN_ROADNM_CD B ON A.RN_MGT_SN = B.RN_MGT_SN AND A.EMD_NO = B.EMD_NO
+			  LEFT JOIN CMN_LOTNUM_ADDR C ON A.BD_MGT_SN = C.BD_MGT_SN
+			  LEFT JOIN CMN_ROADNM_DTL D ON A.BD_MGT_SN = D.BD_MGT_SN
+			 WHERE B.SI_NM          LIKE #siNm# || '%'    /*시도명*/
+			<isNotEmpty property="sggNm" open="AND">
+   			    B.SGG_NM         LIKE #sggNm# || '%'   /*시군구명*/
+   			</isNotEmpty>
+   			<isNotEmpty property="rn" open="AND">
+			 	B.RN         LIKE #rn# || '%'
+			</isNotEmpty>
+			<isNotEmpty property="buldMnNm" open="AND">
+			    A.BUID_MN_NM LIKE #buldMnNm#||'%'
+			</isNotEmpty>
+			<isNotEmpty property="buldSlNo" open="AND">
+				A.BUID_SL_NO LIKE #buldSlNo#||'%'
+			</isNotEmpty>
+			<isNotEmpty property="emdNm" open="AND">
+				C.EMD_NM     LIKE REGEXP_REPLACE(#emdNm#, '[0-9]') || '%'
+			</isNotEmpty>
+			<isNotEmpty property="emdNm" open="AND">
+				D.ADM_NM     LIKE (CASE WHEN REGEXP_INSTR(#emdNm#,'[0-9]') > 0 THEN #emdNm# END) || '%'
+			</isNotEmpty>
+			<isNotEmpty property="lnbrMnNm" open="AND">
+            	C.LNBR_MN_NM LIKE #lnbrMnNm#||'%'
+            </isNotEmpty>
+            <isNotEmpty property="lnbrMnNm" open="AND">
+            	C.LNBR_SL_NO LIKE #lnbrSlNo#||'%'
+            </isNotEmpty>
+            <isNotEmpty property="sggBdNm" open="AND">
+            	D.SGG_BD_NM  LIKE #sggBdNm# || '%'
+            </isNotEmpty>
+			ORDER BY B.RN_MGT_SN
+		) A WHERE NUM BETWEEN #startRow# AND #endRow#
+	</select>
+</sqlMap>

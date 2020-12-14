@@ -1,0 +1,280 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC '-//ibatis.apache.org//DTD Sql Map 2.0//EN' 'http://ibatis.apache.org/dtd/sql-map-2.dtd'>
+<sqlMap namespace="cmmn.cd">
+
+	<resultMap id="cdMap" class="java.util.HashMap">
+		<result column="ESNTL_CD" property="cd" />
+		<result column="CD_NM" property="cdNm" />
+		<result column="CD_DC" property="cdDc" />
+		<result column="CD_DP" property="cdDp" />
+		<result column="UPPER_CD" property="upCd" />
+		<result column="USE_YN" property="useYn" />
+		<result column="ESNTL_YN" property="esntlAt" />
+		<result column="SORT_ORDR" property="sort" />
+		<result column="LOWER_CNT" property="lowerCnt" />
+	</resultMap>
+
+
+	<select id="selectCdFullList" parameterClass="java.util.HashMap" resultMap="cdMap">
+		SELECT
+		CC.ESNTL_CD,
+		CC.CD_NM,
+		CC.CD_DC,
+		LEVEL AS CD_DP,
+		CC.UPPER_CD,
+		CC.USE_YN,
+		CC.ESNTL_YN,
+		CC.SORT_ORDR,
+		0 AS LOWER_CNT
+		FROM CMN_CD CC
+		WHERE CC.USE_YN = 'Y' AND CC.ESNTL_CD != '00000'
+		  AND CC.UPPER_CD IN (
+		  	SELECT CCD.ESNTL_CD FROM CMN_CD CCD WHERE CCD.USE_YN  = 'Y'
+		  )
+		START WITH CC.UPPER_CD = #start_cd#
+		CONNECT BY PRIOR CC.ESNTL_CD = CC.UPPER_CD
+    	ORDER SIBLINGS BY CC.SORT_ORDR ASC, CC.ESNTL_CD ASC
+	</select>
+
+	<select id="selectCdList" parameterClass="java.util.HashMap" resultMap="cdMap">
+		SELECT
+		CC.ESNTL_CD,
+		CC.CD_NM,
+		CC.CD_DC,
+		CC.CD_DP,
+		CC.UPPER_CD,
+		CC.USE_YN,
+		CC.ESNTL_YN,
+		CC.SORT_ORDR,
+		(SELECT COUNT(*) FROM CMN_CD S1 WHERE CC.ESNTL_CD = S1.UPPER_CD AND S1.USE_YN = 'Y') AS LOWER_CNT
+		FROM CMN_CD CC
+		WHERE CC.USE_YN = 'Y' AND CC.ESNTL_CD != '00000'
+	    <isNotEmpty property="upper_cd" prepend="AND">
+			CC.UPPER_CD = #upper_cd#
+		</isNotEmpty>
+	    <isNotEmpty property="cd_arr" prepend="AND">
+			CC.ESNTL_CD IN
+			<iterate property="cd_arr" open=" (" conjunction="," close=")">
+				#cd_arr[]#
+			</iterate>
+		</isNotEmpty>
+	    <isNotEmpty property="cd_not_arr" prepend="AND">
+			CC.ESNTL_CD NOT IN
+			<iterate property="cd_not_arr" open=" (" conjunction="," close=")">
+				#cd_not_arr[]#
+			</iterate>
+		</isNotEmpty>
+		ORDER BY CC.SORT_ORDR ASC, CC.ESNTL_CD ASC
+	</select>
+
+	<select id="selectCdRelateList" parameterClass="java.util.HashMap" resultMap="cdMap">
+		SELECT
+		CC.ESNTL_CD,
+		CC.CD_NM,
+		CC.CD_DC,
+		LEVEL AS CD_DP,
+		CC.UPPER_CD,
+		CC.USE_YN,
+		CC.ESNTL_YN,
+		CC.SORT_ORDR,
+		0 AS LOWER_CNT
+		FROM CMN_CD CC
+		WHERE CC.USE_YN = 'Y'
+	    <isNotEmpty property="cd_nm" prepend="AND">
+			CC.CD_NM LIKE '%' || #cd_nm# || '%'
+		</isNotEmpty>
+		START WITH CC.ESNTL_CD = #upper_cd#
+		CONNECT BY PRIOR CC.ESNTL_CD = CC.UPPER_CD
+    	ORDER SIBLINGS BY CC.SORT_ORDR ASC, CC.ESNTL_CD ASC
+	</select>
+
+	<select id="selectCdDetail" parameterClass="java.util.HashMap" resultMap="cdMap">
+		SELECT
+		CC.ESNTL_CD,
+		CC.CD_NM,
+		CC.CD_DC,
+		CC.CD_DP,
+		CC.UPPER_CD,
+		FN_CD_NM(CC.UPPER_CD) AS UPPER_NM,
+		CC.USE_YN,
+		CC.ESNTL_YN,
+		CC.SORT_ORDR,
+		(SELECT COUNT(*) FROM CMN_CD S1 WHERE CC.ESNTL_CD = S1.UPPER_CD) AS LOWER_CNT
+		FROM CMN_CD CC
+		WHERE CC.ESNTL_CD = #esntl_cd#
+	</select>
+
+	<select id="selectEsntlCd" resultClass="String">
+		SELECT LPAD(NVL(MAX(ESNTL_CD),0)+1, 5, '0') FROM CMN_CD
+	</select>
+
+	<insert id="insertCd" parameterClass="java.util.HashMap">
+		INSERT INTO CMN_CD (
+			ESNTL_CD,
+			CD_NM,
+			CD_DC,
+			CD_DP,
+			UPPER_CD,
+			USE_YN,
+			ESNTL_YN,
+			SORT_ORDR,
+			WRITNG_ID,
+			WRITNG_DT,
+			UPDT_ID,
+			UPDT_DT
+	    ) VALUES(
+    		#esntl_cd#,
+    		#cd_nm#,
+    		#cd_dc#,
+			(SELECT CD_DP+1 FROM CMN_CD WHERE ESNTL_CD = #upper_cd#),
+			#upper_cd#,
+			'Y',
+			'N',
+			#sort_ordr#,
+			#esntl_id#,
+			SYSDATE,
+			#esntl_id#,
+			SYSDATE
+		)
+	</insert>
+
+	<update id="updateCd" parameterClass="java.util.HashMap">
+		UPDATE CMN_CD SET
+			CD_NM = #cd_nm#,
+			CD_DC = #cd_dc#,
+			<isNotEmpty property="use_yn">
+				USE_YN = #use_yn#,
+			</isNotEmpty>
+			SORT_ORDR = #sort_ordr#,
+			UPDT_ID = #esntl_id#,
+			UPDT_DT = SYSDATE
+		WHERE ESNTL_CD = #esntl_cd#
+	</update>
+
+	<select id="selectCdPageList" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		SELECT
+		X.RN,
+		X.TOT_CNT,
+		X.ESNTL_CD,
+		X.CD_NM,
+		X.CD_LEVEL_NM,
+		X.CD_DC,
+		X.CD_DP,
+		X.UPPER_CD,
+		FN_CD_NM(X.UPPER_CD) AS UPPER_NM,
+		FN_CD_FULL_NM(X.ESNTL_CD) AS CD_FULL_NM,
+		X.USE_YN,
+		X.ESNTL_YN,
+		X.SORT_ORDR,
+		(
+			SELECT COUNT(*)
+			FROM CMN_CD CC
+			WHERE CC.UPPER_CD = X.ESNTL_CD
+			AND CC.USE_YN = 'Y'
+		) AS LOWER_CNT
+		FROM
+		(
+			SELECT A.*,
+			ROWNUM AS RN, COUNT(*) OVER() AS TOT_CNT
+			FROM
+			(
+		        SELECT
+				ESNTL_CD,
+				LPAD('┖',(LEVEL-2)*3,' ')|| CD_NM AS CD_LEVEL_NM,
+				CD_NM,
+				CD_DC,
+				LEVEL AS CD_DP,
+				UPPER_CD,
+				USE_YN,
+				ESNTL_YN,
+				SORT_ORDR
+				FROM CMN_CD
+				WHERE USE_YN = 'Y' AND UPPER_CD NOT IN ('XXXXX','00000')
+			    <isNotEmpty property="cd_nm" prepend="AND">
+					CD_NM LIKE '%' || #cd_nm# || '%'
+				</isNotEmpty>
+				START WITH ESNTL_CD = #upper_cd#
+				CONNECT BY PRIOR ESNTL_CD = UPPER_CD
+		    	ORDER SIBLINGS BY SORT_ORDR ASC
+			) A
+		) X
+		WHERE (RN <![CDATA[ > ]]> #startRow# AND RN <![CDATA[ <= ]]> #endRow#)
+		ORDER BY RN ASC
+	</select>
+
+	<select id="selectDeptList" parameterClass="java.util.HashMap" resultMap="cdMap">
+		SELECT
+		S.DEPT_CD AS ESNTL_CD,
+		S.DEPT_NM AS CD_NM,
+		S.DEPT_FUNC AS CD_DC,
+		S.DEPT_DP AS CD_DP,
+		S.DEPT_UPPER_CD AS UPPER_CD,
+		S.USE_YN AS USE_YN,
+		'' AS ESNTL_YN,
+		S.SORT_ORDR AS SORT_ORDR,
+		(SELECT COUNT(*) FROM CMN_DEPT_CD S1 WHERE S.DEPT_CD = S1.DEPT_UPPER_CD) AS LOWER_CNT
+		FROM CMN_DEPT_CD S
+		WHERE S.USE_YN = 'Y'
+	    <isNotEmpty property="slevel" prepend="AND">
+			S.DEPT_DP = #slevel#
+		</isNotEmpty>
+	    <isNotEmpty property="par_id" prepend="AND">
+			S.DEPT_UPPER_CD = #par_id#
+		</isNotEmpty>
+		ORDER BY S.SORT_ORDR ASC
+	</select>
+
+	<select id="selectDeptDetail" parameterClass="java.util.HashMap" resultMap="cdMap">
+		SELECT
+		S.DEPT_CD AS ESNTL_CD,
+		S.DEPT_NM AS CD_NM,
+		S.DEPT_PATH AS CD_DC,
+		S.DEPT_DP AS CD_DP,
+		S.DEPT_UPPER_CD AS UPPER_CD,
+		S.USE_YN AS USE_YN,
+		'' AS ESNTL_YN,
+		S.SORT_ORDR AS SORT_ORDR,
+		(SELECT COUNT(*) FROM CMN_DEPT_CD S1 WHERE S.DEPT_CD = S1.DEPT_UPPER_CD) AS LOWER_CNT
+		FROM CMN_DEPT_CD S
+		WHERE S.USE_YN = 'Y'
+		AND S.DEPT_CD = #id_sta#
+	</select>
+
+	<select id="selectCdGridList" parameterClass="java.util.HashMap" resultMap="cdMap">
+		SELECT
+		CC.ESNTL_CD,
+		CC.CD_NM,
+		CC.CD_DC,
+		CC.CD_DP,
+		CC.UPPER_CD,
+		CC.USE_YN,
+		CC.ESNTL_YN,
+		CC.SORT_ORDR,
+		(SELECT COUNT(*) FROM CMN_CD S1 WHERE CC.ESNTL_CD = S1.UPPER_CD AND S1.USE_YN = 'Y') AS LOWER_CNT
+		FROM CMN_CD CC
+		WHERE CC.USE_YN = 'Y' AND CC.ESNTL_CD != '00000'
+	    <isNotEmpty property="up_cd" prepend="AND">
+			CC.UPPER_CD IN
+			<iterate property="up_cd" open=" (" conjunction="," close=")">
+				#up_cd[]#
+			</iterate>
+		</isNotEmpty>
+		ORDER BY CC.SORT_ORDR ASC, CC.ESNTL_CD ASC
+	</select>
+
+	<select id="selectCdLowerCd" parameterClass="java.util.HashMap" resultClass="int">
+		SELECT COUNT(*)
+		FROM CMN_CD
+		WHERE UPPER_CD = #esntl_cd#
+		  AND USE_YN = 'Y'
+	</select>
+
+	<select id="selectFaceLicenseList" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		SELECT
+			LICENSE,
+			ESNTL_ID
+		FROM CMN_FACE_LICENSE
+		WHERE NVL(USE_YN,'N') = 'N'
+	</select>
+
+</sqlMap>

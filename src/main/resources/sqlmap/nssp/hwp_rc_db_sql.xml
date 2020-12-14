@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC '-//ibatis.apache.org//DTD Sql Map 2.0//EN' 'http://ibatis.apache.org/dtd/sql-map-2.dtd'>
+<sqlMap namespace="hwp">
+
+	<!-- 3.내사착수보고서 -->
+	<select id="selectHwp00000000000000000003_1" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		SELECT A.*
+		     --, FN_OZ_DATE(null, null) AS S_DATE -- 승인 일자로 수정 by dgkim
+		  FROM (
+				SELECT REGEXP_SUBSTR(ITIV_NO, '[^-]+', 1, 1, 'i') AS ITIV_YYYY
+			 		 , LTRIM(REGEXP_SUBSTR(ITIV_NO, '[^-]+', 1, 2, 'i'),0) AS ITIV_NO
+			 		 , FN_USER_NM (CHARGER_ID) AS CHARGER_NM
+			 		 , NVL(FN_RC_TRGTER_NM(RT.RC_NO, '00697'),' ') AS TRGTER_NM
+			 		 , NVL(FN_RC_VIOLT_ROOT_NM(RT.RC_NO),' ') AS VIOLT_NM
+			 		 , (SELECT NVL2(OUTSET_DT, TO_CHAR(OUTSET_DT, 'YYYY.fmMM.DD'), TO_CHAR(SYSDATE, 'YYYY.fmMM.DD')) FROM RC_ITIV_OUTSET WHERE RC_NO = RT.RC_NO) AS S_DATE -- 승인 일자로 수정 by dgkim
+		  		  FROM RC_TMPR RT
+		 	     WHERE RT.RC_NO = #P_RC_NO#
+		 	   ) A RIGHT OUTER JOIN DUAL ON 1=1
+	</select>
+
+	<select id="selectHwp00000000000000000003_2" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		<include refid="hwp.commonTrgtersByFormatTypeD"/>
+	</select>
+
+	<!-- 5.내사사건 기록표지 -->
+	<select id="selectHwp00000000000000000005" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		SELECT REGEXP_SUBSTR(ITIV_NO, '[^-]+', 1, 1, 'i') AS ITIV_YYYY
+			 , LTRIM(REGEXP_SUBSTR(ITIV_NO, '[^-]+', 1, 2, 'i'),0) AS ITIV_NO
+			 , FN_USER_NM (CHARGER_ID) AS CHARGER_NM
+			 , NVL(FN_RC_TRGTER_NM(RT.RC_NO, '00697'),' ') AS TRGTER_NM
+			 , NVL(FN_RC_VIOLT_ROOT_NM(RT.RC_NO),' ') AS VIOLT_NM
+		  FROM RC_TMPR RT
+		 where RT.RC_NO = #P_RC_NO#
+	</select>
+
+	<!-- 201.임시사건 기록표지 -->
+	<select id="selectHwp00000000000000000201" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		SELECT REGEXP_SUBSTR(TMPR_NO, '[^-]+', 1, 1, 'i') AS TMPR_YYYY
+			 , LTRIM(REGEXP_SUBSTR(TMPR_NO, '[^-]+', 1, 2, 'i'),0) AS TMPR_NO
+			 , FN_USER_NM (CHARGER_ID) AS CHARGER_NM
+			 , NVL(FN_RC_TRGTER_NM(RT.RC_NO, '00697'),' ') AS TRGTER_NM
+			 , NVL(FN_RC_VIOLT_ROOT_NM(RT.RC_NO),' ') AS VIOLT_NM
+		  FROM RC_TMPR RT
+		 where RT.RC_NO = #P_RC_NO#
+	</select>
+
+
+	<!-- 6.내사결과보고서 -->
+	<select id="selectHwp00000000000000000006_1" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		SELECT A.ITIV_YYYY
+			 , A.ITIV_NO
+			 , A.CHARGER_NM
+			 , A.VIOLT_NM
+			 , A.VIOLT_ROOT_NM
+			 , A.TRGTER_NMS || CASE WHEN REGEXP_INSTR(SUBSTR(A.TRGTER_NMS,-1,1),'[0-9]') > 0 THEN '명' END AS TRGTER_NMS
+		     -- , FN_OZ_DATE(null, null) AS S_DATE
+		      , A.S_DATE -- 승인 일자로 수정 by dgkim 
+		  FROM (
+				SELECT REGEXP_SUBSTR(ITIV_NO, '[^-]+', 1, 1, 'i') AS ITIV_YYYY
+			 		 , LTRIM(REGEXP_SUBSTR(ITIV_NO, '[^-]+', 1, 2, 'i'),0) AS ITIV_NO
+			 		 , FN_USER_NM (CHARGER_ID) AS CHARGER_NM
+			 		 , FN_RC_VIOLT_ROOT_NM(RT.RC_NO) AS VIOLT_NM
+			 		 , FN_RC_VIOLT_ROOT_NM(RT.RC_NO) AS VIOLT_ROOT_NM
+		        	 , FN_RC_TRGTER_NM(RT.RC_NO, '00697') AS TRGTER_NMS
+		        	 , (SELECT NVL2(ITIV_RESULT_REPORT_DT, TO_CHAR(ITIV_RESULT_REPORT_DT, 'YYYY.fmMM.DD'), TO_CHAR(SYSDATE, 'YYYY.fmMM.DD')) FROM RC_ITIV_RESULT WHERE ITIV_NO = RT.ITIV_NO) AS S_DATE -- 승인 일자로 수정 by dgkim 
+		  		  FROM RC_TMPR RT
+		 	     WHERE RT.RC_NO = #P_RC_NO#
+		 	   ) A RIGHT OUTER JOIN DUAL ON 1=1
+	</select>
+
+	<!-- 6.내사결과보고서 -->
+	<select id="selectHwp00000000000000000006_2" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		<include refid="hwp.commonTrgtersByFormatTypeD" />
+	</select>
+
+	<!-- 202.임시사건결과보고서 -->
+	<select id="selectHwp00000000000000000202_1" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		SELECT A.TMPR_YYYY
+			 , A.TMPR_NO
+			 , A.CHARGER_NM
+			 , A.VIOLT_NM
+			 , A.VIOLT_ROOT_NM
+			 , A.TRGTER_NMS || CASE WHEN REGEXP_INSTR(SUBSTR(A.TRGTER_NMS,-1,1),'[0-9]') > 0 THEN '명' END AS TRGTER_NMS
+		     , FN_OZ_DATE(null, null) AS S_DATE
+		  FROM (
+				SELECT REGEXP_SUBSTR(TMPR_NO, '[^-]+', 1, 1, 'i') AS TMPR_YYYY
+			 		 , LTRIM(REGEXP_SUBSTR(TMPR_NO, '[^-]+', 1, 2, 'i'),0) AS TMPR_NO
+			 		 , FN_USER_NM (CHARGER_ID) AS CHARGER_NM
+			 		 , NVL(FN_RC_VIOLT_ROOT_NM(RT.RC_NO),' ') AS VIOLT_NM
+			 		 , FN_RC_VIOLT_ROOT_NM(RT.RC_NO) AS VIOLT_ROOT_NM
+		        	 , NVL(FN_RC_TRGTER_NM(RT.RC_NO, '00697'),' ') AS TRGTER_NMS
+		  		  FROM RC_TMPR RT
+		 	     WHERE RT.RC_NO = #P_RC_NO#
+		 	   ) A RIGHT OUTER JOIN DUAL ON 1=1
+	</select>
+
+	<!-- 202.임시사건결과보고서 -->
+	<select id="selectHwp00000000000000000202_2" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		<include refid="hwp.commonTrgtersByFormatTypeD" />
+	</select>
+
+</sqlMap>

@@ -1,0 +1,883 @@
+2019-06-20 15:19:26,492 [http-bio-8080-exec-10] DEBUG OZRepositoryRequestItem  - Function Type [256 : ACCESS_GET_ITEMS]
+2019-06-20 15:19:26,493 [http-bio-8080-exec-10] DEBUG RepositoryAdapter  - obj stream itemID : /odi/00000000000000000045_M.odi
+2019-06-20 15:19:26,494 [http-bio-8080-exec-10] DEBUG RepositoryAdapter  - Rebuilding obj stream; /odi/00000000000000000045_M.odi
+2019-06-20 15:19:26,494 [http-bio-8080-exec-10] DEBUG XML-Parser-Configurator  - try to get SAX10_SUN parser factory...
+2019-06-20 15:19:26,494 [http-bio-8080-exec-10] DEBUG XML-Parser-Configurator  - Class.forName(com.sun.xml.parser.SAXParserFactoryImpl).newInstance()
+2019-06-20 15:19:26,497 [http-bio-8080-exec-10] DEBUG DataModule  - TargetDB=OZDBSTORE
+2019-06-20 15:19:26,514 [http-bio-8080-exec-10] DEBUG RepositoryAdapter  - New objstream file was created
+2019-06-20 15:19:26,515 [http-bio-8080-exec-10] DEBUG OZStream  - write Item size = 1100
+2019-06-20 15:19:26,515 [http-bio-8080-exec-10] INFO  MessageHandler  - End Message Handing
+2019-06-20 15:19:26,745 [http-bio-8080-exec-10] INFO  server  - client IP:[ 0:0:0:0:0:0:0:1] A handler is started. Active handler count is 2
+2019-06-20 15:19:26,745 [http-bio-8080-exec-10] INFO  server  - REQUEST-URI : http://localhost:8080/oz70/server
+2019-06-20 15:19:26,746 [http-bio-8080-exec-10] INFO  MessageHandler  - Start Message Handing
+2019-06-20 15:19:26,746 [http-bio-8080-exec-10] DEBUG MessageHandler  - [version:10001][className:oz.framework.cp.message.FrameworkRequestDataModule]
+2019-06-20 15:19:26,746 [http-bio-8080-exec-10] DEBUG MessageHandler  - Request Message starts fetching for Response
+2019-06-20 15:19:26,746 [http-bio-8080-exec-10] DEBUG FrameworkRequestDataModule  - Reading Message is successfully completed
+2019-06-20 15:19:26,746 [http-bio-8080-exec-10] INFO  FrameworkRequestDataModule  - fetch DataModule start: [00000000000000000045_M.odi, null]
+2019-06-20 15:19:26,746 [http-bio-8080-exec-10] DEBUG FrameworkRequestDataModule  - Function Type [ GET_DATAMODULE ]
+2019-06-20 15:19:26,747 [http-bio-8080-exec-10] DEBUG XML-Parser-Configurator  - try to get SAX10_SUN parser factory...
+2019-06-20 15:19:26,747 [http-bio-8080-exec-10] DEBUG XML-Parser-Configurator  - Class.forName(com.sun.xml.parser.SAXParserFactoryImpl).newInstance()
+2019-06-20 15:19:26,749 [http-bio-8080-exec-10] DEBUG DataModule  - TargetDB=OZDBSTORE
+2019-06-20 15:19:26,750 [http-bio-8080-exec-10] DEBUG ScriptModule  - java script complie.
+2019-06-20 15:19:26,756 [http-bio-8080-exec-10] DEBUG FrameworkRequestDataModule  - CONCURRENT_FETCH_SIZE :4096
+2019-06-20 15:19:26,757 [http-bio-8080-exec-10] INFO  DataModule  - Start Datamodule-Binding.
+2019-06-20 15:19:26,757 [http-bio-8080-exec-10] DEBUG DataModule  - </odi/00000000000000000045_M.odi Set Name : OZParam> data-binding complete.
+2019-06-20 15:19:26,757 [http-bio-8080-exec-10] DEBUG StoredPool  - Request for connection has alias 'pcis'
+2019-06-20 15:19:26,757 [http-bio-8080-exec-10] INFO  ConnectionPool-pcis  - Request for connection received.
+2019-06-20 15:19:26,757 [http-bio-8080-exec-10] DEBUG ConnectionPool-pcis  - newConnectionByURL.... url: jdbc:oracle:thin:@(DESCRIPTION=(ADDRESS=(HOST=192.168.10.50)(PROTOCOL=tcp)(PORT=1521))(CONNECT_DATA=(SID=pcis)))
+2019-06-20 15:19:26,757 [http-bio-8080-exec-10] DEBUG ConnectionPool-pcis  - oracle.jdbc.driver.OracleDriver is acceptsURL :true
+2019-06-20 15:19:41,112 [http-bio-8080-exec-9] ERROR ConnectionPool-pcis  - Exception getting connection. : IO 예외 상황: The Network Adapter could not establish the connection
+2019-06-20 15:19:41,113 [http-bio-8080-exec-9] ERROR DataModule  - [Error Code :10102002] [/odi/00000000000000000141_M.odi] [Component Name : DB_NSSP] Fail to get a database connection. 
+java.sql.SQLException: IO 예외 상황: The Network Adapter could not establish the connection
+	at oracle.jdbc.dbaccess.DBError.throwSqlException(DBError.java:134)
+	at oracle.jdbc.dbaccess.DBError.throwSqlException(DBError.java:179)
+	at oracle.jdbc.dbaccess.DBError.throwSqlException(DBError.java:333)
+	at oracle.jdbc.driver.OracleConnection.<init>(OracleConnection.java:404)
+	at oracle.jdbc.driver.OracleDriver.getConnectionInstance(OracleDriver.java:468)
+	at oracle.jdbc.driver.OracleDriver.connect(OracleDriver.java:314)
+	at oz.framework.db.cozbp.l(DashoA12957:559)
+	at oz.framework.db.cozbp.k(DashoA12957:168)
+	at oz.framework.db.cozbp.m(DashoA12957:788)
+	at oz.framework.db.cozbp.a(DashoA12957:648)
+	at oz.framework.db.cozbp.h(DashoA12957:609)
+	at oz.framework.db.cozjt.getConnectionByAlias(DashoA12957:126)
+	at oz.framework.db.cozjt.getConnectionByAlias(DashoA12957:102)
+	at oz.dm.meta.OZDBMS.init(DashoA12957:386)
+	at oz.dm.meta.OZDataModuleImpl.getBCDataModule(DashoA12957:881)
+	at oz.dm.meta.OZDataModuleImpl.getBCDataModule(DashoA12957:835)
+	at oz.framework.cp.message.FrameworkRequestDataModule.b(DashoA12957:876)
+	at oz.framework.cp.message.FrameworkRequestDataModule.fetchMessage(DashoA12957:1427)
+	at oz.server.cozcv.a(DashoA12957:248)
+	at oz.server.cozcv.a(DashoA12957:152)
+	at oz.server.OZServlet.a(DashoA12957:1114)
+	at oz.server.OZServlet.doPost(DashoA12957:372)
+	at javax.servlet.http.HttpServlet.service(HttpServlet.java:650)
+	at javax.servlet.http.HttpServlet.service(HttpServlet.java:731)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:303)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:208)
+	at org.apache.tomcat.websocket.server.WsFilter.doFilter(WsFilter.java:52)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:241)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:208)
+	at org.apache.catalina.core.StandardWrapperValve.invoke(StandardWrapperValve.java:219)
+	at org.apache.catalina.core.StandardContextValve.invoke(StandardContextValve.java:110)
+	at org.apache.catalina.authenticator.AuthenticatorBase.invoke(AuthenticatorBase.java:494)
+	at org.apache.catalina.core.StandardHostValve.invoke(StandardHostValve.java:169)
+	at org.apache.catalina.valves.ErrorReportValve.invoke(ErrorReportValve.java:104)
+	at org.apache.catalina.valves.AccessLogValve.invoke(AccessLogValve.java:1025)
+	at org.apache.catalina.core.StandardEngineValve.invoke(StandardEngineValve.java:116)
+	at org.apache.catalina.connector.CoyoteAdapter.service(CoyoteAdapter.java:445)
+	at org.apache.coyote.http11.AbstractHttp11Processor.process(AbstractHttp11Processor.java:1137)
+	at org.apache.coyote.AbstractProtocol$AbstractConnectionHandler.process(AbstractProtocol.java:637)
+	at org.apache.tomcat.util.net.JIoEndpoint$SocketProcessor.run(JIoEndpoint.java:319)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(Unknown Source)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(Unknown Source)
+	at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:61)
+	at java.lang.Thread.run(Unknown Source)
+2019-06-20 15:19:41,114 [http-bio-8080-exec-9] ERROR DataModule  - Binding Job Failure - Removed cache data.
+2019-06-20 15:19:41,114 [http-bio-8080-exec-9] ERROR FrameworkRequestDataModule  - Bind Error occured during fetching
+Fail to get a database connection. java.sql.SQLException: IO 예외 상황: The Network Adapter could not establish the connection
+	at oz.framework.policy.cozb1.a(DashoA12957:43)
+	at oz.framework.policy.cozb1.a(DashoA12957:49)
+	at oz.dm.meta.OZDBMS.init(DashoA12957:477)
+	at oz.dm.meta.OZDataModuleImpl.getBCDataModule(DashoA12957:881)
+	at oz.dm.meta.OZDataModuleImpl.getBCDataModule(DashoA12957:835)
+	at oz.framework.cp.message.FrameworkRequestDataModule.b(DashoA12957:876)
+	at oz.framework.cp.message.FrameworkRequestDataModule.fetchMessage(DashoA12957:1427)
+	at oz.server.cozcv.a(DashoA12957:248)
+	at oz.server.cozcv.a(DashoA12957:152)
+	at oz.server.OZServlet.a(DashoA12957:1114)
+	at oz.server.OZServlet.doPost(DashoA12957:372)
+	at javax.servlet.http.HttpServlet.service(HttpServlet.java:650)
+	at javax.servlet.http.HttpServlet.service(HttpServlet.java:731)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:303)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:208)
+	at org.apache.tomcat.websocket.server.WsFilter.doFilter(WsFilter.java:52)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:241)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:208)
+	at org.apache.catalina.core.StandardWrapperValve.invoke(StandardWrapperValve.java:219)
+	at org.apache.catalina.core.StandardContextValve.invoke(StandardContextValve.java:110)
+	at org.apache.catalina.authenticator.AuthenticatorBase.invoke(AuthenticatorBase.java:494)
+	at org.apache.catalina.core.StandardHostValve.invoke(StandardHostValve.java:169)
+	at org.apache.catalina.valves.ErrorReportValve.invoke(ErrorReportValve.java:104)
+	at org.apache.catalina.valves.AccessLogValve.invoke(AccessLogValve.java:1025)
+	at org.apache.catalina.core.StandardEngineValve.invoke(StandardEngineValve.java:116)
+	at org.apache.catalina.connector.CoyoteAdapter.service(CoyoteAdapter.java:445)
+	at org.apache.coyote.http11.AbstractHttp11Processor.process(AbstractHttp11Processor.java:1137)
+	at org.apache.coyote.AbstractProtocol$AbstractConnectionHandler.process(AbstractProtocol.java:637)
+	at org.apache.tomcat.util.net.JIoEndpoint$SocketProcessor.run(JIoEndpoint.java:319)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(Unknown Source)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(Unknown Source)
+	at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:61)
+	at java.lang.Thread.run(Unknown Source)
+2019-06-20 15:19:41,117 [http-bio-8080-exec-9] INFO  MessageHandler  - End Message Handing
+2019-06-20 15:19:47,760 [http-bio-8080-exec-10] ERROR ConnectionPool-pcis  - Exception getting connection. : IO 예외 상황: The Network Adapter could not establish the connection
+2019-06-20 15:19:47,760 [http-bio-8080-exec-10] ERROR DataModule  - [Error Code :10102002] [/odi/00000000000000000045_M.odi] [Component Name : DB_NSSP] Fail to get a database connection. 
+java.sql.SQLException: IO 예외 상황: The Network Adapter could not establish the connection
+	at oracle.jdbc.dbaccess.DBError.throwSqlException(DBError.java:134)
+	at oracle.jdbc.dbaccess.DBError.throwSqlException(DBError.java:179)
+	at oracle.jdbc.dbaccess.DBError.throwSqlException(DBError.java:333)
+	at oracle.jdbc.driver.OracleConnection.<init>(OracleConnection.java:404)
+	at oracle.jdbc.driver.OracleDriver.getConnectionInstance(OracleDriver.java:468)
+	at oracle.jdbc.driver.OracleDriver.connect(OracleDriver.java:314)
+	at oz.framework.db.cozbp.l(DashoA12957:559)
+	at oz.framework.db.cozbp.k(DashoA12957:168)
+	at oz.framework.db.cozbp.m(DashoA12957:788)
+	at oz.framework.db.cozbp.a(DashoA12957:648)
+	at oz.framework.db.cozbp.h(DashoA12957:609)
+	at oz.framework.db.cozjt.getConnectionByAlias(DashoA12957:126)
+	at oz.framework.db.cozjt.getConnectionByAlias(DashoA12957:102)
+	at oz.dm.meta.OZDBMS.init(DashoA12957:386)
+	at oz.dm.meta.OZDataModuleImpl.getBCDataModule(DashoA12957:881)
+	at oz.dm.meta.OZDataModuleImpl.getBCDataModule(DashoA12957:835)
+	at oz.framework.cp.message.FrameworkRequestDataModule.b(DashoA12957:876)
+	at oz.framework.cp.message.FrameworkRequestDataModule.fetchMessage(DashoA12957:1427)
+	at oz.server.cozcv.a(DashoA12957:248)
+	at oz.server.cozcv.a(DashoA12957:152)
+	at oz.server.OZServlet.a(DashoA12957:1114)
+	at oz.server.OZServlet.doPost(DashoA12957:372)
+	at javax.servlet.http.HttpServlet.service(HttpServlet.java:650)
+	at javax.servlet.http.HttpServlet.service(HttpServlet.java:731)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:303)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:208)
+	at org.apache.tomcat.websocket.server.WsFilter.doFilter(WsFilter.java:52)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:241)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:208)
+	at org.apache.catalina.core.StandardWrapperValve.invoke(StandardWrapperValve.java:219)
+	at org.apache.catalina.core.StandardContextValve.invoke(StandardContextValve.java:110)
+	at org.apache.catalina.authenticator.AuthenticatorBase.invoke(AuthenticatorBase.java:494)
+	at org.apache.catalina.core.StandardHostValve.invoke(StandardHostValve.java:169)
+	at org.apache.catalina.valves.ErrorReportValve.invoke(ErrorReportValve.java:104)
+	at org.apache.catalina.valves.AccessLogValve.invoke(AccessLogValve.java:1025)
+	at org.apache.catalina.core.StandardEngineValve.invoke(StandardEngineValve.java:116)
+	at org.apache.catalina.connector.CoyoteAdapter.service(CoyoteAdapter.java:445)
+	at org.apache.coyote.http11.AbstractHttp11Processor.process(AbstractHttp11Processor.java:1137)
+	at org.apache.coyote.AbstractProtocol$AbstractConnectionHandler.process(AbstractProtocol.java:637)
+	at org.apache.tomcat.util.net.JIoEndpoint$SocketProcessor.run(JIoEndpoint.java:319)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(Unknown Source)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(Unknown Source)
+	at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:61)
+	at java.lang.Thread.run(Unknown Source)
+2019-06-20 15:19:47,761 [http-bio-8080-exec-10] ERROR DataModule  - Binding Job Failure - Removed cache data.
+2019-06-20 15:19:47,761 [http-bio-8080-exec-10] ERROR FrameworkRequestDataModule  - Bind Error occured during fetching
+Fail to get a database connection. java.sql.SQLException: IO 예외 상황: The Network Adapter could not establish the connection
+	at oz.framework.policy.cozb1.a(DashoA12957:43)
+	at oz.framework.policy.cozb1.a(DashoA12957:49)
+	at oz.dm.meta.OZDBMS.init(DashoA12957:477)
+	at oz.dm.meta.OZDataModuleImpl.getBCDataModule(DashoA12957:881)
+	at oz.dm.meta.OZDataModuleImpl.getBCDataModule(DashoA12957:835)
+	at oz.framework.cp.message.FrameworkRequestDataModule.b(DashoA12957:876)
+	at oz.framework.cp.message.FrameworkRequestDataModule.fetchMessage(DashoA12957:1427)
+	at oz.server.cozcv.a(DashoA12957:248)
+	at oz.server.cozcv.a(DashoA12957:152)
+	at oz.server.OZServlet.a(DashoA12957:1114)
+	at oz.server.OZServlet.doPost(DashoA12957:372)
+	at javax.servlet.http.HttpServlet.service(HttpServlet.java:650)
+	at javax.servlet.http.HttpServlet.service(HttpServlet.java:731)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:303)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:208)
+	at org.apache.tomcat.websocket.server.WsFilter.doFilter(WsFilter.java:52)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:241)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:208)
+	at org.apache.catalina.core.StandardWrapperValve.invoke(StandardWrapperValve.java:219)
+	at org.apache.catalina.core.StandardContextValve.invoke(StandardContextValve.java:110)
+	at org.apache.catalina.authenticator.AuthenticatorBase.invoke(AuthenticatorBase.java:494)
+	at org.apache.catalina.core.StandardHostValve.invoke(StandardHostValve.java:169)
+	at org.apache.catalina.valves.ErrorReportValve.invoke(ErrorReportValve.java:104)
+	at org.apache.catalina.valves.AccessLogValve.invoke(AccessLogValve.java:1025)
+	at org.apache.catalina.core.StandardEngineValve.invoke(StandardEngineValve.java:116)
+	at org.apache.catalina.connector.CoyoteAdapter.service(CoyoteAdapter.java:445)
+	at org.apache.coyote.http11.AbstractHttp11Processor.process(AbstractHttp11Processor.java:1137)
+	at org.apache.coyote.AbstractProtocol$AbstractConnectionHandler.process(AbstractProtocol.java:637)
+	at org.apache.tomcat.util.net.JIoEndpoint$SocketProcessor.run(JIoEndpoint.java:319)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(Unknown Source)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(Unknown Source)
+	at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:61)
+	at java.lang.Thread.run(Unknown Source)
+2019-06-20 15:19:47,763 [http-bio-8080-exec-10] INFO  MessageHandler  - End Message Handing
+2019-06-20 15:26:43,467 [localhost-startStop-2] INFO  server  - Stopping OZ Servlet ..... 
+2019-06-20 15:26:43,469 [localhost-startStop-2] INFO  ConnectionPool  - Start release pool...
+2019-06-20 15:26:43,469 [localhost-startStop-2] INFO  ConnectionPool  - End release pool.
+2019-06-20 15:26:43,856 [localhost-startStop-2] INFO  server  - Released all resources
+2019-06-20 15:26:43,864 [localhost-startStop-2] INFO  server  - Fine.
+2019-06-20 15:27:44,953 [http-bio-8080-exec-8] INFO  Log-Manager  - - Loging START ----------------------------------
+2019-06-20 15:27:44,964 [http-bio-8080-exec-8] INFO  server  - Set XML parser properties.
+2019-06-20 15:27:44,978 [http-bio-8080-exec-8] INFO  XML-License-Loader  - [.xml] loader
+2019-06-20 15:27:44,979 [http-bio-8080-exec-8] DEBUG XML-Parser-Configurator  - try to get DOM10_SUN parser factory...
+2019-06-20 15:27:44,979 [http-bio-8080-exec-8] DEBUG XML-Parser-Configurator  - Class.forName(com.sun.xml.parser.DocumentBuilderFactoryImpl).newInstance()
+2019-06-20 15:27:45,815 [http-bio-8080-exec-8] INFO  resource  - Start initialize OZ
+2019-06-20 15:27:45,816 [http-bio-8080-exec-8] DEBUG resource  - Send mail function is not activated.
+2019-06-20 15:27:45,818 [http-bio-8080-exec-8] DEBUG XML-Parser-Configurator  - try to get DOM10_SUN parser factory...
+2019-06-20 15:27:45,819 [http-bio-8080-exec-8] DEBUG XML-Parser-Configurator  - Class.forName(com.sun.xml.parser.DocumentBuilderFactoryImpl).newInstance()
+2019-06-20 15:27:45,819 [http-bio-8080-exec-8] INFO  OZItemEncryptionManager  - Cannot find product key file
+2019-06-20 15:27:45,833 [http-bio-8080-exec-8] INFO  OZDBConfigManager  - Loading dbconfig.xml
+2019-06-20 15:27:45,834 [http-bio-8080-exec-8] DEBUG XML-Parser-Configurator  - try to get DOM10_SUN parser factory...
+2019-06-20 15:27:45,834 [http-bio-8080-exec-8] DEBUG XML-Parser-Configurator  - Class.forName(com.sun.xml.parser.DocumentBuilderFactoryImpl).newInstance()
+2019-06-20 15:27:45,885 [http-bio-8080-exec-8] DEBUG OZDBConfigManager  - 
+          Vendor Name          : ORACLE
+                 Driver Format : oracle.jdbc.driver.OracleDriver
+                 Key Format    : ORACLE^{user}^{serverAddress}^{portNo}^{sid}
+                 HandlerClass  : com.forcs.db.OZGeneralHandler
+                 ParamFlag     : ?
+                 ITEMS         : {portNo=[key=portNo,useProperty=false], serverAddress=[key=serverAddress,useProperty=false], sid=[key=sid,useProperty=false]}
+                 FieldTypeConv : {DATE=DATE}
+                 Support Fun.  : true
+                 AddInfo       : {LIKE_QUERY=like, DATE_EXPRESSION=TO_DATE('@YYYY/@MM/@DD @hh:@mm:@ss', 'YYYY/MM/DD hh24:mi:ss'), LIKE_DELEMETER=%}
+
+2019-06-20 15:27:45,886 [http-bio-8080-exec-8] DEBUG OZDBConfigManager  - 
+          Vendor Name          : MSSQL
+                 Driver Format : com.microsoft.jdbc.sqlserver.SQLServerDriver
+                 Key Format    : MSSQL^{user}^{serverAddress}^{portNo}^{dbName}
+                 HandlerClass  : com.forcs.db.OZMSSQLHandler
+                 ParamFlag     : ?
+                 ITEMS         : {portNo=[key=portNo,useProperty=false], dbName=[key=dbName,useProperty=false], serverAddress=[key=serverAddress,useProperty=false]}
+                 FieldTypeConv : {DATE=DATETIME}
+                 Support Fun.  : false
+                 AddInfo       : {DATE_EXPRESSION=CAST('@YYYY.@MM.@DD @hh:@mm:@ss' AS DATETIME)}
+
+2019-06-20 15:27:45,886 [http-bio-8080-exec-8] DEBUG OZDBConfigManager  - 
+          Vendor Name          : MSSQL2005
+                 Driver Format : com.microsoft.sqlserver.jdbc.SQLServerDriver
+                 Key Format    : MSSQL2005^{user}^{serverAddress}^{portNo}^{dbName}
+                 HandlerClass  : com.forcs.db.OZMSSQLHandler
+                 ParamFlag     : ?
+                 ITEMS         : {portNo=[key=portNo,useProperty=false], dbName=[key=dbName,useProperty=false], serverAddress=[key=serverAddress,useProperty=false]}
+                 FieldTypeConv : {DATE=DATETIME}
+                 Support Fun.  : false
+                 AddInfo       : {DATE_EXPRESSION=CAST('@YYYY.@MM.@DD @hh:@mm:@ss' AS DATETIME)}
+
+2019-06-20 15:27:45,887 [http-bio-8080-exec-8] WARN  OZDBConfigManager  - [MSSQL2005_MARS] DRIVER is null.
+2019-06-20 15:27:45,887 [http-bio-8080-exec-8] DEBUG OZDBConfigManager  - 
+          Vendor Name          : MSSQL2008
+                 Driver Format : com.microsoft.sqlserver.jdbc.SQLServerDriver
+                 Key Format    : MSSQL2008^{user}^{serverAddress}^{portNo}^{dbName}
+                 HandlerClass  : com.forcs.db.OZMSSQLHandler
+                 ParamFlag     : ?
+                 ITEMS         : {portNo=[key=portNo,useProperty=false], dbName=[key=dbName,useProperty=false], serverAddress=[key=serverAddress,useProperty=false]}
+                 FieldTypeConv : {DATE=DATETIME}
+                 Support Fun.  : false
+                 AddInfo       : {DATE_EXPRESSION=CAST('@YYYY.@MM.@DD @hh:@mm:@ss' AS DATETIME)}
+
+2019-06-20 15:27:45,887 [http-bio-8080-exec-8] DEBUG OZDBConfigManager  - 
+          Vendor Name          : DB2
+                 Driver Format : COM.ibm.db2.jdbc.net.DB2Driver
+                 Key Format    : DB2^{user}^{serverAddress}^{portNo}^{dbName}
+                 HandlerClass  : com.forcs.db.OZGeneralHandler
+                 ParamFlag     : ?
+                 ITEMS         : {portNo=[key=portNo,useProperty=false], dbName=[key=dbName,useProperty=false], serverAddress=[key=serverAddress,useProperty=false]}
+                 FieldTypeConv : {DATE=TIMESTAMP}
+                 Support Fun.  : false
+                 AddInfo       : {DATE_EXPRESSION=TO_DATE('@YYYY-@MM-@DD @hh:@mm:@ss', 'YYYY-MM-DD HH24:MI:SS')}
+
+2019-06-20 15:27:45,888 [http-bio-8080-exec-8] DEBUG OZDBConfigManager  - 
+          Vendor Name          : ODBC
+                 Driver Format : sun.jdbc.odbc.JdbcOdbcDriver
+                 Key Format    : ODBC^{user}^{dsn}
+                 HandlerClass  : com.forcs.db.OZGeneralHandler
+                 ParamFlag     : ?
+                 ITEMS         : {dsn=[key=dsn,useProperty=false]}
+                 FieldTypeConv : {}
+                 Support Fun.  : false
+                 AddInfo       : {}
+
+2019-06-20 15:27:45,888 [http-bio-8080-exec-8] DEBUG OZDBConfigManager  - 
+          Vendor Name          : INFORMIX
+                 Driver Format : com.informix.jdbc.IfxDriver
+                 Key Format    : INFORMIX^{user}^{serverAddress}^{portNo}^{serverName}^{dbName}
+                 HandlerClass  : com.forcs.db.OZGeneralHandler
+                 ParamFlag     : ?
+                 ITEMS         : {portNo=[key=portNo,useProperty=false], dbName=[key=dbName,useProperty=false], serverAddress=[key=serverAddress,useProperty=false], serverName=[key=serverName,useProperty=false]}
+                 FieldTypeConv : {}
+                 Support Fun.  : false
+                 AddInfo       : {}
+
+2019-06-20 15:27:45,888 [http-bio-8080-exec-8] DEBUG OZDBConfigManager  - 
+          Vendor Name          : SYBASE
+                 Driver Format : com.sybase.jdbc2.jdbc.SybDriver
+                 Key Format    : SYBASE^{user}^{dsn}^{serverAddress}^{portNo}^{dbName}
+                 HandlerClass  : com.forcs.db.OZGeneralHandler
+                 ParamFlag     : ?
+                 ITEMS         : {portNo=[key=portNo,useProperty=false], dbName=[key=dbName,useProperty=false], serverAddress=[key=serverAddress,useProperty=false], dsn=[key=dsn,useProperty=false]}
+                 FieldTypeConv : {DATE=DATETIME}
+                 Support Fun.  : false
+                 AddInfo       : {DATE_EXPRESSION=CONVERT(DATETIME, '@YYYY.@MM.@DD @hh:@mm:@ss')}
+
+2019-06-20 15:27:45,892 [http-bio-8080-exec-8] DEBUG OZDBConfigManager  - 
+          Vendor Name          : UNISQL
+                 Driver Format : unisql.jdbc.driver.UniSQLDriver
+                 Key Format    : UNISQL^{user}^{serverAddress}^{portNo}^{dbName}
+                 HandlerClass  : com.forcs.db.OZGeneralHandler
+                 ParamFlag     : ?
+                 ITEMS         : {portNo=[key=portNo,useProperty=false], dbName=[key=dbName,useProperty=false], serverAddress=[key=serverAddress,useProperty=false]}
+                 FieldTypeConv : {}
+                 Support Fun.  : false
+                 AddInfo       : {}
+
+2019-06-20 15:27:45,892 [http-bio-8080-exec-8] DEBUG OZDBConfigManager  - 
+          Vendor Name          : MYSQL
+                 Driver Format : com.mysql.jdbc.Driver
+                 Key Format    : MYSQL^{user}^{serverAddress}^{portNo}^{dbName}
+                 HandlerClass  : com.forcs.db.OZGeneralHandler
+                 ParamFlag     : ?
+                 ITEMS         : {portNo=[key=portNo,useProperty=false], dbName=[key=dbName,useProperty=false], serverAddress=[key=serverAddress,useProperty=false]}
+                 FieldTypeConv : {DATE=DATETIME}
+                 Support Fun.  : false
+                 AddInfo       : {DATE_EXPRESSION=CAST('@YYYY-@MM-@DD @hh:@mm:@ss' AS DATETIME )}
+
+2019-06-20 15:27:45,901 [http-bio-8080-exec-8] DEBUG OZDBConfigManager  - 
+          Vendor Name          : USER
+                 Driver Format : {driver}
+                 Key Format    : USER^{user}^{driver}^{url}
+                 HandlerClass  : com.forcs.db.OZGeneralHandler
+                 ParamFlag     : ?
+                 ITEMS         : {driver=[key=driver,useProperty=false], url=[key=url,useProperty=false]}
+                 FieldTypeConv : {}
+                 Support Fun.  : false
+                 AddInfo       : {}
+
+2019-06-20 15:27:45,902 [http-bio-8080-exec-8] WARN  OZDBConfigManager  - [MSSQL-OLEDB] DRIVER is null.
+2019-06-20 15:27:45,902 [http-bio-8080-exec-8] WARN  OZDBConfigManager  - [ORACLE-OLEDB] DRIVER is null.
+2019-06-20 15:27:45,902 [http-bio-8080-exec-8] WARN  OZDBConfigManager  - [SYBASE-OLEDB] DRIVER is null.
+2019-06-20 15:27:45,902 [http-bio-8080-exec-8] WARN  OZDBConfigManager  - [DB2-OLEDB] DRIVER is null.
+2019-06-20 15:27:45,904 [http-bio-8080-exec-8] WARN  OZDBConfigManager  - [INFORMIX-OLEDB] DRIVER is null.
+2019-06-20 15:27:45,904 [http-bio-8080-exec-8] WARN  OZDBConfigManager  - [TIBERO] URL is null.
+2019-06-20 15:27:45,904 [http-bio-8080-exec-8] DEBUG OZDBConfigManager  - 
+          Vendor Name          : TIBERO5
+                 Driver Format : com.tmax.tibero.jdbc.TbDriver
+                 Key Format    : TIBERO5^{user}^{serverAddress}^{dbName}^{portNo}
+                 HandlerClass  : com.forcs.db.OZGeneralHandler
+                 ParamFlag     : ?
+                 ITEMS         : {portNo=[key=portNo,useProperty=false], dbName=[key=dbName,useProperty=false], serverAddress=[key=serverAddress,useProperty=false]}
+                 FieldTypeConv : {}
+                 Support Fun.  : true
+                 AddInfo       : {}
+
+2019-06-20 15:27:45,905 [http-bio-8080-exec-8] DEBUG OZDBConfigManager  - 
+          Vendor Name          : MARIADB
+                 Driver Format : org.mariadb.jdbc.Driver
+                 Key Format    : MARIADB^{user}^{serverAddress}^{portNo}^{dbName}
+                 HandlerClass  : com.forcs.db.OZMARIADBHandler
+                 ParamFlag     : ?
+                 ITEMS         : {portNo=[key=portNo,useProperty=false], dbName=[key=dbName,useProperty=false], serverAddress=[key=serverAddress,useProperty=false]}
+                 FieldTypeConv : {DATE=DATETIME}
+                 Support Fun.  : true
+                 AddInfo       : {DATE_EXPRESSION=CAST('@YYYY-@MM-@DD @hh:@mm:@ss' AS DATETIME )}
+
+2019-06-20 15:27:45,912 [http-bio-8080-exec-8] INFO  ConnectionPool  - Start initialize...
+2019-06-20 15:27:45,921 [http-bio-8080-exec-8] ERROR ConnectionPool-pcis  - Invalid fetch row ''
+2019-06-20 15:27:45,922 [http-bio-8080-exec-8] INFO  ConnectionPool-pcis  - Loading properties is done.
+2019-06-20 15:27:45,948 [http-bio-8080-exec-8] DEBUG ConnectionPool-pcis  - loading driver: 'oracle.jdbc.driver.OracleDriver'
+2019-06-20 15:27:45,949 [http-bio-8080-exec-8] DEBUG ConnectionPool-pcis  - newConnectionByURL.... url: jdbc:oracle:thin:@(DESCRIPTION=(ADDRESS=(HOST=www.siione.co.kr)(PROTOCOL=tcp)(PORT=15250))(CONNECT_DATA=(SID=pcis)))
+2019-06-20 15:27:45,951 [http-bio-8080-exec-8] DEBUG ConnectionPool-pcis  - oracle.jdbc.driver.OracleDriver is acceptsURL :true
+2019-06-20 15:27:46,504 [http-bio-8080-exec-8] INFO  ConnectionPool-pcis  - Opened a new connection by URL.
+2019-06-20 15:27:46,515 [http-bio-8080-exec-8] DEBUG ConnectionPool-pcis  - Total connections: 1 Available: 1 Checked-out: 0
+2019-06-20 15:27:46,515 [http-bio-8080-exec-8] DEBUG ConnectionPool-pcis  - newConnectionByURL.... url: jdbc:oracle:thin:@(DESCRIPTION=(ADDRESS=(HOST=www.siione.co.kr)(PROTOCOL=tcp)(PORT=15250))(CONNECT_DATA=(SID=pcis)))
+2019-06-20 15:27:46,515 [http-bio-8080-exec-8] DEBUG ConnectionPool-pcis  - oracle.jdbc.driver.OracleDriver is acceptsURL :true
+2019-06-20 15:27:46,668 [http-bio-8080-exec-8] INFO  ConnectionPool-pcis  - Opened a new connection by URL.
+2019-06-20 15:27:46,675 [http-bio-8080-exec-8] DEBUG ConnectionPool-pcis  - Total connections: 2 Available: 2 Checked-out: 0
+2019-06-20 15:27:46,675 [http-bio-8080-exec-8] DEBUG ConnectionPool-pcis  - newConnectionByURL.... url: jdbc:oracle:thin:@(DESCRIPTION=(ADDRESS=(HOST=www.siione.co.kr)(PROTOCOL=tcp)(PORT=15250))(CONNECT_DATA=(SID=pcis)))
+2019-06-20 15:27:46,675 [http-bio-8080-exec-8] DEBUG ConnectionPool-pcis  - oracle.jdbc.driver.OracleDriver is acceptsURL :true
+2019-06-20 15:27:46,794 [http-bio-8080-exec-8] INFO  ConnectionPool-pcis  - Opened a new connection by URL.
+2019-06-20 15:27:46,799 [http-bio-8080-exec-8] DEBUG ConnectionPool-pcis  - Total connections: 3 Available: 3 Checked-out: 0
+2019-06-20 15:27:46,799 [http-bio-8080-exec-8] DEBUG ConnectionPool-pcis  - newConnectionByURL.... url: jdbc:oracle:thin:@(DESCRIPTION=(ADDRESS=(HOST=www.siione.co.kr)(PROTOCOL=tcp)(PORT=15250))(CONNECT_DATA=(SID=pcis)))
+2019-06-20 15:27:46,799 [http-bio-8080-exec-8] DEBUG ConnectionPool-pcis  - oracle.jdbc.driver.OracleDriver is acceptsURL :true
+2019-06-20 15:27:46,925 [http-bio-8080-exec-8] INFO  ConnectionPool-pcis  - Opened a new connection by URL.
+2019-06-20 15:27:46,930 [http-bio-8080-exec-8] DEBUG ConnectionPool-pcis  - Total connections: 4 Available: 4 Checked-out: 0
+2019-06-20 15:27:46,930 [http-bio-8080-exec-8] DEBUG ConnectionPool-pcis  - newConnectionByURL.... url: jdbc:oracle:thin:@(DESCRIPTION=(ADDRESS=(HOST=www.siione.co.kr)(PROTOCOL=tcp)(PORT=15250))(CONNECT_DATA=(SID=pcis)))
+2019-06-20 15:27:46,930 [http-bio-8080-exec-8] DEBUG ConnectionPool-pcis  - oracle.jdbc.driver.OracleDriver is acceptsURL :true
+2019-06-20 15:27:47,074 [http-bio-8080-exec-8] INFO  ConnectionPool-pcis  - Opened a new connection by URL.
+2019-06-20 15:27:47,078 [http-bio-8080-exec-8] DEBUG ConnectionPool-pcis  - Total connections: 5 Available: 5 Checked-out: 0
+2019-06-20 15:27:47,078 [http-bio-8080-exec-8] INFO  ConnectionPool  - End initialize.
+2019-06-20 15:27:47,162 [http-bio-8080-exec-8] DEBUG RepositoryAdapter  - Repository Manager init...
+2019-06-20 15:27:47,181 [http-bio-8080-exec-8] DEBUG LocalRepositoryAdapter  - Repository Root path is C:\Dev\eclipse-workspace\NSSP\src\main\webapp\oz70\WEB-INF/repository_files/
+2019-06-20 15:27:47,182 [http-bio-8080-exec-8] DEBUG LocalRepositoryAdapter  - Repository Temp directory: 'C:\Dev\eclipse-workspace\NSSP\src\main\webapp\oz70\WEB-INF/temp' 
+2019-06-20 15:27:47,278 [http-bio-8080-exec-8] DEBUG DataBindInfo  - ConcurrentFetchSize : 4096byte.
+2019-06-20 15:27:47,279 [http-bio-8080-exec-8] DEBUG DataBindInfo  - ConcurrentFirstRow : 0row.
+2019-06-20 15:27:47,279 [http-bio-8080-exec-8] DEBUG DataBindInfo  - Numeric/Decimal Type zero display  : default
+2019-06-20 15:27:47,283 [http-bio-8080-exec-8] DEBUG SAPClientManager  - oz.sap.jco.OZSAPClientManager class loading error : oz.sap.jco.OZSAPClientManager
+2019-06-20 15:27:47,299 [http-bio-8080-exec-8] DEBUG monitor  - monitor log time pattern : yyyy-MM-dd HH:mm:ss.SSS
+2019-06-20 15:27:47,306 [http-bio-8080-exec-8] DEBUG securitypolicy  - guest session key is null. guest users http session does not checked.
+2019-06-20 15:27:47,315 [http-bio-8080-exec-8] DEBUG securitypolicy  - show browser secure level attribute not exist. show browser secure level is middle
+2019-06-20 15:27:47,316 [http-bio-8080-exec-8] WARN  Main-Configuration  - Can't find 'path.clientinfo.properties.file'. So use default value '%OZ_HOME%/conf/clientlist.xml'
+2019-06-20 15:27:47,320 [http-bio-8080-exec-8] INFO  OZClientInfoManager  - Loading clientlist.xml...
+2019-06-20 15:27:47,320 [http-bio-8080-exec-8] WARN  OZClientInfoManager  - clientlist.xml is not found. client info check is not used
+2019-06-20 15:27:47,330 [http-bio-8080-exec-8] INFO  udl  - Disable OZ_USER_DEFINED_LOG oz user defined log service.
+2019-06-20 15:27:47,330 [http-bio-8080-exec-8] INFO  udl  - Disable OZ_UDL_MONITOR oz user defined log service.
+2019-06-20 15:27:47,339 [http-bio-8080-exec-8] INFO  DataSourceManager  - Loading data source properties from C:\Dev\eclipse-workspace\NSSP\src\main\webapp\oz70\WEB-INF/conf/datasource.properties
+2019-06-20 15:27:47,348 [http-bio-8080-exec-8] WARN  Main-Configuration  - Can't find 'path.externalmodule.properties.file'. So use default value '%OZ_HOME%/conf/external.properties'
+2019-06-20 15:27:47,348 [http-bio-8080-exec-8] INFO  ExternalModuleManager  - Loading external module properties from C:\Dev\eclipse-workspace\NSSP\src\main\webapp\oz70\WEB-INF/conf/external.properties
+2019-06-20 15:27:47,348 [http-bio-8080-exec-8] INFO  ExternalModuleManager  - External module file is not found. Loading process is excluded. 
+2019-06-20 15:27:47,352 [http-bio-8080-exec-8] WARN  Main-Configuration  - Can't find 'path.schedulerhealthcheck.properties'. So use default value '%OZ_HOME%/conf/schedulerhealthcheck.properties'
+2019-06-20 15:27:47,361 [http-bio-8080-exec-8] DEBUG resource  - java script init loading.
+2019-06-20 15:27:47,639 [http-bio-8080-exec-8] INFO  resource  - Loading REPORT frameworks ....
+2019-06-20 15:27:48,036 [http-bio-8080-exec-8] DEBUG resource  - Registered 43 frameworks for REPORT
+2019-06-20 15:27:48,036 [http-bio-8080-exec-8] DEBUG server  - OS Name            : Windows 10
+2019-06-20 15:27:48,037 [http-bio-8080-exec-8] DEBUG server  - OS Version         : 10.0
+2019-06-20 15:27:48,037 [http-bio-8080-exec-8] DEBUG server  - Java Vendor        : Oracle Corporation
+2019-06-20 15:27:48,037 [http-bio-8080-exec-8] DEBUG server  - Java Version       : 1.8.0_211
+2019-06-20 15:27:48,037 [http-bio-8080-exec-8] DEBUG server  - Hostname           : SunU-ProBook
+2019-06-20 15:27:48,037 [http-bio-8080-exec-8] DEBUG server  - CPU Count          : 4
+2019-06-20 15:27:48,037 [http-bio-8080-exec-8] INFO  server  -   ------------------------------------------------  
+2019-06-20 15:27:48,037 [http-bio-8080-exec-8] INFO  server  -   OZ Version Info.
+2019-06-20 15:27:48,037 [http-bio-8080-exec-8] INFO  server  -    OZ Server                : 7.0.0101.20190306 15:20.33
+2019-06-20 15:27:48,037 [http-bio-8080-exec-8] INFO  server  -   ------------------------------------------------  
+2019-06-20 15:27:48,037 [http-bio-8080-exec-8] INFO  server  -    OZ Common Protocol
+2019-06-20 15:27:48,038 [http-bio-8080-exec-8] INFO  server  -       Protocol              : 2007
+2019-06-20 15:27:48,038 [http-bio-8080-exec-8] INFO  server  -    OZ DataModule
+2019-06-20 15:27:48,039 [http-bio-8080-exec-8] INFO  server  -       Streaming Protocol    : 2040
+2019-06-20 15:27:48,039 [http-bio-8080-exec-8] INFO  server  -   ------------------------------------------------  
+2019-06-20 15:27:48,040 [http-bio-8080-exec-8] INFO  server  -    License expiration date  : 2019-12-20
+2019-06-20 15:27:48,040 [http-bio-8080-exec-8] INFO  server  - 
+2019-06-20 15:27:48,040 [http-bio-8080-exec-8] INFO  server  - This product includes Hypersonic SQL.
+2019-06-20 15:27:48,040 [http-bio-8080-exec-8] INFO  server  - 
+2019-06-20 15:27:48,040 [http-bio-8080-exec-8] INFO  server  - OZ Servlet is ready up.
+2019-06-20 15:27:48,054 [http-bio-8080-exec-8] INFO  server  - client IP:[ 0:0:0:0:0:0:0:1] A handler is started. Active handler count is 1
+2019-06-20 15:27:48,055 [http-bio-8080-exec-8] INFO  server  - REQUEST-URI : http://localhost:8080/oz70/server
+2019-06-20 15:27:48,055 [http-bio-8080-exec-8] INFO  MessageHandler  - Start Message Handing
+2019-06-20 15:27:48,056 [http-bio-8080-exec-8] DEBUG MessageHandler  - [version:10001][className:oz.framework.cp.message.repository.OZRepositoryRequestUserLogin]
+2019-06-20 15:27:48,059 [http-bio-8080-exec-8] DEBUG MessageHandler  - Request Message starts fetching for Response
+2019-06-20 15:27:48,063 [http-bio-8080-exec-8] DEBUG OZRepositoryRequestUserLogin  - Reading Message is successfully completed
+2019-06-20 15:27:48,064 [http-bio-8080-exec-8] DEBUG OZRepositoryRequestUserLogin  - Function Type [176 : LOGIN_TO_SERVER]
+2019-06-20 15:27:48,074 [http-bio-8080-exec-8] INFO  MessageHandler  - End Message Handing
+2019-06-20 15:27:48,099 [http-bio-8080-exec-8] INFO  server  - client IP:[ 0:0:0:0:0:0:0:1] A handler is started. Active handler count is 1
+2019-06-20 15:27:48,099 [http-bio-8080-exec-8] INFO  server  - REQUEST-URI : http://localhost:8080/oz70/server
+2019-06-20 15:27:48,099 [http-bio-8080-exec-8] INFO  MessageHandler  - Start Message Handing
+2019-06-20 15:27:48,099 [http-bio-8080-exec-8] DEBUG MessageHandler  - [version:10001][className:oz.framework.cp.message.repositoryex.OZRepositoryRequestItem]
+2019-06-20 15:27:48,100 [http-bio-8080-exec-8] DEBUG MessageHandler  - Request Message starts fetching for Response
+2019-06-20 15:27:48,100 [http-bio-8080-exec-8] DEBUG OZRepositoryRequestItem  - Reading Message is successfully completed
+2019-06-20 15:27:48,103 [http-bio-8080-exec-8] DEBUG OZRepositoryRequestItem  - Function Type [256 : ACCESS_GET_ITEMS]
+2019-06-20 15:27:48,113 [http-bio-8080-exec-8] DEBUG RepositoryAdapter  - compress itemID : /ozr/00000000000000000001_M.OZR
+2019-06-20 15:27:48,118 [http-bio-8080-exec-8] DEBUG OZStream  - write Item size = 3032
+2019-06-20 15:27:48,119 [http-bio-8080-exec-8] INFO  MessageHandler  - End Message Handing
+2019-06-20 15:27:48,353 [http-bio-8080-exec-8] INFO  server  - client IP:[ 0:0:0:0:0:0:0:1] A handler is started. Active handler count is 1
+2019-06-20 15:27:48,354 [http-bio-8080-exec-8] INFO  server  - REQUEST-URI : http://localhost:8080/oz70/server
+2019-06-20 15:27:48,354 [http-bio-8080-exec-8] INFO  MessageHandler  - Start Message Handing
+2019-06-20 15:27:48,354 [http-bio-8080-exec-8] DEBUG MessageHandler  - [version:10001][className:oz.framework.cp.message.repositoryex.OZRepositoryRequestItem]
+2019-06-20 15:27:48,355 [http-bio-8080-exec-8] DEBUG MessageHandler  - Request Message starts fetching for Response
+2019-06-20 15:27:48,355 [http-bio-8080-exec-8] DEBUG OZRepositoryRequestItem  - Reading Message is successfully completed
+2019-06-20 15:27:48,355 [http-bio-8080-exec-8] DEBUG OZRepositoryRequestItem  - Function Type [256 : ACCESS_GET_ITEMS]
+2019-06-20 15:27:48,356 [http-bio-8080-exec-8] DEBUG RepositoryAdapter  - obj stream itemID : /odi/00000000000000000001_M.odi
+2019-06-20 15:27:48,360 [http-bio-8080-exec-8] DEBUG RepositoryAdapter  - Cached obj stream is valid; /odi/00000000000000000001_M.odi
+2019-06-20 15:27:48,361 [http-bio-8080-exec-8] DEBUG OZStream  - write Item size = 1049
+2019-06-20 15:27:48,362 [http-bio-8080-exec-8] INFO  MessageHandler  - End Message Handing
+2019-06-20 15:27:48,426 [http-bio-8080-exec-8] INFO  server  - client IP:[ 0:0:0:0:0:0:0:1] A handler is started. Active handler count is 1
+2019-06-20 15:27:48,426 [http-bio-8080-exec-8] INFO  server  - REQUEST-URI : http://localhost:8080/oz70/server
+2019-06-20 15:27:48,426 [http-bio-8080-exec-8] INFO  MessageHandler  - Start Message Handing
+2019-06-20 15:27:48,427 [http-bio-8080-exec-8] DEBUG MessageHandler  - [version:10001][className:oz.framework.cp.message.FrameworkRequestDataModule]
+2019-06-20 15:27:48,433 [http-bio-8080-exec-8] DEBUG MessageHandler  - Request Message starts fetching for Response
+2019-06-20 15:27:48,435 [http-bio-8080-exec-8] DEBUG FrameworkRequestDataModule  - Reading Message is successfully completed
+2019-06-20 15:27:48,435 [http-bio-8080-exec-8] INFO  FrameworkRequestDataModule  - fetch DataModule start: [00000000000000000001_M.odi, null]
+2019-06-20 15:27:48,437 [http-bio-8080-exec-8] DEBUG FrameworkRequestDataModule  - Function Type [ GET_DATAMODULE ]
+2019-06-20 15:27:48,457 [http-bio-8080-exec-8] DEBUG XML-Parser-Configurator  - try to get SAX10_SUN parser factory...
+2019-06-20 15:27:48,457 [http-bio-8080-exec-8] DEBUG XML-Parser-Configurator  - Class.forName(com.sun.xml.parser.SAXParserFactoryImpl).newInstance()
+2019-06-20 15:27:48,508 [http-bio-8080-exec-8] DEBUG DataModule  - TargetDB=OZDBSTORE
+2019-06-20 15:27:48,540 [http-bio-8080-exec-8] DEBUG ScriptModule  - java script complie.
+2019-06-20 15:27:48,798 [http-bio-8080-exec-8] DEBUG FrameworkRequestDataModule  - CONCURRENT_FETCH_SIZE :4096
+2019-06-20 15:27:48,800 [http-bio-8080-exec-8] INFO  DataModule  - Start Datamodule-Binding.
+2019-06-20 15:27:48,834 [http-bio-8080-exec-8] DEBUG DataModule  - </odi/00000000000000000001_M.odi Set Name : OZParam> data-binding complete.
+2019-06-20 15:27:48,844 [http-bio-8080-exec-8] DEBUG StoredPool  - Request for connection has alias 'pcis'
+2019-06-20 15:27:48,846 [http-bio-8080-exec-8] INFO  ConnectionPool-pcis  - Request for connection received.
+2019-06-20 15:27:48,846 [http-bio-8080-exec-8] DEBUG ConnectionPool-pcis  - Delivered connection from pool []
+2019-06-20 15:27:48,846 [http-bio-8080-exec-8] DEBUG ConnectionPool-pcis  - Total connections: 5 Available: 4 Checked-out: 1
+2019-06-20 15:27:48,854 [http-bio-8080-exec-8] DEBUG DataModule  - Statement Fetch row : 5
+2019-06-20 15:27:48,854 [http-bio-8080-exec-8] DEBUG DataModule  - </odi/00000000000000000001_M.odi Set Name : SQL_1M> Query to run:SELECT * 
+  FROM (
+		SELECT RC_NO 
+			 , FN_USER_NM(CHARGER_ID) AS CHARGER_NM
+		     , FN_USER_NM(WRITNG_ID) AS WRITNG_NM
+		  FROM RC_TMPR RC
+		 WHERE RC.RC_NO=''
+		)
+ RIGHT OUTER JOIN DUAL ON 1=1
+2019-06-20 15:27:48,885 [http-bio-8080-exec-8] DEBUG DataModule  - </odi/00000000000000000001_M.odi Set Name : SQL_1M, 31msec> Success to execute query.
+2019-06-20 15:27:48,894 [http-bio-8080-exec-8] DEBUG DataModule  - </odi/00000000000000000001_M.odi Set Name : SQL_1M, 1rows, 9msec> data-binding complete.
+2019-06-20 15:27:48,895 [http-bio-8080-exec-8] INFO  DataModule  - Datamodule-Binding Complete.
+2019-06-20 15:27:48,899 [http-bio-8080-exec-8] INFO  ConnectionPool-pcis  - Start free a connection. []
+2019-06-20 15:27:48,907 [http-bio-8080-exec-8] DEBUG ConnectionPool-pcis  - Returned connection to pool
+2019-06-20 15:27:48,907 [http-bio-8080-exec-8] DEBUG ConnectionPool-pcis  - Total connections: 5 Available: 5 Checked-out: 0
+2019-06-20 15:27:48,907 [http-bio-8080-exec-8] DEBUG StoredPool  - removed item from pool [ size : 0 ]
+2019-06-20 15:27:48,908 [http-bio-8080-exec-8] INFO  FrameworkRequestDataModule  - Making DataModule is successfully completed [00000000000000000001_M.odi]
+2019-06-20 15:27:48,908 [http-bio-8080-exec-8] INFO  MessageHandler  - End Message Handing
+2019-06-20 15:29:13,066 [http-bio-8080-exec-5] INFO  server  - client IP:[ 0:0:0:0:0:0:0:1] A handler is started. Active handler count is 1
+2019-06-20 15:29:13,067 [http-bio-8080-exec-5] INFO  server  - REQUEST-URI : http://localhost:8080/oz70/server
+2019-06-20 15:29:13,068 [http-bio-8080-exec-5] INFO  MessageHandler  - Start Message Handing
+2019-06-20 15:29:13,068 [http-bio-8080-exec-5] DEBUG MessageHandler  - [version:10001][className:oz.framework.cp.message.repository.OZRepositoryRequestUserLogin]
+2019-06-20 15:29:13,069 [http-bio-8080-exec-5] DEBUG MessageHandler  - Request Message starts fetching for Response
+2019-06-20 15:29:13,069 [http-bio-8080-exec-5] DEBUG OZRepositoryRequestUserLogin  - Reading Message is successfully completed
+2019-06-20 15:29:13,069 [http-bio-8080-exec-5] DEBUG OZRepositoryRequestUserLogin  - Function Type [176 : LOGIN_TO_SERVER]
+2019-06-20 15:29:13,070 [http-bio-8080-exec-5] INFO  MessageHandler  - End Message Handing
+2019-06-20 15:29:13,776 [http-bio-8080-exec-5] INFO  server  - client IP:[ 0:0:0:0:0:0:0:1] A handler is started. Active handler count is 1
+2019-06-20 15:29:13,776 [http-bio-8080-exec-5] INFO  server  - REQUEST-URI : http://localhost:8080/oz70/server
+2019-06-20 15:29:13,776 [http-bio-8080-exec-5] INFO  MessageHandler  - Start Message Handing
+2019-06-20 15:29:13,777 [http-bio-8080-exec-5] DEBUG MessageHandler  - [version:10001][className:oz.framework.cp.message.repositoryex.OZRepositoryRequestItem]
+2019-06-20 15:29:13,777 [http-bio-8080-exec-5] DEBUG MessageHandler  - Request Message starts fetching for Response
+2019-06-20 15:29:13,777 [http-bio-8080-exec-5] DEBUG OZRepositoryRequestItem  - Reading Message is successfully completed
+2019-06-20 15:29:13,778 [http-bio-8080-exec-5] DEBUG OZRepositoryRequestItem  - Function Type [256 : ACCESS_GET_ITEMS]
+2019-06-20 15:29:13,778 [http-bio-8080-exec-5] DEBUG RepositoryAdapter  - compress itemID : /ozr/00000000000000000003_M.OZR
+2019-06-20 15:29:13,780 [http-bio-8080-exec-5] DEBUG RepositoryAdapter  - Rebuilding obj stream; /ozr/00000000000000000003_M.OZR
+2019-06-20 15:29:13,793 [http-bio-8080-exec-5] DEBUG OZStream  - write Item size = 3652
+2019-06-20 15:29:13,794 [http-bio-8080-exec-5] INFO  MessageHandler  - End Message Handing
+2019-06-20 15:29:14,011 [http-bio-8080-exec-4] INFO  server  - client IP:[ 0:0:0:0:0:0:0:1] A handler is started. Active handler count is 1
+2019-06-20 15:29:14,012 [http-bio-8080-exec-4] INFO  server  - REQUEST-URI : http://localhost:8080/oz70/server
+2019-06-20 15:29:14,012 [http-bio-8080-exec-4] INFO  MessageHandler  - Start Message Handing
+2019-06-20 15:29:14,013 [http-bio-8080-exec-4] DEBUG MessageHandler  - [version:10001][className:oz.framework.cp.message.repositoryex.OZRepositoryRequestItem]
+2019-06-20 15:29:14,013 [http-bio-8080-exec-4] DEBUG MessageHandler  - Request Message starts fetching for Response
+2019-06-20 15:29:14,014 [http-bio-8080-exec-4] DEBUG OZRepositoryRequestItem  - Reading Message is successfully completed
+2019-06-20 15:29:14,014 [http-bio-8080-exec-4] DEBUG OZRepositoryRequestItem  - Function Type [256 : ACCESS_GET_ITEMS]
+2019-06-20 15:29:14,014 [http-bio-8080-exec-4] DEBUG RepositoryAdapter  - obj stream itemID : /odi/00000000000000000003_M.odi
+2019-06-20 15:29:14,015 [http-bio-8080-exec-4] DEBUG RepositoryAdapter  - Rebuilding obj stream; /odi/00000000000000000003_M.odi
+2019-06-20 15:29:14,016 [http-bio-8080-exec-4] DEBUG XML-Parser-Configurator  - try to get SAX10_SUN parser factory...
+2019-06-20 15:29:14,016 [http-bio-8080-exec-4] DEBUG XML-Parser-Configurator  - Class.forName(com.sun.xml.parser.SAXParserFactoryImpl).newInstance()
+2019-06-20 15:29:14,019 [http-bio-8080-exec-4] DEBUG DataModule  - TargetDB=OZDBSTORE
+2019-06-20 15:29:14,043 [http-bio-8080-exec-4] DEBUG RepositoryAdapter  - New objstream file was created
+2019-06-20 15:29:14,043 [http-bio-8080-exec-4] DEBUG OZStream  - write Item size = 1189
+2019-06-20 15:29:14,044 [http-bio-8080-exec-4] INFO  MessageHandler  - End Message Handing
+2019-06-20 15:29:14,164 [http-bio-8080-exec-4] INFO  server  - client IP:[ 0:0:0:0:0:0:0:1] A handler is started. Active handler count is 1
+2019-06-20 15:29:14,164 [http-bio-8080-exec-4] INFO  server  - REQUEST-URI : http://localhost:8080/oz70/server
+2019-06-20 15:29:14,164 [http-bio-8080-exec-4] INFO  MessageHandler  - Start Message Handing
+2019-06-20 15:29:14,164 [http-bio-8080-exec-4] DEBUG MessageHandler  - [version:10001][className:oz.framework.cp.message.FrameworkRequestDataModule]
+2019-06-20 15:29:14,165 [http-bio-8080-exec-4] DEBUG MessageHandler  - Request Message starts fetching for Response
+2019-06-20 15:29:14,165 [http-bio-8080-exec-4] DEBUG FrameworkRequestDataModule  - Reading Message is successfully completed
+2019-06-20 15:29:14,165 [http-bio-8080-exec-4] INFO  FrameworkRequestDataModule  - fetch DataModule start: [00000000000000000003_M.odi, null]
+2019-06-20 15:29:14,165 [http-bio-8080-exec-4] DEBUG FrameworkRequestDataModule  - Function Type [ GET_DATAMODULE ]
+2019-06-20 15:29:14,166 [http-bio-8080-exec-4] DEBUG XML-Parser-Configurator  - try to get SAX10_SUN parser factory...
+2019-06-20 15:29:14,166 [http-bio-8080-exec-4] DEBUG XML-Parser-Configurator  - Class.forName(com.sun.xml.parser.SAXParserFactoryImpl).newInstance()
+2019-06-20 15:29:14,167 [http-bio-8080-exec-4] DEBUG DataModule  - TargetDB=OZDBSTORE
+2019-06-20 15:29:14,169 [http-bio-8080-exec-4] DEBUG ScriptModule  - java script complie.
+2019-06-20 15:29:14,176 [http-bio-8080-exec-4] DEBUG FrameworkRequestDataModule  - CONCURRENT_FETCH_SIZE :4096
+2019-06-20 15:29:14,176 [http-bio-8080-exec-4] INFO  DataModule  - Start Datamodule-Binding.
+2019-06-20 15:29:14,176 [http-bio-8080-exec-4] DEBUG DataModule  - </odi/00000000000000000003_M.odi Set Name : OZParam> data-binding complete.
+2019-06-20 15:29:14,177 [http-bio-8080-exec-4] DEBUG StoredPool  - Request for connection has alias 'pcis'
+2019-06-20 15:29:14,177 [http-bio-8080-exec-4] INFO  ConnectionPool-pcis  - Request for connection received.
+2019-06-20 15:29:14,178 [http-bio-8080-exec-4] DEBUG ConnectionPool-pcis  - Delivered connection from pool []
+2019-06-20 15:29:14,178 [http-bio-8080-exec-4] DEBUG ConnectionPool-pcis  - Total connections: 5 Available: 4 Checked-out: 1
+2019-06-20 15:29:14,185 [http-bio-8080-exec-4] DEBUG DataModule  - Statement Fetch row : 5
+2019-06-20 15:29:14,185 [http-bio-8080-exec-4] DEBUG DataModule  - </odi/00000000000000000003_M.odi Set Name : SQL_3M> Query to run:SELECT * 
+  FROM (
+		SELECT REGEXP_SUBSTR(ri.ITIV_NO, '[^-]+', 1,1) AS ITIV_YYYY
+			 , TO_NUMBER( REGEXP_SUBSTR(ri.ITIV_NO, '[^-]+', 1,2)) AS ITIV_NO 
+			 , FN_RC_VIOLT_ROOT_NM(RC.RC_NO)  AS VIOLT_NM
+			 , FN_OZ_DATE(NULL, NULL) CF_TODAY
+		  FROM RC_TMPR RC
+		     , RC_ITIV RI
+		 WHERE RC.ITIV_NO =RI.ITIV_NO
+		   AND RC.RC_NO=''
+) RIGHT OUTER JOIN DUAL ON 1=1
+2019-06-20 15:29:14,209 [http-bio-8080-exec-4] DEBUG DataModule  - </odi/00000000000000000003_M.odi Set Name : SQL_3M, 24msec> Success to execute query.
+2019-06-20 15:29:14,215 [http-bio-8080-exec-4] DEBUG DataModule  - </odi/00000000000000000003_M.odi Set Name : SQL_3M, 1rows, 5msec> data-binding complete.
+2019-06-20 15:29:14,220 [http-bio-8080-exec-4] DEBUG DataModule  - Statement Fetch row : 5
+2019-06-20 15:29:14,221 [http-bio-8080-exec-4] DEBUG DataModule  - </odi/00000000000000000003_M.odi Set Name : SQL_3M_SUB> Query to run:SELECT TRGTER_SN||'.' AS TRGTER_SN
+	  , TRGTER_NM
+	  , HP_NO
+	  , TRGTER_RRN
+	  , TRGTER_CPRN
+	  , WRC_ADDR
+	  , ADRES_ADDR
+  FROM RC_TMPR_TRGTER
+ WHERE RC_NO =''
+2019-06-20 15:29:14,235 [http-bio-8080-exec-4] DEBUG DataModule  - </odi/00000000000000000003_M.odi Set Name : SQL_3M_SUB, 14msec> Success to execute query.
+2019-06-20 15:29:14,240 [http-bio-8080-exec-4] DEBUG DataModule  - </odi/00000000000000000003_M.odi Set Name : SQL_3M_SUB, 0rows, 4msec> data-binding complete.
+2019-06-20 15:29:14,241 [http-bio-8080-exec-4] INFO  DataModule  - Datamodule-Binding Complete.
+2019-06-20 15:29:14,249 [http-bio-8080-exec-4] INFO  ConnectionPool-pcis  - Start free a connection. []
+2019-06-20 15:29:14,255 [http-bio-8080-exec-4] DEBUG ConnectionPool-pcis  - Returned connection to pool
+2019-06-20 15:29:14,255 [http-bio-8080-exec-4] DEBUG ConnectionPool-pcis  - Total connections: 5 Available: 5 Checked-out: 0
+2019-06-20 15:29:14,255 [http-bio-8080-exec-4] DEBUG StoredPool  - removed item from pool [ size : 0 ]
+2019-06-20 15:29:14,255 [http-bio-8080-exec-4] INFO  FrameworkRequestDataModule  - Making DataModule is successfully completed [00000000000000000003_M.odi]
+2019-06-20 15:29:14,256 [http-bio-8080-exec-4] INFO  MessageHandler  - End Message Handing
+2019-06-20 16:25:56,064 [http-bio-8080-exec-4] INFO  Log-Manager  - - Loging START ----------------------------------
+2019-06-20 16:25:56,073 [http-bio-8080-exec-4] INFO  server  - Set XML parser properties.
+2019-06-20 16:25:56,087 [http-bio-8080-exec-4] INFO  XML-License-Loader  - [.xml] loader
+2019-06-20 16:25:56,087 [http-bio-8080-exec-4] DEBUG XML-Parser-Configurator  - try to get DOM10_SUN parser factory...
+2019-06-20 16:25:56,087 [http-bio-8080-exec-4] DEBUG XML-Parser-Configurator  - Class.forName(com.sun.xml.parser.DocumentBuilderFactoryImpl).newInstance()
+2019-06-20 16:26:01,242 [http-bio-8080-exec-4] INFO  resource  - Start initialize OZ
+2019-06-20 16:26:01,242 [http-bio-8080-exec-4] DEBUG resource  - Send mail function is not activated.
+2019-06-20 16:26:01,248 [http-bio-8080-exec-4] DEBUG XML-Parser-Configurator  - try to get DOM10_SUN parser factory...
+2019-06-20 16:26:01,248 [http-bio-8080-exec-4] DEBUG XML-Parser-Configurator  - Class.forName(com.sun.xml.parser.DocumentBuilderFactoryImpl).newInstance()
+2019-06-20 16:26:01,249 [http-bio-8080-exec-4] INFO  OZItemEncryptionManager  - Cannot find product key file
+2019-06-20 16:26:01,266 [http-bio-8080-exec-4] INFO  OZDBConfigManager  - Loading dbconfig.xml
+2019-06-20 16:26:01,266 [http-bio-8080-exec-4] DEBUG XML-Parser-Configurator  - try to get DOM10_SUN parser factory...
+2019-06-20 16:26:01,266 [http-bio-8080-exec-4] DEBUG XML-Parser-Configurator  - Class.forName(com.sun.xml.parser.DocumentBuilderFactoryImpl).newInstance()
+2019-06-20 16:26:01,347 [http-bio-8080-exec-4] DEBUG OZDBConfigManager  - 
+          Vendor Name          : ORACLE
+                 Driver Format : oracle.jdbc.driver.OracleDriver
+                 Key Format    : ORACLE^{user}^{serverAddress}^{portNo}^{sid}
+                 HandlerClass  : com.forcs.db.OZGeneralHandler
+                 ParamFlag     : ?
+                 ITEMS         : {portNo=[key=portNo,useProperty=false], serverAddress=[key=serverAddress,useProperty=false], sid=[key=sid,useProperty=false]}
+                 FieldTypeConv : {DATE=DATE}
+                 Support Fun.  : true
+                 AddInfo       : {LIKE_QUERY=like, DATE_EXPRESSION=TO_DATE('@YYYY/@MM/@DD @hh:@mm:@ss', 'YYYY/MM/DD hh24:mi:ss'), LIKE_DELEMETER=%}
+
+2019-06-20 16:26:01,347 [http-bio-8080-exec-4] DEBUG OZDBConfigManager  - 
+          Vendor Name          : MSSQL
+                 Driver Format : com.microsoft.jdbc.sqlserver.SQLServerDriver
+                 Key Format    : MSSQL^{user}^{serverAddress}^{portNo}^{dbName}
+                 HandlerClass  : com.forcs.db.OZMSSQLHandler
+                 ParamFlag     : ?
+                 ITEMS         : {portNo=[key=portNo,useProperty=false], dbName=[key=dbName,useProperty=false], serverAddress=[key=serverAddress,useProperty=false]}
+                 FieldTypeConv : {DATE=DATETIME}
+                 Support Fun.  : false
+                 AddInfo       : {DATE_EXPRESSION=CAST('@YYYY.@MM.@DD @hh:@mm:@ss' AS DATETIME)}
+
+2019-06-20 16:26:01,348 [http-bio-8080-exec-4] DEBUG OZDBConfigManager  - 
+          Vendor Name          : MSSQL2005
+                 Driver Format : com.microsoft.sqlserver.jdbc.SQLServerDriver
+                 Key Format    : MSSQL2005^{user}^{serverAddress}^{portNo}^{dbName}
+                 HandlerClass  : com.forcs.db.OZMSSQLHandler
+                 ParamFlag     : ?
+                 ITEMS         : {portNo=[key=portNo,useProperty=false], dbName=[key=dbName,useProperty=false], serverAddress=[key=serverAddress,useProperty=false]}
+                 FieldTypeConv : {DATE=DATETIME}
+                 Support Fun.  : false
+                 AddInfo       : {DATE_EXPRESSION=CAST('@YYYY.@MM.@DD @hh:@mm:@ss' AS DATETIME)}
+
+2019-06-20 16:26:01,348 [http-bio-8080-exec-4] WARN  OZDBConfigManager  - [MSSQL2005_MARS] DRIVER is null.
+2019-06-20 16:26:01,348 [http-bio-8080-exec-4] DEBUG OZDBConfigManager  - 
+          Vendor Name          : MSSQL2008
+                 Driver Format : com.microsoft.sqlserver.jdbc.SQLServerDriver
+                 Key Format    : MSSQL2008^{user}^{serverAddress}^{portNo}^{dbName}
+                 HandlerClass  : com.forcs.db.OZMSSQLHandler
+                 ParamFlag     : ?
+                 ITEMS         : {portNo=[key=portNo,useProperty=false], dbName=[key=dbName,useProperty=false], serverAddress=[key=serverAddress,useProperty=false]}
+                 FieldTypeConv : {DATE=DATETIME}
+                 Support Fun.  : false
+                 AddInfo       : {DATE_EXPRESSION=CAST('@YYYY.@MM.@DD @hh:@mm:@ss' AS DATETIME)}
+
+2019-06-20 16:26:01,349 [http-bio-8080-exec-4] DEBUG OZDBConfigManager  - 
+          Vendor Name          : DB2
+                 Driver Format : COM.ibm.db2.jdbc.net.DB2Driver
+                 Key Format    : DB2^{user}^{serverAddress}^{portNo}^{dbName}
+                 HandlerClass  : com.forcs.db.OZGeneralHandler
+                 ParamFlag     : ?
+                 ITEMS         : {portNo=[key=portNo,useProperty=false], dbName=[key=dbName,useProperty=false], serverAddress=[key=serverAddress,useProperty=false]}
+                 FieldTypeConv : {DATE=TIMESTAMP}
+                 Support Fun.  : false
+                 AddInfo       : {DATE_EXPRESSION=TO_DATE('@YYYY-@MM-@DD @hh:@mm:@ss', 'YYYY-MM-DD HH24:MI:SS')}
+
+2019-06-20 16:26:01,350 [http-bio-8080-exec-4] DEBUG OZDBConfigManager  - 
+          Vendor Name          : ODBC
+                 Driver Format : sun.jdbc.odbc.JdbcOdbcDriver
+                 Key Format    : ODBC^{user}^{dsn}
+                 HandlerClass  : com.forcs.db.OZGeneralHandler
+                 ParamFlag     : ?
+                 ITEMS         : {dsn=[key=dsn,useProperty=false]}
+                 FieldTypeConv : {}
+                 Support Fun.  : false
+                 AddInfo       : {}
+
+2019-06-20 16:26:01,351 [http-bio-8080-exec-4] DEBUG OZDBConfigManager  - 
+          Vendor Name          : INFORMIX
+                 Driver Format : com.informix.jdbc.IfxDriver
+                 Key Format    : INFORMIX^{user}^{serverAddress}^{portNo}^{serverName}^{dbName}
+                 HandlerClass  : com.forcs.db.OZGeneralHandler
+                 ParamFlag     : ?
+                 ITEMS         : {portNo=[key=portNo,useProperty=false], dbName=[key=dbName,useProperty=false], serverAddress=[key=serverAddress,useProperty=false], serverName=[key=serverName,useProperty=false]}
+                 FieldTypeConv : {}
+                 Support Fun.  : false
+                 AddInfo       : {}
+
+2019-06-20 16:26:01,351 [http-bio-8080-exec-4] DEBUG OZDBConfigManager  - 
+          Vendor Name          : SYBASE
+                 Driver Format : com.sybase.jdbc2.jdbc.SybDriver
+                 Key Format    : SYBASE^{user}^{dsn}^{serverAddress}^{portNo}^{dbName}
+                 HandlerClass  : com.forcs.db.OZGeneralHandler
+                 ParamFlag     : ?
+                 ITEMS         : {portNo=[key=portNo,useProperty=false], dbName=[key=dbName,useProperty=false], serverAddress=[key=serverAddress,useProperty=false], dsn=[key=dsn,useProperty=false]}
+                 FieldTypeConv : {DATE=DATETIME}
+                 Support Fun.  : false
+                 AddInfo       : {DATE_EXPRESSION=CONVERT(DATETIME, '@YYYY.@MM.@DD @hh:@mm:@ss')}
+
+2019-06-20 16:26:01,351 [http-bio-8080-exec-4] DEBUG OZDBConfigManager  - 
+          Vendor Name          : UNISQL
+                 Driver Format : unisql.jdbc.driver.UniSQLDriver
+                 Key Format    : UNISQL^{user}^{serverAddress}^{portNo}^{dbName}
+                 HandlerClass  : com.forcs.db.OZGeneralHandler
+                 ParamFlag     : ?
+                 ITEMS         : {portNo=[key=portNo,useProperty=false], dbName=[key=dbName,useProperty=false], serverAddress=[key=serverAddress,useProperty=false]}
+                 FieldTypeConv : {}
+                 Support Fun.  : false
+                 AddInfo       : {}
+
+2019-06-20 16:26:01,352 [http-bio-8080-exec-4] DEBUG OZDBConfigManager  - 
+          Vendor Name          : MYSQL
+                 Driver Format : com.mysql.jdbc.Driver
+                 Key Format    : MYSQL^{user}^{serverAddress}^{portNo}^{dbName}
+                 HandlerClass  : com.forcs.db.OZGeneralHandler
+                 ParamFlag     : ?
+                 ITEMS         : {portNo=[key=portNo,useProperty=false], dbName=[key=dbName,useProperty=false], serverAddress=[key=serverAddress,useProperty=false]}
+                 FieldTypeConv : {DATE=DATETIME}
+                 Support Fun.  : false
+                 AddInfo       : {DATE_EXPRESSION=CAST('@YYYY-@MM-@DD @hh:@mm:@ss' AS DATETIME )}
+
+2019-06-20 16:26:01,352 [http-bio-8080-exec-4] DEBUG OZDBConfigManager  - 
+          Vendor Name          : USER
+                 Driver Format : {driver}
+                 Key Format    : USER^{user}^{driver}^{url}
+                 HandlerClass  : com.forcs.db.OZGeneralHandler
+                 ParamFlag     : ?
+                 ITEMS         : {driver=[key=driver,useProperty=false], url=[key=url,useProperty=false]}
+                 FieldTypeConv : {}
+                 Support Fun.  : false
+                 AddInfo       : {}
+
+2019-06-20 16:26:01,352 [http-bio-8080-exec-4] WARN  OZDBConfigManager  - [MSSQL-OLEDB] DRIVER is null.
+2019-06-20 16:26:01,353 [http-bio-8080-exec-4] WARN  OZDBConfigManager  - [ORACLE-OLEDB] DRIVER is null.
+2019-06-20 16:26:01,353 [http-bio-8080-exec-4] WARN  OZDBConfigManager  - [SYBASE-OLEDB] DRIVER is null.
+2019-06-20 16:26:01,353 [http-bio-8080-exec-4] WARN  OZDBConfigManager  - [DB2-OLEDB] DRIVER is null.
+2019-06-20 16:26:01,353 [http-bio-8080-exec-4] WARN  OZDBConfigManager  - [INFORMIX-OLEDB] DRIVER is null.
+2019-06-20 16:26:01,353 [http-bio-8080-exec-4] WARN  OZDBConfigManager  - [TIBERO] URL is null.
+2019-06-20 16:26:01,354 [http-bio-8080-exec-4] DEBUG OZDBConfigManager  - 
+          Vendor Name          : TIBERO5
+                 Driver Format : com.tmax.tibero.jdbc.TbDriver
+                 Key Format    : TIBERO5^{user}^{serverAddress}^{dbName}^{portNo}
+                 HandlerClass  : com.forcs.db.OZGeneralHandler
+                 ParamFlag     : ?
+                 ITEMS         : {portNo=[key=portNo,useProperty=false], dbName=[key=dbName,useProperty=false], serverAddress=[key=serverAddress,useProperty=false]}
+                 FieldTypeConv : {}
+                 Support Fun.  : true
+                 AddInfo       : {}
+
+2019-06-20 16:26:01,354 [http-bio-8080-exec-4] DEBUG OZDBConfigManager  - 
+          Vendor Name          : MARIADB
+                 Driver Format : org.mariadb.jdbc.Driver
+                 Key Format    : MARIADB^{user}^{serverAddress}^{portNo}^{dbName}
+                 HandlerClass  : com.forcs.db.OZMARIADBHandler
+                 ParamFlag     : ?
+                 ITEMS         : {portNo=[key=portNo,useProperty=false], dbName=[key=dbName,useProperty=false], serverAddress=[key=serverAddress,useProperty=false]}
+                 FieldTypeConv : {DATE=DATETIME}
+                 Support Fun.  : true
+                 AddInfo       : {DATE_EXPRESSION=CAST('@YYYY-@MM-@DD @hh:@mm:@ss' AS DATETIME )}
+
+2019-06-20 16:26:01,361 [http-bio-8080-exec-4] INFO  ConnectionPool  - Start initialize...
+2019-06-20 16:26:01,386 [http-bio-8080-exec-4] ERROR ConnectionPool-pcis  - Invalid fetch row ''
+2019-06-20 16:26:01,387 [http-bio-8080-exec-4] INFO  ConnectionPool-pcis  - Loading properties is done.
+2019-06-20 16:26:01,404 [http-bio-8080-exec-4] DEBUG ConnectionPool-pcis  - loading driver: 'oracle.jdbc.driver.OracleDriver'
+2019-06-20 16:26:01,404 [http-bio-8080-exec-4] DEBUG ConnectionPool-pcis  - newConnectionByURL.... url: jdbc:oracle:thin:@(DESCRIPTION=(ADDRESS=(HOST=www.siione.co.kr)(PROTOCOL=tcp)(PORT=15250))(CONNECT_DATA=(SID=pcis)))
+2019-06-20 16:26:01,407 [http-bio-8080-exec-4] DEBUG ConnectionPool-pcis  - oracle.jdbc.driver.OracleDriver is acceptsURL :true
+2019-06-20 16:26:02,326 [http-bio-8080-exec-4] INFO  ConnectionPool-pcis  - Opened a new connection by URL.
+2019-06-20 16:26:02,335 [http-bio-8080-exec-4] DEBUG ConnectionPool-pcis  - Total connections: 1 Available: 1 Checked-out: 0
+2019-06-20 16:26:02,335 [http-bio-8080-exec-4] DEBUG ConnectionPool-pcis  - newConnectionByURL.... url: jdbc:oracle:thin:@(DESCRIPTION=(ADDRESS=(HOST=www.siione.co.kr)(PROTOCOL=tcp)(PORT=15250))(CONNECT_DATA=(SID=pcis)))
+2019-06-20 16:26:02,336 [http-bio-8080-exec-4] DEBUG ConnectionPool-pcis  - oracle.jdbc.driver.OracleDriver is acceptsURL :true
+2019-06-20 16:26:02,482 [http-bio-8080-exec-4] INFO  ConnectionPool-pcis  - Opened a new connection by URL.
+2019-06-20 16:26:02,486 [http-bio-8080-exec-4] DEBUG ConnectionPool-pcis  - Total connections: 2 Available: 2 Checked-out: 0
+2019-06-20 16:26:02,487 [http-bio-8080-exec-4] DEBUG ConnectionPool-pcis  - newConnectionByURL.... url: jdbc:oracle:thin:@(DESCRIPTION=(ADDRESS=(HOST=www.siione.co.kr)(PROTOCOL=tcp)(PORT=15250))(CONNECT_DATA=(SID=pcis)))
+2019-06-20 16:26:02,487 [http-bio-8080-exec-4] DEBUG ConnectionPool-pcis  - oracle.jdbc.driver.OracleDriver is acceptsURL :true
+2019-06-20 16:26:02,619 [http-bio-8080-exec-4] INFO  ConnectionPool-pcis  - Opened a new connection by URL.
+2019-06-20 16:26:02,625 [http-bio-8080-exec-4] DEBUG ConnectionPool-pcis  - Total connections: 3 Available: 3 Checked-out: 0
+2019-06-20 16:26:02,625 [http-bio-8080-exec-4] DEBUG ConnectionPool-pcis  - newConnectionByURL.... url: jdbc:oracle:thin:@(DESCRIPTION=(ADDRESS=(HOST=www.siione.co.kr)(PROTOCOL=tcp)(PORT=15250))(CONNECT_DATA=(SID=pcis)))
+2019-06-20 16:26:02,625 [http-bio-8080-exec-4] DEBUG ConnectionPool-pcis  - oracle.jdbc.driver.OracleDriver is acceptsURL :true
+2019-06-20 16:26:02,757 [http-bio-8080-exec-4] INFO  ConnectionPool-pcis  - Opened a new connection by URL.
+2019-06-20 16:26:02,763 [http-bio-8080-exec-4] DEBUG ConnectionPool-pcis  - Total connections: 4 Available: 4 Checked-out: 0
+2019-06-20 16:26:02,763 [http-bio-8080-exec-4] DEBUG ConnectionPool-pcis  - newConnectionByURL.... url: jdbc:oracle:thin:@(DESCRIPTION=(ADDRESS=(HOST=www.siione.co.kr)(PROTOCOL=tcp)(PORT=15250))(CONNECT_DATA=(SID=pcis)))
+2019-06-20 16:26:02,763 [http-bio-8080-exec-4] DEBUG ConnectionPool-pcis  - oracle.jdbc.driver.OracleDriver is acceptsURL :true
+2019-06-20 16:26:02,903 [http-bio-8080-exec-4] INFO  ConnectionPool-pcis  - Opened a new connection by URL.
+2019-06-20 16:26:02,909 [http-bio-8080-exec-4] DEBUG ConnectionPool-pcis  - Total connections: 5 Available: 5 Checked-out: 0
+2019-06-20 16:26:02,909 [http-bio-8080-exec-4] INFO  ConnectionPool  - End initialize.
+2019-06-20 16:26:03,018 [http-bio-8080-exec-4] DEBUG RepositoryAdapter  - Repository Manager init...
+2019-06-20 16:26:03,050 [http-bio-8080-exec-4] DEBUG LocalRepositoryAdapter  - Repository Root path is C:\Dev\eclipse-workspace\NSSP\src\main\webapp\oz70\WEB-INF/repository_files/
+2019-06-20 16:26:03,051 [http-bio-8080-exec-4] DEBUG LocalRepositoryAdapter  - Repository Temp directory: 'C:\Dev\eclipse-workspace\NSSP\src\main\webapp\oz70\WEB-INF/temp' 
+2019-06-20 16:26:03,204 [http-bio-8080-exec-4] DEBUG DataBindInfo  - ConcurrentFetchSize : 4096byte.
+2019-06-20 16:26:03,204 [http-bio-8080-exec-4] DEBUG DataBindInfo  - ConcurrentFirstRow : 0row.
+2019-06-20 16:26:03,205 [http-bio-8080-exec-4] DEBUG DataBindInfo  - Numeric/Decimal Type zero display  : default
+2019-06-20 16:26:03,207 [http-bio-8080-exec-4] DEBUG SAPClientManager  - oz.sap.jco.OZSAPClientManager class loading error : oz.sap.jco.OZSAPClientManager
+2019-06-20 16:26:03,236 [http-bio-8080-exec-4] DEBUG monitor  - monitor log time pattern : yyyy-MM-dd HH:mm:ss.SSS
+2019-06-20 16:26:03,251 [http-bio-8080-exec-4] DEBUG securitypolicy  - guest session key is null. guest users http session does not checked.
+2019-06-20 16:26:03,259 [http-bio-8080-exec-4] DEBUG securitypolicy  - show browser secure level attribute not exist. show browser secure level is middle
+2019-06-20 16:26:03,259 [http-bio-8080-exec-4] WARN  Main-Configuration  - Can't find 'path.clientinfo.properties.file'. So use default value '%OZ_HOME%/conf/clientlist.xml'
+2019-06-20 16:26:03,264 [http-bio-8080-exec-4] INFO  OZClientInfoManager  - Loading clientlist.xml...
+2019-06-20 16:26:03,264 [http-bio-8080-exec-4] WARN  OZClientInfoManager  - clientlist.xml is not found. client info check is not used
+2019-06-20 16:26:03,274 [http-bio-8080-exec-4] INFO  udl  - Disable OZ_USER_DEFINED_LOG oz user defined log service.
+2019-06-20 16:26:03,274 [http-bio-8080-exec-4] INFO  udl  - Disable OZ_UDL_MONITOR oz user defined log service.
+2019-06-20 16:26:03,285 [http-bio-8080-exec-4] INFO  DataSourceManager  - Loading data source properties from C:\Dev\eclipse-workspace\NSSP\src\main\webapp\oz70\WEB-INF/conf/datasource.properties
+2019-06-20 16:26:03,297 [http-bio-8080-exec-4] WARN  Main-Configuration  - Can't find 'path.externalmodule.properties.file'. So use default value '%OZ_HOME%/conf/external.properties'
+2019-06-20 16:26:03,297 [http-bio-8080-exec-4] INFO  ExternalModuleManager  - Loading external module properties from C:\Dev\eclipse-workspace\NSSP\src\main\webapp\oz70\WEB-INF/conf/external.properties
+2019-06-20 16:26:03,298 [http-bio-8080-exec-4] INFO  ExternalModuleManager  - External module file is not found. Loading process is excluded. 
+2019-06-20 16:26:03,305 [http-bio-8080-exec-4] WARN  Main-Configuration  - Can't find 'path.schedulerhealthcheck.properties'. So use default value '%OZ_HOME%/conf/schedulerhealthcheck.properties'
+2019-06-20 16:26:03,337 [http-bio-8080-exec-4] DEBUG resource  - java script init loading.
+2019-06-20 16:26:04,447 [http-bio-8080-exec-4] INFO  resource  - Loading REPORT frameworks ....
+2019-06-20 16:26:05,132 [http-bio-8080-exec-4] DEBUG resource  - Registered 43 frameworks for REPORT
+2019-06-20 16:26:05,133 [http-bio-8080-exec-4] DEBUG server  - OS Name            : Windows 10
+2019-06-20 16:26:05,133 [http-bio-8080-exec-4] DEBUG server  - OS Version         : 10.0
+2019-06-20 16:26:05,133 [http-bio-8080-exec-4] DEBUG server  - Java Vendor        : Oracle Corporation
+2019-06-20 16:26:05,133 [http-bio-8080-exec-4] DEBUG server  - Java Version       : 1.8.0_211
+2019-06-20 16:26:05,133 [http-bio-8080-exec-4] DEBUG server  - Hostname           : SunU-ProBook
+2019-06-20 16:26:05,133 [http-bio-8080-exec-4] DEBUG server  - CPU Count          : 4
+2019-06-20 16:26:05,133 [http-bio-8080-exec-4] INFO  server  -   ------------------------------------------------  
+2019-06-20 16:26:05,133 [http-bio-8080-exec-4] INFO  server  -   OZ Version Info.
+2019-06-20 16:26:05,133 [http-bio-8080-exec-4] INFO  server  -    OZ Server                : 7.0.0101.20190306 15:20.33
+2019-06-20 16:26:05,134 [http-bio-8080-exec-4] INFO  server  -   ------------------------------------------------  
+2019-06-20 16:26:05,134 [http-bio-8080-exec-4] INFO  server  -    OZ Common Protocol
+2019-06-20 16:26:05,134 [http-bio-8080-exec-4] INFO  server  -       Protocol              : 2007
+2019-06-20 16:26:05,136 [http-bio-8080-exec-4] INFO  server  -    OZ DataModule
+2019-06-20 16:26:05,140 [http-bio-8080-exec-4] INFO  server  -       Streaming Protocol    : 2040
+2019-06-20 16:26:05,140 [http-bio-8080-exec-4] INFO  server  -   ------------------------------------------------  
+2019-06-20 16:26:05,140 [http-bio-8080-exec-4] INFO  server  -    License expiration date  : 2019-12-20
+2019-06-20 16:26:05,141 [http-bio-8080-exec-4] INFO  server  - 
+2019-06-20 16:26:05,152 [http-bio-8080-exec-4] INFO  server  - This product includes Hypersonic SQL.
+2019-06-20 16:26:05,153 [http-bio-8080-exec-4] INFO  server  - 
+2019-06-20 16:26:05,153 [http-bio-8080-exec-4] INFO  server  - OZ Servlet is ready up.
+2019-06-20 16:26:05,254 [http-bio-8080-exec-4] INFO  server  - client IP:[ 0:0:0:0:0:0:0:1] A handler is started. Active handler count is 1
+2019-06-20 16:26:05,256 [http-bio-8080-exec-4] INFO  server  - REQUEST-URI : http://localhost:8080/oz70/server
+2019-06-20 16:26:05,256 [http-bio-8080-exec-4] INFO  MessageHandler  - Start Message Handing
+2019-06-20 16:26:05,257 [http-bio-8080-exec-4] DEBUG MessageHandler  - [version:10001][className:oz.framework.cp.message.repository.OZRepositoryRequestUserLogin]
+2019-06-20 16:26:05,268 [http-bio-8080-exec-4] DEBUG MessageHandler  - Request Message starts fetching for Response
+2019-06-20 16:26:05,306 [http-bio-8080-exec-4] DEBUG OZRepositoryRequestUserLogin  - Reading Message is successfully completed
+2019-06-20 16:26:05,318 [http-bio-8080-exec-4] DEBUG OZRepositoryRequestUserLogin  - Function Type [176 : LOGIN_TO_SERVER]
+2019-06-20 16:26:05,403 [http-bio-8080-exec-4] INFO  MessageHandler  - End Message Handing
+2019-06-20 16:26:05,650 [http-bio-8080-exec-6] INFO  server  - client IP:[ 0:0:0:0:0:0:0:1] A handler is started. Active handler count is 1
+2019-06-20 16:26:05,652 [http-bio-8080-exec-6] INFO  server  - REQUEST-URI : http://localhost:8080/oz70/server
+2019-06-20 16:26:05,652 [http-bio-8080-exec-6] INFO  MessageHandler  - Start Message Handing
+2019-06-20 16:26:05,652 [http-bio-8080-exec-6] DEBUG MessageHandler  - [version:10001][className:oz.framework.cp.message.repositoryex.OZRepositoryRequestItem]
+2019-06-20 16:26:05,654 [http-bio-8080-exec-6] DEBUG MessageHandler  - Request Message starts fetching for Response
+2019-06-20 16:26:05,656 [http-bio-8080-exec-6] DEBUG OZRepositoryRequestItem  - Reading Message is successfully completed
+2019-06-20 16:26:05,660 [http-bio-8080-exec-6] DEBUG OZRepositoryRequestItem  - Function Type [256 : ACCESS_GET_ITEMS]
+2019-06-20 16:26:05,669 [http-bio-8080-exec-6] DEBUG RepositoryAdapter  - compress itemID : /ozr/00000000000000000001_M.OZR
+2019-06-20 16:26:05,676 [http-bio-8080-exec-6] DEBUG OZStream  - write Item size = 3032
+2019-06-20 16:26:05,678 [http-bio-8080-exec-6] INFO  MessageHandler  - End Message Handing
+2019-06-20 16:26:06,142 [http-bio-8080-exec-6] INFO  server  - client IP:[ 0:0:0:0:0:0:0:1] A handler is started. Active handler count is 1
+2019-06-20 16:26:06,143 [http-bio-8080-exec-6] INFO  server  - REQUEST-URI : http://localhost:8080/oz70/server
+2019-06-20 16:26:06,143 [http-bio-8080-exec-6] INFO  MessageHandler  - Start Message Handing
+2019-06-20 16:26:06,143 [http-bio-8080-exec-6] DEBUG MessageHandler  - [version:10001][className:oz.framework.cp.message.repositoryex.OZRepositoryRequestItem]
+2019-06-20 16:26:06,144 [http-bio-8080-exec-6] DEBUG MessageHandler  - Request Message starts fetching for Response
+2019-06-20 16:26:06,144 [http-bio-8080-exec-6] DEBUG OZRepositoryRequestItem  - Reading Message is successfully completed
+2019-06-20 16:26:06,144 [http-bio-8080-exec-6] DEBUG OZRepositoryRequestItem  - Function Type [256 : ACCESS_GET_ITEMS]
+2019-06-20 16:26:06,145 [http-bio-8080-exec-6] DEBUG RepositoryAdapter  - obj stream itemID : /odi/00000000000000000001_M.odi
+2019-06-20 16:26:06,151 [http-bio-8080-exec-6] DEBUG RepositoryAdapter  - Cached obj stream is valid; /odi/00000000000000000001_M.odi
+2019-06-20 16:26:06,152 [http-bio-8080-exec-6] DEBUG OZStream  - write Item size = 1049
+2019-06-20 16:26:06,153 [http-bio-8080-exec-6] INFO  MessageHandler  - End Message Handing
+2019-06-20 16:26:06,306 [http-bio-8080-exec-6] INFO  server  - client IP:[ 0:0:0:0:0:0:0:1] A handler is started. Active handler count is 1
+2019-06-20 16:26:06,307 [http-bio-8080-exec-6] INFO  server  - REQUEST-URI : http://localhost:8080/oz70/server
+2019-06-20 16:26:06,307 [http-bio-8080-exec-6] INFO  MessageHandler  - Start Message Handing
+2019-06-20 16:26:06,307 [http-bio-8080-exec-6] DEBUG MessageHandler  - [version:10001][className:oz.framework.cp.message.FrameworkRequestDataModule]
+2019-06-20 16:26:06,314 [http-bio-8080-exec-6] DEBUG MessageHandler  - Request Message starts fetching for Response
+2019-06-20 16:26:06,317 [http-bio-8080-exec-6] DEBUG FrameworkRequestDataModule  - Reading Message is successfully completed
+2019-06-20 16:26:06,317 [http-bio-8080-exec-6] INFO  FrameworkRequestDataModule  - fetch DataModule start: [00000000000000000001_M.odi, null]
+2019-06-20 16:26:06,320 [http-bio-8080-exec-6] DEBUG FrameworkRequestDataModule  - Function Type [ GET_DATAMODULE ]
+2019-06-20 16:26:06,351 [http-bio-8080-exec-6] DEBUG XML-Parser-Configurator  - try to get SAX10_SUN parser factory...
+2019-06-20 16:26:06,352 [http-bio-8080-exec-6] DEBUG XML-Parser-Configurator  - Class.forName(com.sun.xml.parser.SAXParserFactoryImpl).newInstance()
+2019-06-20 16:26:06,444 [http-bio-8080-exec-6] DEBUG DataModule  - TargetDB=OZDBSTORE
+2019-06-20 16:26:06,506 [http-bio-8080-exec-6] DEBUG ScriptModule  - java script complie.
+2019-06-20 16:26:07,062 [http-bio-8080-exec-6] DEBUG FrameworkRequestDataModule  - CONCURRENT_FETCH_SIZE :4096
+2019-06-20 16:26:07,066 [http-bio-8080-exec-6] INFO  DataModule  - Start Datamodule-Binding.
+2019-06-20 16:26:07,139 [http-bio-8080-exec-6] DEBUG DataModule  - </odi/00000000000000000001_M.odi Set Name : OZParam> data-binding complete.
+2019-06-20 16:26:07,153 [http-bio-8080-exec-6] DEBUG StoredPool  - Request for connection has alias 'pcis'
+2019-06-20 16:26:07,155 [http-bio-8080-exec-6] INFO  ConnectionPool-pcis  - Request for connection received.
+2019-06-20 16:26:07,156 [http-bio-8080-exec-6] DEBUG ConnectionPool-pcis  - Delivered connection from pool []
+2019-06-20 16:26:07,157 [http-bio-8080-exec-6] DEBUG ConnectionPool-pcis  - Total connections: 5 Available: 4 Checked-out: 1
+2019-06-20 16:26:07,165 [http-bio-8080-exec-6] DEBUG DataModule  - Statement Fetch row : 5
+2019-06-20 16:26:07,165 [http-bio-8080-exec-6] DEBUG DataModule  - </odi/00000000000000000001_M.odi Set Name : SQL_1M> Query to run:SELECT * 
+  FROM (
+		SELECT RC_NO 
+			 , FN_USER_NM(CHARGER_ID) AS CHARGER_NM
+		     , FN_USER_NM(WRITNG_ID) AS WRITNG_NM
+		  FROM RC_TMPR RC
+		 WHERE RC.RC_NO=''
+		)
+ RIGHT OUTER JOIN DUAL ON 1=1
+2019-06-20 16:26:07,224 [http-bio-8080-exec-6] DEBUG DataModule  - </odi/00000000000000000001_M.odi Set Name : SQL_1M, 59msec> Success to execute query.
+2019-06-20 16:26:07,235 [http-bio-8080-exec-6] DEBUG DataModule  - </odi/00000000000000000001_M.odi Set Name : SQL_1M, 1rows, 11msec> data-binding complete.
+2019-06-20 16:26:07,235 [http-bio-8080-exec-6] INFO  DataModule  - Datamodule-Binding Complete.
+2019-06-20 16:26:07,241 [http-bio-8080-exec-6] INFO  ConnectionPool-pcis  - Start free a connection. []
+2019-06-20 16:26:07,247 [http-bio-8080-exec-6] DEBUG ConnectionPool-pcis  - Returned connection to pool
+2019-06-20 16:26:07,247 [http-bio-8080-exec-6] DEBUG ConnectionPool-pcis  - Total connections: 5 Available: 5 Checked-out: 0
+2019-06-20 16:26:07,247 [http-bio-8080-exec-6] DEBUG StoredPool  - removed item from pool [ size : 0 ]
+2019-06-20 16:26:07,248 [http-bio-8080-exec-6] INFO  FrameworkRequestDataModule  - Making DataModule is successfully completed [00000000000000000001_M.odi]
+2019-06-20 16:26:07,248 [http-bio-8080-exec-6] INFO  MessageHandler  - End Message Handing

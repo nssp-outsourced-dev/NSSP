@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
+<properties>
+	<comment>DB</comment>
+	
+	<entry key="base.driver">oracle.jdbc.driver.OracleDriver</entry>
+
+	<!-- #Dev -->
+	<entry key="base.url">jdbc:oracle:thin:@172.16.107.111:1521/orcl</entry> 	
+	
+    <!-- #Real	
+	<entry key="base.url">jdbc:oracle:thin:@10.66.204.44:1521/orcl</entry>
+	-->
+	<entry key="base.username">nssp_dba</entry>
+	<entry key="base.password">nssp_dba</entry>
+
+</properties>

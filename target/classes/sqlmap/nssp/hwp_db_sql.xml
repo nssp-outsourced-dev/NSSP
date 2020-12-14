@@ -1,0 +1,1746 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC '-//ibatis.apache.org//DTD Sql Map 2.0//EN' 'http://ibatis.apache.org/dtd/sql-map-2.dtd'>
+<sqlMap namespace="hwp">
+
+	<sql id="commonTrgtersByFormatTypeD">
+		SELECT TRGTER_NM,
+		       ROWNUM||'.' AS RM,
+		       ROWNUM||'. '||FN_CD_NM(A.TRGTER_SE_CD)||' '||A.TRGTER_NM AS NM,
+		       CASE WHEN NVL(TRGTER_TY_CD,'I') = 'E' THEN TRGTER_CPRN  					ELSE TRGTER_RRN END AS TRGTER_RRN,
+		       CASE WHEN NVL(TRGTER_TY_CD,'I') = 'E' THEN NVL(DWLSIT_ADDR,WRC_ADDR)  	ELSE DWLSIT_ADDR END AS ADDR,
+		       CASE WHEN NVL(TRGTER_TY_CD,'I') = 'E' THEN NVL(WRC_TEL,TEL)  			ELSE TEL END AS TEL,
+			   '성    명:' AS T1,
+		       CASE WHEN NVL(TRGTER_TY_CD,'I') = 'E' THEN '법인등록번호 :'  ELSE '주민등록번호 :' END AS T2,
+		       CASE WHEN NVL(TRGTER_TY_CD,'I') = 'E' THEN '소 재 지:'   	ELSE '주   거:' END AS T3,
+		       '연 락 처:' AS T4
+		       , '직    업:' AS T5 -- 직업 by dgkim
+		       , A.OCCP_NM -- 직업 by dgkim
+		  FROM (
+		    	SELECT I.TRGTER_NM,
+		           	   DGUARD.DECRYPT('TBL','ENC',I.TRGTER_RRN) AS TRGTER_RRN,
+		           	   I.TRGTER_SE_CD,
+		               I.ADRES_ADDR AS DWLSIT_ADDR, 					/*주거지:DWLSIT_ZIP 주소:ADRES_ADDR*/
+		               DGUARD.DECRYPT('TBL','ENC',NVL(I.HP_NO,I.OWNHOM_TEL)) AS TEL,
+		               I.TRGTER_TY_CD,
+		               NVL(I.TRGTER_CPRN, I.TRGTER_CRN) AS TRGTER_CPRN,  /*법인등록번호, 사업자등록번호*/
+		               (CASE WHEN I.WRC_ZIP IS NOT NULL THEN '('||I.WRC_ZIP||') ' END)||I.WRC_ADDR AS WRC_ADDR,     /*직장주소*/
+		               NVL(I.WRC_TEL,DGUARD.DECRYPT('TBL','ENC',NVL(I.HP_NO,I.OWNHOM_TEL))) AS WRC_TEL,
+		               I.SORT_ORDR,
+		               I.TRGTER_SN
+		               , FN_CD_NM(I.OCCP_CD) AS OCCP_NM -- 직업 by dgkim
+		          FROM RC_TMPR_TRGTER I
+		         WHERE I.USE_YN = 'Y'
+		           AND I.RC_NO = #P_RC_NO#
+		           AND I.TRGTER_SE_CD IN (SELECT CC.ESNTL_CD FROM CMN_CD CC WHERE CC.UPPER_CD = '00102'  AND CC.CD_DC = 'suspct-Group')
+			   	 ORDER BY I.SORT_ORDR, I.TRGTER_SN
+			   ) A
+		RIGHT JOIN DUAL D ON 1=1
+		ORDER BY ROWNUM
+	</sql>
+
+	<!-- 진술조서 -->
+	<select id="selectHwp00000000000000000014" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		SELECT
+		    A.TRGTER_NM  	AS INPUT_1,
+		    A.TRGTER_RRN	AS INPUT_3,
+		    A.OCCP_NM		AS INPUT_4,
+		    A.WRC_NM        AS INPUT_5,	/*직장명*/
+		    A.DWLSIT_ADDR 	AS INPUT_6,
+		    A.REGBS_ADDR	AS INPUT_7,
+		    A.WRC_ADDR		AS INPUT_8,
+		    A.OWNHOM_TEL	AS INPUT_9,
+		    A.HP_NO			AS INPUT_10,
+		    A.WRC_TEL		AS INPUT_11,
+		    A.EMAIL			AS INPUT_12,
+		    A.VIOLT_ROOT_NM AS INPUT_13,
+		    FN_OZ_DATE(TO_CHAR(SYSDATE,'YYYYMMDD'),'') AS INPUT_14,
+			A.CHARGER_NM 	AS INPUT_15,
+		    WRITNG_NM 		AS INPUT_16
+		FROM (
+		    SELECT
+		        TRGTER_SN,
+		        TRGTER_NM,
+		        TRGTER_RRN,
+		        OCCP_NM,
+		        WRC_NM,
+		        DWLSIT_ADDR,
+		        REGBS_ADDR,
+		        WRC_ADDR,
+		        OWNHOM_TEL,
+		        HP_NO,
+		        WRC_TEL,
+		        EMAIL,
+		        FN_RC_VIOLT_ROOT_NM(RC_NO) AS VIOLT_ROOT_NM,
+				CHARGER_NM,
+			    WRITNG_NM,
+			    SORT_ORDR
+		    FROM (
+		        SELECT
+		            A.RC_NO,
+		            C.CASE_NO,
+		            A.TRGTER_SE_CD,
+		            A.TRGTER_SN,
+		            A.TRGTER_NM,
+		            DGUARD.DECRYPT('TBL','ENC',A.TRGTER_RRN) AS TRGTER_RRN,
+		            FN_CD_NM(A.OCCP_CD) AS OCCP_NM,
+		            A.WRC_NM,
+		            A.ADRES_ADDR AS DWLSIT_ADDR,    	/*주거지:DWLSIT_ZIP 주소:ADRES_ADDR*/
+		            A.REGBS_ADDR AS REGBS_ADDR,        	/*등록지*/
+		            A.WRC_ADDR AS WRC_ADDR,             /*직장주소*/
+		            DGUARD.DECRYPT('TBL','ENC',A.OWNHOM_TEL) AS OWNHOM_TEL,     /*자택전화*/
+		            DGUARD.DECRYPT('TBL','ENC',A.HP_NO) AS HP_NO,          /*휴대전화*/
+		            A.WRC_TEL,          /*직장*/
+		            A.EMAIL,
+					FN_USER_NM(C.CHARGER_ID) AS CHARGER_NM,
+					FN_USER_NM(A.WRITNG_ID) AS WRITNG_NM,
+					(
+						SELECT
+							LISTAGG(RT.TRGTER_NM,', ') WITHIN GROUP(ORDER BY TRGTER_SN)
+						FROM RC_TMPR_TRGTER RT
+						WHERE RT.USE_YN = 'Y'
+						AND RT.RC_NO  = A.RC_NO
+						AND RT.TRGTER_SE_CD = '00697'
+					) TRGTER_NM_S,	/*피의자*/
+					A.SORT_ORDR
+		        FROM RC_TMPR_TRGTER A
+		        JOIN RC_TMPR C ON A.RC_NO = C.RC_NO
+		        WHERE A.RC_NO = #P_RC_NO#
+		          AND A.TRGTER_SN = #P_TRGTER_SN#
+		    ) A
+		) A
+		ORDER BY A.SORT_ORDR, A.TRGTER_SN
+	</select>
+
+	<!-- 압수수색영장 -->
+	<select id="hwp.selectHwp00000000000000000043_1" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		SELECT A.*, FN_OZ_DATE(TO_CHAR(SYSDATE,'YYYYMMDD'),'') AS S_DATE FROM (
+			SELECT
+		        '제 '||FN_CNVR_NO(Q.ZRLONG_REQST_NO)||' 호' AS ZRLONG_REQ_NO,
+		        FN_EXMN_NM(P.CMPTNC_EXMN_CD) AS CMPTNC_EXMN_NM,
+		        NVL(TO_CHAR(Q.VALID_DT,'YYYY'),'2000')||'년 '||NVL(TO_NUMBER(TO_CHAR(Q.VALID_DT,'MM')),'0')||'월 '||NVL(TO_NUMBER(TO_CHAR(Q.VALID_DT,'DD')),'0')||'일' AS VALID_DT,
+		        FN_RC_VIOLT_ROOT_NM(Q.RC_NO) AS VIOLT_ROOT_NM,
+		        Q.COUNSL_NM,
+		        Q.SZURE_THING,
+		        Q.SRCHNG_TRGET,
+		        P.CRMNL_FACT AS CRMNL_FACT, /*범죄사실*/
+		        Q.SRCHNG_RESN AS SRCHNG_RESN,
+		        Q.ACNUT_NM_CD,
+		        Q.ACNUT_BANK||'ㆍ'||ACNUT_NO AS ACNUT_BANK_NO,
+		        Q.DELNG_PD,
+		        Q.DELNG_CN,
+		        Q.EXCUTER_ID,
+		        FN_CD_NM(NVL(U.RSPOFC_CD,U.CLSF_CD)) || ' ' || U.USER_NM AS EXCUTER,
+		        TO_CHAR(Q.EXCUT_DT,'YYYY')||'-'||TO_NUMBER(TO_CHAR(Q.EXCUT_DT,'MM'))||'-'||TO_NUMBER(TO_CHAR(Q.EXCUT_DT,'DD'))||' '||
+		        TO_NUMBER(TO_CHAR(Q.EXCUT_DT,'HH24'))||':'||TO_CHAR(Q.EXCUT_DT,'MI') AS EXCUT_DT,
+		        NVL(SZURE_ZRLONG_CD,'00790') AS SZURE_ZRLONG_CD, /*사전*/
+		        FN_DEPT_NM(P.CHARGER_DEPT_CD) AS CHARGER_DEPT,
+		        FN_USER_NM(P.CHARGER_ID) AS CHARGER_NM,
+		        FN_USER_NM(Q.WRITNG_ID) AS WRITNG_NM
+		        , (SELECT FN_CD_NM(cu.CLSF_CD) FROM CMN_USER cu WHERE ESNTL_ID = Q.WRITNG_ID) AS CLSF_NM -- 직급 by dgkim
+		    FROM INV_SZURE_REQST Q
+		    LEFT JOIN RC_TMPR P ON Q.RC_NO = P.RC_NO
+		    LEFT JOIN CMN_USER U ON Q.EXCUTER_ID = U.ESNTL_ID
+		    WHERE Q.ZRLONG_REQST_YN = 'Y'
+		      AND Q.RC_NO = #P_RC_NO#
+		      AND Q.ZRLONG_REQST_NO = #P_ZRLONG_REQST_NO#
+		) A
+		RIGHT JOIN DUAL D ON 1=1
+	</select>
+	<select id="hwp.selectHwp00000000000000000043_2" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		SELECT
+            ROW_NUMBER() OVER(ORDER BY B.SORT_ORDR, B.TRGTER_SN)||'.' AS RM_L,
+            B.TRGTER_NM AS TRGTER_NM_L,
+            CASE WHEN NVL(B.TRGTER_TY_CD,'I') = 'E' THEN B.TRGTER_CPRN  ELSE DGUARD.DECRYPT('TBL','ENC',B.TRGTER_RRN) END AS TRGTER_RRN_L,
+            (CASE WHEN B.WRC_NM IS NOT NULL THEN B.WRC_NM||' ' END)||FN_CD_NM(B.OCCP_CD) OCCP_NM_L,
+            CASE WHEN NVL(B.TRGTER_TY_CD,'I') = 'E' THEN NVL(B.ADRES_ADDR,B.WRC_ADDR) ELSE B.ADRES_ADDR END AS ADDR_L,
+            '성    명' AS T1,
+		    CASE WHEN NVL(B.TRGTER_TY_CD,'I') = 'E' THEN '법인등록번호 ' ELSE '주민등록번호 ' END AS T2,
+		    '직   업' AS T3,
+		    CASE WHEN NVL(B.TRGTER_TY_CD,'I') = 'E' THEN '소 재 지'   	 ELSE '주   거' END AS T4
+		    , (SELECT FN_CD_NM(cu.CLSF_CD) FROM CMN_USER cu WHERE ESNTL_ID = B.WRITNG_ID) AS CLSF_NM -- 직급 by dgkim
+        FROM INV_SZURE_APPLCNT A
+        JOIN RC_TMPR_TRGTER B ON A.RC_NO = B.RC_NO AND A.TRGTER_SN = B.TRGTER_SN
+        WHERE B.USE_YN = 'Y'
+          AND A.RC_NO = #P_RC_NO#
+          AND A.ZRLONG_REQST_NO = #P_ZRLONG_REQST_NO#
+        ORDER BY B.SORT_ORDR, B.TRGTER_SN ASC
+	</select>
+	<select id="hwp.selectHwp00000000000000000043_3" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		SELECT
+			ROW_NUMBER() OVER(ORDER BY A.WRITNG_DT)||'.' AS RNM_L,
+			(CASE WHEN A.ACNUT_NM_CD = '01339' THEN '■' END) AS ACNUT_NM_CD1_L,
+			(CASE WHEN A.ACNUT_NM_CD = '01340' THEN '■' END) AS ACNUT_NM_CD2_L,
+		    NVL(A.ACNUT_NM, FN_CD_NM(A.ACNUT_NM_CD)) AS ACNUT_NM_L,
+		    A.ACNUT_BANK || ' · ' || A.ACNUT_NO AS ACNUT_BANK_NO_L,
+		    A.DELNG_PD AS DELNG_PD_L,
+		    A.DELNG_CN AS DELNG_CN_L,
+		    '계좌명의인' AS TT1,
+	       	'개설은행ㆍ계좌번호' AS TT2,
+	       	'거래기간' AS TT3,
+	       	'거래정보등의내용' AS TT4
+	       	, (SELECT FN_CD_NM(cu.CLSF_CD) FROM CMN_USER cu WHERE ESNTL_ID = A.WRITNG_ID) AS CLSF_NM -- 직급 by dgkim
+		FROM INV_SZURE_ACNUT A
+		JOIN INV_SZURE_REQST B ON A.RC_NO = B.RC_NO AND A.ZRLONG_REQST_NO = B.ZRLONG_REQST_NO
+        WHERE B.SZURE_ZRLONG_CD = '00792'  /*거래 계좌*/
+		  AND A.RC_NO = #P_RC_NO#
+		  AND A.ZRLONG_REQST_NO = #P_ZRLONG_REQST_NO#
+		ORDER BY A.WRITNG_DT
+	</select>
+
+	<select id="hwp.selectHwp00000000000000000022" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		SELECT A.*, FN_OZ_DATE(TO_CHAR(SYSDATE,'YYYYMMDD'),'') AS S_DATE
+		FROM (
+		    SELECT
+		        D.TRGTER_NM AS TRGTER_NM,
+				(CASE WHEN D.WRC_NM IS NOT NULL THEN TRIM(D.WRC_NM) ||'와(과) ' END) AS WRC_NM,
+				FN_RC_VIOLT_ROOT_NM(A.RC_NO) AS VIOLT_ROOT_NM,
+		        TO_NUMBER(TO_CHAR(A.ATEND_DEMAND_DT,'YYYY'))||'. '||TO_NUMBER(TO_CHAR(A.ATEND_DEMAND_DT,'MM'))||'. '||TO_NUMBER(TO_CHAR(A.ATEND_DEMAND_DT,'DD'))||'. '
+				|| TO_NUMBER(TO_CHAR(A.ATEND_DEMAND_DT,'HH24'))||':'||TO_CHAR(A.ATEND_DEMAND_DT,'MI') AS ATEND_DEMAND_DT,
+		        UR.TEL_NO AS TEL_NO,
+		        FN_USER_NM(B.CHARGER_ID) AS CHARGER_NM,
+				FN_USER_NM(A.WRITNG_ID) AS WRITNG_NM,
+		        /*TO_CHAR(A.DEMAND_SN) AS DEMAND_SN,*/
+		        FN_CNVR_NO(A.VIEW_SN) AS DEMAND_SN,
+			    CASE WHEN D.TRGTER_SE_CD = '00697' THEN '정당한 이유 없이 출석요구에 응하지 아니하면 형사소송법의 규정에 따라 체포될 수 있습니다.'
+			    END AS ADD_MSG			/*피의자메세지*/
+		    FROM INV_PRSCT_ATEND A
+		    LEFT JOIN RC_TMPR_TRGTER D ON A.RC_NO = D.RC_NO AND A.TRGTER_SN = D.TRGTER_SN
+		    LEFT JOIN RC_TMPR B ON A.RC_NO = B.RC_NO
+		    LEFT JOIN CMN_USER UR ON B.CHARGER_ID = UR.ESNTL_ID
+		    WHERE A.RC_NO   = #P_RC_NO#
+		      AND A.TRGTER_SN = #P_TRGTER_SN#
+		      AND A.DEMAND_SN = #P_DEMAND_SN#
+		      AND A.USE_YN != 'N'
+		) A
+		RIGHT JOIN DUAL D ON 1=1
+	</select>
+
+	<select id="hwp.selectHwp00000000000000000069" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		SELECT
+		    --FN_OZ_DATE(TO_CHAR(SYSDATE,'YYYYMMDD'),'') AS S_DATE,
+		    --A.WRITNG_NM
+		    A.*
+		FROM (
+		SELECT
+		    --FN_USER_NM(A.WRITNG_ID) AS WRITNG_NM
+		    (SELECT FN_USER_NM(CHARGER_ID) FROM RC_TMPR WHERE RC_NO = A.RC_NO) AS CHARGER_NM -- 담당자로 변경 by dgkim
+		    , (SELECT TO_CHAR(NVL2(PRSCT_DE, TO_DATE(PRSCT_DE, 'YYYY-MM-DD'), SYSDATE), 'YYYY.fmMM.DD')
+				FROM RC_TMPR WHERE RC_NO = A.RC_NO) AS S_DATE -- 승인 일자로 수정 by dgkim
+		FROM INV_PRSCT_ATEND A
+		WHERE A.RC_NO   	= #P_RC_NO#
+		  AND A.TRGTER_SN 	= #P_TRGTER_SN#
+		  AND A.DEMAND_SN 	= #P_DEMAND_SN#
+		  AND A.USE_YN != 'N'
+		) A
+		RIGHT JOIN DUAL D ON 1=1
+	</select>
+
+	<select id="hwp.selectHwp00000000000000000141" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		SELECT
+		    --FN_OZ_DATE(TO_CHAR(SYSDATE,'YYYYMMDD'),'') AS S_DATE,
+		    A.*
+		FROM (
+		SELECT
+		     (SELECT 
+		    		FN_USER_NM(CHARGER_ID)
+		    	FROM 
+		    		RC_TMPR WHERE RC_NO = A.RC_NO) AS CHARGER_NM --담당자로 변경 --FN_USER_NM(A.WRITNG_ID) AS WRITNG_NM
+		    , (SELECT 
+		    		TO_CHAR(NVL2(PRSCT_DE, TO_DATE(PRSCT_DE, 'YYYY-MM-DD'), SYSDATE), 'YYYY.fmMM.DD')
+		    	FROM 
+		    		RC_TMPR WHERE RC_NO = A.RC_NO) AS S_DATE -- 승인 일자로 수정 by dgkim
+		FROM INV_PRSCT_ARRST A
+		WHERE A.RC_NO   = #P_RC_NO#
+		  AND A.TRGTER_SN = #P_TRGTER_SN#
+		  AND A.ARRST_SN = #P_ARRST_SN#
+		  AND A.USE_YN != 'N'
+		) A
+		RIGHT JOIN DUAL D ON 1=1
+	</select>
+
+	<select id="hwp.selectHwp00000000000000000142" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		SELECT
+		    --FN_OZ_DATE(TO_CHAR(SYSDATE,'YYYYMMDD'),'') AS S_DATE,
+		    A.*
+		    --A.WRITNG_NM
+		FROM (
+		SELECT
+		    (SELECT 
+		    	FN_USER_NM(CHARGER_ID)
+	    	 FROM 
+	    	 	RC_TMPR WHERE RC_NO = A.RC_NO) AS CHARGER_NM-- 담당자로 변경 --FN_USER_NM(A.WRITNG_ID) AS WRITNG_NM
+		    , (SELECT 
+		    	TO_CHAR(NVL2(PRSCT_DE, TO_DATE(PRSCT_DE, 'YYYY-MM-DD'), SYSDATE), 'YYYY.fmMM.DD')
+	    	 FROM 
+	    	 	RC_TMPR WHERE RC_NO = A.RC_NO) AS S_DATE -- 승인 일자로 수정 by dgkim
+		FROM INV_ZRLONG_REQST A
+		WHERE A.RC_NO   = #P_RC_NO#
+		  AND A.TRGTER_SN = #P_TRGTER_SN#
+		  AND A.ZRLONG_REQST_NO = #P_ZRLONG_REQST_NO#
+		) A
+		RIGHT JOIN DUAL D ON 1=1
+	</select>
+
+	<select id="hwp.selectHwp00000000000000000143" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		SELECT
+			FN_USER_NM(WRITNG_ID) AS WRITNG_NM,
+			FN_OZ_DATE(null, null) AS S_DATE
+			, A.USER_NM -- 담당자로 변경 by dgkim
+		FROM (
+		    SELECT
+		    WRITNG_ID
+		    , (
+		    	SELECT
+		    		FN_USER_NM(CHARGER_ID)
+		    	FROM 
+		    		RC_TMPR
+		    	WHERE 
+		    		RC_NO = S.RC_NO
+		    ) AS USER_NM -- 담당자로 변경 by dgkim
+		    FROM INV_SUGEST S
+			WHERE S.SUGEST_NO = #P_SUGEST_NO#
+			AND S.USE_YN = 'Y'
+		) A
+		RIGHT JOIN DUAL D ON 1=1
+	</select>
+
+	<select id="hwp.selectHwp00000000000000000144" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		SELECT
+		    FN_OZ_DATE(TO_CHAR(SYSDATE,'YYYYMMDD'),'') AS S_DATE,
+		    A.WRITNG_NM
+		    , A.CHARGER_NM -- 담당자로 변경 by dgkim
+		FROM (
+		SELECT
+		    FN_USER_NM(A.WRITNG_ID) AS WRITNG_NM
+		     , (
+		    	SELECT
+		    		FN_USER_NM(CHARGER_ID)
+		    	FROM 
+		    		RC_TMPR
+		    	WHERE 
+		    		RC_NO = A.RC_NO
+		    ) AS CHARGER_NM -- 담당자로 변경 by dgkim
+		FROM INV_SZURE_REQST A
+		WHERE A.RC_NO   = #P_RC_NO#
+		  AND A.ZRLONG_REQST_NO = #P_ZRLONG_REQST_NO#
+		) A
+		RIGHT JOIN DUAL D ON 1=1
+	</select>
+
+	<select id="hwp.selectHwp00000000000000000032" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		SELECT
+		    A.*, FN_OZ_DATE(TO_CHAR(SYSDATE,'YYYYMMDD'),'') AS S_DATE
+		FROM (
+	        SELECT
+	            FN_CNVR_NO(C.CASE_NO) AS CASE_NO,
+	            FN_CNVR_NO(A.RC_NO) AS RC_NO,
+	            A.TRGTER_SE_CD,
+	            A.TRGTER_SN,
+	            A.TRGTER_NM,
+	            DGUARD.DECRYPT('TBL','ENC',A.TRGTER_RRN) AS TRGTER_RRN,
+	            FN_CD_NM(A.OCCP_CD) || (CASE WHEN A.WRC_NM IS NOT NULL THEN ' (' || TRIM(A.WRC_NM) || ')' END) AS OCCP_NM,
+	            A.ADRES_ADDR AS DWLSIT_ADDR,    	/*주거지:DWLSIT_ZIP 주소:ADRES_ADDR*/
+	            A.REGBS_ADDR AS REGBS_ADDR,        	/*등록지*/
+	            A.WRC_ADDR AS WRC_ADDR,             /*직장주소*/
+	            DGUARD.DECRYPT('TBL','ENC',A.OWNHOM_TEL) AS OWNHOM_TEL,     /*자택전화*/
+	            DGUARD.DECRYPT('TBL','ENC',A.HP_NO) AS HP_NO,          		/*휴대전화*/
+	            A.WRC_TEL,          /*직장*/
+	            A.EMAIL,
+	            FN_RC_VIOLT_ROOT_NM(C.RC_NO) AS VIOLT_ROOT_NM,
+	            FN_USER_NM(C.CHARGER_ID) AS CHARGER_NM,
+				FN_USER_NM(A.WRITNG_ID) AS WRITNG_NM
+	        FROM RC_TMPR_TRGTER A
+	        JOIN RC_TMPR C ON A.RC_NO = C.RC_NO
+	        WHERE A.RC_NO 		= #P_RC_NO#
+	          AND A.TRGTER_SN 	= #P_TRGTER_SN#
+		) A
+		RIGHT JOIN DUAL D ON 1=1
+	</select>
+
+	<select id="hwp.selectHwp00000000000000000033" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		SELECT
+            A.*,
+            FN_OZ_DATE(TO_CHAR(SYSDATE,'YYYYMMDD'),'') AS S_DATE,
+            NVL(#P_CNT#,(SELECT COUNT(*)+1 FROM CMN_DOC_PBLICTE PB WHERE PB.FORMAT_ID = '00000000000000000033' AND PB.DOC_ID = A.DOC_ID AND PB.USE_YN = 'Y')) AS T_CNT
+        FROM (
+            SELECT
+                FN_CNVR_NO(C.CASE_NO) AS CASE_NO,
+                FN_CNVR_NO(A.RC_NO) AS RC_NO,
+                A.TRGTER_SE_CD,
+                A.TRGTER_SN,
+                A.TRGTER_NM,
+                DGUARD.DECRYPT('TBL','ENC',A.TRGTER_RRN) AS TRGTER_RRN,
+                FN_CD_NM(A.OCCP_CD) || (CASE WHEN A.WRC_NM IS NOT NULL THEN ' (' || TRIM(A.WRC_NM) || ')' END) AS OCCP_NM,
+                A.ADRES_ADDR AS DWLSIT_ADDR,    	/*주거지:DWLSIT_ZIP 주소:ADRES_ADDR*/
+                A.REGBS_ADDR AS REGBS_ADDR,        	/*등록지*/
+                A.WRC_ADDR AS WRC_ADDR,             /*직장주소*/
+                DGUARD.DECRYPT('TBL','ENC',A.OWNHOM_TEL) AS OWNHOM_TEL,     /*자택전화*/
+                DGUARD.DECRYPT('TBL','ENC',A.HP_NO) AS HP_NO,          		/*휴대전화*/
+                A.WRC_TEL,          /*직장*/
+                A.EMAIL,
+                FN_RC_VIOLT_ROOT_NM(C.RC_NO) AS VIOLT_ROOT_NM,
+                FN_USER_NM(C.CHARGER_ID) AS CHARGER_NM,
+                FN_USER_NM(A.WRITNG_ID) AS WRITNG_NM,
+                A.DOC_ID
+            FROM RC_TMPR_TRGTER A
+            JOIN RC_TMPR C ON A.RC_NO = C.RC_NO
+            WHERE A.RC_NO 		= #P_RC_NO#
+	          AND A.TRGTER_SN 	= #P_TRGTER_SN#
+        ) A
+        RIGHT JOIN DUAL D ON 1=1
+	</select>
+
+	<select id="hwp.selectHwp00000000000000000021" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		SELECT 
+			A.*
+			, FN_OZ_DATE(TO_CHAR(SYSDATE,'YYYYMMDD'),'') AS S_DATE
+		FROM (
+			SELECT
+				TRGTER_NM,
+				DGUARD.DECRYPT('TBL','ENC',TRGTER_RRN) AS TRGTER_RRN,
+				ADRES_ADDR AS DWLSIT_ADDR,	/*주거지:DWLSIT_ZIP 주소:ADRES_ADDR*/
+				FN_RC_VIOLT_ROOT_NM (RC_NO) AS VIOLT_ROOT_NM,
+				FN_CD_NM (TRGTER_SE_CD) AS TRGTER_SE_NM
+				--, (SELECT * FROM RC_TMPR WHERE RC_NO = )
+			FROM RC_TMPR_TRGTER 
+			WHERE RC_NO 	= #P_RC_NO#
+				AND TRGTER_SN = #P_TRGTER_SN#
+				AND USE_YN = 'Y'
+		) A
+		RIGHT JOIN DUAL D ON 1=1
+	</select>
+
+	<select id="hwp.selectHwp00000000000000000016" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		SELECT
+		    A.*, FN_OZ_DATE(TO_CHAR(SYSDATE,'YYYYMMDD'),'') AS S_DATE
+		FROM (
+	        SELECT
+	            A.TRGTER_NM,
+	            DGUARD.DECRYPT('TBL','ENC',A.TRGTER_RRN) AS TRGTER_RRN,
+				A.WRC_NM,
+	            FN_CD_NM(A.OCCP_CD) AS OCCP_NM,
+	            A.ADRES_ADDR AS DWLSIT_ADDR,    	/*주거지:DWLSIT_ZIP 주소:ADRES_ADDR*/
+	            A.REGBS_ADDR AS REGBS_ADDR,        	/*등록지*/
+	            A.WRC_ADDR AS WRC_ADDR,             /*직장주소*/
+	            DGUARD.DECRYPT('TBL','ENC',A.OWNHOM_TEL) AS OWNHOM_TEL,     /*자택전화*/
+	            DGUARD.DECRYPT('TBL','ENC',A.HP_NO) AS HP_NO,          		/*휴대전화*/
+	            A.WRC_TEL,          /*직장*/
+	            A.EMAIL,
+	            CASE WHEN C.CASE_NO IS NOT NULL THEN SUBSTR(C.CASE_NO,0,4)||' 감사조사 정식 제'||TO_NUMBER(SUBSTR(C.CASE_NO,INSTR(C.CASE_NO, '-')+1))
+	            ELSE
+	            	CASE WHEN C.ITIV_NO IS NOT NULL THEN SUBSTR(C.ITIV_NO,0,4)||' 감사조사 내사 제'||TO_NUMBER(SUBSTR(C.ITIV_NO,INSTR(C.ITIV_NO, '-')+1))
+		        	ELSE SUBSTR(C.RC_NO,0,4)||' 감사조사 임시 제'||TO_NUMBER(SUBSTR(C.RC_NO,INSTR(C.RC_NO, '-')+1))
+		        	END
+		        END AS CASE_NO,
+		        FN_CD_NM(A.TRGTER_SE_CD) || DECODE(SUBSTR( FN_CD_NM(A.TRGTER_SE_CD),LENGTH(FN_CD_NM(A.TRGTER_SE_CD)) ),'인','으','') AS TRGTER_SE_NM
+	        FROM RC_TMPR_TRGTER A
+	        JOIN RC_TMPR C ON A.RC_NO = C.RC_NO
+	        WHERE A.RC_NO = #P_RC_NO#
+	          AND A.TRGTER_SN = #P_TRGTER_SN#
+		) A
+		RIGHT JOIN DUAL D ON 1=1
+	</select>
+
+	<select id="hwp.selectHwp00000000000000000027" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		SELECT A.*, FN_OZ_DATE(TO_CHAR(SYSDATE,'YYYYMMDD'),'') AS S_DATE FROM (
+		    SELECT FN_CNVR_NO(I.RC_NO) AS RC_NO,           	/*사건번호*/
+		           FN_CNVR_NO(C.CASE_NO) AS CASE_NO,
+		           I.TRGTER_SN,         /*피의자 일련번호*/
+		           TO_CHAR(I.ARRST_SN) AS ARRST_SN,   /*긴급체포 일련번호*/
+		           I.ARRST_TY_CD,       /*긴급체포 구분*/
+		           B.TRGTER_NM,
+		           B.TRGTER_AGE AS TRGTER_AGE,     /*나이*/
+		           DGUARD.DECRYPT('TBL','ENC',B.TRGTER_RRN) AS TRGTER_RRN,
+		           FN_CD_NM(B.OCCP_CD) AS OCCP_NM, /*직업코드*/
+		           B.ADRES_ADDR AS DWLSIT_ADDR,    /*주거지:DWLSIT_ZIP 주소:ADRES_ADDR*/
+		           TO_NUMBER(TO_CHAR(I.WRITNG_DT,'YYYY'))||'년 '||TO_NUMBER(TO_CHAR(I.WRITNG_DT,'MM'))||'월 '||TO_NUMBER(TO_CHAR(I.WRITNG_DT,'DD'))||'일' AS WRITNG_DE,
+		           FN_OZ_DATETIME (I.ARRST_DT, 'K') AS ARRST_DT, 		/*체포일시*/
+		           I.ARRST_PLACE,
+		           I.ARRESTER_CLSS || ' ' || I.ARRESTER_NM AS ARRESTER,
+		           FN_OZ_DATETIME (I.ATTRACT_DT, 'K') AS ATTRACT_DT, 	/*인치일시*/
+		           I.ATTRACT_PLACE,
+		           FN_OZ_DATETIME (I.CNFNM_DT, 'K') AS CNFNM_DT, 		/*구금일시*/
+		           I.CNFNM_PLACE,
+		           FN_CD_NM(D.CLSF_CD)||' '|| D.USER_NM AS CNFNM_EXCUTR_NM, /*구금을 집행한 자의 관직 및 성명*/
+		           FN_OZ_DATETIME (I.RSL_DT, 'K') AS RSL_DT, 			/*석방일시*/
+		           I.RSL_PLACE,        /*석방장소*/
+		           FN_CD_NM(I.RSL_RESN_CD) || ' ' || I.RSL_RESN_ETC AS RSL_RESN,   /*석빙시유*/
+		           FN_CD_NM(F.CLSF_CD)||' '|| F.USER_NM AS RSL_EXCUTR_NM, /*석방한 자의 관직 및 성명*/
+		           FN_RC_VIOLT_ROOT_NM (C.RC_NO) AS VIOLT_ROOT_NM,
+		           C.CRMNL_FACT,							/*범죄사실*/
+		           I.EMRGNCY_ARRST_RESN AS ARRST_RESN_FACT,  /*체포의 사유*/
+		           I.COUNSL_NM,
+		           FN_USER_NM(I.WRITNG_ID) AS WRITNG_NM
+		           , FN_USER_NM(C.CHARGER_ID) AS CHARGER_NM -- 담당자로 변경 by dgkim
+		        FROM INV_PRSCT_ARRST I
+		        LEFT JOIN RC_TMPR_TRGTER B ON I.RC_NO = B.RC_NO AND I.TRGTER_SN = B.TRGTER_SN AND B.USE_YN = 'Y'
+		        LEFT JOIN RC_TMPR C ON I.RC_NO = C.RC_NO
+		        LEFT JOIN CMN_USER D ON D.ESNTL_ID = I.CNFNM_EXCUTR_ID
+		        LEFT JOIN CMN_USER F ON F.ESNTL_ID = I.RSL_EXCUTR_ID
+		        WHERE I.USE_YN = 'Y'
+		          AND I.RC_NO = #P_RC_NO#
+		          AND I.TRGTER_SN = #P_TRGTER_SN#
+		          AND I.ARRST_SN = #P_ARRST_SN#
+		) A
+		RIGHT JOIN DUAL D ON 1=1
+	</select>
+
+	<select id="hwp.selectHwp00000000000000000026" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		SELECT A.*, FN_OZ_DATE(TO_CHAR(SYSDATE,'YYYYMMDD'),'') AS S_DATE FROM (
+		    SELECT FN_CNVR_NO(I.RC_NO) AS RC_NO,           	/*사건번호*/
+		           FN_CNVR_NO(C.CASE_NO) AS CASE_NO,
+		           I.TRGTER_SN,         /*피의자 일련번호*/
+		           I.ARRST_SN,        	/*긴급체포 일련번호*/
+		           I.ARRST_TY_CD,       /*긴급체포 구분*/
+		           B.TRGTER_NM,
+		           DGUARD.DECRYPT('TBL','ENC',B.TRGTER_RRN) AS TRGTER_RRN,
+		           FN_CD_NM(B.OCCP_CD) AS OCCP_NM, /*직업코드*/
+		           B.ADRES_ADDR AS DWLSIT_ADDR,    /*주거지:DWLSIT_ZIP 주소:ADRES_ADDR*/
+		           B.REGBS_ADDR AS REGBS_ADDR,            /*등록지*/
+		           TO_NUMBER(TO_CHAR(I.WRITNG_DT,'YYYY'))||'년 '||TO_NUMBER(TO_CHAR(I.WRITNG_DT,'MM'))||'월 '||TO_NUMBER(TO_CHAR(I.WRITNG_DT,'DD'))||'일' AS WRITNG_DE,
+		           FN_OZ_DATETIME (I.ARRST_DT, 'K') AS ARRST_DT,  /*체포일시*/
+		           I.ARRST_PLACE,
+		           I.ARRESTER_CLSS || ' ' || I.ARRESTER_NM AS ARRESTER,
+		           FN_OZ_DATETIME (I.ATTRACT_DT, 'K') AS ATTRACT_DT,  /*인치일시*/
+		           I.ATTRACT_PLACE,
+		           FN_OZ_DATETIME (I.CNFNM_DT, 'K') AS CNFNM_DT,  /*구금일시*/
+		           I.CNFNM_PLACE,
+		           C.CRMNL_FACT,         /*범죄사실*/
+		           FN_EXMN_NM(C.CMPTNC_EXMN_CD) AS CMPTNC_EXMN_NM, /*관할검찰*/
+		           FN_RC_VIOLT_ROOT_NM(C.RC_NO) AS VIOLT_ROOT_NM,
+		           FN_USER_NM(I.WRITNG_ID) AS WRITNG_NM,
+		           I.EMRGNCY_ARRST_RESN AS ARRST_RESN_FACT
+		           , FN_USER_NM(C.CHARGER_ID) AS CHARGER_NM -- 담당자로 변경 by dgkim
+		        FROM INV_PRSCT_ARRST I
+		        LEFT JOIN RC_TMPR_TRGTER B ON I.RC_NO = B.RC_NO AND I.TRGTER_SN = B.TRGTER_SN AND B.USE_YN = 'Y'
+		        LEFT JOIN RC_TMPR C ON I.RC_NO = C.RC_NO
+		        WHERE I.USE_YN = 'Y'
+		          AND I.RC_NO 		= #P_RC_NO#
+		          AND I.TRGTER_SN 	= #P_TRGTER_SN#
+		          AND I.ARRST_SN 	= #P_ARRST_SN#
+		) A
+		RIGHT JOIN DUAL D ON 1=1
+	</select>
+
+	<select id="hwp.selectHwp00000000000000000034" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		SELECT A.*, FN_OZ_DATE(TO_CHAR(SYSDATE,'YYYYMMDD'),'') AS S_DATE FROM (
+		    SELECT  TO_CHAR(I.ARRST_SN) AS ARRST_SN,          /*긴급체포 일련번호*/
+		            B.TRGTER_NM,
+		            DGUARD.DECRYPT('TBL','ENC',B.TRGTER_RRN) AS TRGTER_RRN,
+		            B.ADRES_ADDR AS DWLSIT_ADDR,    /*주거지:DWLSIT_ZIP 주소:ADRES_ADDR*/
+		            TO_NUMBER(TO_CHAR(I.ARRST_DT,'YYYY'))||'. '||TO_NUMBER(TO_CHAR(I.ARRST_DT,'MM'))||'. '||TO_NUMBER(TO_CHAR(I.ARRST_DT,'DD'))||'. '||
+		            TO_NUMBER(TO_CHAR(I.ARRST_DT,'HH24'))||':'||TO_CHAR(I.ARRST_DT,'MI')  AS ARRST_DT,
+		            FN_RC_VIOLT_ROOT_NM(C.RC_NO) AS VIOLT_ROOT_NM,
+		            NVL(I.ATTRACT_PLACE,I.CNFNM_PLACE) AS ATTRACT_PLACE,
+		            FN_CD_NM (I.ARRST_TY_CD) AS ARRST_TY_NM,
+					FN_EXMN_CMPTNC_DC (C.CMPTNC_EXMN_CD) AS EXMN_CMPTNC_DC,
+		            I.ARRESTER_NM, 						/*체포자성명*/
+		            I.ARRESTER_PSITN,
+		            F.TEL_NO AS ARRESTER_TEL, 			/*체포자 연락처*/
+		            FN_USER_NM(C.CHARGER_ID) AS CHARGER_NM,
+		            FN_USER_NM(I.WRITNG_ID) AS WRITNG_NM,
+					'체포' AS ARRST_TYPE
+		        FROM INV_PRSCT_ARRST I
+		        LEFT JOIN RC_TMPR_TRGTER B ON I.RC_NO = B.RC_NO AND I.TRGTER_SN = B.TRGTER_SN AND B.USE_YN = 'Y'
+		        LEFT JOIN RC_TMPR C ON I.RC_NO = C.RC_NO
+		        LEFT JOIN CMN_USER F ON I.ARRESTER_ID = F.ESNTL_ID
+		        WHERE I.USE_YN = 'Y'
+		          AND I.RC_NO = #P_RC_NO#
+		          AND I.TRGTER_SN = #P_TRGTER_SN#
+		          AND I.ARRST_SN = #P_ARRST_SN#
+		) A
+		RIGHT JOIN DUAL D ON 1=1
+	</select>
+
+	<select id="hwp.selectHwp00000000000000000030" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		SELECT A.*, FN_OZ_DATE(TO_CHAR(SYSDATE,'YYYYMMDD'),'') AS S_DATE FROM (
+		    SELECT TO_CHAR(I.ARRST_SN) AS ARRST_SN,          /*긴급체포 일련번호*/
+		           B.TRGTER_NM,
+		           B.TRGTER_AGE AS TRGTER_AGE,     /*나이*/
+		           DGUARD.DECRYPT('TBL','ENC',B.TRGTER_RRN) AS TRGTER_RRN,
+		           FN_CD_NM(B.OCCP_CD) AS OCCP_NM, /*직업코드*/
+		           B.ADRES_ADDR AS DWLSIT_ADDR,    /*주거지:DWLSIT_ZIP 주소:ADRES_ADDR*/
+		           TO_NUMBER(TO_CHAR(I.WRITNG_DT,'YYYY'))||'년 '||TO_NUMBER(TO_CHAR(I.WRITNG_DT,'MM'))||'월 '||TO_NUMBER(TO_CHAR(I.WRITNG_DT,'DD'))||'일' AS WRITNG_DE,
+		           FN_OZ_DATETIME (I.ARRST_DT, 'K') AS ARRST_DT,  /*체포일시*/
+		           I.ARRST_PLACE,
+		           I.ARRESTER_NM, /*체포자성명*/
+		           DGUARD.DECRYPT('TBL','ENC',I.ARRESTER_RRN) AS ARRESTER_RRN,
+		           I.ARRESTER_DWLSIT,
+		           FN_OZ_DATETIME (I.ATTRACT_DT, 'K') AS ATTRACT_DT,  /*인치일시*/
+		           I.ATTRACT_PLACE,
+		           FN_OZ_DATETIME (I.CNFNM_DT, 'K') AS CNFNM_DT,  /*구금일시*/
+		           I.CNFNM_PLACE,
+		           FN_OZ_DATETIME (I.RSL_DT, 'K') AS RSL_DT,  /*석방일시*/
+		           I.RSL_RESN_CD || ' ' || I.RSL_RESN_ETC AS RSL_RESN,   /*석빙시유*/
+		           FN_RC_VIOLT_ROOT_NM (C.RC_NO) AS VIOLT_ROOT_NM,
+		           C.CRMNL_FACT,
+		           I.EMRGNCY_ARRST_RESN,  /*긴급체포 사유*/
+		           I.COUNSL_NM,
+		           FN_USER_NM(C.CHARGER_ID) AS CHARGER_NM,
+		           FN_USER_NM(I.WRITNG_ID) AS WRITNG_NM
+		        FROM INV_PRSCT_ARRST I
+		        LEFT JOIN RC_TMPR_TRGTER B ON I.RC_NO = B.RC_NO AND I.TRGTER_SN = B.TRGTER_SN AND B.USE_YN = 'Y'
+		        LEFT JOIN RC_TMPR C ON I.RC_NO = C.RC_NO
+		        WHERE I.USE_YN = 'Y'
+		          AND I.RC_NO = #P_RC_NO#
+		          AND I.TRGTER_SN = #P_TRGTER_SN#
+		          AND I.ARRST_SN = #P_ARRST_SN#
+		) A
+		RIGHT JOIN DUAL D ON 1=1
+	</select>
+
+	<select id="hwp.selectHwp00000000000000000029" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		SELECT A.*, FN_OZ_DATE(TO_CHAR(SYSDATE,'YYYYMMDD'),'') AS S_DATE FROM (
+		    SELECT TO_CHAR(I.ARRST_SN) AS ARRST_SN,          /*긴급체포 일련번호*/
+		           B.TRGTER_NM,
+		           B.TRGTER_AGE AS TRGTER_AGE,     /*나이*/
+		           DGUARD.DECRYPT('TBL','ENC',B.TRGTER_RRN) AS TRGTER_RRN,
+		           FN_CD_NM(B.OCCP_CD) AS OCCP_NM, /*직업코드*/
+		           B.ADRES_ADDR AS DWLSIT_ADDR,    /*주거지:DWLSIT_ZIP 주소:ADRES_ADDR*/
+		           TO_NUMBER(TO_CHAR(I.WRITNG_DT,'YYYY'))||'년 '||TO_NUMBER(TO_CHAR(I.WRITNG_DT,'MM'))||'월 '||TO_NUMBER(TO_CHAR(I.WRITNG_DT,'DD'))||'일' AS WRITNG_DE,
+		           FN_OZ_DATETIME (I.ARRST_DT, 'K') AS ARRST_DT,  /*체포일시*/
+		           I.ARRST_PLACE,
+		           I.ARRESTER_CLSS || ' ' || I.ARRESTER_NM AS ARRESTER,
+		           FN_OZ_DATETIME (I.ATTRACT_DT, 'K') AS ATTRACT_DT,  /*인치일시*/
+		           I.ATTRACT_PLACE,
+		           FN_OZ_DATETIME (I.CNFNM_DT, 'K') AS CNFNM_DT,  /*구금일시*/
+		           I.CNFNM_PLACE,
+		           /*구금을 집행한 자의 관직 및 성명*/
+		           FN_OZ_DATETIME (I.RSL_DT, 'K') AS RSL_DT,  /*석방일시*/
+		           /*삭방장소*/
+		           I.RSL_RESN_CD || ' ' || I.RSL_RESN_ETC AS RSL_RESN,   /*석빙시유*/
+		           /*석방한 자의 관직 및 성명*/
+		           FN_RC_VIOLT_ROOT_NM (C.RC_NO) AS VIOLT_ROOT_NM,
+		           C.CRMNL_FACT,
+		           I.EMRGNCY_ARRST_RESN,  /*범죄사실 및 긴급체포 사유*/
+		           I.COUNSL_NM,
+		           FN_USER_NM(C.CHARGER_ID) AS CHARGER_NM,
+		           FN_USER_NM(I.WRITNG_ID) AS WRITNG_NM
+		        FROM INV_PRSCT_ARRST I
+		        LEFT JOIN RC_TMPR_TRGTER B ON I.RC_NO = B.RC_NO AND I.TRGTER_SN = B.TRGTER_SN AND B.USE_YN = 'Y'
+		        LEFT JOIN RC_TMPR C ON I.RC_NO = C.RC_NO
+		        WHERE I.USE_YN = 'Y'
+		          AND I.RC_NO = #P_RC_NO#
+		          AND I.TRGTER_SN = #P_TRGTER_SN#
+		          AND I.ARRST_SN = #P_ARRST_SN#
+		) A
+		RIGHT JOIN DUAL D ON 1=1
+	</select>
+
+	<select id="hwp.selectHwp00000000000000000035" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		SELECT A.*, FN_OZ_DATE(TO_CHAR(SYSDATE,'YYYYMMDD'),'') AS S_DATE FROM (
+			SELECT  TO_CHAR(I.ARRST_SN) AS ARRST_SN,          /*긴급체포 일련번호*/
+					B.TRGTER_NM,
+					DGUARD.DECRYPT('TBL','ENC',B.TRGTER_RRN) AS TRGTER_RRN,
+					B.TRGTER_AGE AS TRGTER_AGE,
+					B.ADRES_ADDR AS DWLSIT_ADDR,    /*주거지:DWLSIT_ZIP 주소:ADRES_ADDR*/
+					TO_NUMBER(TO_CHAR(I.ARRST_DT,'YYYY'))||'. '||TO_NUMBER(TO_CHAR(I.ARRST_DT,'MM'))||'. '||TO_NUMBER(TO_CHAR(I.ARRST_DT,'DD'))||'. '
+					||TO_NUMBER(TO_CHAR(I.ARRST_DT,'HH24'))||':'||TO_CHAR(I.ARRST_DT,'MI') AS ARRST_DT,
+					I.ARRST_PLACE,
+					FN_CD_NM (I.ARRST_TY_CD) AS ARRST_TY_NM,
+				    FN_USER_NM(C.CHARGER_ID) AS CHARGER_NM,
+		            FN_USER_NM(I.WRITNG_ID) AS WRITNG_NM,
+					'체포' AS ARRST_TY
+				FROM INV_PRSCT_ARRST I
+				LEFT JOIN RC_TMPR_TRGTER B ON I.RC_NO = B.RC_NO AND I.TRGTER_SN = B.TRGTER_SN AND B.USE_YN = 'Y'
+				LEFT JOIN RC_TMPR C ON I.RC_NO = C.RC_NO
+				WHERE I.USE_YN = 'Y'
+				  AND I.RC_NO = #P_RC_NO#
+				  AND I.TRGTER_SN = #P_TRGTER_SN#
+				  AND I.ARRST_SN = #P_ARRST_SN#
+		) A
+		RIGHT JOIN DUAL D ON 1=1
+	</select>
+
+	<select id="hwp.selectHwp00000000000000000025" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		SELECT A.*, FN_OZ_DATE(TO_CHAR(SYSDATE,'YYYYMMDD'),'') AS S_DATE
+		FROM (
+            SELECT  FN_CNVR_NO(A.ZRLONG_REQST_NO) AS ZRLONG_REQST_NO,
+                    B.TRGTER_NM,
+                    DGUARD.DECRYPT('TBL','ENC',B.TRGTER_RRN) AS TRGTER_RRN,
+                    B.TRGTER_AGE AS TRGTER_AGE,
+                    B.ADRES_ADDR AS DWLSIT_ADDR,    /*주거지:DWLSIT_ZIP 주소:ADRES_ADDR*/
+                    FN_OZ_DATETIME (A.ARRST_DT,'') AS ARRST_DT,
+                    A.ARRST_PLACE,
+                    DECODE(A.ZRLONG_SE_CD,'00774','구속',DECODE(ARSTT_CD,'00778','긴급체포','00779','현행범인체포','체포')) AS ARRST_TY_NM,
+                    FN_USER_NM(A.WRITNG_ID) AS WRITNG_NM,
+                    FN_CD_NM(A.ZRLONG_SE_CD) AS ARRST_TY
+                    , (
+                    	SELECT
+                    		FN_USER_NM(CHARGER_ID)
+                    	FROM 
+                    		RC_TMPR
+                    	WHERE 
+                    		RC_NO = B.RC_NO
+                    ) AS CHARGER_NM -- 담당자로 변경 by dgkim
+    		FROM INV_ZRLONG_REQST A
+			LEFT JOIN RC_TMPR_TRGTER B ON A.RC_NO = B.RC_NO AND A.TRGTER_SN = B.TRGTER_SN
+			WHERE B.USE_YN = 'Y'
+			  AND A.RC_NO = #P_RC_NO#
+			  AND A.TRGTER_SN = #P_TRGTER_SN#
+			  AND A.ZRLONG_REQST_NO = #P_ZRLONG_REQST_NO#
+		) A
+		RIGHT JOIN DUAL D ON 1=1
+	</select>
+
+	<select id="hwp.selectHwp00000000000000000178" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		SELECT A.*,
+		 	FN_RCV_EXMN_NM (A.EXMN_NM) AS CMPTNC_EXMN_NM,
+		 	FN_OZ_DATE(TO_CHAR(SYSDATE,'YYYYMMDD'),'') AS S_DATE
+		FROM (
+			SELECT
+		        FN_CNVR_NO(D.DSCVRY_NO) AS DSCVRY_NO,
+		        FN_EXMN_NM(B.CMPTNC_EXMN_CD) AS EXMN_NM,
+		        A.TRGTER_NM,
+		        DGUARD.DECRYPT('TBL','ENC',A.TRGTER_RRN) AS TRGTER_RRN,
+		        A.TRGTER_AGE AS TRGTER_AGE,
+		        FN_CD_NM(A.OCCP_CD) OCCP_NM,
+		        A.ADRES_ADDR AS DWLSIT_ADDR,	/*주거지:DWLSIT_ZIP 주소:ADRES_ADDR*/
+		        FN_RC_VIOLT_ROOT_NM(D.RC_NO) AS VIOLT_ROOT_NM,
+		        TO_CHAR(TO_DATE(C.TRN_DE,'YYYYMMDD'),'YYYY-MM-DD') AS TRN_DE,
+		        FN_CNVR_NO(C.TRN_NO) AS TRN_NO,
+		        FN_CNVR_NO(B.CASE_NO) AS CASE_NO,
+		        D.DSCVRY_DC,
+		        D.DSCVRY_RESN,
+		        FN_USER_NM(B.CHARGER_ID) AS CHARGER_NM,
+		        FN_USER_NM(NVL(D.UPDT_ID,D.WRITNG_ID)) AS WRITNG_NM,
+		        F.PRSEC_NM
+		        , (SELECT FN_CD_NM(cu.CLSF_CD) FROM CMN_USER cu WHERE ESNTL_ID = B.WRITNG_ID) AS CLSF_NM -- 직급 by dgkim
+	        FROM INV_STPRSC_DSCVRY D
+	        LEFT JOIN INV_STPRSC F ON D.RC_NO = F.RC_NO AND D.TRGTER_SN = F.TRGTER_SN
+	        JOIN RC_TMPR_TRGTER A ON D.RC_NO = A.RC_NO AND D.TRGTER_SN = A.TRGTER_SN
+	        JOIN RC_TMPR B ON A.RC_NO = B.RC_NO AND B.USE_YN = 'Y'
+	        JOIN (
+	            SELECT
+	                CC.RC_NO,
+	                CC.TRGTER_SN,
+	                MAX(CC.TRN_NO) AS TRN_NO,
+	                MAX(D.TRN_DE) KEEP(DENSE_RANK FIRST ORDER BY CC.TRN_NO DESC) AS TRN_DE
+	            FROM TRN_VIOLT CC
+	            JOIN TRN_CASE D ON D.TRN_NO = CC.TRN_NO AND D.USE_YN = 'Y'
+	            JOIN RC_TMPR_TRGTER RT ON CC.RC_NO = RT.RC_NO AND CC.TRGTER_SN = RT.TRGTER_SN AND RT.USE_YN = 'Y'
+	            WHERE CC.USE_YN = 'Y'
+	              AND CC.RC_NO = #P_RC_NO#
+	              AND D.ED_YN = 'Y'                        	/*종결여부*/
+	              AND CC.TRN_OPINION_CD = '01367'        	/*피의자소재불명*/
+	              AND RT.TRGTER_SE_CD = '00697'
+	            GROUP BY CC.RC_NO, CC.TRGTER_SN
+	        ) C ON A.RC_NO = C.RC_NO AND A.TRGTER_SN = C.TRGTER_SN
+	        WHERE A.USE_YN = 'Y'
+	          AND D.RC_NO = #P_RC_NO#
+	          AND D.TRGTER_SN = #P_TRGTER_SN#
+	          AND D.DSCVRY_NO = #P_DSCVRY_NO#
+        ) A
+		RIGHT JOIN DUAL D ON 1=1
+	</select>
+
+	<select id="hwp.selectHwp00000000000000000181" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		SELECT A.*,
+             FN_RCV_EXMN_NM (A.EXMN_NM) AS CMPTNC_EXMN_NM,
+             FN_OZ_DATE(TO_CHAR(SYSDATE,'YYYYMMDD'),'') AS S_DATE,
+             FN_RC_TRGTER_NM (A.RC_NO, '00697') AS TRGTER_NM_S
+        FROM (
+            SELECT
+            	A.RC_NO,
+                FN_CNVR_NO(D.DSCVRY_NO) AS DSCVRY_NO,
+                FN_EXMN_NM(B.CMPTNC_EXMN_CD) AS EXMN_NM,
+                A.TRGTER_NM,
+                DGUARD.DECRYPT('TBL','ENC',A.TRGTER_RRN) AS TRGTER_RRN,
+                A.TRGTER_AGE AS TRGTER_AGE,
+                FN_CD_NM(A.OCCP_CD) OCCP_NM,
+                NVL(DGUARD.DECRYPT('TBL','ENC',NVL(A.HP_NO,A.OWNHOM_TEL)),A.WRC_TEL) AS TEL_NO,
+                A.ADRES_ADDR AS DWLSIT_ADDR,	/*주거지:DWLSIT_ZIP 주소:ADRES_ADDR*/
+                FN_RC_VIOLT_ROOT_NM(D.RC_NO) AS VIOLT_ROOT_NM,
+                TO_CHAR(TO_DATE(C.TRN_DE,'YYYYMMDD'),'YYYY-MM-DD') AS TRN_DE,
+                FN_CNVR_NO(C.TRN_NO) AS TRN_NO,
+                FN_CNVR_NO(B.CASE_NO) AS CASE_NO,
+                D.DSCVRY_DC,
+                D.DSCVRY_RESN,
+                FN_USER_NM(B.CHARGER_ID) AS CHARGER_NM,
+                FN_USER_NM(NVL(D.UPDT_ID,D.WRITNG_ID)) AS WRITNG_NM,
+                F.PRSEC_NM,
+                SUBSTR(F.EXMN_CASE_NO, 1, 4) AS EXMN_CASE_NO_1,
+                TO_CHAR(TO_NUMBER(SUBSTR(F.EXMN_CASE_NO , INSTR(F.EXMN_CASE_NO, '-')+1))) AS EXMN_CASE_NO_2
+                , (SELECT FN_CD_NM(cu.CLSF_CD) FROM CMN_USER cu WHERE ESNTL_ID = B.WRITNG_ID) AS CLSF_NM -- 직급 by dgkim
+            FROM INV_REFE_DSCVRY D
+            LEFT JOIN INV_REFESTPGE F ON D.RC_NO = F.RC_NO AND D.TRGTER_SN = F.TRGTER_SN
+            JOIN RC_TMPR_TRGTER A ON D.RC_NO = A.RC_NO AND D.TRGTER_SN = A.TRGTER_SN
+            JOIN RC_TMPR B ON A.RC_NO = B.RC_NO AND B.USE_YN = 'Y'
+            JOIN (
+                SELECT
+                    CC.RC_NO,
+                    MAX(CC.TRN_NO) AS TRN_NO,
+                    MAX(D.TRN_DE) KEEP(DENSE_RANK FIRST ORDER BY CC.TRN_NO DESC) AS TRN_DE
+                FROM TRN_VIOLT CC
+                JOIN TRN_CASE D ON D.TRN_NO = CC.TRN_NO AND D.USE_YN = 'Y'
+                JOIN RC_TMPR_TRGTER RT ON CC.RC_NO = RT.RC_NO AND CC.TRGTER_SN = RT.TRGTER_SN AND RT.USE_YN = 'Y'
+                WHERE CC.USE_YN = 'Y'
+                  AND CC.RC_NO = #P_RC_NO#
+                  AND D.ED_YN = 'Y'                          /*종결여부*/
+                  AND CC.TRN_OPINION_CD = '01368'            /*참고인소재불명*/
+                GROUP BY CC.RC_NO, CC.TRGTER_SN
+            ) C ON A.RC_NO = C.RC_NO
+            WHERE A.USE_YN = 'Y'
+              AND D.RC_NO = #P_RC_NO#
+              AND D.TRGTER_SN = #P_TRGTER_SN#
+              AND D.DSCVRY_NO = #P_DSCVRY_NO#
+        ) A
+        RIGHT JOIN DUAL D ON 1=1
+	</select>
+
+	<select id="hwp.selectHwp00000000000000000036" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		SELECT
+	    	A.*,
+		    FN_OZ_DATE(TO_CHAR(SYSDATE,'YYYYMMDD'),'') AS S_DATE,
+		    CASE WHEN NEED_CNSDR_4 IS NOT NULL THEN '※ 구체적 내용은 별지와 같음' END AS NEED_CNSDR_ETC,
+		    FN_RCV_EXMN_NM (A.EXMN_NM) AS CMPTNC_EXMN_NM
+		FROM (
+		    SELECT C.CASE_NO,                                       /*사건번호*/
+	           FN_CNVR_NO(I.ZRLONG_REQST_NO) AS ZRLONG_REQST_NO,    /*영장신청번호*/
+	           FN_EXMN_NM(C.CMPTNC_EXMN_CD) AS EXMN_NM,
+	           FN_RC_VIOLT_ROOT_NM(I.RC_NO) AS VIOLT_ROOT_NM,
+	           I.IMPR_PLACE,
+	           FN_OZ_DATE(TO_CHAR(I.VALID_DT,'YYYYMMDD'),'') AS VALID_DT,
+	           FN_NEED_CNSDR (I.RC_NO, I.TRGTER_SN, I.ZRLONG_REQST_NO, '00780') AS NEED_CNSDR_1,  /*필요고려사항*/
+	           FN_NEED_CNSDR (I.RC_NO, I.TRGTER_SN, I.ZRLONG_REQST_NO, '00781') AS NEED_CNSDR_2,
+	           FN_NEED_CNSDR (I.RC_NO, I.TRGTER_SN, I.ZRLONG_REQST_NO, '00782') AS NEED_CNSDR_3,
+	           FN_NEED_CNSDR (I.RC_NO, I.TRGTER_SN, I.ZRLONG_REQST_NO, '00783') AS NEED_CNSDR_4,
+	           B.TRGTER_NM,
+	           DGUARD.DECRYPT('TBL','ENC',B.TRGTER_RRN) || '  ( '||B.TRGTER_AGE||'세 )' AS TRGTER_RRN,
+	           B.ADRES_ADDR AS DWLSIT_ADDR,
+	           B.ADRES_ADDR,					/*주거지:DWLSIT_ZIP 주소:ADRES_ADDR*/
+	           FN_CD_NM(B.OCCP_CD) AS OCCP_NM,
+	           COUNSL_NM,
+	           FN_DEPT_NM(WRITNG_DEPT_CD) AS DEPT,
+	           I.REREQST_RESN,
+	           FN_USER_NM(C.CHARGER_ID) AS CHARGER_NM,
+	           FN_USER_NM(I.WRITNG_ID) AS WRITNG_NM,
+	           C.CRMNL_FACT,
+	           I.IMPR_RESN
+	           , (SELECT FN_CD_NM(cu.CLSF_CD) FROM CMN_USER cu WHERE ESNTL_ID = C.WRITNG_ID) AS CLSF_NM -- 직급 by dgkim
+	        FROM INV_ZRLONG_REQST I
+	        LEFT JOIN RC_TMPR_TRGTER B ON I.RC_NO = B.RC_NO AND I.TRGTER_SN = B.TRGTER_SN AND B.USE_YN = 'Y'
+	        LEFT JOIN RC_TMPR C ON I.RC_NO = C.RC_NO
+	        WHERE I.ZRLONG_REQST_YN = 'Y'
+	          AND I.RC_NO = #P_RC_NO#
+	          AND I.TRGTER_SN = #P_TRGTER_SN#
+	          AND I.ZRLONG_REQST_NO = #P_ZRLONG_REQST_NO#
+		) A
+		RIGHT JOIN DUAL ON 1=1
+	</select>
+
+	<select id="hwp.selectHwp00000000000000000037" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		SELECT
+	    	A.*,
+		    FN_OZ_DATE(TO_CHAR(SYSDATE,'YYYYMMDD'),'') AS S_DATE,
+		    CASE WHEN NEED_CNSDR_4 IS NOT NULL THEN '※ 구체적 내용은 별지와 같음' END AS NEED_CNSDR_ETC,
+		    FN_RCV_EXMN_NM (A.EXMN_NM) AS CMPTNC_EXMN_NM
+		FROM (
+		    SELECT C.CASE_NO,                                       /*사건번호*/
+	           FN_CNVR_NO(I.ZRLONG_REQST_NO) AS ZRLONG_REQST_NO,    /*영장신청번호*/
+	           FN_EXMN_NM(C.CMPTNC_EXMN_CD) AS EXMN_NM,
+	           FN_RC_VIOLT_ROOT_NM(I.RC_NO) AS VIOLT_ROOT_NM,
+	           I.IMPR_PLACE,
+	           FN_OZ_DATE(TO_CHAR(I.VALID_DT,'YYYYMMDD'),'') AS VALID_DT,
+	           FN_NEED_CNSDR (I.RC_NO, I.TRGTER_SN, I.ZRLONG_REQST_NO, '00780') AS NEED_CNSDR_1,  /*필요고려사항*/
+	           FN_NEED_CNSDR (I.RC_NO, I.TRGTER_SN, I.ZRLONG_REQST_NO, '00781') AS NEED_CNSDR_2,
+	           FN_NEED_CNSDR (I.RC_NO, I.TRGTER_SN, I.ZRLONG_REQST_NO, '00782') AS NEED_CNSDR_3,
+	           FN_NEED_CNSDR (I.RC_NO, I.TRGTER_SN, I.ZRLONG_REQST_NO, '00783') AS NEED_CNSDR_4,
+	           B.TRGTER_NM,
+	           DGUARD.DECRYPT('TBL','ENC',B.TRGTER_RRN) || '  ( '||B.TRGTER_AGE||'세 )' AS TRGTER_RRN,
+	           B.ADRES_ADDR AS DWLSIT_ADDR,
+	           B.ADRES_ADDR,					/*주거지:DWLSIT_ZIP 주소:ADRES_ADDR*/
+	           FN_CD_NM(B.OCCP_CD) AS OCCP_NM,
+	           COUNSL_NM,
+	           FN_DEPT_NM(WRITNG_DEPT_CD) AS DEPT,
+	           I.REREQST_RESN,
+	           FN_USER_NM(C.CHARGER_ID) AS CHARGER_NM,
+	           FN_USER_NM(I.WRITNG_ID) AS WRITNG_NM,
+	           C.CRMNL_FACT,
+	           I.IMPR_RESN
+	           , (SELECT FN_CD_NM(cu.CLSF_CD) FROM CMN_USER cu WHERE ESNTL_ID = C.WRITNG_ID) AS CLSF_NM -- 직급 by dgkim
+	        FROM INV_ZRLONG_REQST I
+	        LEFT JOIN RC_TMPR_TRGTER B ON I.RC_NO = B.RC_NO AND I.TRGTER_SN = B.TRGTER_SN AND B.USE_YN = 'Y'
+	        LEFT JOIN RC_TMPR C ON I.RC_NO = C.RC_NO
+	        WHERE I.ZRLONG_REQST_YN = 'Y'
+	          AND I.RC_NO = #P_RC_NO#
+	          AND I.TRGTER_SN = #P_TRGTER_SN#
+	          AND I.ZRLONG_REQST_NO = #P_ZRLONG_REQST_NO#
+		) A
+		RIGHT JOIN DUAL ON 1=1
+	</select>
+
+	<select id="hwp.selectHwp00000000000000000023" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		SELECT
+			A.*,
+			FN_OZ_DATE(TO_CHAR(SYSDATE,'YYYYMMDD'),'') AS S_DATE,
+			FN_RCV_EXMN_NM (A.EXMN_NM) AS CMPTNC_EXMN_NM
+		FROM (
+			SELECT
+			 FN_CNVR_NO(A.ZRLONG_REQST_NO) AS ZRLONG_REQST_NO,
+			 B.TRGTER_NM,
+			 DGUARD.DECRYPT('TBL','ENC',B.TRGTER_RRN) || '  ( '||B.TRGTER_AGE||'세 )' AS TRGTER_RRN,
+			 FN_CD_NM(B.OCCP_CD) AS OCCP_NM,
+			 B.ADRES_ADDR AS DWLSIT_ADDR,		/*주거지:DWLSIT_ZIP 주소:ADRES_ADDR*/
+			 A.ATTRACT_PLACE,  	/*인치장소*/
+		     A.CNFNM_PLACE,		/*구금장소*/
+		     A.COUNSL_NM,
+			 FN_OZ_DATE(TO_CHAR(A.VALID_DT,'YYYYMMDD'),'') AS VALID_DT,
+			 FN_RC_VIOLT_ROOT_NM (A.RC_NO) AS VIOLT_ROOT_NM,
+		     C.CRMNL_FACT,  	/*범죄사실*/
+		     A.IMPR_RESN,
+		     FN_EXMN_NM(C.CMPTNC_EXMN_CD) AS EXMN_NM,
+		     A.REREQST_RESN,			/*재신청 사유*/
+			 FN_USER_NM(C.CHARGER_ID) AS CHARGER_NM,
+		     FN_USER_NM(A.WRITNG_ID) AS WRITNG_NM
+			, (SELECT FN_CD_NM(cu.CLSF_CD) FROM CMN_USER cu WHERE ESNTL_ID = C.WRITNG_ID) AS CLSF_NM -- 직급 by dgkim
+			FROM INV_ZRLONG_REQST A
+			LEFT JOIN RC_TMPR_TRGTER B ON A.RC_NO = B.RC_NO AND A.TRGTER_SN = B.TRGTER_SN
+		    LEFT JOIN RC_TMPR C ON A.RC_NO = C.RC_NO
+			WHERE B.USE_YN = 'Y'
+			  AND A.RC_NO = #P_RC_NO#
+			  AND A.TRGTER_SN = #P_TRGTER_SN#
+			  AND A.ZRLONG_REQST_NO = #P_ZRLONG_REQST_NO#
+		) A
+		RIGHT JOIN DUAL D ON 1=1
+	</select>
+
+	<select id="hwp.selectHwp00000000000000000183" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		SELECT
+            A.*,
+            FN_OZ_DATE(TO_CHAR(SYSDATE,'YYYYMMDD'),'') AS S_DATE,
+            FN_RCV_EXMN_NM (A.EXMN_NM) AS CMPTNC_EXMN_NM
+        FROM (
+            SELECT
+               FN_CNVR_NO(I.ZRLONG_REQST_NO) AS ZRLONG_REQST_NO,    /*영장신청번호*/
+               FN_EXMN_NM(C.CMPTNC_EXMN_CD) AS EXMN_NM,
+               FN_RC_VIOLT_ROOT_NM(I.RC_NO) AS VIOLT_ROOT_NM,
+               FN_CD_NM(I.ZRLONG_SE_CD) AS ZRLONG_SE_NM,
+               FN_OZ_DATE (TO_CHAR(R.ISUE_DT,'YYYYMMDD'),'K') AS ISUE_DT,	/*발부일시*/
+               FN_USER_NM(NVL(I.UPDT_ID,I.WRITNG_ID)) AS WRITNG_NM,
+               FN_USER_NM(NVL(R.UPDT_ID,R.WRITNG_ID)) AS R_WRITNG_NM,
+               B.TRGTER_NM,
+               R.EXCUT_INCPCTY_ETC AS  EXCUT_INCPCTY
+               , (SELECT FN_CD_NM(cu.CLSF_CD) FROM CMN_USER cu WHERE ESNTL_ID = C.WRITNG_ID) AS CLSF_NM -- 직급 by dgkim
+               , FN_USER_NM(C.CHARGER_ID) AS CHARGER_NM -- 담당자로 변경 by dgkim
+            FROM INV_ZRLONG_REQST I
+            LEFT JOIN INV_ZRLONG_RESULT R ON I.ZRLONG_SE_CD = R.ZRLONG_SE_CD AND I.ZRLONG_NO = R.ZRLONG_NO
+            LEFT JOIN RC_TMPR_TRGTER B ON I.RC_NO = B.RC_NO AND I.TRGTER_SN = B.TRGTER_SN AND B.USE_YN = 'Y'
+            LEFT JOIN RC_TMPR C ON I.RC_NO = C.RC_NO
+            WHERE I.ZRLONG_REQST_YN = 'Y'
+              AND I.RC_NO 			= #P_RC_NO#
+              AND I.TRGTER_SN 		= #P_TRGTER_SN#
+              AND I.ZRLONG_REQST_NO = #P_ZRLONG_REQST_NO#
+        ) A
+        RIGHT JOIN DUAL ON 1=1
+	</select>
+
+	<select id="hwp.selectHwp00000000000000000184" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		SELECT
+            A.*,
+            FN_OZ_DATE(TO_CHAR(SYSDATE,'YYYYMMDD'),'') AS S_DATE,
+            FN_RCV_EXMN_NM (A.EXMN_NM) AS CMPTNC_EXMN_NM
+        FROM (
+            SELECT
+               FN_CNVR_NO(I.ZRLONG_REQST_NO) AS ZRLONG_REQST_NO,    /*영장신청번호*/
+               FN_EXMN_NM(C.CMPTNC_EXMN_CD) AS EXMN_NM,
+               FN_RC_VIOLT_ROOT_NM(I.RC_NO) AS VIOLT_ROOT_NM,
+               '압수수색검증영장' AS ZRLONG_SE_NM,
+               (SELECT FN_OZ_DATE (TO_CHAR(MAX(R.ISUE_DT),'YYYYMMDD'),'K') FROM INV_SZURE_RESULT R WHERE R.RC_NO = I.RC_NO AND R.ZRLONG_REQST_NO = I.ZRLONG_REQST_NO) AS ISUE_DT,
+               FN_USER_NM(NVL(I.UPDT_ID,I.WRITNG_ID)) AS WRITNG_NM,
+               FN_USER_NM((SELECT MAX(NVL(R.UPDT_ID,R.WRITNG_ID)) FROM INV_SZURE_RESULT R WHERE R.RC_NO = I.RC_NO AND R.ZRLONG_REQST_NO = I.ZRLONG_REQST_NO)) AS R_WRITNG_NM,
+               FN_SZURE_APPLCNT(I.RC_NO, I.ZRLONG_REQST_NO) AS TRGTER_NM,
+               (SELECT MAX(FN_CD_NM(R.EXCUT_INCPCTY_CD) || ' ' || R.EXCUT_INCPCTY_ETC) FROM INV_SZURE_RESULT R WHERE R.RC_NO = I.RC_NO AND R.ZRLONG_REQST_NO = I.ZRLONG_REQST_NO) AS EXCUT_INCPCTY
+            	, (SELECT FN_CD_NM(cu.CLSF_CD) FROM CMN_USER cu WHERE ESNTL_ID = C.WRITNG_ID) AS CLSF_NM -- 직급 by dgkim
+            FROM INV_SZURE_REQST I
+            LEFT JOIN RC_TMPR C ON I.RC_NO = C.RC_NO
+            WHERE I.ZRLONG_REQST_YN = 'Y'
+              AND I.RC_NO           = #P_RC_NO#
+              AND I.ZRLONG_REQST_NO = #P_ZRLONG_REQST_NO#
+        ) A
+        RIGHT JOIN DUAL ON 1=1
+	</select>
+
+	<select id="hwp.selectHwp00000000000000000047" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		SELECT
+		    A.*
+		FROM (
+		    SELECT
+		        FN_SZURE_APPLCNT(Q.RC_NO, Q.ZRLONG_REQST_NO) AS TRGTER_NMS,
+		        FN_RC_VIOLT_ROOT_NM(Q.RC_NO) AS VIOLT_ROOT_NM,
+		        FN_OZ_DATE (TO_CHAR(NVL((
+	            	SELECT MAX(R.EXCUT_DT) FROM INV_SZURE_RESULT R
+	            	WHERE R.RC_NO = Q.RC_NO AND R.ZRLONG_REQST_NO = Q.ZRLONG_REQST_NO
+	            ), Q.EXCUT_DT),'YYYYMMDD'),'K') AS EXCUT_DT,
+		        FN_USER_NM(P.CHARGER_ID) AS CHARGER_NM,
+		        FN_USER_NM(NVL(Q.WRITNG_ID,Q.UPDT_ID)) AS WRITNG_NM
+		    FROM INV_SZURE_REQST Q
+		    LEFT JOIN RC_TMPR P ON Q.RC_NO = P.RC_NO
+		    WHERE Q.ZRLONG_REQST_YN = 'Y'
+		      AND Q.RC_NO = #P_RC_NO#
+		      AND Q.ZRLONG_REQST_NO = #P_ZRLONG_REQST_NO#
+		) A
+		RIGHT JOIN DUAL ON 1=1
+	</select>
+
+	<select id="hwp.selectHwp00000000000000000046" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		SELECT
+		    A.*,
+		    FN_OZ_DATE(TO_CHAR(SYSDATE,'YYYYMMDD'),'') AS S_DATE
+		FROM
+		(
+		    SELECT
+		        FN_SZURE_APPLCNT(Q.RC_NO, Q.ZRLONG_REQST_NO) AS TRGTER_NMS,
+		        FN_RC_VIOLT_ROOT_NM(Q.RC_NO) AS VIOLT_ROOT_NM,
+		        Q.SRCHNG_TRGET,        /*수색대상*/
+		        FN_OZ_DATE (TO_CHAR(NVL((
+		            SELECT MAX(R.EXCUT_DT) FROM INV_SZURE_RESULT R
+		            WHERE R.RC_NO = Q.RC_NO AND R.ZRLONG_REQST_NO = Q.ZRLONG_REQST_NO
+		            ), Q.EXCUT_DT),'YYYYMMDD'),'K') AS EXCUT_DT,
+		        FN_USER_NM(Q.WRITNG_ID) AS WRITNG_NM,
+		        FN_USER_NM(P.CHARGER_ID) AS CHARGER_NM
+		    FROM INV_SZURE_REQST Q
+		    LEFT JOIN RC_TMPR P ON Q.RC_NO = P.RC_NO
+		    WHERE Q.ZRLONG_REQST_YN = 'Y'
+		      AND Q.RC_NO = #P_RC_NO#
+		      AND Q.ZRLONG_REQST_NO = #P_ZRLONG_REQST_NO#
+		) A
+		RIGHT OUTER JOIN DUAL ON 1=1
+	</select>
+
+	<select id="hwp.selectHwp00000000000000000186" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		SELECT
+		    A.*,
+		    FN_OZ_DATE(TO_CHAR(SYSDATE,'YYYYMMDD'),'') AS S_DATE,
+		    FN_OZ_DATE (TO_CHAR(A.EXCUT_DT_B,'YYYYMMDD'),'') || ' '
+		    || TO_NUMBER(NVL(TO_CHAR(A.EXCUT_DT_B,'HH24'),TO_CHAR(SYSDATE,'HH24')))
+		    ||':'||NVL(TO_CHAR(A.EXCUT_DT_B,'MI'),TO_CHAR(SYSDATE,'MI')) AS EXCUT_DT
+		FROM
+		(
+		    SELECT
+		        FN_SZURE_APPLCNT(Q.RC_NO, Q.ZRLONG_REQST_NO) AS TRGTER_NMS,
+		        FN_RC_VIOLT_ROOT_NM(Q.RC_NO) AS VIOLT_ROOT_NM,
+		        Q.SRCHNG_TRGET,        /*수색대상*/
+		        TO_CHAR(NVL((
+		            SELECT MAX(R.EXCUT_DT) FROM INV_SZURE_RESULT R
+		            WHERE R.RC_NO = Q.RC_NO AND R.ZRLONG_REQST_NO = Q.ZRLONG_REQST_NO
+		            ), Q.EXCUT_DT),'YYYYMMDD') AS EXCUT_DT_B,
+		        FN_USER_NM(Q.WRITNG_ID) AS WRITNG_NM,
+		        FN_USER_NM(P.CHARGER_ID) AS CHARGER_NM
+		    FROM INV_SZURE_REQST Q
+		    LEFT JOIN RC_TMPR P ON Q.RC_NO = P.RC_NO
+		    WHERE Q.ZRLONG_REQST_YN = 'Y'
+		      AND Q.RC_NO = #P_RC_NO#
+		      AND Q.ZRLONG_REQST_NO = #P_ZRLONG_REQST_NO#
+		) A
+		RIGHT OUTER JOIN DUAL ON 1=1
+	</select>
+
+	<select id="hwp.selectHwp00000000000000000059" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		SELECT A.*, FN_OZ_DATE(TO_CHAR(SYSDATE,'YYYYMMDD'),'') AS S_DATE FROM (
+		    SELECT
+		        FN_CNVR_NO(A.PRMISN_PROGRS_NO) AS PRMISN_PROGRS_NO,
+		        B.TRGTER_NM,
+		        DGUARD.DECRYPT('TBL','ENC',B.TRGTER_RRN) AS TRGTER_RRN,
+		        B.ADRES_ADDR AS DWLSIT_ADDR,		/*주거지:DWLSIT_ZIP 주소:ADRES_ADDR*/
+		        FN_CD_NM(B.OCCP_CD) AS OCCP_NM,
+		        A.COMMN_BSNM,
+		        A.REQUST_RESN,
+		        A.SBSCRBER_RELATE,
+		        A.DTA_SCOPE,
+		        A.RERQEST_RESN,
+		        A.DSMSSL_RESN,
+		        FN_EXMN_NM(CMPTNC_EXMN_CD) AS CMPTNC_EXMN_NM,
+		        FN_EXMN_CMPTNC_DC (CMPTNC_EXMN_CD)  AS EXMN_CMPTNC_DC,
+		        UR.USER_NM AS CHARGER_NM,
+		        UR.TEL_NO,
+		        UR.FAX_NO AS FAX_NO,
+		        FN_USER_NM(A.WRITNG_ID) AS WRITNG_NM
+		        , (SELECT FN_CD_NM(cu.CLSF_CD) FROM CMN_USER cu WHERE ESNTL_ID = B.WRITNG_ID) AS CLSF_NM -- 직급 by dgkim
+		    FROM INV_COMMN_PRMISN A
+		    LEFT JOIN RC_TMPR_TRGTER B ON A.RC_NO = B.RC_NO AND A.TRGTER_SN = B.TRGTER_SN
+		    LEFT JOIN RC_TMPR C ON A.RC_NO = C.RC_NO
+		    LEFT JOIN CMN_USER UR ON C.CHARGER_ID = UR.ESNTL_ID
+		    WHERE A.USE_YN = 'Y'
+		      AND A.PRMISN_PROGRS_NO = #P_PRMISN_PROGRS_NO#
+		) A
+		RIGHT JOIN DUAL D ON 1=1
+	</select>
+
+	<select id="hwp.selectHwp00000000000000000060" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		SELECT A.*, FN_OZ_DATE(TO_CHAR(SYSDATE,'YYYYMMDD'),'') AS S_DATE FROM (
+		    SELECT
+		        FN_CNVR_NO(A.PRMISN_PROGRS_NO) AS PRMISN_PROGRS_NO,
+		        B.TRGTER_NM,
+		        DGUARD.DECRYPT('TBL','ENC',B.TRGTER_RRN) AS TRGTER_RRN,
+		        B.ADRES_ADDR AS DWLSIT_ADDR,			/*주거지:DWLSIT_ZIP 주소:ADRES_ADDR*/
+		        FN_CD_NM(B.OCCP_CD) AS OCCP_NM,
+		        A.COMMN_BSNM,
+		        A.REQUST_RESN,
+		        A.SBSCRBER_RELATE,
+		        A.DTA_SCOPE,
+		        A.RERQEST_RESN,
+		        A.DSMSSL_RESN,
+		        FN_EXMN_NM(CMPTNC_EXMN_CD) AS CMPTNC_EXMN_NM,
+		        FN_EXMN_CMPTNC_DC (CMPTNC_EXMN_CD)  AS EXMN_CMPTNC_DC,
+		        UR.USER_NM AS CHARGER_NM,
+		        UR.TEL_NO,
+		        FN_USER_NM(A.WRITNG_ID) AS WRITNG_NM,
+		        UR.FAX_NO AS FAX_NO
+		        , (SELECT FN_CD_NM(cu.CLSF_CD) FROM CMN_USER cu WHERE ESNTL_ID = B.WRITNG_ID) AS CLSF_NM -- 직급 by dgkim
+		    FROM INV_COMMN_PRMISN A
+		    LEFT JOIN RC_TMPR_TRGTER B ON A.RC_NO = B.RC_NO AND A.TRGTER_SN = B.TRGTER_SN
+		    LEFT JOIN RC_TMPR C ON A.RC_NO = C.RC_NO
+		    LEFT JOIN CMN_USER UR ON C.CHARGER_ID = UR.ESNTL_ID
+		    WHERE A.USE_YN = 'Y'
+		      AND A.PRMISN_PROGRS_NO = #P_PRMISN_PROGRS_NO#
+		) A
+		RIGHT JOIN DUAL D ON 1=1
+	</select>
+
+	<select id="hwp.selectHwp00000000000000000062" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		SELECT
+			FN_CNVR_NO(X.SUGEST_NO) AS SUGEST_NO,
+			X.RC_NO,
+			FN_CNVR_NO((SELECT RT.CASE_NO FROM RC_TMPR RT WHERE RT.RC_NO = X.RC_NO)) AS CASE_NO,
+			(SELECT FN_OZ_DATE2(TO_CHAR(RT.RC_DT,'YYYYMMDD'),null) FROM RC_TMPR RT WHERE RT.RC_NO = X.RC_NO) AS RC_DT,
+			X.TRGTER_NM || CASE WHEN REGEXP_INSTR(SUBSTR(X.TRGTER_NM,-1,1),'[0-9]') > 0 THEN '명' END AS TRGTER_NM,
+			X.TRGTER_RRN,
+			X.DWLSIT_ADDR,
+			FN_CD_NM(X.SUGEST_TY_CD) AS SUGEST_TY_NM,
+			TO_CHAR(TO_DATE(X.SUGEST_DE,'YYYYMMDD'),'YYYY. MM. DD') AS SUGEST_DE,
+			TO_CHAR(TO_DATE(X.CMND_DE,'YYYYMMDD'),'YYYY. MM. DD') AS CMND_DE,
+			FN_RCV_EXMN_NM((SELECT FN_EXMN_NM(IP.CMPTNC_EXMN_CD) FROM RC_TMPR IP WHERE IP.RC_NO = X.RC_NO)) AS CMPTNC_EXMN_NM,
+			FN_RC_VIOLT_ROOT_NM(X.RC_NO) AS VIOLT_NM,
+			FN_USER_NM(WRITNG_ID) AS OZ_NM,
+			FN_OZ_DATE(null, null) AS OZ_DT
+			, (SELECT FN_CD_NM(cu.CLSF_CD) FROM CMN_USER cu WHERE ESNTL_ID = X.WRITNG_ID) AS CLSF_NM -- 직급 by dgkim
+		FROM
+		(
+		    SELECT
+			    MAX(S.SUGEST_NO) AS SUGEST_NO,
+			    MAX(S.RC_NO) AS RC_NO,
+			    MAX(S.SUGEST_TY_CD) AS SUGEST_TY_CD,
+			    MAX(S.SUGEST_DE) AS SUGEST_DE,
+			    MAX(S.CMND_DE) AS CMND_DE,
+			    MAX(PT.TRGTER_NM) KEEP(DENSE_RANK FIRST ORDER BY PT.SORT_ORDR,PT.TRGTER_SN ASC) || (CASE WHEN COUNT(DISTINCT(PT.TRGTER_SN)) > 1 THEN ' 외 '||(COUNT(DISTINCT(PT.TRGTER_SN))-1) END) AS TRGTER_NM,
+			    MAX(DGUARD.DECRYPT('TBL','ENC',PT.TRGTER_RRN)) KEEP(DENSE_RANK FIRST ORDER BY PT.SORT_ORDR,PT.TRGTER_SN ASC) AS TRGTER_RRN,
+			    MAX(PT.ADRES_ADDR) KEEP(DENSE_RANK FIRST ORDER BY PT.SORT_ORDR,PT.TRGTER_SN ASC) AS DWLSIT_ADDR,	/*주거지:DWLSIT_ZIP 주소:ADRES_ADDR*/
+			    MAX(S.WRITNG_ID) AS WRITNG_ID
+		    FROM INV_SUGEST S
+		    LEFT JOIN RC_TMPR_TRGTER PT ON S.RC_NO = PT.RC_NO AND PT.TRGTER_SE_CD IN (SELECT CC.ESNTL_CD FROM CMN_CD CC WHERE CC.UPPER_CD = '00102'  AND CC.CD_DC = 'suspct-Group')
+		    WHERE S.SUGEST_NO = #P_SUGEST_NO# AND S.USE_YN = 'Y'
+		) X
+	</select>
+
+	<select id="hwp.selectHwp00000000000000000041" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		SELECT
+			A.*, FN_OZ_DATE(null, null) AS OZ_DT,
+			FN_RCV_EXMN_NM (A.EXMN_NM) AS CMPTNC_EXMN_NM,
+			CASE WHEN A.ARRST_DATETIME IS NOT NULL THEN A.ARRST_DATETIME || '경' END AS ARRST_DT
+		FROM
+		(
+		    SELECT
+		    FN_CNVR_NO(S.SUGEST_NO) AS SUGEST_NO,
+		    S.RC_NO,
+		    S.TRGTER_SN,
+		    S.ARRST_SN,
+		    FN_CD_NM(S.SUGEST_TY_CD) AS SUGEST_TY_NM,
+		    TO_CHAR(TO_DATE(S.SUGEST_DE,'YYYYMMDD'),'YYYY. MM. DD') AS SUGEST_DE,
+		    TO_CHAR(TO_DATE(S.CMND_DE,'YYYYMMDD'),'YYYY. MM. DD') AS CMND_DE,
+		    (SELECT FN_EXMN_NM(IP.CMPTNC_EXMN_CD) FROM RC_TMPR IP WHERE IP.RC_NO = S.RC_NO) AS EXMN_NM,
+		    FN_RC_VIOLT_ROOT_NM(S.RC_NO) AS VIOLT_NM,
+		    PT.TRGTER_NM,
+		    PT.TRGTER_ENG_NM,
+		    FN_CD_NM(PA.ARRST_TY_CD) AS ARRST_TY_NM,
+		    FN_OZ_DATETIME (PA.ARRST_DT,'') AS ARRST_DATETIME,
+		    FN_CD_NM(PA.RSL_RESN_CD) AS RSL_RESN_NM,
+		    PA.RSL_RESN_ETC,
+		    TO_CHAR(PA.RSL_DT,'YYYY"년" MM"월" DD"일" HH24"시" MI"분"') AS RSL_DT,
+		    FN_USER_NM(S.WRITNG_ID) AS OZ_NM
+		    , (SELECT FN_CD_NM(cu.CLSF_CD) FROM CMN_USER cu WHERE ESNTL_ID = S.WRITNG_ID) AS CLSF_NM -- 직급 by dgkim
+		    FROM INV_SUGEST S
+		    INNER JOIN RC_TMPR_TRGTER PT ON S.RC_NO = PT.RC_NO AND S.TRGTER_SN = PT.TRGTER_SN
+		    	AND PT.TRGTER_SE_CD IN (
+		    		SELECT CC.ESNTL_CD FROM CMN_CD CC WHERE CC.UPPER_CD = '00102'  AND CC.CD_DC = 'suspct-Group'
+		    	)
+		    INNER JOIN INV_PRSCT_ARRST PA ON S.RC_NO = PA.RC_NO AND S.TRGTER_SN = PA.TRGTER_SN AND S.ARRST_SN = PA.ARRST_SN
+		    WHERE S.SUGEST_NO = #P_SUGEST_NO#
+		      AND S.USE_YN = 'Y'
+		) A RIGHT OUTER JOIN DUAL ON 1=1
+	</select>
+
+	<select id="hwp.selectHwp00000000000000000042" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		SELECT
+			A.*, FN_OZ_DATE(null, null) AS OZ_DT,
+			FN_RCV_EXMN_NM (A.EXMN_NM) AS CMPTNC_EXMN_NM,
+			CASE WHEN A.ARRST_DATETIME IS NOT NULL THEN A.ARRST_DATETIME || '경' END AS ARRST_DT
+		FROM
+		(
+		    SELECT
+		    FN_CNVR_NO(S.SUGEST_NO) AS SUGEST_NO,
+		    S.RC_NO,
+		    S.TRGTER_SN,
+		    S.ARRST_SN,
+		    FN_CD_NM(S.SUGEST_TY_CD) AS SUGEST_TY_NM,
+		    TO_CHAR(TO_DATE(S.SUGEST_DE,'YYYYMMDD'),'YYYY. MM. DD') AS SUGEST_DE,
+		    TO_CHAR(TO_DATE(S.CMND_DE,'YYYYMMDD'),'YYYY. MM. DD') AS CMND_DE,
+		    (SELECT FN_EXMN_NM(IP.CMPTNC_EXMN_CD) FROM RC_TMPR IP WHERE IP.RC_NO = S.RC_NO) AS EXMN_NM,
+		    S.CMND_PRSEC_NM,
+		    FN_RC_VIOLT_ROOT_NM(S.RC_NO) AS VIOLT_NM,
+		    PT.TRGTER_NM,
+		    PT.TRGTER_ENG_NM,
+		    FN_CD_NM(PA.ARRST_TY_CD) AS ARRST_TY_NM,
+		    FN_OZ_DATETIME (PA.ARRST_DT,'') AS ARRST_DATETIME,
+		    FN_CD_NM(PA.RSL_RESN_CD) AS RSL_RESN_NM,
+		    PA.RSL_RESN_ETC,
+		    FN_OZ_DATETIME (PA.RSL_DT,'') AS RSL_DT,
+		    /*TO_CHAR(PA.RSL_DT,'YYYY"년" MM"월" DD"일" HH24"시" MI"분"') AS RSL_DT,*/
+		    FN_USER_NM(S.WRITNG_ID) AS OZ_NM
+		    , (SELECT FN_CD_NM(cu.CLSF_CD) FROM CMN_USER cu WHERE ESNTL_ID = S.WRITNG_ID) AS CLSF_NM -- 직급 by dgkim
+		    FROM INV_SUGEST S
+		    INNER JOIN RC_TMPR_TRGTER PT ON S.RC_NO = PT.RC_NO AND S.TRGTER_SN = PT.TRGTER_SN
+		    	AND PT.TRGTER_SE_CD IN (
+		    		SELECT CC.ESNTL_CD FROM CMN_CD CC WHERE CC.UPPER_CD = '00102'  AND CC.CD_DC = 'suspct-Group'
+		    	)
+		    INNER JOIN INV_PRSCT_ARRST PA ON S.RC_NO = PA.RC_NO AND S.TRGTER_SN = PA.TRGTER_SN AND S.ARRST_SN = PA.ARRST_SN
+		    WHERE S.SUGEST_NO = #P_SUGEST_NO#
+		      AND S.USE_YN = 'Y'
+		) A RIGHT OUTER JOIN DUAL ON 1=1
+	</select>
+
+	<select id="hwp.selectHwp00000000000000000058_1" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		SELECT
+			A.SUGEST_NO,
+			A.EXMN_NM,
+			A.CMND_PRSEC_NM,
+			A.VIOLT_NM,
+			A.TRGTER_NMS || CASE WHEN REGEXP_INSTR(SUBSTR(A.TRGTER_NMS,-1,1),'[0-9]') > 0 THEN '명' END AS TRGTER_NMS,
+			A.OZ_NM,
+			FN_OZ_DATE(null, null) AS OZ_DT,
+			FN_RCV_EXMN_NM (A.EXMN_NM) AS CMPTNC_EXMN_NM
+			, A.CLSF_NM -- 직급 by dgkim
+		FROM
+		(
+		    SELECT
+		    FN_CNVR_NO(S.SUGEST_NO) AS SUGEST_NO,
+		    (SELECT FN_EXMN_NM(IP.CMPTNC_EXMN_CD) FROM RC_TMPR IP WHERE IP.RC_NO = S.RC_NO) AS EXMN_NM,
+		    S.CMND_PRSEC_NM,
+		    FN_RC_VIOLT_ROOT_NM(S.RC_NO) AS VIOLT_NM,
+		    FN_RC_TRGTER_NM(S.RC_NO, '00697') AS TRGTER_NMS,
+		    FN_USER_NM(S.WRITNG_ID) AS OZ_NM
+		    , (SELECT FN_CD_NM(cu.CLSF_CD) FROM CMN_USER cu WHERE ESNTL_ID = S.WRITNG_ID) AS CLSF_NM -- 직급 by dgkim
+		    FROM INV_SUGEST S
+		    WHERE S.SUGEST_NO = #P_SUGEST_NO#
+		      AND S.USE_YN = 'Y'
+		) A RIGHT OUTER JOIN DUAL ON 1=1
+	</select>
+
+	<select id="hwp.selectHwp00000000000000000058_2" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		SELECT
+			ROW_NUMBER() OVER(ORDER BY SC.CCDRC_NO ASC, SC.CCDRC_SN ASC) AS RN,
+			IC.CCDRC_NM,
+			IC.CCDRC_QY,
+			FN_CCDRC_TRGTER_NM(IC.CCDRC_NO, IC.CCDRC_SN, IC.RC_NO, 'S') AS CF_SZURE_TRGTER_NM,
+			FN_CCDRC_TRGTER_NM(IC.CCDRC_NO, IC.CCDRC_SN, IC.RC_NO, 'P') AS CF_POSESN_TRGTER_NM,
+			'' AS ETC
+		FROM INV_SUGEST_CCDRC SC
+		INNER JOIN INV_CCDRC IC ON IC.CCDRC_NO = SC.CCDRC_NO AND IC.CCDRC_SN = SC.CCDRC_SN AND IC.USE_YN = 'Y'
+		AND SC.SUGEST_NO = #P_SUGEST_NO#
+		ORDER BY SC.CCDRC_NO ASC, SC.CCDRC_SN ASC
+	</select>
+
+	<select id="hwp.selectHwp00000000000000000055_1" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		SELECT
+			A.SUGEST_NO,
+			A.EXMN_NM,
+			A.CMND_PRSEC_NM,
+			A.VIOLT_NM,
+			A.TRGTER_NMS || CASE WHEN REGEXP_INSTR(SUBSTR(A.TRGTER_NMS,-1,1),'[0-9]') > 0 THEN '명' END AS TRGTER_NMS,
+			A.OZ_NM,
+			FN_OZ_DATE(null, null) AS OZ_DT,
+			FN_RCV_EXMN_NM (A.EXMN_NM) AS CMPTNC_EXMN_NM
+			, A.CLSF_NM -- 직급 by dgkim
+		FROM
+		(
+		    SELECT
+		    FN_CNVR_NO(S.SUGEST_NO) AS SUGEST_NO,
+		    (SELECT FN_EXMN_NM(IP.CMPTNC_EXMN_CD) FROM RC_TMPR IP WHERE IP.RC_NO = S.RC_NO) AS EXMN_NM,
+		    S.CMND_PRSEC_NM,
+		    FN_RC_VIOLT_ROOT_NM(S.RC_NO) AS VIOLT_NM,
+		    FN_RC_TRGTER_NM(S.RC_NO, '00697') AS TRGTER_NMS,
+		    FN_USER_NM(S.WRITNG_ID) AS OZ_NM
+		    , (SELECT FN_CD_NM(cu.CLSF_CD) FROM CMN_USER cu WHERE ESNTL_ID = S.WRITNG_ID) AS CLSF_NM -- 직급 by dgkim
+		    FROM INV_SUGEST S
+		    WHERE S.SUGEST_NO = #P_SUGEST_NO#
+		      AND S.USE_YN = 'Y'
+		) A RIGHT OUTER JOIN DUAL ON 1=1
+	</select>
+
+	<select id="hwp.selectHwp00000000000000000055_2" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		SELECT
+			ROW_NUMBER() OVER(ORDER BY SC.CCDRC_NO ASC, SC.CCDRC_SN ASC) AS RN,
+			IC.CCDRC_NM,
+			IC.CCDRC_QY,
+			FN_CCDRC_TRGTER_NM(IC.CCDRC_NO, IC.CCDRC_SN, IC.RC_NO, 'S') AS CF_SZURE_TRGTER_NM,
+			FN_CCDRC_TRGTER_NM(IC.CCDRC_NO, IC.CCDRC_SN, IC.RC_NO, 'P') AS CF_POSESN_TRGTER_NM,
+			'' AS ETC
+		FROM INV_SUGEST_CCDRC SC
+		INNER JOIN INV_CCDRC IC ON IC.CCDRC_NO = SC.CCDRC_NO AND IC.CCDRC_SN = SC.CCDRC_SN AND IC.USE_YN = 'Y'
+		AND SC.SUGEST_NO = #P_SUGEST_NO#
+		ORDER BY SC.CCDRC_NO ASC, SC.CCDRC_SN ASC
+	</select>
+
+	<select id="hwp.selectHwp00000000000000000054_1" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		SELECT
+			A.SUGEST_NO,
+			A.EXMN_NM,
+			A.CMND_PRSEC_NM,
+			A.VIOLT_NM,
+			A.TRGTER_NMS || CASE WHEN REGEXP_INSTR(SUBSTR(A.TRGTER_NMS,-1,1),'[0-9]') > 0 THEN '명' END AS TRGTER_NMS,
+			A.OZ_NM,
+			FN_OZ_DATE(null, null) AS OZ_DT,
+			FN_RCV_EXMN_NM (A.EXMN_NM) AS CMPTNC_EXMN_NM
+			, A.CLSF_NM -- 직급 by dgkim
+		FROM
+		(
+		    SELECT
+		    FN_CNVR_NO(S.SUGEST_NO) AS SUGEST_NO,
+		    (SELECT FN_EXMN_NM(IP.CMPTNC_EXMN_CD) FROM RC_TMPR IP WHERE IP.RC_NO = S.RC_NO) AS EXMN_NM,
+		    S.CMND_PRSEC_NM,
+		    FN_RC_VIOLT_ROOT_NM(S.RC_NO) AS VIOLT_NM,
+		    FN_RC_TRGTER_NM(S.RC_NO, '00697') AS TRGTER_NMS,
+		    FN_USER_NM(S.WRITNG_ID) AS OZ_NM
+		    , (SELECT FN_CD_NM(cu.CLSF_CD) FROM CMN_USER cu WHERE ESNTL_ID = S.WRITNG_ID) AS CLSF_NM -- 직급 by dgkim
+		    FROM INV_SUGEST S
+		    WHERE S.SUGEST_NO = #P_SUGEST_NO#
+		      AND S.USE_YN = 'Y'
+		) A RIGHT OUTER JOIN DUAL ON 1=1
+	</select>
+
+	<select id="hwp.selectHwp00000000000000000054_2" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		SELECT
+			ROW_NUMBER() OVER(ORDER BY SC.CCDRC_NO ASC, SC.CCDRC_SN ASC) AS RN,
+			IC.CCDRC_NM,
+			IC.CCDRC_QY,
+			FN_CCDRC_TRGTER_NM(IC.CCDRC_NO, IC.CCDRC_SN, IC.RC_NO, 'S') AS CF_SZURE_TRGTER_NM,
+			FN_CCDRC_TRGTER_NM(IC.CCDRC_NO, IC.CCDRC_SN, IC.RC_NO, 'P') AS CF_POSESN_TRGTER_NM,
+			'' AS ETC
+		FROM INV_SUGEST_CCDRC SC
+		INNER JOIN INV_CCDRC IC ON IC.CCDRC_NO = SC.CCDRC_NO AND IC.CCDRC_SN = SC.CCDRC_SN AND IC.USE_YN = 'Y'
+		AND SC.SUGEST_NO = #P_SUGEST_NO#
+		ORDER BY SC.CCDRC_NO ASC, SC.CCDRC_SN ASC
+	</select>
+
+	<select id="hwp.selectHwp00000000000000000056_1" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		SELECT
+			A.SUGEST_NO,
+			A.EXMN_NM,
+			A.CMND_PRSEC_NM,
+			A.VIOLT_NM,
+			A.TRGTER_NMS || CASE WHEN REGEXP_INSTR(SUBSTR(A.TRGTER_NMS,-1,1),'[0-9]') > 0 THEN '명' END AS TRGTER_NMS,
+			A.OZ_NM,
+			FN_OZ_DATE(null, null) AS OZ_DT,
+			FN_RCV_EXMN_NM (A.EXMN_NM) AS CMPTNC_EXMN_NM
+			, A.CLSF_NM -- 직급 by dgkim
+		FROM
+		(
+		    SELECT
+		    FN_CNVR_NO(S.SUGEST_NO) AS SUGEST_NO,
+		    (SELECT FN_EXMN_NM(IP.CMPTNC_EXMN_CD) FROM RC_TMPR IP WHERE IP.RC_NO = S.RC_NO) AS EXMN_NM,
+		    S.CMND_PRSEC_NM,
+		    FN_RC_VIOLT_ROOT_NM(S.RC_NO) AS VIOLT_NM,
+		    NVL(FN_RC_TRGTER_NM(S.RC_NO, '00697'),' ') AS TRGTER_NMS,
+		    FN_USER_NM(S.WRITNG_ID) AS OZ_NM
+		    , (SELECT FN_CD_NM(cu.CLSF_CD) FROM CMN_USER cu WHERE ESNTL_ID = S.WRITNG_ID) AS CLSF_NM -- 직급 by dgkim
+		    FROM INV_SUGEST S
+		    WHERE S.SUGEST_NO = #P_SUGEST_NO#
+		      AND S.USE_YN = 'Y'
+		) A RIGHT OUTER JOIN DUAL ON 1=1
+	</select>
+
+	<select id="hwp.selectHwp00000000000000000056_2" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		SELECT
+			ROW_NUMBER() OVER(ORDER BY SC.CCDRC_NO ASC, SC.CCDRC_SN ASC) AS RN,
+			IC.CCDRC_NM,
+			IC.CCDRC_QY,
+			FN_CCDRC_TRGTER_NM(IC.CCDRC_NO, IC.CCDRC_SN, IC.RC_NO, 'S') AS CF_SZURE_TRGTER_NM,
+			FN_CCDRC_TRGTER_NM(IC.CCDRC_NO, IC.CCDRC_SN, IC.RC_NO, 'P') AS CF_POSESN_TRGTER_NM,
+			'' AS ETC
+		FROM INV_SUGEST_CCDRC SC
+		INNER JOIN INV_CCDRC IC ON IC.CCDRC_NO = SC.CCDRC_NO AND IC.CCDRC_SN = SC.CCDRC_SN AND IC.USE_YN = 'Y'
+		AND SC.SUGEST_NO = #P_SUGEST_NO#
+		ORDER BY SC.CCDRC_NO ASC, SC.CCDRC_SN ASC
+	</select>
+
+	<select id="hwp.selectHwp00000000000000000057_1" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		SELECT
+			A.SUGEST_NO,
+			A.EXMN_NM,
+			A.CMND_PRSEC_NM,
+			A.VIOLT_NM,
+			A.TRGTER_NMS || CASE WHEN REGEXP_INSTR(SUBSTR(A.TRGTER_NMS,-1,1),'[0-9]') > 0 THEN '명' END AS TRGTER_NMS,
+			A.OZ_NM,
+			FN_OZ_DATE(null, null) AS OZ_DT,
+			FN_RCV_EXMN_NM (A.EXMN_NM) AS CMPTNC_EXMN_NM
+			, A.CLSF_NM -- 직급 by dgkim
+		FROM
+		(
+		    SELECT
+		    FN_CNVR_NO(S.SUGEST_NO) AS SUGEST_NO,
+		    (SELECT FN_EXMN_NM(IP.CMPTNC_EXMN_CD) FROM RC_TMPR IP WHERE IP.RC_NO = S.RC_NO) AS EXMN_NM,
+		    S.CMND_PRSEC_NM,
+		    FN_RC_VIOLT_ROOT_NM(S.RC_NO) AS VIOLT_NM,
+		    NVL(FN_RC_TRGTER_NM(S.RC_NO, '00697'),' ') AS TRGTER_NMS,
+		    FN_USER_NM(S.WRITNG_ID) AS OZ_NM
+		    , (SELECT FN_CD_NM(cu.CLSF_CD) FROM CMN_USER cu WHERE ESNTL_ID = S.WRITNG_ID) AS CLSF_NM -- 직급 by dgkim
+		    FROM INV_SUGEST S
+		    WHERE S.SUGEST_NO = #P_SUGEST_NO#
+		      AND S.USE_YN = 'Y'
+		) A RIGHT OUTER JOIN DUAL ON 1=1
+	</select>
+
+	<select id="hwp.selectHwp00000000000000000057_2" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		SELECT
+			ROW_NUMBER() OVER(ORDER BY SC.CCDRC_NO ASC, SC.CCDRC_SN ASC) AS RN,
+			IC.CCDRC_NM,
+			IC.CCDRC_QY,
+			FN_CCDRC_TRGTER_NM(IC.CCDRC_NO, IC.CCDRC_SN, IC.RC_NO, 'S') AS CF_SZURE_TRGTER_NM,
+			FN_CCDRC_TRGTER_NM(IC.CCDRC_NO, IC.CCDRC_SN, IC.RC_NO, 'P') AS CF_POSESN_TRGTER_NM,
+			'' AS ETC
+		FROM INV_SUGEST_CCDRC SC
+		INNER JOIN INV_CCDRC IC ON IC.CCDRC_NO = SC.CCDRC_NO AND IC.CCDRC_SN = SC.CCDRC_SN AND IC.USE_YN = 'Y'
+		AND SC.SUGEST_NO = #P_SUGEST_NO#
+		ORDER BY SC.CCDRC_NO ASC, SC.CCDRC_SN ASC
+	</select>
+
+	<select id="hwp.selectHwp00000000000000000053" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		SELECT
+			A.SUGEST_NO,
+			A.EXMN_NM,
+			A.CMND_PRSEC_NM,
+			A.VIOLT_NM,
+			A.TRGTER_NMS || CASE WHEN REGEXP_INSTR(SUBSTR(A.TRGTER_NMS,-1,1),'[0-9]') > 0 THEN '명' END AS TRGTER_NMS,
+			A.OZ_NM,
+			FN_OZ_DATE(null, null) AS OZ_DT,
+			FN_RCV_EXMN_NM (A.EXMN_NM) AS CMPTNC_EXMN_NM
+			, A.CLSF_NM -- 직급 by dgkim
+		FROM
+		(
+		    SELECT
+		    FN_CNVR_NO(S.SUGEST_NO) AS SUGEST_NO,
+		    (SELECT FN_EXMN_NM(IP.CMPTNC_EXMN_CD) FROM RC_TMPR IP WHERE IP.RC_NO = S.RC_NO) AS EXMN_NM,
+		    S.CMND_PRSEC_NM,
+		    FN_RC_VIOLT_ROOT_NM(S.RC_NO) AS VIOLT_NM,
+		    NVL(FN_RC_TRGTER_NM(S.RC_NO, '00697'),' ') AS TRGTER_NMS,
+		    FN_USER_NM(S.WRITNG_ID) AS OZ_NM
+		    , (SELECT FN_CD_NM(cu.CLSF_CD) FROM CMN_USER cu WHERE ESNTL_ID = S.WRITNG_ID) AS CLSF_NM -- 직급 by dgkim
+		    FROM INV_SUGEST S
+		    WHERE S.SUGEST_NO = #P_SUGEST_NO#
+		      AND S.USE_YN = 'Y'
+		) A RIGHT OUTER JOIN DUAL ON 1=1
+	</select>
+
+	<select id="hwp.selectHwp00000000000000000008_1" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		SELECT
+		    A.*,
+		    FN_OZ_DATE(null, null) AS S_DATE
+		FROM (
+		    SELECT
+		        SUBSTR(A.CASE_NO,0,4)||' 감사조사 인지 '||TO_NUMBER(SUBSTR(A.CASE_NO , INSTR(A.CASE_NO, '-')+1)) AS CASE_NO,
+		        FN_RC_VIOLT_UPPER_NMS (A.RC_NO) AS VIOLT_NM,
+		        FN_USER_NM(A.WRITNG_ID) AS WRITNG_NM,
+				A.CRMNL_FACT
+		    FROM RC_TMPR A
+		    WHERE A.RC_NO = #P_RC_NO#
+		) A
+		RIGHT JOIN DUAL D ON 1=1
+	</select>
+
+	<select id="hwp.selectHwp00000000000000000008_2" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		<include refid="commonTrgtersByFormatTypeD"/>
+	</select>
+
+	<select id="hwp.selectHwp00000000000000000007_1" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		SELECT
+            A.*,
+            FN_OZ_DATE(null, null) AS S_DATE
+        FROM (
+            SELECT
+                SUBSTR(A.CASE_NO,0,4) AS CASE_NO1,
+                TO_CHAR(TO_NUMBER(SUBSTR(A.CASE_NO , INSTR(A.CASE_NO, '-')+1))) AS CASE_NO2,
+                FN_CNVR_NO(A.CASE_NO) AS CASE_NO,
+                FN_RC_VIOLT_ROOT_NM (A.RC_NO) AS VIOLT_NM,
+                FN_USER_NM(A.WRITNG_ID) AS WRITNG_NM
+            FROM RC_TMPR A
+            WHERE A.RC_NO = #P_RC_NO#
+              AND A.USE_YN = 'Y'
+        ) A
+        RIGHT JOIN DUAL D ON 1=1
+	</select>
+
+	<select id="hwp.selectHwp00000000000000000007_2" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		SELECT
+            ROW_NUMBER() OVER(ORDER BY B.SORT_ORDR, B.TRGTER_SN)||'.' AS RM_L,
+            B.TRGTER_NM AS TRGTER_NM_L,
+            CASE WHEN NVL(B.TRGTER_TY_CD,'I') = 'E' THEN B.TRGTER_CPRN  ELSE DGUARD.DECRYPT('TBL','ENC',B.TRGTER_RRN) END AS TRGTER_RRN_L,
+            (CASE WHEN B.WRC_NM IS NOT NULL THEN B.WRC_NM||' ' END)||FN_CD_NM(B.OCCP_CD) OCCP_NM_L,
+            CASE WHEN NVL(B.TRGTER_TY_CD,'I') = 'E' THEN NVL(B.ADRES_ADDR,B.WRC_ADDR) ELSE B.ADRES_ADDR END AS ADDR_L,	/*주거지:DWLSIT_ZIP 주소:ADRES_ADDR*/
+            B.REGBS_ADDR AS REGBS_ADDR_L, 		/*등록지주소*/
+            '성    명' AS T1,
+		    CASE WHEN NVL(TRGTER_TY_CD,'I') = 'E' THEN '법인등록번호 '  ELSE '주민등록번호 ' END AS T2,
+		    CASE WHEN NVL(TRGTER_TY_CD,'I') = 'E' THEN '소 재 지'   	ELSE '주   거' END AS T3,
+		    '직    업' AS T4
+        FROM RC_TMPR_TRGTER B
+        WHERE B.USE_YN = 'Y'
+          AND B.RC_NO = #P_RC_NO#
+          AND B.TRGTER_SE_CD IN (
+          	SELECT CC.ESNTL_CD
+            FROM CMN_CD CC
+            WHERE CC.CD_DC = 'suspct-Group'		/*피의자 그룹*/
+              AND CC.UPPER_CD = '00102'
+          )
+        ORDER BY B.SORT_ORDR, B.TRGTER_SN ASC
+	</select>
+
+	<select id="hwp.selectHwp00000000000000000185_1" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		SELECT
+            A.*,
+            FN_OZ_DATE(TO_CHAR(SYSDATE,'YYYYMMDD'),'') AS S_DATE,
+            FN_RCV_EXMN_NM (A.EXMN_NM) AS CMPTNC_EXMN_NM
+        FROM
+        (
+            SELECT
+                FN_CNVR_NO(Q.ZRLONG_REQST_NO) AS ZRLONG_REQST_NO,
+                FN_CNVR_NO(P.CASE_NO) AS CASE_NO,
+                FN_SZURE_APPLCNT(Q.RC_NO, Q.ZRLONG_REQST_NO) AS TRGTER_NMS,
+                FN_RC_VIOLT_ROOT_NM(Q.RC_NO) AS VIOLT_ROOT_NM,
+                FN_USER_NM(Q.WRITNG_ID) AS WRITNG_NM,
+                FN_USER_NM(P.CHARGER_ID) AS CHARGER_NM,
+                FN_EXMN_NM(P.CMPTNC_EXMN_CD) AS EXMN_NM
+                , (SELECT FN_CD_NM(cu.CLSF_CD) FROM CMN_USER cu WHERE ESNTL_ID = P.WRITNG_ID) AS CLSF_NM -- 직급 by dgkim
+            FROM INV_SZURE_REQST Q
+            LEFT JOIN RC_TMPR P ON Q.RC_NO = P.RC_NO
+            WHERE Q.ZRLONG_REQST_YN = 'Y'
+              AND Q.RC_NO = #P_RC_NO#
+              AND Q.ZRLONG_REQST_NO = #P_ZRLONG_REQST_NO#
+        ) A
+        RIGHT OUTER JOIN DUAL ON 1=1
+	</select>
+
+	<select id="hwp.selectHwp00000000000000000185_2" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		SELECT
+            ROW_NUMBER() OVER(ORDER BY B.SORT_ORDR, B.TRGTER_SN)||'.' AS RM_L,
+            B.TRGTER_NM AS TRGTER_NM_L,
+            CASE WHEN NVL(B.TRGTER_TY_CD,'I') = 'E' THEN B.TRGTER_CPRN  ELSE DGUARD.DECRYPT('TBL','ENC',B.TRGTER_RRN) END AS TRGTER_RRN_L,
+            (CASE WHEN B.WRC_NM IS NOT NULL THEN B.WRC_NM||' ' END)||FN_CD_NM(B.OCCP_CD) OCCP_NM_L,
+            CASE WHEN NVL(B.TRGTER_TY_CD,'I') = 'E' THEN NVL(B.ADRES_ADDR,B.WRC_ADDR) ELSE B.ADRES_ADDR END AS ADDR_L,	/*주거지:DWLSIT_ZIP 주소:ADRES_ADDR*/
+            B.REGBS_ADDR AS REGBS_ADDR_L, 		/*등록지주소*/
+            '성    명' AS T1,
+		    CASE WHEN NVL(TRGTER_TY_CD,'I') = 'E' THEN '법인등록번호 '  ELSE '주민등록번호 ' END AS T2,
+		    CASE WHEN NVL(TRGTER_TY_CD,'I') = 'E' THEN '소 재 지'   	ELSE '주   거' END AS T3,
+		    '직    업' AS T4
+        FROM INV_SZURE_APPLCNT A
+        JOIN RC_TMPR_TRGTER B ON A.RC_NO = B.RC_NO AND A.TRGTER_SN = B.TRGTER_SN
+        WHERE B.USE_YN = 'Y'
+          AND A.RC_NO = #P_RC_NO#
+          AND A.ZRLONG_REQST_NO = #P_ZRLONG_REQST_NO#
+        ORDER BY B.SORT_ORDR, B.TRGTER_SN ASC
+	</select>
+
+	<select id="hwp.selectHwp00000000000000000070_1" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		SELECT
+		    A.CASE_NO,
+		    A.VIOLT_NM,
+		    A.VIOLT_ROOT_NM,
+		    A.TRGTER_NMS || CASE WHEN REGEXP_INSTR(SUBSTR(A.TRGTER_NMS,-1,1),'[0-9]') > 0 THEN '명' END AS TRGTER_NMS,
+		    A.WRITNG_NM, 
+		    A.CHARGER_NM,
+		    A.CRMNL_FACT,
+		    FN_OZ_DATE(null, null) AS S_DATE
+		FROM (
+		    SELECT
+		        SUBSTR(A.CASE_NO,0,4)||' 감사조사 인지 '||TO_NUMBER(SUBSTR(A.CASE_NO , INSTR(A.CASE_NO, '-')+1)) AS CASE_NO,
+		        FN_RC_VIOLT_UPPER_NMS (A.RC_NO) AS VIOLT_NM,
+		        FN_RC_VIOLT_ROOT_NM(A.RC_NO) AS VIOLT_ROOT_NM,
+		        NVL(FN_RC_TRGTER_NM(A.RC_NO, '00697'),' ') AS TRGTER_NMS,
+		        FN_USER_NM(A.WRITNG_ID) AS WRITNG_NM,
+		        FN_USER_NM(A.CHARGER_ID) AS CHARGER_NM, -- 담당자로 수정 by dgkim
+				A.CRMNL_FACT
+				, A.PRSCT_DE -- 승인 일자로 수정 by dgkim
+		    FROM RC_TMPR A
+		    WHERE A.RC_NO = #P_RC_NO#
+		) A
+		RIGHT JOIN DUAL D ON 1=1
+	</select>
+
+	<select id="hwp.selectHwp00000000000000000070_2" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		<include refid="commonTrgtersByFormatTypeD"/>
+	</select>
+
+	<!-- 128.의견서 -->
+	<select id="selectHwp00000000000000000218_1" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		SELECT T.*
+             , FN_OZ_DATE(NULL, NULL) CF_TODAY
+        FROM (
+            SELECT FN_RC_VIOLT_UPPER_NMS(B.RC_NO) VIOLT_NM
+                 , FN_CD_NM(C.CLSF_CD) CLSF_NM
+                 , FN_USER_NM(B.CHARGER_ID) AS USER_NM -- 담당자로 변경 by dgkim --, C.USER_NM AS USER_NM
+                 , FN_ROOT_DEPT_NM(DEPT_CD) AS DEPT_NM
+                 , FN_EXMN_NM(B.CMPTNC_EXMN_CD) CMPTNC_EXMN_NM
+            FROM RC_TMPR B
+               , CMN_USER C
+            WHERE B.USE_YN = 'Y'
+              AND B.RC_NO = #P_RC_NO#
+              AND B.RC_NO = B.RC_NO
+              AND B.CHARGER_ID = C.ESNTL_ID
+        ) T RIGHT OUTER JOIN DUAL ON 1=1
+	</select>
+
+	<select id="selectHwp00000000000000000218_2" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		<include refid="commonTrgtersByFormatTypeD"/>
+	</select>
+
+	<select id="selectHwp00000000000000000138" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		SELECT
+			--FN_OZ_DATE(TO_CHAR(SYSDATE,'YYYYMMDD'),'') S_DATE,
+			A.WRITNG_NM,
+			A.CHARGER_NM
+			, A.S_DATE -- 승인 일자로 수정 by dgkim
+		FROM (
+				SELECT
+					FN_USER_NM(NVL(A.WRITNG_ID, B.WRITNG_ID)) AS WRITNG_NM
+					, FN_USER_NM(A.CHARGER_ID) AS CHARGER_NM--담당자로 변경 by dgkim
+					, TO_CHAR(NVL2(A.PRSCT_DE, TO_DATE(A.PRSCT_DE, 'YYYY-MM-DD'), SYSDATE), 'YYYY.fmMM.DD') AS S_DATE -- 승인 일자로 수정 by dgkim
+				FROM RC_TMPR A
+				LEFT JOIN RC_TMPR_TRGTER B ON A.RC_NO = B.RC_NO AND B.TRGTER_SN = #P_TRGTER_SN#
+				WHERE A.RC_NO   = #P_RC_NO#
+					AND A.USE_YN != 'N'
+			) A
+		RIGHT JOIN DUAL D ON 1=1
+	</select>
+
+	<select id="selectHwp00000000000000000182_1" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		SELECT
+	        FN_CNVR_NO(I.DSCVRY_NO) AS DSCVRY_NO,
+	        FN_RC_TRGTER_NM(I.RC_NO, '00697') AS TRGTER_NMS,
+	        TT.TRGTER_NM,
+	        DGUARD.DECRYPT('TBL','ENC',TT.TRGTER_RRN) AS TRGTER_RRN,
+	        DECODE(TT.SEXDSTN_CD, 'M', '남', 'F', '여', 'E', '불상') AS SEXDSTN,
+	        TT.TRGTER_AGE,
+	        FN_USER_NM(TT.OCCP_CD) AS OCCP_NM,
+	        TT.ADRES_ADDR AS DWLSIT_ADDR,			/*주거지:DWLSIT_ZIP 주소:ADRES_ADDR*/
+	        TT.REGBS_ADDR,
+	        RF.EXMN_CASE_NO,
+	        RF.PRSEC_NM,
+	        FN_OZ_DATE(RF.DECSN_DE,'') AS DECSN_DE,
+	        RF.REFE_PSPPS,
+	        FN_CNVR_NO(T.CASE_NO) AS CASE_NO,
+	        I.DSCVRY_RESN,
+	        FN_OZ_DATE(I.DSCVRY_DE,'') AS DSCVRY_DE,
+	        I.DSCVRY_REPORT_DE,
+	        FN_RC_VIOLT_ROOT_NM (T.RC_NO) AS VIOLT_NM,
+	        (SELECT MAX(B.TRN_DE) FROM TRN_CASE B WHERE RC_NO = T.RC_NO AND B.USE_YN = 'Y') AS TRN_DE,
+	        (  SELECT
+                LISTAGG(C.TRN_OPINION_CD,',') WITHIN GROUP (ORDER BY C.TRGTER_SN) AS L_TRN_OPINION_CD
+                FROM TRN_VIOLT C
+               WHERE C.RC_NO = I.RC_NO
+                 AND C.TRGTER_SN = I.TRGTER_SN
+                 AND C.TRN_NO = (SELECT MAX(VT.TRN_NO) FROM TRN_VIOLT VT WHERE VT.RC_NO = I.RC_NO AND VT.TRGTER_SN = I.TRGTER_SN)
+	        ) AS TRN_OPINION_NM,
+	        FN_USER_NM(T.CHARGER_ID) AS CHARGER_NM,
+	        FN_USER_NM(I.WRITNG_ID) AS WRITNG_NM
+        FROM INV_REFE_DSCVRY I
+        LEFT JOIN INV_REFESTPGE RF ON I.RC_NO = RF.RC_NO AND I.TRGTER_SN = RF.TRGTER_SN
+        JOIN RC_TMPR T ON I.RC_NO = T.RC_NO
+        JOIN RC_TMPR_TRGTER TT ON I.RC_NO = TT.RC_NO AND I.TRGTER_SN = TT.TRGTER_SN AND TT.USE_YN = 'Y'
+        WHERE T.USE_YN = 'Y'
+          AND I.RC_NO = #P_RC_NO#
+          AND I.TRGTER_SN = #P_TRGTER_SN#
+          AND ROWNUM = 1
+	</select>
+
+	<select id="selectHwp00000000000000000182_2" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		SELECT
+			FN_OZ_DATE(A.CMND_DE,'') AS CMND_DE,
+		    A.CMND_GRFC_NM,
+		    FN_OZ_DATE(A.REPORT_DE,'') AS REPORT_DE,
+		    A.REPORT_CN
+		FROM INV_REFE_REPORT A
+		WHERE A.RC_NO = #P_RC_NO#
+		  AND A.TRGTER_SN = #P_TRGTER_SN#
+	</select>
+
+	<select id="selectHwp00000000000000000179_1" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		SELECT
+	        TT.TRGTER_NM,
+	        SUBSTR(DGUARD.DECRYPT('TBL','ENC',TT.TRGTER_RRN),0,6) AS TRGTER_RRN,
+	        DECODE(TT.SEXDSTN_CD, 'M', '남', 'F', '여', 'E', '불상') AS SEXDSTN,
+	        FN_RC_VIOLT_ROOT_NM (T.RC_NO) AS VIOLT_NM,
+	        I.STPRSC_PSPPS,
+	        T.CASE_NO,
+	        FN_RC_VIOLT_ROOT_NM (T.RC_NO) AS VIOLT_NM,
+	        TT.REGBS_ADDR,
+	        TT.ADRES_ADDR AS DWLSIT_ADDR,			/*주거지:DWLSIT_ZIP 주소:ADRES_ADDR*/
+	        FN_USER_NM(T.CHARGER_ID) AS CHARGER_NM,
+	        T.OCCRRNC_ADDR,
+	        FN_OZ_DATE2(TO_CHAR(T.OCCRRNC_BEGIN_DT,'YYYYMMDD'), NULL) AS OCCRRNC_BEGIN_DE,
+	        FN_RC_TRGTER_NM(I.RC_NO, '00698') AS TRGTER_NM_V
+        FROM INV_STPRSC I
+        JOIN RC_TMPR T ON I.RC_NO = T.RC_NO
+        JOIN RC_TMPR_TRGTER TT ON I.RC_NO = TT.RC_NO AND I.TRGTER_SN = TT.TRGTER_SN AND TT.USE_YN = 'Y'
+        WHERE T.USE_YN = 'Y'
+          AND I.RC_NO = #P_RC_NO#
+		  AND I.TRGTER_SN = #P_TRGTER_SN#
+	</select>
+
+	<select id="selectHwp00000000000000000179_2" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		SELECT
+			ROW_NUMBER() OVER(ORDER BY B.WRITNG_DT)||'.' AS RN,
+		    TO_CHAR(A.ISUE_DT,'YYYY.MM.DD') AS ISUE_DT,
+		    TO_CHAR(A.VALID_DT,'YYYY.MM.DD') AS VALID_DT,
+		    A.ZRLONG_NO,
+		    FN_CD_NM(A.ZRLONG_SE_CD) AS ZRLONG_SE_CD
+		FROM INV_ZRLONG_RESULT A
+		JOIN INV_ZRLONG_REQST B ON A.ZRLONG_SE_CD = B.ZRLONG_SE_CD AND A.ZRLONG_NO = B.ZRLONG_NO
+		WHERE B.RC_NO = #P_RC_NO#
+		ORDER BY B.WRITNG_DT
+	</select>
+
+	<select id="selectHwp00000000000000000258_1" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		SELECT
+	        TT.TRGTER_NM,
+	        SUBSTR(DGUARD.DECRYPT('TBL','ENC',TT.TRGTER_RRN),0,6) AS TRGTER_RRN,
+	        DECODE(TT.SEXDSTN_CD, 'M', '남', 'F', '여', 'E', '불상') AS SEXDSTN,
+	        FN_RC_VIOLT_ROOT_NM (T.RC_NO) AS VIOLT_NM,
+	        I.STPRSC_PSPPS,
+	        T.CASE_NO,
+	        FN_RC_VIOLT_ROOT_NM (T.RC_NO) AS VIOLT_NM,
+	        TT.REGBS_ADDR,
+	        TT.ADRES_ADDR AS DWLSIT_ADDR,			/*주거지:DWLSIT_ZIP 주소:ADRES_ADDR*/
+	        FN_USER_NM(T.CHARGER_ID) AS CHARGER_NM,
+	        T.OCCRRNC_ADDR,
+	        FN_OZ_DATE2(TO_CHAR(T.OCCRRNC_BEGIN_DT,'YYYYMMDD'), NULL) AS OCCRRNC_BEGIN_DE,
+	        FN_RC_TRGTER_NM(I.RC_NO, '00698') AS TRGTER_NM_V
+        FROM INV_STPRSC I
+        JOIN RC_TMPR T ON I.RC_NO = T.RC_NO
+        JOIN RC_TMPR_TRGTER TT ON I.RC_NO = TT.RC_NO AND I.TRGTER_SN = TT.TRGTER_SN AND TT.USE_YN = 'Y'
+        WHERE T.USE_YN = 'Y'
+          AND I.RC_NO = #P_RC_NO#
+		  AND I.TRGTER_SN = #P_TRGTER_SN#
+	</select>
+
+	<select id="selectHwp00000000000000000258_2" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		SELECT
+			ROW_NUMBER() OVER(ORDER BY B.WRITNG_DT)||'.' AS RN,
+		    TO_CHAR(A.ISUE_DT,'YYYY.MM.DD') AS ISUE_DT,
+		    TO_CHAR(A.VALID_DT,'YYYY.MM.DD') AS VALID_DT,
+		    A.ZRLONG_NO,
+		    FN_CD_NM(A.ZRLONG_SE_CD) AS ZRLONG_SE_CD
+		FROM INV_ZRLONG_RESULT A
+		JOIN INV_ZRLONG_REQST B ON A.ZRLONG_SE_CD = B.ZRLONG_SE_CD AND A.ZRLONG_NO = B.ZRLONG_NO
+		WHERE B.RC_NO = #P_RC_NO#
+		ORDER BY B.WRITNG_DT
+	</select>
+
+</sqlMap>

@@ -1,0 +1,78 @@
+@charset "utf-8";
+/* CSS Document */
+iframe{border: none!important}
+.dhtmlwindow{
+position: absolute; /*변경함 */
+visibility: hidden;
+background-color: white;
+z-index: 9999999999999999999999999!important;	
+	
+}
+
+.drag-handle{ /*CSS for Drag Handle*/
+
+padding: 0px;
+text-indent: 3px;
+ background-color: #5384d0;
+color: white;
+cursor: move;
+overflow: hidden;
+width: auto;
+filter:progid:DXImageTransform.Microsoft.alpha(opacity=100);
+-moz-opacity: 1;
+opacity: 1; height: 60px; line-height: 60px; padding: 0px 20px; box-sizing: border-box; z-index: 9999999; font-size: 18px; font-weight: 700
+}
+
+.drag-handle .drag-controls{ /*CSS for controls (min, close etc) within Drag Handle*/
+position: absolute;
+right: 20px;
+top: 2px;
+cursor: hand;
+cursor: pointer;
+}
+
+* html .drag-handle{ /*IE6 and below CSS hack. Width must be set to 100% in order for opaque title bar to render*/
+width: 100%; 
+}
+
+
+.drag-contentarea{ /*CSS for Content Display Area div*/
+border-top: 1px solid brown;
+background-color: white;
+color: black;
+height: 150px;
+padding: 2px;
+overflow: auto;
+}
+
+.drag-statusarea{ /*CSS for Status Bar div (includes resizearea)*/
+
+}
+
+
+.drag-resizearea{ /*CSS for Resize Area itself*/
+float: right;
+width: 13px; /*width of resize image*/
+height: 13px; /*height of resize image*/
+cursor: nw-resize;
+font-size: 0;  z-index: 9999999;
+}
+
+
+
+.drag-handle{ /*Overwrite default drag handle bar background color with below*/
+background-color: #5384d0; z-index: 9999999; 
+}
+
+#interVeil{ /*CSS for veil that covers entire page while modal window is visible*/
+position: absolute;
+background: black url();
+width: 100%;
+left: 0;
+top: 0;
+z-index: 999999;
+visibility: hidden;
+filter:progid:DXImageTransform.Microsoft.alpha(opacity=80);
+opacity: 0.8;
+
+}

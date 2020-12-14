@@ -1,0 +1,36 @@
+@charset "utf-8";
+/* CSS Document */
+
+
+.center {
+width:60%;
+margin:20px auto 0 auto;
+}
+
+.marginbot {
+margin-bottom:15px;
+}
+
+ul.list li {
+list-style-type:none;
+margin-left:20px;
+}
+
+ul.tabs {
+float: left; width: 100% ; margin-bottom: -1px; border-bottom: 1px solid #333;
+overflow:hidden;
+}
+
+ul.tabs li {float: left;  background-color: #fff; padding: 10px 0px; text-align: center;border-top: 1px solid #ccc; border-left: 1px solid #ccc;  border-right: 1px solid #999; margin-right: -1px; color: #666;
+cursor:pointer;  float: left; width: 130px; 
+}
+
+ul.tabs li:hover {
+}
+
+ul.tabs li.current { background-color: #525ed2; color: #fff;
+}
+
+.tabscontent { width: 100%;
+float: left; 
+}

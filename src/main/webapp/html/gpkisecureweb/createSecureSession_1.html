@@ -1,0 +1,56 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<meta http-equiv="X-UA-Compatible" content="IE=Edge;" />
+	<title>GPKI 사용자용 표준보안API</title>
+	<script type="text/javascript" src="./client/json2.js"></script>
+	<script type="text/javascript" src="./client/jquery-1.7.1.min.js"></script>
+	<script type="text/javascript" src="./client/jquery-ui.min.js"></script>
+	<script type="text/javascript" src="./client/var.js"></script>
+	<script type="text/javascript" src="./client/GPKIErrorText.js"></script>
+	<script type="text/javascript" src="./client/GPKISecureWebNP.js"></script>
+	<link rel="stylesheet" type="text/css" href="./css/style.css" />
+</head>
+
+<body>
+	<div class="wrap">
+		<div class="header">
+			<h1><a href="index.html"><strong>GPKI 사용자용 표준보안API</strong></a></h1>
+		</div>
+		<div class="content">
+			<div class="course course1">
+				<div class="title">
+					<h2><span class="subject">1. 사용자 인증 및 보안 세션 만들기</span></h2><br/>
+				</div>
+				<div class="list_01">
+					<ul id="gpkilink">
+						<li>
+							<span class="subject">- 사용자와 서버 인증서 인증 후 보안 세션 만들기 (인증서 로그인)</span><span class="sub"><br /></span>
+							<span>
+								&nbsp;&nbsp;&nbsp;사용자 인증서와 서버 인증서에 대한 상호 검증 후 보안 세션을 생성합니다.<br/>
+								&nbsp;&nbsp;&nbsp;파라미터로 전달된 Form 객체와 URL link 내에 파라미터 값들을<br/>
+								&nbsp;&nbsp;&nbsp;서버 인증서(공개키)로 암호화합니다.<br/>
+							</span>
+							<br/>
+							<div class="list_final_item">
+								<ul><li><a href="createSecureSession_1_1">* Form 객체를 이용한 팝업 로그인 (Login)</a></li></ul>
+							</div>
+							<div class="list_final_item">
+								<ul><li><a href="createSecureSession_1_3">* Form 객체를 이용한 임베디드 로그인 (LoginEmbedded)</a></li></ul>
+							</div>
+							<div class="list_final_item">
+								<ul><li><a href="createSecureSession_1_2">* URL 링크를 이용한 팝업 로그인 (LoginLink)</a></li></ul>
+							</div>
+						</li>
+					</ul>
+				</div>
+			</div>
+			<div class="sp"></div>
+			<script type="text/javascript">
+				$(document).ready(replaceServerScriptExt());
+			</script>
+		</div>
+	</div>
+</body>
+</html>

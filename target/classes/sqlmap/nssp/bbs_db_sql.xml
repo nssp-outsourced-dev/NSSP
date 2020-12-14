@@ -1,0 +1,473 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC '-//ibatis.apache.org//DTD Sql Map 2.0//EN' 'http://ibatis.apache.org/dtd/sql-map-2.dtd'> 
+<sqlMap namespace="bbs">
+
+	<resultMap id="bbsMap" class="java.util.HashMap">
+	    <result column="BBS_ID" property="BBS_ID" />
+	    <result column="BBS_SN" property="BBS_SN" />
+	    <result column="NTT_SJ" property="NTT_SJ" />
+    	<result column="NTT_CN" property="NTT_CN" javaType="java.lang.String" jdbcType="CLOB" />
+	    <result column="REFRN_SN" property="REFRN_SN" />
+	    <result column="DPNDCY_SN" property="DPNDCY_SN" />
+	    <result column="INQIRE_CO" property="INQIRE_CO" />
+	    <result column="FILE_ID" property="FILE_ID" />
+	    <result column="NOTICE_YN" property="NOTICE_YN" />
+	    <result column="NOTICE_BEGIN_DE" property="NOTICE_BEGIN_DE" />
+	    <result column="NOTICE_END_DE" property="NOTICE_END_DE" />
+	    <result column="OTHBC_YN" property="OTHBC_YN" />
+	    <result column="OTHBC_PW" property="OTHBC_PW" />
+	    <result column="WRITNG_ID" property="WRITNG_ID" />
+	    <result column="WRITNG_NM" property="WRITNG_NM" />
+	    <result column="WRITNG_DT" property="WRITNG_DT" />
+	    <result column="UPDT_ID" property="UPDT_ID" />
+	    <result column="UPDT_DT" property="UPDT_DT" />
+	</resultMap>
+
+
+	<select id="selectBbsManageList" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		SELECT 
+		BBS_ID,
+		BBS_NM,
+		BBS_CN,
+		REPLY_YN,
+		ATCH_FILE_CO,
+		CMNT_YN,
+		USE_YN,
+		WRITNG_AUTHOR_SE,
+		INQIRE_AUTHOR_SE,
+		CMNT_WRITNG_AUTHOR_SE,
+		CMNT_INQIRE_AUTHOR_SE,
+		WRITNG_ID,
+		WRITNG_DT,
+		UPDT_ID,
+		UPDT_DT
+		FROM CMN_BBS_MANAGE B
+		ORDER BY B.BBS_ID ASC
+	</select>
+
+	<select id="selectBbsManageDetail" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		SELECT 
+		BBS_ID,
+		BBS_NM,
+		BBS_CN,
+		REPLY_YN,
+		ATCH_FILE_CO,
+		CMNT_YN,
+		USE_YN,
+		WRITNG_AUTHOR_SE,
+		INQIRE_AUTHOR_SE,
+		CMNT_WRITNG_AUTHOR_SE,
+		CMNT_INQIRE_AUTHOR_SE,
+		WRITNG_ID,
+		WRITNG_DT,
+		UPDT_ID,
+		UPDT_DT
+		FROM CMN_BBS_MANAGE B
+		WHERE B.BBS_ID = #bbs_id#
+	</select>
+
+	<insert id="insertBbsManage" parameterClass="HashMap">
+		INSERT INTO CMN_BBS_MANAGE(
+			BBS_ID,
+			BBS_NM,
+			BBS_CN,
+			REPLY_YN,
+			ATCH_FILE_CO,
+			CMNT_YN,
+			USE_YN,
+			WRITNG_AUTHOR_SE,
+			INQIRE_AUTHOR_SE,
+			CMNT_WRITNG_AUTHOR_SE,
+			CMNT_INQIRE_AUTHOR_SE,
+			WRITNG_ID,
+			WRITNG_DT
+		) VALUES(
+			(SELECT LPAD(NVL(MAX(BBS_ID),0)+1, 20, '0') FROM CMN_BBS_MANAGE),
+			#bbs_nm#,
+			#bbs_cn#,
+			#reply_yn#,
+			#atch_file_co#,
+			#cmnt_yn#,
+			#use_yn#,
+			#writng_author_se#,
+			#inqire_author_se#,
+			#cmnt_writng_author_se#,
+			#cmnt_inqire_author_se#,
+			#esntl_id#,
+			SYSDATE
+		)
+	</insert>
+	
+	<update id="updateBbsManage" parameterClass="HashMap">
+		UPDATE CMN_BBS_MANAGE SET
+			BBS_NM = #bbs_nm#,
+			BBS_CN = #bbs_cn#,
+			REPLY_YN = #reply_yn#,
+			ATCH_FILE_CO = #atch_file_co#,
+			CMNT_YN = #cmnt_yn#,
+			USE_YN = #use_yn#,
+			WRITNG_AUTHOR_SE = #writng_author_se#,
+			INQIRE_AUTHOR_SE = #inqire_author_se#,
+			CMNT_WRITNG_AUTHOR_SE = #cmnt_writng_author_se#,
+			CMNT_INQIRE_AUTHOR_SE = #cmnt_inqire_author_se#,
+			UPDT_ID = #esntl_id#,
+			UPDT_DT = SYSDATE
+		WHERE BBS_ID = #bbs_id#
+	</update>
+
+	<select id="selectBbsList" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		SELECT 
+		X.RN,
+		X.DP,
+		X.TOT_CNT,
+		X.BBS_ID,
+		X.BBS_SN,
+		X.NTT_SJ,
+		X.REFRN_SN,
+		X.DPNDCY_SN,
+		X.FILE_ID,
+		X.USE_YN,
+	    (
+	        CASE WHEN X.NOTICE_YN = 'Y' 
+	        AND X.NOTICE_BEGIN_DE <![CDATA[ <= ]]> TO_CHAR(SYSDATE, 'YYYYMMDD') 
+	        AND X.NOTICE_END_DE <![CDATA[ >= ]]> TO_CHAR(SYSDATE, 'YYYYMMDD')
+	        THEN 'Y' ELSE 'N' END
+		) AS NOTICE_YN, 
+		X.NOTICE_BEGIN_DE,
+		X.NOTICE_END_DE,
+		X.OTHBC_YN,
+		X.OTHBC_PW,
+		X.WRITNG_ID,
+		FN_USER_NM(X.WRITNG_ID) AS WRITNG_NM,
+		TO_CHAR(X.WRITNG_DT, 'yyyy-mm-dd hh24:mi') AS WRITNG_DT,
+		TO_CHAR(X.WRITNG_DT, 'yyyy-mm-dd') AS WRITNG_DE,
+		X.UPDT_ID,
+		TO_CHAR(X.UPDT_DT, 'yyyy-mm-dd hh24:mi') AS UPDT_DT,
+		X.INQIRE_CO,
+		(CASE WHEN TO_CHAR(X.WRITNG_DT, 'yyyymmdd') = TO_CHAR(SYSDATE, 'yyyymmdd') THEN 'Y' ELSE 'N' END) AS NEW_YN,
+		(
+			SELECT COUNT(*)
+			FROM CMN_BBS_CMNT BC
+			WHERE BC.BBS_ID = X.BBS_ID 
+			AND BC.BBS_SN = X.BBS_SN
+			AND BC.USE_YN = 'Y'
+		) AS CMNT_CNT,
+		(
+			SELECT COUNT(*)
+			FROM CMN_FILE_DETAIL FD
+			WHERE FD.FILE_ID = X.FILE_ID 
+			AND FD.USE_YN = 'Y'
+		) AS FILE_CNT
+		FROM 
+		(
+			SELECT A.*, 
+			ROWNUM AS RN, COUNT(*) OVER() AS TOT_CNT
+			FROM 
+			(
+				SELECT 
+				LEVEL AS DP,
+				B.BBS_ID,
+				B.BBS_SN,
+				B.NTT_SJ,
+				B.REFRN_SN,
+				B.DPNDCY_SN,
+				B.INQIRE_CO,
+				B.FILE_ID,
+				B.USE_YN,
+				B.NOTICE_YN,
+				B.NOTICE_BEGIN_DE,
+				B.NOTICE_END_DE,
+				B.OTHBC_YN,
+				B.OTHBC_PW,
+				B.WRITNG_ID,
+				B.WRITNG_DT,
+				B.UPDT_ID,
+				B.UPDT_DT
+				FROM CMN_BBS B
+				WHERE B.USE_YN = 'Y' 
+				<isNotEmpty property="ntt_sj" prepend="AND">
+					B.NTT_SJ LIKE '%' || #ntt_sj# || '%'
+				</isNotEmpty>
+				START WITH B.BBS_ID = #bbs_id# AND B.DPNDCY_SN = 0
+				CONNECT BY PRIOR B.BBS_SN = B.DPNDCY_SN AND B.BBS_ID = #bbs_id#
+				ORDER SIBLINGS BY 
+				    (
+				        CASE WHEN B.NOTICE_YN = 'Y' 
+				        AND B.NOTICE_BEGIN_DE <![CDATA[ <= ]]> TO_CHAR(SYSDATE, 'YYYYMMDD') 
+				        AND B.NOTICE_END_DE <![CDATA[ >= ]]> TO_CHAR(SYSDATE, 'YYYYMMDD')
+				        THEN 1 ELSE 2 END
+                    ) ASC, 
+				    B.REFRN_SN DESC, B.BBS_SN ASC
+			) A	
+		) X
+		WHERE (RN <![CDATA[ > ]]> #startRow# AND RN <![CDATA[ <= ]]> #endRow#)
+		ORDER BY RN ASC
+	</select>
+
+	<select id="selectBbsDetail" parameterClass="java.util.HashMap" resultMap="bbsMap"> 
+		SELECT 
+		B.BBS_ID,
+		B.BBS_SN,
+		B.NTT_SJ,
+		B.NTT_CN,
+		B.REFRN_SN,
+		B.DPNDCY_SN,
+		B.INQIRE_CO,
+		B.FILE_ID,
+		B.USE_YN,
+	    (
+	        CASE WHEN B.NOTICE_YN = 'Y' 
+	        AND B.NOTICE_BEGIN_DE <![CDATA[ <= ]]> TO_CHAR(SYSDATE, 'YYYYMMDD') 
+	        AND B.NOTICE_END_DE <![CDATA[ >= ]]> TO_CHAR(SYSDATE, 'YYYYMMDD')
+	        THEN 'Y' ELSE 'N' END
+		) AS NOTICE_YN, 
+		B.NOTICE_BEGIN_DE,
+		B.NOTICE_END_DE,
+		B.OTHBC_YN,
+		B.OTHBC_PW,
+		B.WRITNG_ID,
+		FN_USER_NM(B.WRITNG_ID) AS WRITNG_NM,
+		TO_CHAR(B.WRITNG_DT, 'yyyy-mm-dd hh24:mi') AS WRITNG_DT,
+		TO_CHAR(B.WRITNG_DT, 'yyyy. mm. dd') AS WRITNG_DE,
+		B.UPDT_ID,
+		TO_CHAR(B.UPDT_DT, 'yyyy-mm-dd hh24:mi') AS UPDT_DT,
+		B.INQIRE_CO
+		FROM CMN_BBS B
+		WHERE B.BBS_ID = #bbs_id#
+		AND B.BBS_SN = #bbs_sn#
+		AND B.USE_YN = 'Y' 
+	</select>
+
+	<select id="selectBbsPreview" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		SELECT
+		X.CATE,
+		X.BBS_SN, 
+		X.NTT_SJ,  
+		X.WRITNG_ID, 
+		TO_CHAR(X.WRITNG_DT,'YYYY-MM-DD') AS WRITNG_DT,
+		X.OTHBC_YN,
+	    (
+	        CASE WHEN X.NOTICE_YN = 'Y' 
+	        AND X.NOTICE_BEGIN_DE <![CDATA[ <= ]]> TO_CHAR(SYSDATE, 'YYYYMMDD') 
+	        AND X.NOTICE_END_DE <![CDATA[ >= ]]> TO_CHAR(SYSDATE, 'YYYYMMDD')
+	        THEN 'Y' ELSE 'N' END
+		) AS NOTICE_YN,
+		(CASE WHEN TO_CHAR(X.WRITNG_DT, 'yyyymmdd') = TO_CHAR(SYSDATE, 'yyyymmdd') THEN 'Y' ELSE 'N' END) AS NEW_YN,
+		(
+			SELECT COUNT(*)
+			FROM CMN_BBS_CMNT BC
+			WHERE BC.BBS_ID = X.BBS_ID 
+			AND BC.BBS_SN = X.BBS_SN
+			AND BC.USE_YN = 'Y'
+		) AS CMNT_CNT,
+		(
+			SELECT COUNT(*)
+			FROM CMN_FILE_DETAIL FD
+			WHERE FD.FILE_ID = X.FILE_ID 
+			AND FD.USE_YN = 'Y'
+		) AS FILE_CNT
+		FROM
+		(
+			SELECT 'PREV' AS CATE, B.* 
+			FROM CMN_BBS B 
+			WHERE B.BBS_ID = #bbs_id#
+	        AND B.BBS_SN IN (
+	    		SELECT MIN(S2.BBS_SN)
+	    		FROM CMN_BBS S2 
+	    		WHERE S2.BBS_ID = #bbs_id# AND S2.USE_YN = 'Y' AND S2.DPNDCY_SN = '0'
+	            AND S2.BBS_SN <![CDATA[ > ]]> #bbs_sn#
+	        )     
+	        UNION ALL
+			SELECT 'NEXT' AS CATE, A.*
+			FROM CMN_BBS A 
+			WHERE A.BBS_ID = #bbs_id#
+	        AND A.BBS_SN IN (
+	    		SELECT MAX(S1.BBS_SN)
+	    		FROM CMN_BBS S1 
+	    		WHERE S1.BBS_ID = #bbs_id# AND S1.USE_YN = 'Y' AND S1.DPNDCY_SN = '0'
+	            AND S1.BBS_SN <![CDATA[ < ]]> #bbs_sn#
+	        )
+        ) X
+	</select>
+	
+	<insert id="insertBbs" parameterClass="HashMap">
+
+		<selectKey keyProperty="bbs_sn" resultClass="int">
+			SELECT NVL(MAX(BBS_SN)+1, 1) FROM CMN_BBS WHERE BBS_ID = #bbs_id#
+		</selectKey>
+
+		INSERT INTO CMN_BBS(
+			BBS_ID,
+			BBS_SN,
+			NTT_SJ,
+			NTT_CN,
+			REFRN_SN,
+			DPNDCY_SN,
+			USE_YN,
+			FILE_ID,
+			NOTICE_YN,
+			<isEqual property="notice_yn" compareValue="Y">
+				NOTICE_BEGIN_DE,
+				NOTICE_END_DE,
+			</isEqual>
+			OTHBC_YN,
+			<isEqual property="othbc_yn" compareValue="N">
+				OTHBC_PW,
+			</isEqual>
+			WRITNG_ID,
+			WRITNG_DT,
+			INQIRE_CO
+		) VALUES(
+			#bbs_id#,
+			#bbs_sn#,
+			#ntt_sj#,
+			#ntt_cn:CLOB#,
+			<isEmpty property="parent_sn">
+				#bbs_sn#,
+				0,
+			</isEmpty>
+			<isNotEmpty property="parent_sn">
+				(
+					SELECT REFRN_SN 
+					FROM CMN_BBS 
+					WHERE BBS_ID = #bbs_id# 
+					AND BBS_SN = #parent_sn#
+				),
+				#parent_sn#,
+			</isNotEmpty>
+			'Y',
+			#file_id#,
+			#notice_yn#,
+			<isEqual property="notice_yn" compareValue="Y">
+				replace(#notice_begin_de#,'-',''),
+				replace(#notice_end_de#,'-',''),
+			</isEqual>
+			#othbc_yn#,
+			<isEqual property="othbc_yn" compareValue="N">
+				#othbc_pw#,
+			</isEqual>
+			#esntl_id#,
+			SYSDATE,
+			0
+		)
+	</insert>
+	
+	<update id="updateBbs" parameterClass="HashMap">
+		UPDATE CMN_BBS SET
+			NTT_SJ = #ntt_sj#,
+			NTT_CN = #ntt_cn:CLOB#,
+			<isNotEmpty property="file_id">
+				FILE_ID = #file_id#,
+			</isNotEmpty>
+			NOTICE_YN = #notice_yn#,
+			<isEqual property="notice_yn" compareValue="Y">
+				NOTICE_BEGIN_DE = replace(#notice_begin_de#,'-',''),
+				NOTICE_END_DE = replace(#notice_end_de#,'-',''),
+			</isEqual>
+			OTHBC_YN = #othbc_yn#,
+			<isEqual property="othbc_yn" compareValue="N">
+				OTHBC_PW = #othbc_pw#,
+			</isEqual>
+			UPDT_ID = #esntl_id#,
+			UPDT_DT = SYSDATE
+		WHERE BBS_ID = #bbs_id#
+		AND BBS_SN = #bbs_sn#
+		AND USE_YN = 'Y' 
+	</update>
+
+	<update id="deleteBbs" parameterClass="HashMap">
+		UPDATE CMN_BBS SET
+			USE_YN = 'N',
+			UPDT_ID = #esntl_id#,
+			UPDT_DT = SYSDATE
+		WHERE BBS_ID = #bbs_id#
+		AND BBS_SN = #bbs_sn#
+		AND USE_YN = 'Y' 
+	</update>
+	
+	<update id="updateBbsInqireCo" parameterClass="HashMap">
+		UPDATE CMN_BBS SET
+			INQIRE_CO = INQIRE_CO + 1
+		WHERE BBS_ID = #bbs_id#
+		AND BBS_SN = #bbs_sn#
+		AND USE_YN = 'Y' 
+	</update>
+
+
+
+	<select id="selectBbsCmntList" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		SELECT 
+		BC.CMNT_SN,
+		<isEqual property="hide_yn" compareValue="Y">
+			CASE WHEN WRITNG_ID = #esntl_id# THEN BC.CMNT_CN ELSE '비밀 덧글입니다.' END AS CMNT_CN,
+		</isEqual>
+		<isNotEqual property="hide_yn" compareValue="Y">
+			BC.CMNT_CN,
+		</isNotEqual>
+		FN_USER_NM(BC.WRITNG_ID) AS WRITNG_NM,
+		WRITNG_ID,
+		TO_CHAR(BC.WRITNG_DT, 'yyyy-mm-dd hh24:mi') AS WRITNG_DT,
+		UPDT_ID,
+		TO_CHAR(BC.UPDT_DT, 'yyyy-mm-dd hh24:mi') AS UPDT_DT
+		FROM CMN_BBS_CMNT BC
+		WHERE BC.BBS_ID = #bbs_id# 
+		AND BC.BBS_SN = #bbs_sn# 
+		AND BC.USE_YN = 'Y' 
+		ORDER BY BC.CMNT_SN ASC
+	</select>
+
+	<select id="selectBbsCmntDetail" parameterClass="java.util.HashMap" resultClass="java.util.HashMap"> 
+		SELECT 
+		BC.CMNT_CN,
+		FN_USER_NM(BC.WRITNG_ID) AS WRITNG_NM,
+		WRITNG_ID,
+		TO_CHAR(BC.WRITNG_DT, 'yyyy-mm-dd hh24:mi') AS WRITNG_DT,
+		UPDT_ID,
+		TO_CHAR(BC.UPDT_DT, 'yyyy-mm-dd hh24:mi') AS UPDT_DT
+		FROM CMN_BBS_CMNT BC
+		WHERE BC.BBS_ID = #bbs_id# 
+		AND BC.BBS_SN = #bbs_sn#
+		AND BC.CMNT_SN = #cmnt_sn# 
+		AND BC.USE_YN = 'Y' 
+	</select>
+
+	<insert id="insertBbsCmnt" parameterClass="HashMap">
+		INSERT INTO CMN_BBS_CMNT(
+			BBS_ID,
+			BBS_SN,
+			CMNT_SN,
+			CMNT_CN,
+			USE_YN,
+			WRITNG_ID,
+			WRITNG_DT
+		) VALUES(
+			#bbs_id#,
+			#bbs_sn#,
+			(SELECT NVL(MAX(CMNT_SN)+1, 1) FROM CMN_BBS_CMNT WHERE BBS_ID = #bbs_id# AND BBS_SN = #bbs_sn#),
+			#cmnt_cn#,
+			'Y',
+			#esntl_id#,
+			SYSDATE
+		)
+	</insert>
+	
+	<update id="updateBbsCmnt" parameterClass="HashMap">
+		UPDATE CMN_BBS_CMNT SET
+			CMNT_CN = #cmnt_cn#,
+			UPDT_ID = #esntl_id#,
+			UPDT_DT = SYSDATE
+		WHERE BBS_ID = #bbs_id# 
+		AND BBS_SN = #bbs_sn#
+		AND CMNT_SN = #cmnt_sn# 
+	</update>
+
+	<update id="deleteBbsCmnt" parameterClass="HashMap">
+		UPDATE CMN_BBS_CMNT SET
+			USE_YN = 'N',
+			UPDT_ID = #esntl_id#,
+			UPDT_DT = SYSDATE
+		WHERE BBS_ID = #bbs_id# 
+		AND BBS_SN = #bbs_sn#
+		AND CMNT_SN = #cmnt_sn# 
+	</update>
+</sqlMap>

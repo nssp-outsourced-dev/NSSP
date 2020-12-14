@@ -1,0 +1,21 @@
+#
+#  sample configuraion for MariaDB
+#
+
+mariadb_example.vendor=mariadb
+mariadb_example.portNo=3306
+mariadb_example.serverAddress=127.0.0.1
+mariadb_example.password=mariadb
+mariadb_example.user=mariadb
+mariadb_example.maxconns=20
+mariadb_example.initconns=5
+mariadb_example.timeout=5
+mariadb_example.initSqls=
+mariadb_example.closeSqls=
+mariadb_example.doConnectionCheck=false
+mariadb_example.testQueryString=
+mariadb_example.sessionQuery=
+mariadb_example.encodecharset=
+mariadb_example.decodecharset=
+mariadb_example.fetchrow=0
+mariadb_example.ignoreQueryError=false

@@ -1,0 +1,381 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC '-//ibatis.apache.org//DTD Sql Map 2.0//EN' 'http://ibatis.apache.org/dtd/sql-map-2.dtd'>
+<sqlMap namespace="inv.commn">
+
+	<!-- 내사건목록 -->
+	<select id="selectMyCaseList" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+	<![CDATA[
+		SELECT A.RC_NO
+		     , TO_CHAR(A.RC_DT, 'YYYY-MM-DD') RC_DT
+		     , B.CASE_NO
+		     , TO_CHAR(TO_DATE(B.PRSCT_DE, 'YYYY-MM-DD'), 'YYYY-MM-DD') PRSCT_DE
+		     , NVL(B.CMPTNC_EXMN_CD, A.CMPTNC_EXMN_CD) CMPTNC_EXMN_CD
+		     , FN_EXMN_NM(NVL(B.CMPTNC_EXMN_CD, A.CMPTNC_EXMN_CD)) CMPTNC_EXMN_NM
+		     , NVL(FN_USER_NM(B.CHARGER_ID), FN_RC_ALOT_NM(A.RC_NO)) ALOT_USER_NM
+		     , NVL(FN_CASE_VIOLT_NM(B.CASE_NO), FN_RC_VIOLT_NM(A.RC_NO)) VIOLT_NM
+		     , NVL(FN_CASE_TRGTER_NMS(A.CASE_NO), FN_RC_TRGTER_NMS(A.RC_NO)) TRGTER_NMS
+		  FROM RC_TMPR A
+		     , INV_PRSCT B
+		 WHERE A.USE_YN = 'Y'
+		   AND NVL(B.USE_YN, 'Y') = 'Y'
+		   AND A.CASE_NO = B.CASE_NO (+)
+	]]><isNotEmpty property="RC_NO">
+		   AND A.RC_NO = #RC_NO#
+		</isNotEmpty>
+		<isNotEmpty property="RC_DT_FROM">
+		   AND A.RC_DT BETWEEN TO_DATE(REPLACE(#RC_DT_FROM#, '-', ''), 'YYYYMMDD') AND TO_DATE(NVL(REPLACE(#RC_DT_TO#, '-', ''), REPLACE(#RC_DT_FROM#, '-', '')), 'YYYYMMDD') + 0.99999
+		</isNotEmpty>
+		<isNotEmpty property="CASE_NO">
+		   AND B.CHARGER_ID = #CHARGER_ID#
+		   AND A.CASE_NO = #CASE_NO#
+		</isNotEmpty>
+		<isNotEmpty property="PRSCT_DE_FROM">
+		   AND B.PRSCT_DE BETWEEN REPLACE(#PRSCT_DE_FROM#, '-', '') AND REPLACE(NVL(#PRSCT_DE_TO#, #PRSCT_DE_FROM#), '-', '')
+		</isNotEmpty>
+	</select>
+
+	<select id="selectCommnList" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+	<![CDATA[
+		SELECT A.PRMISN_PROGRS_NO
+             , A.PRMISN_SE_CD
+             , FN_CD_NM(A.PRMISN_SE_CD) PRMISN_SE_CD_NM
+             , A.COMMN_BSNM
+             , A.RC_NO
+             , C.CASE_NO
+             , A.REQST_DE
+             , A.TRGTER_SN
+             , X.TRGTER_NM
+             , A.REQST_RESULT_CD
+             , FN_CD_NM(A.REQST_RESULT_CD) REQST_RESULT_CD_NM
+             , A.REREQST_YN
+             , A.ORIGNL_PROGRS_NO
+          FROM INV_COMMN_PRMISN A
+          LEFT JOIN RC_TMPR_TRGTER X ON X.RC_NO = A.RC_NO AND X.TRGTER_SN = A.TRGTER_SN
+          LEFT JOIN RC_TMPR C ON A.RC_NO = C.RC_NO
+         WHERE A.USE_YN = 'Y'
+		   AND A.WRITNG_ID = #WRITNG_ID#
+	]]><isNotEmpty property="RC_NO" open="AND">
+		    A.RC_NO LIKE #RC_NO#||'%'
+		</isNotEmpty>
+		<isNotEmpty property="TRGTER_SN" open="AND">
+			A.TRGTER_SN = #TRGTER_SN#
+		</isNotEmpty>
+		 ORDER BY PRMISN_PROGRS_NO
+	</select>
+
+	<select id="selectCommnInfo" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+	<![CDATA[
+		SELECT PRMISN_PROGRS_NO
+             , PRMISN_SE_CD
+             , COMMN_BSNM
+             , TO_CHAR(TO_DATE(REQST_DE,'YYYYMMDD'),'YYYY-MM-DD') AS REQST_DE
+             , DTA_SCOPE
+             , REQUST_RESN
+             , SBSCRBER_RELATE
+             , RERQEST_RESN
+             , NNPMSNPC_RESN
+             , TO_CHAR(EXCUT_DT,'YYYY-MM-DD')     AS EXCUT_DT
+             , TO_CHAR(EXCUT_DT,'HH24')          AS EXCUT_DT2
+             , TO_CHAR(EXCUT_DT,'MI')              AS EXCUT_DT3
+             , A.DOC_ID
+             , A.FILE_ID
+             , A.RC_NO
+             , B.CASE_NO
+             , A.TRGTER_SN
+             , TRGTER_NM
+             , DGUARD.DECRYPT('TBL','ENC',C.TRGTER_RRN) AS TRGTER_RRN
+             , ADRES_ADDR
+             , FN_CD_NM(OCCP_CD) OCCP_CD_NM
+             , FN_EXMN_NM(B.CMPTNC_EXMN_CD) CMPTNC_EXMN_NM
+             , FN_USER_NM(B.CHARGER_ID) ALOT_USER_NM
+             , FN_RC_VIOLT_UPPER_NMS(A.RC_NO) VIOLT_NM
+             , REQST_RESULT_CD
+             , PRMISN_NO
+             , TO_CHAR(TO_DATE(PRMISN_RECPT_DE,'YYYYMMDD'),'YYYY-MM-DD') AS PRMISN_RECPT_DE
+             , TO_CHAR(TO_DATE(ISUE_DE,'YYYYMMDD'),'YYYY-MM-DD') AS ISUE_DE
+             , DSMSSL_SE_CD
+             , TO_CHAR(TO_DATE(DSMSSL_DE,'YYYYMMDD'),'YYYY-MM-DD') AS DSMSSL_DE
+             , DSMSSL_RESN
+             , TO_CHAR(TO_DATE(RETURN_DE,'YYYYMMDD'),'YYYY-MM-DD') AS RETURN_DE
+             , RETURN_RESN
+             , REREQST_YN
+             , ORIGNL_PROGRS_NO
+             , A.DTA_SCOPE_ENCLSR_YN
+             , A.REQUST_RESN_ENCLSR_YN
+             , A.SBSCRBER_RELATE_ENCLSR_YN
+             , A.RERQEST_RESN_ENCLSR_YN
+             , A.NNPMSNPC_RESN_ENCLSR_YN
+          FROM INV_COMMN_PRMISN A
+             , RC_TMPR_TRGTER C
+             , RC_TMPR B
+         WHERE A.RC_NO = C.RC_NO
+           AND A.TRGTER_SN = C.TRGTER_SN
+           AND A.USE_YN = 'Y'
+           AND B.USE_YN = 'Y'
+           AND A.RC_NO = B.RC_NO
+		   AND A.WRITNG_ID = #WRITNG_ID#
+		   AND A.PRMISN_PROGRS_NO = #PRMISN_PROGRS_NO#
+		 ORDER BY A.PRMISN_PROGRS_NO DESC
+	]]>
+	</select>
+
+	<insert id="insertCommn" parameterClass="java.util.HashMap">
+		<selectKey keyProperty="PRMISN_PROGRS_NO" resultClass="String">
+		SELECT TO_CHAR(SYSDATE, 'YYYY')|| '-' || LPAD(NVL(MAX(SUBSTR(PRMISN_PROGRS_NO,6,6)),0)+1, 6, '0')
+		  FROM INV_COMMN_PRMISN
+		 WHERE PRMISN_PROGRS_NO LIKE TO_CHAR(SYSDATE, 'YYYY')||'%'
+		</selectKey>
+		INSERT INTO INV_COMMN_PRMISN
+			( PRMISN_PROGRS_NO
+			, PRMISN_SE_CD
+		<isEqual property="PRMISN_SE_CD" compareValue="00743">
+			, NNPMSNPC_RESN
+			, EXCUT_DT
+		</isEqual>
+			, COMMN_BSNM
+			, REQST_DE
+			, DTA_SCOPE
+			, REQUST_RESN
+			, SBSCRBER_RELATE
+			, RERQEST_RESN
+			, REQST_RESULT_CD
+			, PRMISN_NO
+			, PRMISN_RECPT_DE
+			, ISUE_DE
+			, DSMSSL_SE_CD
+			, DSMSSL_DE
+			, DSMSSL_RESN
+			, RETURN_DE
+			, RETURN_RESN
+			, RC_NO
+			, TRGTER_SN
+			, DOC_ID
+			, FILE_ID
+			, WRITNG_ID
+			, WRITNG_DT
+			, UPDT_ID
+			, UPDT_DT
+			, DTA_SCOPE_ENCLSR_YN
+            , REQUST_RESN_ENCLSR_YN
+            , SBSCRBER_RELATE_ENCLSR_YN
+            , RERQEST_RESN_ENCLSR_YN
+            , NNPMSNPC_RESN_ENCLSR_YN
+			)
+		VALUES
+			( #PRMISN_PROGRS_NO#
+			, #PRMISN_SE_CD#
+		<isEqual property="PRMISN_SE_CD" compareValue="00743">
+			, #NNPMSNPC_RESN#
+			<isEmpty property="EXCUT_DT">
+				, ''
+			</isEmpty>
+			<isNotEmpty property="EXCUT_DT">
+				, TO_DATE(REPLACE(#EXCUT_DT#,'-','')||LPAD(#EXCUT_DT2#,2,'0')||LPAD(#EXCUT_DT3#,2,'0'),'YYYYMMDDHH24MI')
+			</isNotEmpty>
+		</isEqual>
+		<![CDATA[
+			, #COMMN_BSNM#
+			, REPLACE(#REQST_DE#, '-', '')
+			, #DTA_SCOPE#
+			, #REQUST_RESN#
+			, #SBSCRBER_RELATE#
+			, #RERQEST_RESN#
+			, '00737' /* 허가신청 */
+			, #PRMISN_NO#
+			, #PRMISN_RECPT_DE#
+			, #ISUE_DE#
+			, #DSMSSL_SE_CD#
+			, #DSMSSL_DE#
+			, #DSMSSL_RESN#
+			, #RETURN_DE#
+			, #RETURN_RESN#
+			, #RC_NO#
+			, #TRGTER_SN#
+			, #DOC_ID#
+			, #FILE_ID#
+			, #WRITNG_ID#
+			, SYSDATE
+			, #UPDT_ID#
+			, SYSDATE
+			, #DTA_SCOPE_ENCLSR_YN#
+            , #REQUST_RESN_ENCLSR_YN#
+            , #SBSCRBER_RELATE_ENCLSR_YN#
+            , #RERQEST_RESN_ENCLSR_YN#
+            , #NNPMSNPC_RESN_ENCLSR_YN#
+			)
+		]]>
+	</insert>
+
+	<insert id="insertCommnRe" parameterClass="java.util.HashMap">
+		<selectKey keyProperty="PRMISN_PROGRS_NO" resultClass="String">
+		SELECT TO_CHAR(SYSDATE, 'YYYY')|| '-' || LPAD(NVL(MAX(SUBSTR(PRMISN_PROGRS_NO,6,6)),0)+1, 6, '0')
+		  FROM INV_COMMN_PRMISN
+		 WHERE PRMISN_PROGRS_NO LIKE TO_CHAR(SYSDATE, 'YYYY')||'%'
+		</selectKey>
+		<![CDATA[
+		INSERT INTO INV_COMMN_PRMISN
+			( PRMISN_PROGRS_NO
+			, PRMISN_SE_CD
+			, NNPMSNPC_RESN
+			, EXCUT_DT
+			, COMMN_BSNM
+			, REQST_DE
+			, DTA_SCOPE
+			, REQUST_RESN
+			, SBSCRBER_RELATE
+			, REQST_RESULT_CD
+			, RC_NO
+			, TRGTER_SN
+			, ORIGNL_PROGRS_NO
+			, DOC_ID
+			, FILE_ID
+			, WRITNG_ID
+			, WRITNG_DT
+			, UPDT_ID
+			, UPDT_DT
+			)
+		SELECT #PRMISN_PROGRS_NO#
+			, PRMISN_SE_CD
+			, NNPMSNPC_RESN
+			, EXCUT_DT
+			, COMMN_BSNM
+			, TO_CHAR(SYSDATE, 'YYYYMMDD')
+			, DTA_SCOPE
+			, REQUST_RESN
+			, SBSCRBER_RELATE
+			, '00737'  /* 허가신청 */
+			, RC_NO
+			, TRGTER_SN
+			, #ORIGNL_PROGRS_NO#
+			, DOC_ID
+			, FILE_ID
+			, #WRITNG_ID#
+			, SYSDATE
+			, #UPDT_ID#
+			, SYSDATE
+		 FROM INV_COMMN_PRMISN
+		WHERE PRMISN_PROGRS_NO = #ORIGNL_PROGRS_NO#
+		]]>
+	</insert>
+
+	<update id="updateCommn" parameterClass="java.util.HashMap">
+		UPDATE INV_COMMN_PRMISN
+		   SET PRMISN_SE_CD = #PRMISN_SE_CD#
+		<isEqual property="PRMISN_SE_CD" compareValue="00743"><!-- 사후허가 -->
+		     , NNPMSNPC_RESN = #NNPMSNPC_RESN#
+		     , EXCUT_DT      =
+		     	<isEmpty property="EXCUT_DT">
+					''
+				</isEmpty>
+				<isNotEmpty property="EXCUT_DT">
+					TO_DATE(REPLACE(#EXCUT_DT#,'-','')||LPAD(#EXCUT_DT2#,2,'0')||LPAD(#EXCUT_DT3#,2,'0'),'YYYYMMDDHH24MI')
+				</isNotEmpty>
+		</isEqual>
+		<isNotEqual property="PRMISN_SE_CD" compareValue="00743">
+		     , NNPMSNPC_RESN = ''
+		     , EXCUT_DT      = ''
+		</isNotEqual>
+		<![CDATA[
+		     , COMMN_BSNM      = #COMMN_BSNM#
+		     , REQST_DE        = REPLACE(#REQST_DE#, '-', '')
+		     , DTA_SCOPE       = #DTA_SCOPE#
+		     , REQUST_RESN     = #REQUST_RESN#
+		     , SBSCRBER_RELATE = #SBSCRBER_RELATE#
+		     , RERQEST_RESN    = #RERQEST_RESN#
+		     , UPDT_ID         = #UPDT_ID#
+		     , UPDT_DT         = SYSDATE
+		     , DTA_SCOPE_ENCLSR_YN		 = #DTA_SCOPE_ENCLSR_YN#
+             , REQUST_RESN_ENCLSR_YN	 = #REQUST_RESN_ENCLSR_YN#
+             , SBSCRBER_RELATE_ENCLSR_YN = #SBSCRBER_RELATE_ENCLSR_YN#
+             , RERQEST_RESN_ENCLSR_YN	 = #RERQEST_RESN_ENCLSR_YN#
+             , NNPMSNPC_RESN_ENCLSR_YN	 = #NNPMSNPC_RESN_ENCLSR_YN#
+		 WHERE USE_YN = 'Y'
+		   AND REQST_RESULT_CD = '00737'  /* 허가신청 */
+		   AND PRMISN_PROGRS_NO = #PRMISN_PROGRS_NO#
+		]]>
+	</update>
+
+	<update id="updateCommnRe" parameterClass="java.util.HashMap">
+	<![CDATA[
+		UPDATE INV_COMMN_PRMISN
+		   SET REREQST_YN = 'Y'
+		 WHERE USE_YN = 'Y'
+		   AND REREQST_YN = 'N'
+		   AND REQST_RESULT_CD = '00739'  /* 기각 */
+		   AND PRMISN_PROGRS_NO = #ORIGNL_PROGRS_NO#
+	]]>
+	</update>
+
+	<update id="updateCommnResult" parameterClass="java.util.HashMap">
+		UPDATE INV_COMMN_PRMISN
+		   SET REQST_RESULT_CD = #REQST_RESULT_CD#
+		<isEqual property="REQST_RESULT_CD" compareValue="00738"><!-- 허가 -->
+		     , PRMISN_NO       = #PRMISN_NO#
+		     , PRMISN_RECPT_DE = REPLACE(#PRMISN_RECPT_DE#, '-', '')
+		     , ISUE_DE         = REPLACE(#ISUE_DE#, '-', '')
+		</isEqual>
+		<isEqual property="REQST_RESULT_CD" compareValue="00739"><!-- 기각 -->
+		     , DSMSSL_SE_CD = #DSMSSL_SE_CD#
+		     , DSMSSL_DE    = REPLACE(#DSMSSL_DE#, '-', '')
+		     , DSMSSL_RESN  = <![CDATA[#DSMSSL_RESN#]]>
+		</isEqual>
+		<isEqual property="REQST_RESULT_CD" compareValue="00740"><!-- 반환 -->
+		     , RETURN_DE = REPLACE(#RETURN_DE#, '-', '')
+		     , RETURN_RESN = <![CDATA[#RETURN_RESN#]]>
+		</isEqual>
+		     , UPDT_ID = #UPDT_ID#
+		     , UPDT_DT = SYSDATE
+		 WHERE USE_YN = 'Y'
+		   AND PRMISN_PROGRS_NO = #PRMISN_PROGRS_NO#
+	</update>
+
+	<update id="deleteCommn" parameterClass="java.util.HashMap">
+	<![CDATA[
+		UPDATE INV_COMMN_PRMISN
+		   SET USE_YN = 'N'
+		     , UPDT_ID = #UPDT_ID#
+		     , UPDT_DT = SYSDATE
+		 WHERE PRMISN_PROGRS_NO = #PRMISN_PROGRS_NO#
+	]]>
+	</update>
+
+	<select id="selectCaseInfoList" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		SELECT
+			DECODE(A.RC_SE_CD, 'T' ,'임시','I','내사','F','정식') AS RC_SE_NM,
+			DECODE(A.RC_SE_CD, 'T' ,A.TMPR_NO,'I',A.ITIV_NO,'F',A.CASE_NO) AS DS_CASE_NO,
+			A.CASE_NO,
+			A.RC_NO,
+			FN_DEPT_NM (B.DEPT_CD) AS DEPT_NM,
+			FN_CD_NM (NVL(B.RSPOFC_CD, B.CLSF_CD)) AS RSPOFC_NM,
+			B.USER_NM AS CHARGER_NM, /*담당자*/
+			DGUARD.DECRYPT('TBL','ENC',B.HP_NO) AS HP_NO, /*담당자 연락처*/
+			B.TEL_NO,
+			FN_CD_NM (A.PROGRS_STTUS_CD) AS PROGRS_STTUS_NM,	/*수사상태*/
+			FN_RC_VIOLT_ROOT_NM (A.RC_NO) AS VIOLT_NM 			/*위반죄명*/
+		FROM RC_TMPR A
+		LEFT JOIN CMN_USER B ON A.CHARGER_ID = B.ESNTL_ID
+		WHERE A.USE_YN = 'Y'
+		  AND A.RC_NO IN (
+		  	SELECT DISTINCT C.RC_NO
+		  	FROM RC_TMPR_TRGTER C
+		  	WHERE C.TRGTER_NM LIKE NVL(#search_text#,'-') || '%'
+		  	  AND C.USE_YN = 'Y'
+		  	UNION ALL
+		  	SELECT DISTINCT D.RC_NO
+		  	FROM RC_TMPR_TRGTER D
+		  	WHERE D.WRC_NM LIKE NVL(#search_text#,'-') || '%'
+		  	  AND D.USE_YN = 'Y'
+		  	UNION ALL
+		  	SELECT DISTINCT E.RC_NO
+		  	FROM RC_TMPR_TRGTER E
+		  	WHERE E.TRGTER_RRN LIKE DGUARD.ENCRYPT('TBL','ENC',NVL(#search_text#,'-')) || '%'
+		  	  AND E.USE_YN = 'Y'
+		  )
+		  AND DECODE(A.RC_SE_CD, 'T' ,A.TMPR_NO,'I',A.ITIV_NO,'F',A.CASE_NO) IS NOT NULL /*사건번호,내사번호,임시번호*/
+		  AND A.USE_YN = 'Y'
+	</select>
+
+
+</sqlMap>
+
+

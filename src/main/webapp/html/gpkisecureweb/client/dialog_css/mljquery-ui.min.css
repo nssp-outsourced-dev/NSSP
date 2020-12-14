@@ -1,0 +1,1367 @@
+/*! jQuery UI - v1.11.2 - 2015-01-22
+* http://jqueryui.com
+* Includes: core.css, draggable.css, resizable.css, selectable.css, sortable.css, accordion.css, autocomplete.css, button.css, datepicker.css, dialog.css, menu.css, progressbar.css, selectmenu.css, slider.css, spinner.css, tabs.css, tooltip.css, theme.css
+* To view and modify this theme, visit http://jqueryui.com/themeroller/?ffDefault=Trebuchet%20MS%2CTahoma%2CVerdana%2CArial%2Csans-serif&fwDefault=bold&fsDefault=1.1em&cornerRadius=4px&bgColorHeader=f6a828&bgTextureHeader=gloss_wave&bgImgOpacityHeader=35&borderColorHeader=e78f08&fcHeader=ffffff&iconColorHeader=ffffff&bgColorContent=eeeeee&bgTextureContent=highlight_soft&bgImgOpacityContent=100&borderColorContent=dddddd&fcContent=333333&iconColorContent=222222&bgColorDefault=f6f6f6&bgTextureDefault=glass&bgImgOpacityDefault=100&borderColorDefault=cccccc&fcDefault=1c94c4&iconColorDefault=ef8c08&bgColorHover=fdf5ce&bgTextureHover=glass&bgImgOpacityHover=100&borderColorHover=fbcb09&fcHover=c77405&iconColorHover=ef8c08&bgColorActive=ffffff&bgTextureActive=glass&bgImgOpacityActive=65&borderColorActive=fbd850&fcActive=eb8f00&iconColorActive=ef8c08&bgColorHighlight=ffe45c&bgTextureHighlight=highlight_soft&bgImgOpacityHighlight=75&borderColorHighlight=fed22f&fcHighlight=363636&iconColorHighlight=228ef1&bgColorError=b81900&bgTextureError=diagonals_thick&bgImgOpacityError=18&borderColorError=cd0a0a&fcError=ffffff&iconColorError=ffd27a&bgColorOverlay=666666&bgTextureOverlay=diagonals_thick&bgImgOpacityOverlay=20&opacityOverlay=50&bgColorShadow=000000&bgTextureShadow=flat&bgImgOpacityShadow=10&opacityShadow=20&thicknessShadow=5px&offsetTopShadow=-5px&offsetLeftShadow=-5px&cornerRadiusShadow=5px
+* Copyright 2015 jQuery Foundation and other contributors; Licensed MIT */
+
+/* Layout helpers
+----------------------------------*/
+
+html,body{height:100%}
+.MLdialog-progress{
+	background:#fff url(../dialog_img/setup_content.png)no-repeat 20px 40px;
+	background-color:#ffffff;
+	background-image:url(../dialog_img/setup_content.gif);
+	background-position:20px 40px;
+	background-repeat: no-repeat;
+	width:440px;
+	padding:20px 0 20px 140px !important;
+	display:none;
+	z-index:15000;
+}
+.MLdialog-progress-font{
+	display:block; 
+	color:#193b65; 
+	margin:15px 0 15px 64px; 
+	font-weight:bold;
+}
+.MLdialog-progress-set{
+	width:152px; 
+	height:21px; 
+	margin-left:60px; 
+	display:block;
+}
+.MLdialog-mask{
+	position:absolute;
+	z-index:10000;
+	background-color:#000;
+	display:none;
+	left:0;
+	top:0;
+}
+.MLdialog-downloadChecker{
+	background:#fff url(../dialog_img/setup_content.png)no-repeat 20px 60px;
+	background-color:#ffffff;
+	background-image:url(../dialog_img/setup_content.gif);
+	background-position:20px 60px;
+	background-repeat: no-repeat;
+	width:440px;
+	padding:20px 0 20px 140px !important;
+	display:none;
+	z-index:15000;
+}
+.MLdialog-downloadChecker-icon{
+	width:152px; 
+	height:21px; 
+	margin-left:60px; 
+	display:block;
+	cursor: hand;
+}
+.MLdialog-downloadChecker-font{
+	display:block; 
+	color:#193b65; 
+	margin:15px 0 15px 64px; 
+	font-weight:bold;
+}
+.MLdialog-blue-button{
+	display:inline-block; 
+	background-color:#1f84c7;
+	padding-top:5px;
+	*padding-top:10px;
+	text-align:center;
+	line-hight:26px;
+	font-weight:bold;
+	color:#fff; 
+	width:80px; 
+	height:26px; 
+	margin-left:3px; 
+	margin-bottom:3px;
+	cursor: pointer;
+}
+.MLdialog-blue-button:hover{
+	background:#165c8b;
+	cursor: pointer;
+}
+.MLdialog-blue-button3{
+	display:inline-block; 
+	background-color:#1f84c7;
+	padding-top:5px;
+	*padding-top:10px;
+	text-align:center;
+	line-hight:26px;
+	font-weight:bold;
+	color:#fff; 
+	width:100px; 
+	height:26px; 
+	margin-left:3px; 
+	margin-bottom:3px;
+	cursor: pointer;
+}
+.MLdialog-blue-button3:hover{
+	background:#165c8b;
+	cursor: pointer;
+}
+.MLdialog-grey-button{
+	display:inline-block; 
+	background-color:#d1d1d1;
+	padding-top:5px;
+	*padding-top:10px; 
+	text-align:center; 
+	line-hight:26px; 
+	font-weight:bold; 
+	color:#fff; 
+	width:80px; 
+	height:26px; 
+	margin-left:10px; 
+	margin-bottom:3px;
+	cursor: pointer;
+}
+.MLdialog-grey-button:hover{
+	background:#929292;
+	cursor: pointer;
+}
+.MLdialog-grey-button3{
+	display:inline-block; 
+	background-color:#d1d1d1;
+	padding-top:5px;
+	*padding-top:10px; 
+	text-align:center; 
+	line-hight:26px; 
+	font-weight:bold; 
+	color:#fff; 
+	width:100px; 
+	height:26px; 
+	margin-left:10px; 
+	margin-bottom:3px;
+	cursor: pointer;
+}
+.MLdialog-grey-button3:hover{
+	background:#929292;
+	cursor: pointer;
+}
+.MLdialog-button-set3{
+	display:block;
+	padding-left:0px;
+}
+.MLdialog-button-set{
+	display:block;
+	padding-left:50px;
+}
+.MLdialog-div{
+	background:#fff url(../dialog_img/setup_content2.png)no-repeat 20px 40px;
+	background-color:#ffffff;
+	background-image:url(../dialog_img/setup_content2.gif);
+	background-position:20px 40px;
+	background-repeat: no-repeat;
+	width:440px;
+	padding:20px 0 20px 140px !important; 
+	border:1px solid #999;
+	display:none;
+	z-index:15000;
+}
+.MLui-helper-hidden {
+	display: none;
+}
+.MLui-helper-hidden-accessible {
+	border: 0;
+	clip: rect(0 0 0 0);
+	height: 1px;
+	margin: -1px;
+	overflow: hidden;
+	padding: 0;
+	position: absolute;
+	width: 1px;
+}
+.MLui-helper-reset {
+	margin: 0;
+	padding: 0;
+	border: 0;
+	outline: 0;
+	line-height: 1.3;
+	text-decoration: none;
+	font-size: 100%;
+	list-style: none;
+}
+.MLui-helper-clearfix:before,
+.MLui-helper-clearfix:after {
+	content: "";
+	display: table;
+	border-collapse: collapse;
+}
+.MLui-helper-clearfix:after {
+	clear: both;
+}
+.MLui-helper-clearfix {
+	min-height: 0; /* support: IE7 */
+}
+.MLui-helper-zfix {
+	width: 100%;
+	height: 100%;
+	top: 0;
+	left: 0;
+	position: absolute;
+	opacity: 0;
+	filter:Alpha(Opacity=0); /* support: IE8 */
+}
+
+.MLui-front {
+	z-index: 100;
+}
+
+.MLdialog-load-progress{
+	background:#fff url(../dialog_img/setup_loadbar.gif)no-repeat;
+	background-image:url(../dialog_img/setup_loadbar.gif);
+	width:160px;
+	height:10px;
+}
+.MLdialog-MacPath-img{
+	background:#fff url(../dialog_img/mac_path.png)no-repeat;
+	width:300px;
+	height:200px;
+}
+/* Interaction Cues
+----------------------------------*/
+.MLui-state-disabled {
+	cursor: default !important;
+}
+
+
+/* Icons
+----------------------------------*/
+
+/* states and images */
+.MLui-icon {
+	display: block;
+	text-indent: -99999px;
+	overflow: hidden;
+	background-repeat: no-repeat;
+}
+
+
+/* Misc visuals
+----------------------------------*/
+
+/* Overlays */
+.MLui-widget-overlay {
+	position: fixed;
+	_position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+}
+.MLui-draggable-handle {
+	-ms-touch-action: none;
+	touch-action: none;
+}
+.MLui-resizable {
+	position: relative;
+}
+.MLui-resizable-handle {
+	position: absolute;
+	font-size: 0.1px;
+	display: block;
+	-ms-touch-action: none;
+	touch-action: none;
+}
+.MLui-resizable-disabled .MLui-resizable-handle,
+.MLui-resizable-autohide .MLui-resizable-handle {
+	display: none;
+}
+.MLui-resizable-n {
+	cursor: n-resize;
+	height: 7px;
+	width: 100%;
+	top: -5px;
+	left: 0;
+}
+.MLui-resizable-s {
+	cursor: s-resize;
+	height: 7px;
+	width: 100%;
+	bottom: -5px;
+	left: 0;
+}
+.MLui-resizable-e {
+	cursor: e-resize;
+	width: 7px;
+	right: -5px;
+	top: 0;
+	height: 100%;
+}
+.MLui-resizable-w {
+	cursor: w-resize;
+	width: 7px;
+	left: -5px;
+	top: 0;
+	height: 100%;
+}
+.MLui-resizable-se {
+	cursor: se-resize;
+	width: 12px;
+	height: 12px;
+	right: 1px;
+	bottom: 1px;
+}
+.MLui-resizable-sw {
+	cursor: sw-resize;
+	width: 9px;
+	height: 9px;
+	left: -5px;
+	bottom: -5px;
+}
+.MLui-resizable-nw {
+	cursor: nw-resize;
+	width: 9px;
+	height: 9px;
+	left: -5px;
+	top: -5px;
+}
+.MLui-resizable-ne {
+	cursor: ne-resize;
+	width: 9px;
+	height: 9px;
+	right: -5px;
+	top: -5px;
+}
+.MLui-selectable {
+	-ms-touch-action: none;
+	touch-action: none;
+}
+.MLui-selectable-helper {
+	position: absolute;
+	z-index: 100;
+	border: 1px dotted black;
+}
+.MLui-sortable-handle {
+	-ms-touch-action: none;
+	touch-action: none;
+}
+.MLui-accordion .MLui-accordion-header {
+	display: block;
+	cursor: pointer;
+	position: relative;
+	margin: 2px 0 0 0;
+	padding: .5em .5em .5em .7em;
+	min-height: 0; /* support: IE7 */
+	font-size: 100%;
+}
+.MLui-accordion .MLui-accordion-icons {
+	padding-left: 2.2em;
+}
+.MLui-accordion .MLui-accordion-icons .MLui-accordion-icons {
+	padding-left: 2.2em;
+}
+.MLui-accordion .MLui-accordion-header .MLui-accordion-header-icon {
+	position: absolute;
+	left: .5em;
+	top: 50%;
+	margin-top: -8px;
+}
+.MLui-accordion .MLui-accordion-content {
+	padding: 1em 2.2em;
+	border-top: 0;
+	overflow: auto;
+}
+.MLui-autocomplete {
+	position: absolute;
+	top: 0;
+	left: 0;
+	cursor: default;
+}
+.MLui-button {
+	display: inline-block;
+	position: relative;
+	padding: 0;
+	line-height: normal;
+	margin-right: .1em;
+	cursor: pointer;
+	vertical-align: middle;
+	text-align: center;
+	overflow: visible; /* removes extra width in IE */
+}
+.MLui-button,
+.MLui-button:link,
+.MLui-button:visited,
+.MLui-button:hover,
+.MLui-button:active {
+	text-decoration: none;
+}
+/* to make room for the icon, a width needs to be set here */
+.MLui-button-icon-only {
+	width: 2.2em;
+}
+/* button elements seem to need a little more width */
+button.MLui-button-icon-only {
+	width: 2.4em;
+}
+.MLui-button-icons-only {
+	width: 3.4em;
+}
+button.MLui-button-icons-only {
+	width: 3.7em;
+}
+
+/* button text element */
+.MLui-button .MLui-button-text {
+	display: block;
+	line-height: normal;
+}
+.MLui-button-text-only .MLui-button-text {
+	padding: .4em 1em;
+}
+.MLui-button-icon-only .MLui-button-text,
+.MLui-button-icons-only .MLui-button-text {
+	padding: .4em;
+	text-indent: -9999999px;
+}
+.MLui-button-text-icon-primary .MLui-button-text,
+.MLui-button-text-icons .MLui-button-text {
+	padding: .4em 1em .4em 2.1em;
+}
+.MLui-button-text-icon-secondary .MLui-button-text,
+.MLui-button-text-icons .MLui-button-text {
+	padding: .4em 2.1em .4em 1em;
+}
+.MLui-button-text-icons .MLui-button-text {
+	padding-left: 2.1em;
+	padding-right: 2.1em;
+}
+/* no icon support for input elements, provide padding by default */
+input.MLui-button {
+	padding: .4em 1em;
+}
+
+/* button icon element(s) */
+.MLui-button-icon-only .MLui-icon,
+.MLui-button-text-icon-primary .MLui-icon,
+.MLui-button-text-icon-secondary .MLui-icon,
+.MLui-button-text-icons .MLui-icon,
+.MLui-button-icons-only .MLui-icon {
+	position: absolute;
+	top: 50%;
+	margin-top: -8px;
+}
+.MLui-button-icon-only .MLui-icon {
+	left: 50%;
+	margin-left: -8px;
+}
+.MLui-button-text-icon-primary .MLui-button-icon-primary,
+.MLui-button-text-icons .MLui-button-icon-primary,
+.MLui-button-icons-only .MLui-button-icon-primary {
+	left: .5em;
+}
+.MLui-button-text-icon-secondary .MLui-button-icon-secondary,
+.MLui-button-text-icons .MLui-button-icon-secondary,
+.MLui-button-icons-only .MLui-button-icon-secondary {
+	right: .5em;
+}
+
+/* button sets */
+.MLui-buttonset {
+	margin-right: 7px;
+}
+.MLui-buttonset .MLui-button {
+	margin-left: 0;
+	margin-right: -.3em;
+}
+
+/* workarounds */
+/* reset extra padding in Firefox, see h5bp.com/l */
+input.MLui-button::-moz-focus-inner,
+button.MLui-button::-moz-focus-inner {
+	border: 0;
+	padding: 0;
+}
+.MLui-datepicker {
+	width: 17em;
+	padding: .2em .2em 0;
+	display: none;
+}
+.MLui-datepicker .MLui-datepicker-header {
+	position: relative;
+	padding: .2em 0;
+}
+.MLui-datepicker .MLui-datepicker-prev,
+.MLui-datepicker .MLui-datepicker-next {
+	position: absolute;
+	top: 2px;
+	width: 1.8em;
+	height: 1.8em;
+}
+.MLui-datepicker .MLui-datepicker-prev-hover,
+.MLui-datepicker .MLui-datepicker-next-hover {
+	top: 1px;
+}
+.MLui-datepicker .MLui-datepicker-prev {
+	left: 2px;
+}
+.MLui-datepicker .MLui-datepicker-next {
+	right: 2px;
+}
+.MLui-datepicker .MLui-datepicker-prev-hover {
+	left: 1px;
+}
+.MLui-datepicker .MLui-datepicker-next-hover {
+	right: 1px;
+}
+.MLui-datepicker .MLui-datepicker-prev span,
+.MLui-datepicker .MLui-datepicker-next span {
+	display: block;
+	position: absolute;
+	left: 50%;
+	margin-left: -8px;
+	top: 50%;
+	margin-top: -8px;
+}
+.MLui-datepicker .MLui-datepicker-title {
+	margin: 0 2.3em;
+	line-height: 1.8em;
+	text-align: center;
+}
+.MLui-datepicker .MLui-datepicker-title select {
+	font-size: 1em;
+	margin: 1px 0;
+}
+.MLui-datepicker select.MLui-datepicker-month,
+.MLui-datepicker select.MLui-datepicker-year {
+	width: 45%;
+}
+.MLui-datepicker table {
+	width: 100%;
+	font-size: .9em;
+	border-collapse: collapse;
+	margin: 0 0 .4em;
+}
+.MLui-datepicker th {
+	padding: .7em .3em;
+	text-align: center;
+	font-weight: bold;
+	border: 0;
+}
+.MLui-datepicker td {
+	border: 0;
+	padding: 1px;
+}
+.MLui-datepicker td span,
+.MLui-datepicker td a {
+	display: block;
+	padding: .2em;
+	text-align: right;
+	text-decoration: none;
+}
+.MLui-datepicker .MLui-datepicker-buttonpane {
+	background-image: none;
+	margin: .7em 0 0 0;
+	padding: 0 .2em;
+	border-left: 0;
+	border-right: 0;
+	border-bottom: 0;
+}
+.MLui-datepicker .MLui-datepicker-buttonpane button {
+	float: right;
+	margin: .5em .2em .4em;
+	cursor: pointer;
+	padding: .2em .6em .3em .6em;
+	width: auto;
+	overflow: visible;
+}
+.MLui-datepicker .MLui-datepicker-buttonpane button.MLui-datepicker-current {
+	float: left;
+}
+
+/* with multiple calendars */
+.MLui-datepicker.MLui-datepicker-multi {
+	width: auto;
+}
+.MLui-datepicker-multi .MLui-datepicker-group {
+	float: left;
+}
+.MLui-datepicker-multi .MLui-datepicker-group table {
+	width: 95%;
+	margin: 0 auto .4em;
+}
+.MLui-datepicker-multi-2 .MLui-datepicker-group {
+	width: 50%;
+}
+.MLui-datepicker-multi-3 .MLui-datepicker-group {
+	width: 33.3%;
+}
+.MLui-datepicker-multi-4 .MLui-datepicker-group {
+	width: 25%;
+}
+.MLui-datepicker-multi .MLui-datepicker-group-last .MLui-datepicker-header,
+.MLui-datepicker-multi .MLui-datepicker-group-middle .MLui-datepicker-header {
+	border-left-width: 0;
+}
+.MLui-datepicker-multi .MLui-datepicker-buttonpane {
+	clear: left;
+}
+.MLui-datepicker-row-break {
+	clear: both;
+	width: 100%;
+	font-size: 0;
+}
+
+/* RTL support */
+.MLui-datepicker-rtl {
+	direction: rtl;
+}
+.MLui-datepicker-rtl .MLui-datepicker-prev {
+	right: 2px;
+	left: auto;
+}
+.MLui-datepicker-rtl .MLui-datepicker-next {
+	left: 2px;
+	right: auto;
+}
+.MLui-datepicker-rtl .MLui-datepicker-prev:hover {
+	right: 1px;
+	left: auto;
+}
+.MLui-datepicker-rtl .MLui-datepicker-next:hover {
+	left: 1px;
+	right: auto;
+}
+.MLui-datepicker-rtl .MLui-datepicker-buttonpane {
+	clear: right;
+}
+.MLui-datepicker-rtl .MLui-datepicker-buttonpane button {
+	float: left;
+}
+.MLui-datepicker-rtl .MLui-datepicker-buttonpane button.MLui-datepicker-current,
+.MLui-datepicker-rtl .MLui-datepicker-group {
+	float: right;
+}
+.MLui-datepicker-rtl .MLui-datepicker-group-last .MLui-datepicker-header,
+.MLui-datepicker-rtl .MLui-datepicker-group-middle .MLui-datepicker-header {
+	border-right-width: 0;
+	border-left-width: 1px;
+}
+.MLui-dialog {
+	overflow: hidden;
+	position: absolute;
+	top: 0;
+	left: 0;
+	padding: 0;
+	outline: 0;
+}
+.MLui-dialog .MLui-dialog-titlebar {
+	padding: .4em 1em;
+	position: relative;
+	width: 85%;
+	z-index: 201;
+}
+.MLui-dialog .MLui-dialog-title {
+	float: left;
+	margin: .1em 0;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+.MLui-dialog .MLui-dialog-titlebar-close {
+	position: absolute;
+	right: .3em;
+	top: 50%;
+	width: 20px;
+	margin: -10px 0 0 0;
+	padding: 1px;
+	height: 20px;
+}
+.MLui-dialog .MLui-dialog-content {
+	position: relative;
+	top:-34px;
+	border: 0;
+	padding: 0;
+/*	background: #ff0; */
+	overflow: hidden;
+	z-index: 200;
+	margin-bottom: -36px;
+}
+.MLui-dialog .MLui-dialog-buttonpane {
+	text-align: left;
+	border-width: 1px 0 0 0;
+	background-image: none;
+	margin-top: .5em;
+	padding: .3em 1em .5em .4em;
+}
+.MLui-dialog .MLui-dialog-buttonpane .MLui-dialog-buttonset {
+	float: right;
+}
+.MLui-dialog .MLui-dialog-buttonpane button {
+	margin: .5em .4em .5em 0;
+	cursor: pointer;
+}
+.MLui-dialog .MLui-resizable-se {
+	width: 12px;
+	height: 12px;
+	right: -5px;
+	bottom: -5px;
+	background-position: 16px 16px;
+}
+.MLui-draggable .MLui-dialog-titlebar {
+	cursor: move;
+}
+.MLui-menu {
+	list-style: none;
+	padding: 0;
+	margin: 0;
+	display: block;
+	outline: none;
+}
+.MLui-menu .MLui-menu {
+	position: absolute;
+}
+.MLui-menu .MLui-menu-item {
+	position: relative;
+	margin: 0;
+	padding: 3px 1em 3px .4em;
+	cursor: pointer;
+	min-height: 0; /* support: IE7 */
+	/* support: IE10, see #8844 */
+}
+.MLui-menu .MLui-menu-divider {
+	margin: 5px 0;
+	height: 0;
+	font-size: 0;
+	line-height: 0;
+	border-width: 1px 0 0 0;
+}
+.MLui-menu .MLui-state-focus,
+.MLui-menu .MLui-state-active {
+	margin: -1px;
+}
+
+/* icon support */
+.MLui-menu-icons {
+	position: relative;
+}
+.MLui-menu-icons .MLui-menu-item {
+	padding-left: 2em;
+}
+
+/* left-aligned */
+.MLui-menu .MLui-icon {
+	position: absolute;
+	top: 0;
+	bottom: 0;
+	left: .2em;
+	margin: auto 0;
+}
+
+/* right-aligned */
+.MLui-menu .MLui-menu-icon {
+	left: auto;
+	right: 0;
+}
+.MLui-progressbar {
+	height: 2em;
+	text-align: left;
+	overflow: hidden;
+}
+.MLui-progressbar .MLui-progressbar-value {
+	margin: -1px;
+	height: 100%;
+}
+.MLui-progressbar .MLui-progressbar-overlay {
+	height: 100%;
+	filter: alpha(opacity=25); /* support: IE8 */
+	opacity: 0.25;
+}
+.MLui-progressbar-indeterminate .MLui-progressbar-value {
+	background-image: none;
+}
+.MLui-selectmenu-menu {
+	padding: 0;
+	margin: 0;
+	position: absolute;
+	top: 0;
+	left: 0;
+	display: none;
+}
+.MLui-selectmenu-menu .MLui-menu {
+	overflow: auto;
+	/* Support: IE7 */
+	overflow-x: hidden;
+	padding-bottom: 1px;
+}
+.MLui-selectmenu-menu .MLui-menu .MLui-selectmenu-optgroup {
+	font-size: 1em;
+	font-weight: bold;
+	line-height: 1.5;
+	padding: 2px 0.4em;
+	margin: 0.5em 0 0 0;
+	height: auto;
+	border: 0;
+}
+.MLui-selectmenu-open {
+	display: block;
+}
+.MLui-selectmenu-button {
+	display: inline-block;
+	overflow: hidden;
+	position: relative;
+	text-decoration: none;
+	cursor: pointer;
+}
+.MLui-selectmenu-button span.MLui-icon {
+	right: 0.5em;
+	left: auto;
+	margin-top: -8px;
+	position: absolute;
+	top: 50%;
+}
+.MLui-selectmenu-button span.MLui-selectmenu-text {
+	text-align: left;
+	padding: 0.4em 2.1em 0.4em 1em;
+	display: block;
+	line-height: 1.4;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+.MLui-slider {
+	position: relative;
+	text-align: left;
+}
+.MLui-slider .MLui-slider-handle {
+	position: absolute;
+	z-index: 2;
+	width: 1.2em;
+	height: 1.2em;
+	cursor: default;
+	-ms-touch-action: none;
+	touch-action: none;
+}
+.MLui-slider .MLui-slider-range {
+	position: absolute;
+	z-index: 1;
+	font-size: .7em;
+	display: block;
+	border: 0;
+	background-position: 0 0;
+}
+
+/* support: IE8 - See #6727 */
+.MLui-slider.MLui-state-disabled .MLui-slider-handle,
+.MLui-slider.MLui-state-disabled .MLui-slider-range {
+	filter: inherit;
+}
+
+.MLui-slider-horizontal {
+	height: .8em;
+}
+.MLui-slider-horizontal .MLui-slider-handle {
+	top: -.3em;
+	margin-left: -.6em;
+}
+.MLui-slider-horizontal .MLui-slider-range {
+	top: 0;
+	height: 100%;
+}
+.MLui-slider-horizontal .MLui-slider-range-min {
+	left: 0;
+}
+.MLui-slider-horizontal .MLui-slider-range-max {
+	right: 0;
+}
+
+.MLui-slider-vertical {
+	width: .8em;
+	height: 100px;
+}
+.MLui-slider-vertical .MLui-slider-handle {
+	left: -.3em;
+	margin-left: 0;
+	margin-bottom: -.6em;
+}
+.MLui-slider-vertical .MLui-slider-range {
+	left: 0;
+	width: 100%;
+}
+.MLui-slider-vertical .MLui-slider-range-min {
+	bottom: 0;
+}
+.MLui-slider-vertical .MLui-slider-range-max {
+	top: 0;
+}
+.MLui-spinner {
+	position: relative;
+	display: inline-block;
+	overflow: hidden;
+	padding: 0;
+	vertical-align: middle;
+}
+.MLui-spinner-input {
+	border: none;
+	background: none;
+	color: inherit;
+	padding: 0;
+	margin: .2em 0;
+	vertical-align: middle;
+	margin-left: .4em;
+	margin-right: 22px;
+}
+.MLui-spinner-button {
+	width: 16px;
+	height: 50%;
+	font-size: .5em;
+	padding: 0;
+	margin: 0;
+	text-align: center;
+	position: absolute;
+	cursor: default;
+	display: block;
+	overflow: hidden;
+	right: 0;
+}
+/* more specificity required here to override default borders */
+.MLui-spinner a.MLui-spinner-button {
+	border-top: none;
+	border-bottom: none;
+	border-right: none;
+}
+/* vertically center icon */
+.MLui-spinner .MLui-icon {
+	position: absolute;
+	margin-top: -8px;
+	top: 50%;
+	left: 0;
+}
+.MLui-spinner-up {
+	top: 0;
+}
+.MLui-spinner-down {
+	bottom: 0;
+}
+
+/* TR overrides */
+.MLui-spinner .MLui-icon-triangle-1-s {
+	/* need to fix icons sprite */
+	background-position: -65px -16px;
+}
+.MLui-tabs {
+	position: relative;/* position: relative prevents IE scroll bug (element with position: relative inside container with overflow: auto appear as "fixed") */
+	padding: .2em;
+}
+.MLui-tabs .MLui-tabs-nav {
+	margin: 0;
+	padding: .2em .2em 0;
+}
+.MLui-tabs .MLui-tabs-nav li {
+	list-style: none;
+	float: left;
+	position: relative;
+	top: 0;
+	margin: 1px .2em 0 0;
+	border-bottom-width: 0;
+	padding: 0;
+	white-space: nowrap;
+}
+.MLui-tabs .MLui-tabs-nav .MLui-tabs-anchor {
+	float: left;
+	padding: .5em 1em;
+	text-decoration: none;
+}
+.MLui-tabs .MLui-tabs-nav li.MLui-tabs-active {
+	margin-bottom: -1px;
+	padding-bottom: 1px;
+}
+.MLui-tabs .MLui-tabs-nav li.MLui-tabs-active .MLui-tabs-anchor,
+.MLui-tabs .MLui-tabs-nav li.MLui-state-disabled .MLui-tabs-anchor,
+.MLui-tabs .MLui-tabs-nav li.MLui-tabs-loading .MLui-tabs-anchor {
+	cursor: text;
+}
+.MLui-tabs-collapsible .MLui-tabs-nav li.MLui-tabs-active .MLui-tabs-anchor {
+	cursor: pointer;
+}
+.MLui-tabs .MLui-tabs-panel {
+	display: block;
+	border-width: 0;
+	padding: 1em 1.4em;
+	background: none;
+}
+.MLui-tooltip {
+	padding: 8px;
+	position: absolute;
+	z-index: 9999;
+	max-width: 300px;
+	-webkit-box-shadow: 0 0 5px #aaa;
+	box-shadow: 0 0 5px #aaa;
+}
+body .MLui-tooltip {
+	border-width: 2px;
+}
+
+/* Component containers
+----------------------------------*/
+.MLui-widget {
+	font-family: Trebuchet MS,Tahoma,Verdana,Arial,sans-serif;
+	font-size: 1.1em;
+	radius:8px;
+	box-shadow:5px 8px 15px #7e7e7e;
+	-webkit-box-shadow:5px 8px 15px #7e7e7e;
+	-moz-box-shadow:5px 8px 15px #7e7e7e;
+}
+.MLui-widget .MLui-widget {
+	font-size: 1em;
+}
+.MLui-widget input,
+.MLui-widget select,
+.MLui-widget textarea,
+.MLui-widget button {
+	font-family: Trebuchet MS,Tahoma,Verdana,Arial,sans-serif;
+	font-size: 1em;
+}
+.MLui-widget-content {
+/*	border: 1px solid #dddddd;
+	background: #eeeeee url("images/ui-bg_highlight-soft_100_eeeeee_1x100.png") 50% top repeat-x;
+	color: #333333; */
+}
+.MLui-widget-content a {
+	color: #333333;
+}
+.MLui-widget-header {
+/*	border: 1px solid #e78f08;
+	background: #f6a828 url("images/ui-bg_gloss-wave_35_f6a828_500x100.png") 50% 50% repeat-x;
+	color: #ffffff;
+	font-weight: bold; */
+}
+.MLui-widget-header a {
+	color: #ffffff;
+}
+
+/* Interaction states
+----------------------------------*/
+.MLui-state-default,
+.MLui-widget-content .MLui-state-default,
+.MLui-widget-header .MLui-state-default {
+	border: 1px solid #cccccc;
+	background: #f6f6f6 50% 50% repeat-x;
+	font-weight: bold;
+	color: #1c94c4;
+}
+.MLui-state-default a,
+.MLui-state-default a:link,
+.MLui-state-default a:visited {
+	color: #1c94c4;
+	text-decoration: none;
+}
+.MLui-state-hover,
+.MLui-widget-content .MLui-state-hover,
+.MLui-widget-header .MLui-state-hover,
+.MLui-state-focus,
+.MLui-widget-content .MLui-state-focus,
+.MLui-widget-header .MLui-state-focus {
+	border: 1px solid #fbcb09;
+	background: #fdf5ce 50% 50% repeat-x;
+	font-weight: bold;
+	color: #c77405;
+}
+.MLui-state-hover a,
+.MLui-state-hover a:hover,
+.MLui-state-hover a:link,
+.MLui-state-hover a:visited,
+.MLui-state-focus a,
+.MLui-state-focus a:hover,
+.MLui-state-focus a:link,
+.MLui-state-focus a:visited {
+	color: #c77405;
+	text-decoration: none;
+}
+.MLui-state-active,
+.MLui-widget-content .MLui-state-active,
+.MLui-widget-header .MLui-state-active {
+	border: 1px solid #fbd850;
+	background: #ffffff 50% 50% repeat-x;
+	font-weight: bold;
+	color: #eb8f00;
+}
+.MLui-state-active a,
+.MLui-state-active a:link,
+.MLui-state-active a:visited {
+	color: #eb8f00;
+	text-decoration: none;
+}
+
+/* Interaction Cues
+----------------------------------*/
+.MLui-state-highlight,
+.MLui-widget-content .MLui-state-highlight,
+.MLui-widget-header .MLui-state-highlight {
+	border: 1px solid #fed22f;
+	background: #ffe45c 50% top repeat-x;
+	color: #363636;
+}
+.MLui-state-highlight a,
+.MLui-widget-content .MLui-state-highlight a,
+.MLui-widget-header .MLui-state-highlight a {
+	color: #363636;
+}
+.MLui-state-error,
+.MLui-widget-content .MLui-state-error,
+.MLui-widget-header .MLui-state-error {
+	border: 1px solid #cd0a0a;
+	background: #b81900 50% 50% repeat;
+	color: #ffffff;
+}
+.MLui-state-error a,
+.MLui-widget-content .MLui-state-error a,
+.MLui-widget-header .MLui-state-error a {
+	color: #ffffff;
+}
+.MLui-state-error-text,
+.MLui-widget-content .MLui-state-error-text,
+.MLui-widget-header .MLui-state-error-text {
+	color: #ffffff;
+}
+.MLui-priority-primary,
+.MLui-widget-content .MLui-priority-primary,
+.MLui-widget-header .MLui-priority-primary {
+	font-weight: bold;
+}
+.MLui-priority-secondary,
+.MLui-widget-content .MLui-priority-secondary,
+.MLui-widget-header .MLui-priority-secondary {
+	opacity: .7;
+	filter:Alpha(Opacity=70); /* support: IE8 */
+	font-weight: normal;
+}
+.MLui-state-disabled,
+.MLui-widget-content .MLui-state-disabled,
+.MLui-widget-header .MLui-state-disabled {
+	opacity: .35;
+	filter:Alpha(Opacity=35); /* support: IE8 */
+	background-image: none;
+}
+.MLui-state-disabled .MLui-icon {
+	filter:Alpha(Opacity=35); /* support: IE8 - See #6059 */
+}
+
+/* Icons
+----------------------------------*/
+
+
+
+/* positioning */
+.MLui-icon-blank { background-position: 16px 16px; }
+.MLui-icon-carat-1-n { background-position: 0 0; }
+.MLui-icon-carat-1-ne { background-position: -16px 0; }
+.MLui-icon-carat-1-e { background-position: -32px 0; }
+.MLui-icon-carat-1-se { background-position: -48px 0; }
+.MLui-icon-carat-1-s { background-position: -64px 0; }
+.MLui-icon-carat-1-sw { background-position: -80px 0; }
+.MLui-icon-carat-1-w { background-position: -96px 0; }
+.MLui-icon-carat-1-nw { background-position: -112px 0; }
+.MLui-icon-carat-2-n-s { background-position: -128px 0; }
+.MLui-icon-carat-2-e-w { background-position: -144px 0; }
+.MLui-icon-triangle-1-n { background-position: 0 -16px; }
+.MLui-icon-triangle-1-ne { background-position: -16px -16px; }
+.MLui-icon-triangle-1-e { background-position: -32px -16px; }
+.MLui-icon-triangle-1-se { background-position: -48px -16px; }
+.MLui-icon-triangle-1-s { background-position: -64px -16px; }
+.MLui-icon-triangle-1-sw { background-position: -80px -16px; }
+.MLui-icon-triangle-1-w { background-position: -96px -16px; }
+.MLui-icon-triangle-1-nw { background-position: -112px -16px; }
+.MLui-icon-triangle-2-n-s { background-position: -128px -16px; }
+.MLui-icon-triangle-2-e-w { background-position: -144px -16px; }
+.MLui-icon-arrow-1-n { background-position: 0 -32px; }
+.MLui-icon-arrow-1-ne { background-position: -16px -32px; }
+.MLui-icon-arrow-1-e { background-position: -32px -32px; }
+.MLui-icon-arrow-1-se { background-position: -48px -32px; }
+.MLui-icon-arrow-1-s { background-position: -64px -32px; }
+.MLui-icon-arrow-1-sw { background-position: -80px -32px; }
+.MLui-icon-arrow-1-w { background-position: -96px -32px; }
+.MLui-icon-arrow-1-nw { background-position: -112px -32px; }
+.MLui-icon-arrow-2-n-s { background-position: -128px -32px; }
+.MLui-icon-arrow-2-ne-sw { background-position: -144px -32px; }
+.MLui-icon-arrow-2-e-w { background-position: -160px -32px; }
+.MLui-icon-arrow-2-se-nw { background-position: -176px -32px; }
+.MLui-icon-arrowstop-1-n { background-position: -192px -32px; }
+.MLui-icon-arrowstop-1-e { background-position: -208px -32px; }
+.MLui-icon-arrowstop-1-s { background-position: -224px -32px; }
+.MLui-icon-arrowstop-1-w { background-position: -240px -32px; }
+.MLui-icon-arrowthick-1-n { background-position: 0 -48px; }
+.MLui-icon-arrowthick-1-ne { background-position: -16px -48px; }
+.MLui-icon-arrowthick-1-e { background-position: -32px -48px; }
+.MLui-icon-arrowthick-1-se { background-position: -48px -48px; }
+.MLui-icon-arrowthick-1-s { background-position: -64px -48px; }
+.MLui-icon-arrowthick-1-sw { background-position: -80px -48px; }
+.MLui-icon-arrowthick-1-w { background-position: -96px -48px; }
+.MLui-icon-arrowthick-1-nw { background-position: -112px -48px; }
+.MLui-icon-arrowthick-2-n-s { background-position: -128px -48px; }
+.MLui-icon-arrowthick-2-ne-sw { background-position: -144px -48px; }
+.MLui-icon-arrowthick-2-e-w { background-position: -160px -48px; }
+.MLui-icon-arrowthick-2-se-nw { background-position: -176px -48px; }
+.MLui-icon-arrowthickstop-1-n { background-position: -192px -48px; }
+.MLui-icon-arrowthickstop-1-e { background-position: -208px -48px; }
+.MLui-icon-arrowthickstop-1-s { background-position: -224px -48px; }
+.MLui-icon-arrowthickstop-1-w { background-position: -240px -48px; }
+.MLui-icon-arrowreturnthick-1-w { background-position: 0 -64px; }
+.MLui-icon-arrowreturnthick-1-n { background-position: -16px -64px; }
+.MLui-icon-arrowreturnthick-1-e { background-position: -32px -64px; }
+.MLui-icon-arrowreturnthick-1-s { background-position: -48px -64px; }
+.MLui-icon-arrowreturn-1-w { background-position: -64px -64px; }
+.MLui-icon-arrowreturn-1-n { background-position: -80px -64px; }
+.MLui-icon-arrowreturn-1-e { background-position: -96px -64px; }
+.MLui-icon-arrowreturn-1-s { background-position: -112px -64px; }
+.MLui-icon-arrowrefresh-1-w { background-position: -128px -64px; }
+.MLui-icon-arrowrefresh-1-n { background-position: -144px -64px; }
+.MLui-icon-arrowrefresh-1-e { background-position: -160px -64px; }
+.MLui-icon-arrowrefresh-1-s { background-position: -176px -64px; }
+.MLui-icon-arrow-4 { background-position: 0 -80px; }
+.MLui-icon-arrow-4-diag { background-position: -16px -80px; }
+.MLui-icon-extlink { background-position: -32px -80px; }
+.MLui-icon-newwin { background-position: -48px -80px; }
+.MLui-icon-refresh { background-position: -64px -80px; }
+.MLui-icon-shuffle { background-position: -80px -80px; }
+.MLui-icon-transfer-e-w { background-position: -96px -80px; }
+.MLui-icon-transferthick-e-w { background-position: -112px -80px; }
+.MLui-icon-folder-collapsed { background-position: 0 -96px; }
+.MLui-icon-folder-open { background-position: -16px -96px; }
+.MLui-icon-document { background-position: -32px -96px; }
+.MLui-icon-document-b { background-position: -48px -96px; }
+.MLui-icon-note { background-position: -64px -96px; }
+.MLui-icon-mail-closed { background-position: -80px -96px; }
+.MLui-icon-mail-open { background-position: -96px -96px; }
+.MLui-icon-suitcase { background-position: -112px -96px; }
+.MLui-icon-comment { background-position: -128px -96px; }
+.MLui-icon-person { background-position: -144px -96px; }
+.MLui-icon-print { background-position: -160px -96px; }
+.MLui-icon-trash { background-position: -176px -96px; }
+.MLui-icon-locked { background-position: -192px -96px; }
+.MLui-icon-unlocked { background-position: -208px -96px; }
+.MLui-icon-bookmark { background-position: -224px -96px; }
+.MLui-icon-tag { background-position: -240px -96px; }
+.MLui-icon-home { background-position: 0 -112px; }
+.MLui-icon-flag { background-position: -16px -112px; }
+.MLui-icon-calendar { background-position: -32px -112px; }
+.MLui-icon-cart { background-position: -48px -112px; }
+.MLui-icon-pencil { background-position: -64px -112px; }
+.MLui-icon-clock { background-position: -80px -112px; }
+.MLui-icon-disk { background-position: -96px -112px; }
+.MLui-icon-calculator { background-position: -112px -112px; }
+.MLui-icon-zoomin { background-position: -128px -112px; }
+.MLui-icon-zoomout { background-position: -144px -112px; }
+.MLui-icon-search { background-position: -160px -112px; }
+.MLui-icon-wrench { background-position: -176px -112px; }
+.MLui-icon-gear { background-position: -192px -112px; }
+.MLui-icon-heart { background-position: -208px -112px; }
+.MLui-icon-star { background-position: -224px -112px; }
+.MLui-icon-link { background-position: -240px -112px; }
+.MLui-icon-cancel { background-position: 0 -128px; }
+.MLui-icon-plus { background-position: -16px -128px; }
+.MLui-icon-plusthick { background-position: -32px -128px; }
+.MLui-icon-minus { background-position: -48px -128px; }
+.MLui-icon-minusthick { background-position: -64px -128px; }
+.MLui-icon-close { background-position: -80px -128px; }
+.MLui-icon-closethick { background-position: -96px -128px; }
+.MLui-icon-key { background-position: -112px -128px; }
+.MLui-icon-lightbulb { background-position: -128px -128px; }
+.MLui-icon-scissors { background-position: -144px -128px; }
+.MLui-icon-clipboard { background-position: -160px -128px; }
+.MLui-icon-copy { background-position: -176px -128px; }
+.MLui-icon-contact { background-position: -192px -128px; }
+.MLui-icon-image { background-position: -208px -128px; }
+.MLui-icon-video { background-position: -224px -128px; }
+.MLui-icon-script { background-position: -240px -128px; }
+.MLui-icon-alert { background-position: 0 -144px; }
+.MLui-icon-info { background-position: -16px -144px; }
+.MLui-icon-notice { background-position: -32px -144px; }
+.MLui-icon-help { background-position: -48px -144px; }
+.MLui-icon-check { background-position: -64px -144px; }
+.MLui-icon-bullet { background-position: -80px -144px; }
+.MLui-icon-radio-on { background-position: -96px -144px; }
+.MLui-icon-radio-off { background-position: -112px -144px; }
+.MLui-icon-pin-w { background-position: -128px -144px; }
+.MLui-icon-pin-s { background-position: -144px -144px; }
+.MLui-icon-play { background-position: 0 -160px; }
+.MLui-icon-pause { background-position: -16px -160px; }
+.MLui-icon-seek-next { background-position: -32px -160px; }
+.MLui-icon-seek-prev { background-position: -48px -160px; }
+.MLui-icon-seek-end { background-position: -64px -160px; }
+.MLui-icon-seek-start { background-position: -80px -160px; }
+/* ui-icon-seek-first is deprecated, use ui-icon-seek-start instead */
+.MLui-icon-seek-first { background-position: -80px -160px; }
+.MLui-icon-stop { background-position: -96px -160px; }
+.MLui-icon-eject { background-position: -112px -160px; }
+.MLui-icon-volume-off { background-position: -128px -160px; }
+.MLui-icon-volume-on { background-position: -144px -160px; }
+.MLui-icon-power { background-position: 0 -176px; }
+.MLui-icon-signal-diag { background-position: -16px -176px; }
+.MLui-icon-signal { background-position: -32px -176px; }
+.MLui-icon-battery-0 { background-position: -48px -176px; }
+.MLui-icon-battery-1 { background-position: -64px -176px; }
+.MLui-icon-battery-2 { background-position: -80px -176px; }
+.MLui-icon-battery-3 { background-position: -96px -176px; }
+.MLui-icon-circle-plus { background-position: 0 -192px; }
+.MLui-icon-circle-minus { background-position: -16px -192px; }
+.MLui-icon-circle-close { background-position: -32px -192px; }
+.MLui-icon-circle-triangle-e { background-position: -48px -192px; }
+.MLui-icon-circle-triangle-s { background-position: -64px -192px; }
+.MLui-icon-circle-triangle-w { background-position: -80px -192px; }
+.MLui-icon-circle-triangle-n { background-position: -96px -192px; }
+.MLui-icon-circle-arrow-e { background-position: -112px -192px; }
+.MLui-icon-circle-arrow-s { background-position: -128px -192px; }
+.MLui-icon-circle-arrow-w { background-position: -144px -192px; }
+.MLui-icon-circle-arrow-n { background-position: -160px -192px; }
+.MLui-icon-circle-zoomin { background-position: -176px -192px; }
+.MLui-icon-circle-zoomout { background-position: -192px -192px; }
+.MLui-icon-circle-check { background-position: -208px -192px; }
+.MLui-icon-circlesmall-plus { background-position: 0 -208px; }
+.MLui-icon-circlesmall-minus { background-position: -16px -208px; }
+.MLui-icon-circlesmall-close { background-position: -32px -208px; }
+.MLui-icon-squaresmall-plus { background-position: -48px -208px; }
+.MLui-icon-squaresmall-minus { background-position: -64px -208px; }
+.MLui-icon-squaresmall-close { background-position: -80px -208px; }
+.MLui-icon-grip-dotted-vertical { background-position: 0 -224px; }
+.MLui-icon-grip-dotted-horizontal { background-position: -16px -224px; }
+.MLui-icon-grip-solid-vertical { background-position: -32px -224px; }
+.MLui-icon-grip-solid-horizontal { background-position: -48px -224px; }
+.MLui-icon-gripsmall-diagonal-se { background-position: -64px -224px; }
+.MLui-icon-grip-diagonal-se { background-position: -80px -224px; }
+
+
+/* Misc visuals
+----------------------------------*/
+
+/* Corner radius */
+.MLui-corner-all,
+.MLui-corner-top,
+.MLui-corner-left,
+.MLui-corner-tl {
+	border-top-left-radius: 4px;
+}
+.MLui-corner-all,
+.MLui-corner-top,
+.MLui-corner-right,
+.MLui-corner-tr {
+	border-top-right-radius: 4px;
+}
+.MLui-corner-all,
+.MLui-corner-bottom,
+.MLui-corner-left,
+.MLui-corner-bl {
+	border-bottom-left-radius: 4px;
+}
+.MLui-corner-all,
+.MLui-corner-bottom,
+.MLui-corner-right,
+.MLui-corner-br {
+	border-bottom-right-radius: 4px;
+}
+
+/* Overlays */
+.MLui-widget-overlay {
+	background: #666666 50% 50% repeat;
+	opacity: .5;
+	filter: Alpha(Opacity=50); /* support: IE8 */
+}
+.MLui-widget-shadow {
+	margin: -5px 0 0 -5px;
+	padding: 5px;
+	background: #000000 50% 50% repeat-x;
+	opacity: .2;
+	filter: Alpha(Opacity=20); /* support: IE8 */
+	border-radius: 5px;
+}

@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC '-//ibatis.apache.org//DTD Sql Map 2.0//EN' 'http://ibatis.apache.org/dtd/sql-map-2.dtd'>
+<sqlMap namespace="cmmn.exmn">
+
+	<select id="selectExmnFullList" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		SELECT
+		DC.EXMN_CD,
+		DC.EXMN_NM,
+		DC.EXMN_CMPTNC_DC,
+		LEVEL AS EXMN_DP,
+		DC.EXMN_UPPER_CD,
+		FN_EXMN_NM(DC.EXMN_UPPER_CD) AS EXMN_UPPER_NM,
+		DC.USE_YN,
+		DC.SORT_ORDR,
+		0 AS LOWER_CNT
+		FROM CMN_EXMN_CD DC
+		WHERE DC.USE_YN = 'Y' AND DC.EXMN_CD != '00000'
+		  AND DC.EXMN_UPPER_CD IN (
+		  	SELECT EM.EXMN_CD FROM CMN_EXMN_CD EM WHERE EM.USE_YN = 'Y'
+		  )
+		START WITH DC.EXMN_UPPER_CD = #start_cd#
+		CONNECT BY PRIOR DC.EXMN_CD = DC.EXMN_UPPER_CD
+    	ORDER SIBLINGS BY DC.SORT_ORDR ASC, DC.EXMN_CD ASC
+	</select>
+
+	<select id="selectExmnList" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		SELECT
+		DC.EXMN_CD,
+		DC.EXMN_NM,
+		DC.EXMN_CMPTNC_DC,
+		DC.EXMN_DP,
+		DC.EXMN_UPPER_CD,
+		FN_EXMN_NM(DC.EXMN_UPPER_CD) AS EXMN_UPPER_NM,
+		DC.USE_YN,
+		DC.SORT_ORDR,
+		(SELECT COUNT(*) FROM CMN_EXMN_CD S1 WHERE DC.EXMN_CD = S1.EXMN_UPPER_CD) AS LOWER_CNT
+		FROM CMN_EXMN_CD DC
+		WHERE DC.USE_YN = 'Y' AND DC.EXMN_CD != '00000'
+	    <isNotEmpty property="exmn_upper_cd" prepend="AND">
+			DC.EXMN_UPPER_CD = #exmn_upper_cd#
+		</isNotEmpty>
+	    <isNotEmpty property="exmn_cd_arr" prepend="AND">
+			DC.EXMN_CD IN
+			<iterate property="exmn_cd_arr" open=" (" conjunction="," close=")">
+				#exmn_cd_arr[]#
+			</iterate>
+		</isNotEmpty>
+	    <isNotEmpty property="exmn_cd_not_arr" prepend="AND">
+			DC.EXMN_CD NOT IN
+			<iterate property="exmn_cd_not_arr" open=" (" conjunction="," close=")">
+				#exmn_cd_not_arr[]#
+			</iterate>
+		</isNotEmpty>
+		ORDER BY DC.SORT_ORDR ASC, DC.EXMN_CD ASC
+	</select>
+
+	<select id="selectExmnDetail" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		SELECT
+		DC.EXMN_CD,
+		DC.EXMN_NM,
+		DC.EXMN_CMPTNC_DC,
+		DC.EXMN_DP,
+		DC.EXMN_UPPER_CD,
+		FN_EXMN_NM(DC.EXMN_UPPER_CD) AS EXMN_UPPER_NM,
+		DC.USE_YN,
+		DC.SORT_ORDR,
+		DC.WRITNG_ID,
+		TO_CHAR(DC.WRITNG_DT, 'YYYY-MM-DD') AS WRITNG_DT,
+		(SELECT COUNT(*) FROM CMN_EXMN_CD S1 WHERE DC.EXMN_CD = S1.EXMN_UPPER_CD) AS LOWER_CNT
+		FROM CMN_EXMN_CD DC
+		WHERE DC.EXMN_CD = #exmn_cd#
+	</select>
+
+	<select id="selectEsntlExmn" resultClass="String">
+		SELECT LPAD(NVL(MAX(EXMN_CD),0)+1, 5, '0') FROM CMN_EXMN_CD
+	</select>
+
+	<insert id="insertExmn" parameterClass="java.util.HashMap">
+		INSERT INTO CMN_EXMN_CD (
+			EXMN_CD,
+			EXMN_NM,
+			EXMN_CMPTNC_DC,
+			EXMN_DP,
+			EXMN_UPPER_CD,
+			USE_YN,
+			SORT_ORDR,
+			WRITNG_ID,
+			WRITNG_DT,
+			UPDT_ID,
+			UPDT_DT
+	    ) VALUES(
+    		#exmn_cd#,
+    		#exmn_nm#,
+    		#exmn_cmptnc_dc#,
+			(SELECT EXMN_DP+1 FROM CMN_EXMN_CD WHERE EXMN_CD = #exmn_upper_cd#),
+			#exmn_upper_cd#,
+			'Y',
+			#sort_ordr#,
+			#esntl_id#,
+			SYSDATE,
+			#esntl_id#,
+			SYSDATE
+		)
+	</insert>
+
+	<update id="updateExmn" parameterClass="java.util.HashMap">
+		UPDATE CMN_EXMN_CD SET
+			EXMN_NM = #exmn_nm#,
+			EXMN_CMPTNC_DC = #exmn_cmptnc_dc#,
+			<isNotEmpty property="use_yn">
+				USE_YN = #use_yn#,
+			</isNotEmpty>
+			SORT_ORDR = #sort_ordr#,
+			UPDT_ID = #esntl_id#,
+			UPDT_DT = SYSDATE
+		WHERE EXMN_CD = #exmn_cd#
+	</update>
+
+	<select id="selectExmnLowerCd" parameterClass="java.util.HashMap" resultClass="int">
+		SELECT COUNT(*)
+		FROM CMN_EXMN_CD
+		WHERE EXMN_UPPER_CD = #exmn_cd#
+		  AND USE_YN = 'Y'
+	</select>
+
+
+</sqlMap>

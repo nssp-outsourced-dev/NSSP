@@ -15,10 +15,10 @@
 
 			<c:if test="${mngr_yn ne 'Y'}">
 				fnSelectDept("", "${dept_cd}", "${dept_single_nm}")
-				$("#searchChager").val("${esntl_id}");
+				//$("#searchChager").val("${esntl_id}");//자신부서의 담당자 모두 검색 가능도록 수정 by dgkim 
 				$("#searchDeptNm").attr("disabled",true);
 				$("#btnDeptSearch").hide();
-				$("#searchChager").attr("disabled",true);
+				//$("#searchChager").attr("disabled",false);//자신부서의 담당자 모두 검색 가능도록 수정 by dgkim 
 			</c:if>
 			fnSearch();
 		});

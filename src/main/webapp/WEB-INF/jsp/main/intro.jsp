@@ -252,6 +252,21 @@ body span {
 			 </c:when>
 			 <c:otherwise></c:otherwise>
 			</c:choose>
+			
+			<div class="admin_icon" style="margin-left: 0px;">
+			<div class="topbtn">
+				<a href="javascript:void(0);" title="GPKI등록">GPKI 
+				<c:choose>
+					<c:when test="${gpki_dn == null && gpki_dn eq ''}">
+						미등록
+					</c:when>
+					<c:otherwise>
+						등록완료
+					</c:otherwise>
+				</c:choose>
+				</a>
+			</div>
+		</div>
 		</div>
 	</header>
 
@@ -537,7 +552,7 @@ body span {
 						<table class="tb_07">
 							<thead>
 								<tr>
-									<th></th>
+									<th>선택</th>
 									<th>접수번호</th>
 									<th>수사단서</th>
 									<th>사건구분</th>
@@ -575,7 +590,7 @@ body span {
 						<table class="tb_07">
 							<thead>
 								<tr>
-									<th></th>
+									<th>선택</th>
 									<th>접수번호</th>
 									<th>내사번호</th>
 									<th>수사단서</th>

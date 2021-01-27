@@ -252,10 +252,10 @@
 						AND C.TRGTER_NM = #trgter_nm#
 					</isNotEmpty>
 					<isNotEmpty property="chager" >
-						AND C.CHARGER_ID = #chager#
+						AND D.CHARGER_ID = #chager#
 					</isNotEmpty>
 					<isNotEmpty property="dept_cd" >
-						AND C.CHARGER_DEPT_CD IN (
+						AND D.CHARGER_DEPT_CD IN (
 							SELECT DC.DEPT_CD
 							FROM CMN_DEPT_CD DC
 							WHERE DC.USE_YN = 'Y' AND DC.DEPT_CD != '00000'

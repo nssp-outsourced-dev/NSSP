@@ -14,10 +14,10 @@
 
 			<c:if test="${mngr_yn ne 'Y'}">
 				fnSelectDept("", "${dept_cd}", "${dept_single_nm}")
-				$("#searchChager").val("${esntl_id}");
+				//$("#searchChager").val("${esntl_id}");//자신부서의 담당자 모두 검색 가능도록 수정 by dgkim 
 				$("#searchDeptNm").attr("disabled",true);
 				$("#btnDeptSearch").hide();
-				$("#searchChager").attr("disabled",true);
+				//$("#searchChager").attr("disabled",false);//자신부서의 담당자 모두 검색 가능도록 수정 by dgkim 
 			</c:if>
 			fnSearch();
 		});
@@ -30,8 +30,8 @@
 
 	function initGrid() {
 		var columnLayout = [
-			{ dataField : "grdRn", 				headerText : "순번", 			width : 30},		
-			{ dataField : "grdSugestDe", 		headerText : "지휘요구일자", 	width : 100, dataType : "date", formatString : "yyyy-mm-dd"},
+			{ dataField : "grdRn", 				headerText : "순번", 			width : 50},		
+			{ dataField : "grdSugestDe", 		headerText : "지휘요구일자", 	width : 130, dataType : "date", formatString : "yyyy-mm-dd"},
 			{ dataField : "grdTrgterNmS", 		headerText : "피의자"	  },
 			{ dataField : "grdVioltRootNm", 	headerText : "죄명"	  },
 			{ dataField : "", 		headerText : "제출지", width : 130 },
@@ -44,14 +44,14 @@
 			},
 			{ dataField : "grdCmptncExmnNm", 	headerText : "지휘관서"  },
 			{ dataField : "grdCmndDe", 			headerText : "지휘일자", 	width : 130, dataType : "date", formatString : "yyyy-mm-dd"},
-			{ dataField : "grdSugestResultNm", 	headerText : "건의결과",  	width : 80  },
+			{ dataField : "grdSugestResultNm", 	headerText : "건의결과",  	width : 100  },
 			{ dataField : "grdCaseNo", 			headerText : "사건번호",  	width : 130,
 				renderer : {type : "TemplateRenderer"},
 				labelFunction : function (rowIndex, columnIndex, value, headerText, item ) {
 					return fnChangeNo (value);
 				}
 			},
-			{ dataField : "", 		headerText : "수령자", width : 110  }  
+			{ dataField : "", 		headerText : "수령자", width : 130  }  
 		];
 		var gridPros = {
 			headerHeight : 30,

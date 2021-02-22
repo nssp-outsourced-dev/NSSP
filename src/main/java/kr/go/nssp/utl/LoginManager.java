@@ -197,8 +197,8 @@ public class LoginManager implements HttpSessionBindingListener{
 							session.setAttribute("mngr_yn", mngr_yn);
 							session.setAttribute("esntl_id", esntl_id);
 
-							//timeout 30분
-							session.setMaxInactiveInterval(1800);
+							//timeout 60분
+							session.setMaxInactiveInterval(3600);
 
 							//새로운 접속(세션) 생성
 							setSession(session, esntl_id);

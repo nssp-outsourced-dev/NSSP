@@ -266,10 +266,9 @@
 		<c:if test="${option.REPLY_YN eq 'Y'}">
 			<a href="javascript:void(0);" id="btnAdd" onClick="fnReply();" class="btn_st2 icon_n fl mr_m1">답변</a>
 		</c:if>
-		<c:if test="${result.WRITNG_ID eq esntl_id || mngr_yn eq 'Y'}">
-			<a href="javascript:void(0);" id="btnUpdate" onClick="fnUpdate();" class="btn_st2 icon_n fl mr_m1">수정</a>
-		</c:if>
+		<%-- <c:if test="${result.WRITNG_ID eq esntl_id || mngr_yn eq 'Y'}"></c:if> --%>
 	</c:if>
+	<a href="javascript:void(0);" id="btnUpdate" onClick="fnUpdate();" class="btn_st2 icon_n fl mr_m1">수정</a>
 </div>
 
 <div class="com_box  t_right">

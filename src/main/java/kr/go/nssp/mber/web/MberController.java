@@ -553,7 +553,7 @@ public class MberController {
 							session.setAttribute("esntl_id", esntl_id);
 
 							// timeout 30분
-							session.setMaxInactiveInterval(1800);
+							session.setMaxInactiveInterval(3600);
 							// 새로운 접속(세션) 생성
 							loginManager.setSession(session, esntl_id);
 

@@ -81,7 +81,7 @@ public class MainController {
 		HashMap bMap = new HashMap();
     	bMap.put("bbs_id", "00000000000000000001");
     	bMap.put("startRow", 0);
-    	bMap.put("endRow", 4);
+    	bMap.put("endRow", 3);
     	List<HashMap> noticeList = bbsService.getBbsList(bMap);
 
         //업무알림
@@ -89,8 +89,16 @@ public class MainController {
     	bMap.put("startRow", 0);
     	bMap.put("endRow", 3);
     	List<HashMap> workList = bbsService.getBbsList(bMap);
+    	
+    	//문의사항
+    	bMap.put("bbs_id", "00000000000000000003");
+    	bMap.put("startRow", 0);
+    	bMap.put("endRow", 3);
+    	List<HashMap> qnaList = bbsService.getBbsList(bMap);
+    	
         model.addAttribute("noticeList", noticeList);
         model.addAttribute("workList", workList);
+        model.addAttribute("qnaList", qnaList);
 
         return "main/intro";
     }

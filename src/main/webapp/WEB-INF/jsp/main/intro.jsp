@@ -77,6 +77,89 @@ body span {
 	padding-top: 4px;
 	font-size:15px;
 }
+
+/* 메인상단 */
+.logo {
+	background-color: honeydew;
+}
+
+.main_box {
+	padding: 100px 0px 20px 0px;
+}
+.main_box .ininbox{
+	margin: 10px auto 10px;
+}
+
+/* 사건조회 */
+.main_search_box, .main_search_box .tx {
+	background-color: lavender !important;
+}
+
+/* 공지사항 및 문의사항 */
+.main_notice_box .title_box {
+	height: 50px;
+	background-color: antiquewhite;
+}
+.main_notice_box .title_box .title_t {
+	font-size: 14px;
+}
+.main_notice_box{
+	padding: 0px 0px 10px 0px;
+}
+.main_notice_box .list_box ul li .tx {
+	width: 100%;
+}
+
+/* 업무알림 */
+.main_alarm_box .title_box{
+	height: 50px;
+	background-color: antiquewhite;
+}
+.main_alarm_box .title_box .title_t{
+	font-size: 14px;
+}
+.main_alarm_box {
+	height: 180px;
+}
+
+.main_alarm_box .list_box ul li div {
+	width: 100%;
+}
+
+/* 통계 */
+.main_status_box .timebox .tx1 {
+	font-size: 21px;
+}
+
+.main_status_box .iconbox {
+	padding-left: 74px;
+    padding-top: 47px;
+}
+.main_status_box .iconbox ul li .icon_r1 {
+	height: 80px !important;
+	background-color: darkgoldenrod;
+	font-size: 30px;
+}
+
+.main_status_box .iconbox ul li .icon_r2 {
+	height: 95px !important;
+	background-color: saddlebrown;
+	font-size: 30px;
+}
+
+/* 내사건 */
+.main_case_box .title_box {
+    background-color: navy; /* teal */
+}
+
+.tb_07 tbody td .ing_box .ing4 {
+	background-color: crimson;
+}
+
+/* 내사건 하단 */
+.main_case_box {
+	height: 563px; 
+}
 </style>
 <script type="text/javascript">
 	$(function() {
@@ -252,21 +335,6 @@ body span {
 			 </c:when>
 			 <c:otherwise></c:otherwise>
 			</c:choose>
-			
-			<div class="admin_icon" style="margin-left: 0px;">
-			<div class="topbtn">
-				<a href="javascript:void(0);" title="GPKI등록">GPKI 
-				<c:choose>
-					<c:when test="${gpki_dn == null && gpki_dn eq ''}">
-						미등록
-					</c:when>
-					<c:otherwise>
-						등록완료
-					</c:otherwise>
-				</c:choose>
-				</a>
-			</div>
-		</div>
 		</div>
 	</header>
 
@@ -279,7 +347,7 @@ body span {
 				</div>
 				<div class="title">
 					<div class="tx1">
-						<em>사건</em>조회
+						<em>사건조회</em>
 					</div>
 					<div class="tx2">Case inquiry</div>
 				</div>
@@ -312,7 +380,7 @@ body span {
 				</div>
 				<div class="iconbox" style="width: 775px;">
 					<ul>
-						<li style="width: 150px;padding-top: 20px;margin-right: 0px">
+						<li style="width: 130px;padding-top: 20px;margin-right: 0px">
 							<div class="icon_r1" style="width: 80px;height: 120px;">
 								${caseSttus.ST_CNT0}
 								<div class="umbox" style="width: 45px;height: 45px;border-radius: 10px;right: -20px; bottom: -20px;">
@@ -321,7 +389,7 @@ body span {
 							</div>
 							<div class="tx_box" style="margin-top: 20px;margin-left: 10px;">사건접수</div>
 						</li>
-						<li style="width: 150px;">
+						<li style="width: 130px;">
 							<div class="icon_r2" style="width: 95px;height: 140px;">
 								${caseSttus.ST_CNT1}
 								<div class="umbox" style="width: 45px;height: 45px;border-radius: 10px;right: -20px; bottom: -20px;">
@@ -330,7 +398,7 @@ body span {
 							</div>
 							<div class="tx_box" style="margin-top: 20px;margin-left: 23px;">수사중</div>
 						</li>
-						<li style="width: 150px;padding-top: 20px;margin-right: 0px;"">
+						<li style="width: 130px;padding-top: 20px;margin-right: 0px;"">
 							<div class="icon_r1" style="width: 80px;height: 120px;" >
 								${caseSttus.ST_CNT2}
 								<div class="umbox" style="width: 45px;height: 45px;border-radius: 10px;right: -20px; bottom: -20px;">
@@ -339,7 +407,7 @@ body span {
 							</div>
 							<div class="tx_box" style="margin-top: 20px;margin-left: 10px;">수사지휘건의</div>
 						</li>
-						<li style="width: 150px;">
+						<li style="width: 130px;">
 							<div class="icon_r2" style="width: 95px;height: 140px;">
 								${caseSttus.ST_CNT3}
 								<div class="umbox" style="width: 45px;height: 45px;border-radius: 10px;right: -20px; bottom: -20px;">
@@ -348,7 +416,7 @@ body span {
 							</div>
 							<div class="tx_box" style="margin-top: 20px;margin-left: 23px;">송치준비중</div>
 						</li>
-						<li style="width: 150px;padding-top: 20px;">
+						<li style="width: 130px;padding-top: 20px;">
 							<div class="icon_r1" style="width: 80px;height: 120px;">
 								${caseSttus.ST_CNT4}
 								<div class="umbox" style="width: 45px;height: 45px;border-radius: 10px;right: -20px; bottom: -20px;">
@@ -364,12 +432,12 @@ body span {
 
 		<div class="ininbox">
 			<div class="main_l_box">
-				<div class="main_notice_box mb_30 ">
+				<div class="main_notice_box mb_10">
 					<div class="title_box">
 						<div class="title_t">
 							공지사항<em>NOTICE</em>
 						</div>
-						<div class="title_more"><a href="/bbs/00000000000000000001/list/">+</a></div>
+						<div class="title_more"><a href="/bbs/00000000000000000001/list/"><b>+</b></a></div>
 					</div>
 					<div class="list_box">
 						<ul>
@@ -385,21 +453,21 @@ body span {
 									<div class="icon"><img src="/img/notice_icon2.png" alt="" /></div>
 								</c:otherwise>
 							</c:choose>
-							<div class="tx" style="font-size:15px;"><a href="javascript:fnBbsDetail('00000000000000000001', '${result.BBS_SN}');">${result.NTT_SJ}</a></div>
-							<div class="date">${result.WRITNG_DE}</div>
+							<div class="tx" style="font-size:12px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;"><a href="javascript:fnBbsDetail('00000000000000000001', '${result.BBS_SN}');">${result.NTT_SJ}</a></div>
+							<%-- <div class="date">${result.WRITNG_DE}</div> --%>
 						</li>
 						</c:forEach>
 
 						</ul>
 					</div>
 				</div>
-				<div class="main_alarm_box ">
+				<div class="main_alarm_box mb_10">
 					<div class="title_box">
 						<div class="title_t">업무알림</div>
-						<div class="al_icon" style="left:90px; top:20px;width: 27px">
+						<div class="al_icon" style="left:90px; top:20px;width: 23px">
 							<img src="/img/icon_new1.png" alt="" />
 						</div>
-						<div class="title_more" style="margin-left: 242px;"><a href="/bbs/00000000000000000002/list/">+</a></div>
+						<div class="title_more" style="margin-left: 259px;"><a href="/bbs/00000000000000000002/list/"><b>+</b></a></div>
 					</div>
 					<div class="list_box">
 						<ul>
@@ -407,10 +475,10 @@ body span {
 							</c:if>
 							<c:forEach var="result" items="${workList}" varStatus="status">
 							<li >
-								<div style="font-size:15px; width: 70%;    float: left;">
+								<div style="font-size:12px; width: 100%; float: left; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
 								<a href="javascript:fnBbsDetail('00000000000000000002', '${result.BBS_SN}');"><c:if test="${result.NOTICE_YN eq 'Y'}">[공지]</c:if> ${result.NTT_SJ}</a>
 								</div>
-								<div style="font-size:12px; width: 30%; float: right;    text-align: right;">${result.WRITNG_DE}</div>
+								<%-- <div style="font-size:12px; width: 30%; float: right;    text-align: right; ">${result.WRITNG_DE}</div> --%>
 								<c:if test="${result.NEW_YN eq 'Y'}">
 								<div class="icon">
 									<img src="/img/icon_new2.png" alt="" />
@@ -418,6 +486,36 @@ body span {
 								</c:if>
 							</li>
 							</c:forEach>
+						</ul>
+					</div>
+				</div>
+				
+				<div class="main_notice_box">
+					<div class="title_box">
+						<div class="title_t">
+							문의사항<em>Q&A</em>
+						</div>
+						<div class="title_more"><a href="/bbs/00000000000000000003/list/"><b>+</b></a></div>
+					</div>
+					<div class="list_box">
+						<ul>
+						<c:if test="${fn:length(qnaList) == 0}">
+						</c:if>
+						<c:forEach var="result" items="${qnaList}" varStatus="status">
+						<li>
+							<c:choose>
+								<c:when test="${result.NOTICE_YN eq 'Y'}">
+									<div class="icon"><img src="/img/notice_icon1.png" alt="" /></div>
+								</c:when>
+								<c:otherwise>
+									<div class="icon"><img src="/img/notice_icon2.png" alt="" /></div>
+								</c:otherwise>
+							</c:choose>
+							<div class="tx" style="font-size:12px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;"><a href="javascript:fnBbsDetail('00000000000000000003', '${result.BBS_SN}');">${result.NTT_SJ}</a></div>
+							<%-- <div class="date">${result.WRITNG_DE}</div> --%>
+						</li>
+						</c:forEach>
+
 						</ul>
 					</div>
 				</div>

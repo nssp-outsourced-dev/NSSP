@@ -88,7 +88,12 @@
 %>
 
 <jsp:include page="/inc/header.jsp"/>
-
+<style>
+	/* 메인상단 */
+	.logo {
+		background-color: honeydew;
+	}
+</style>
 <script type="text/javascript">
 	function fnLayoutLogout(){
 	    location.href = "<c:url value='/member/logoutAction/'/>";

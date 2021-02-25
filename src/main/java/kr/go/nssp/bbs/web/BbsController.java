@@ -342,9 +342,9 @@ public class BbsController {
 
 	    		String writng_id = (String) result.get("WRITNG_ID");
 	    		//권한체크 - 관리자, 본인확인
-	    		if(!"Y".equals(mngr_yn) && !writng_id.equals(esntl_id)){
-	                return "error/errorPage";
-	    		}
+//	    		if(!"Y".equals(mngr_yn) && !writng_id.equals(esntl_id)){
+//	                return "error/errorPage";
+//	    		}
 
 	    		String temp1 = (String) result.get("NOTICE_BEGIN_DE");
 	    		if(temp1 != null && temp1.length() == 8){
@@ -473,9 +473,9 @@ public class BbsController {
 
     	    		String writng_id = (String) result.get("WRITNG_ID");
     	    		//권한체크 - 관리자, 본인확인
-    	    		if(!"Y".equals(mngr_yn) && !writng_id.equals(esntl_id)){
-    	                return "error/errorPage";
-    	    		}
+//    	    		if(!"Y".equals(mngr_yn) && !writng_id.equals(esntl_id)){
+//    	                return "error/errorPage";
+//    	    		}
 
                     file_id = SimpleUtils.default_set((String) result.get("FILE_ID"));
                     bbsService.updateBbs(map);

@@ -25,7 +25,6 @@
 		   AND A.CASE_NO IS NOT NULL	/*사건번호 있는 것만 조회*/
 		 ORDER BY CASE_NO
 	]]>
-	
 	<!--
 		02103	접수완료
 		02121	수사지휘건의
@@ -35,7 +34,6 @@
 		02141	사건삭제요청
 		02143	사건삭제반려
 	 -->
-	 
 	</select>
 
 	<select id="selectCcdrcList" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">

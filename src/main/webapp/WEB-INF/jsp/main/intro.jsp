@@ -80,7 +80,7 @@ body span {
 
 /* 메인상단 */
 .logo {
-	background-color: honeydew;
+	/* background-color: honeydew; */
 }
 
 .main_box {
@@ -91,6 +91,9 @@ body span {
 }
 
 /* 사건조회 */
+.main_search_box .icon {
+	border: 2px white solid;
+}
 .main_search_box, .main_search_box .tx {
 	background-color: lavender !important;
 }
@@ -123,21 +126,47 @@ body span {
 }
 
 .main_alarm_box .list_box ul li div {
-	width: 100%;
+	width: 3%;
+}
+
+.main_alarm_box .list_box ul li .icon {
+	right: 335px;
+	margin-top: 6px;
 }
 
 /* 통계 */
+.main_status_box .timebox {
+	width: 292px;
+}
+
 .main_status_box .timebox .tx1 {
-	font-size: 21px;
+	font-size: 26px;
+}
+.main_status_box .timebox .todey .ttx1 {
+	/* font-size: 12px; */
+}
+.main_status_box .timebox .todey .ttx2 {
+	font-size: 20px;
+	margin-bottom: 0px
+}
+.main_status_box .timebox .todey .ttx3 {
+	font-size: 15px;
+	margin-bottom: 0px
 }
 
 .main_status_box .iconbox {
-	padding-left: 74px;
-    padding-top: 47px;
+	padding-left: 45px;
+	padding-top: 30px;
+	margin-left: 0px;
+	width: 687px; 
+	height: 215px; 
+	border: 1px solid black; 
+	border-radius: 10px;
+	border-top-width: 7px;
+	border-top-color: navy;
 }
 .main_status_box .iconbox ul li .icon_r1 {
 	height: 80px !important;
-	background-color: darkgoldenrod;
 	font-size: 30px;
 }
 
@@ -147,19 +176,49 @@ body span {
 	font-size: 30px;
 }
 
+.main_status_box .iconbox ul li .icon_r3 {
+	height: 80px !important;
+	font-size: 30px;
+	border-radius: 15%;
+}
+
 /* 내사건 */
 .main_case_box .title_box {
     background-color: navy; /* teal */
 }
 
+.tb_07 tbody td .ing_box .ing1 {
+	/* background-color: #7a7ae6; */
+}
 .tb_07 tbody td .ing_box .ing4 {
 	background-color: crimson;
 }
 
 /* 내사건 하단 */
 .main_case_box {
-	height: 563px; 
+	height: 563px;
 }
+
+/**** 추가(2021-03-02) start  ****/
+.main_status_box .iconbox ul li .icon_r3{ width: 140px; height: 140px; background-color: #000000; text-align: center; position: relative;  }
+.main_status_box .iconbox ul li .icon_r3 img{ width: 140px; }
+.main_status_box .iconbox ul li .icon_r3 .umbox{ 
+	width: 163px; 
+	height: 63px; 
+	background-color: #transparent; 
+	/* color: #fff;  */
+	font-size: 20px; 
+	position: absolute; 
+	top:125px; 
+	left : 0px; 
+	font-weight: 900; 
+	width: 80px;
+	height: 30px; 
+	border-radius: 10px;
+	right: -20px; 
+	color: #cc1d2a;
+}
+/**** 추가(2021-03-02) end  ****/
 </style>
 <script type="text/javascript">
 	$(function() {
@@ -168,7 +227,7 @@ body span {
 				if(event.keyCode == 13) {
 					fnInputCaseDetail();
 				}
-			}); */ /*최초 실행시 오류 발생*/
+			}); */ /*���� ������ ���� �߻�*/
 			$("#selSearchType").change(function (event){
 				if($(this).val() == "Nm") {
 					$("#txtSearchText").prop("placeholder","");
@@ -343,7 +402,7 @@ body span {
 		<div class="ininbox">
 			<div class="main_search_box">
 				<div class="icon">
-					<img src="/img/main_searchicon.png" alt="" />
+					<img src="/img/menu_icon06_on.png" alt="" />
 				</div>
 				<div class="title">
 					<div class="tx1">
@@ -378,52 +437,52 @@ body span {
 						<div class="ttx3">${LayoutNowTime}</div>
 					</div>
 				</div>
-				<div class="iconbox" style="width: 775px;">
+				<div class="iconbox" style="">
 					<ul>
-						<li style="width: 130px;padding-top: 20px;margin-right: 0px">
-							<div class="icon_r1" style="width: 80px;height: 120px;">
-								${caseSttus.ST_CNT0}
-								<div class="umbox" style="width: 45px;height: 45px;border-radius: 10px;right: -20px; bottom: -20px;">
-									<img src="/img/main_status03.png" alt="" style="padding-bottom: 10px;"/>
+						<li style="width: 130px;padding-top: 0px;margin-right: 0px">
+							<div class="icon_r3" style="width: 80px;height: 120px;">
+								<img src="/img/main_status03.png" alt="" style="padding-bottom: 10px;"/>
+								<div class="umbox" style=""><!-- background-color: #ada8ae; -->
+								${caseSttus.ST_CNT0}<font color="black">건</font>
 								</div>
 							</div>
-							<div class="tx_box" style="margin-top: 20px;margin-left: 10px;">사건접수</div>
+							<div style="margin-top: 10px;font-size: 18px;margin-left: 3px;">사건접수</div>
 						</li>
-						<li style="width: 130px;">
-							<div class="icon_r2" style="width: 95px;height: 140px;">
-								${caseSttus.ST_CNT1}
-								<div class="umbox" style="width: 45px;height: 45px;border-radius: 10px;right: -20px; bottom: -20px;">
-									<img src="/img/main_status04.png" alt="" style="padding-bottom: 10px;"/>
+						<li style="width: 130px;padding-top: 0px;margin-right: 0px">
+							<div class="icon_r3" style="width: 80px;height: 120px;">
+								<img src="/img/main_status04.png" alt="" style="padding-bottom: 10px;"/>
+								<div class="umbox" style=""><!-- background-color: #5f6283; -->
+								${caseSttus.ST_CNT1}<font color="black">건</font>
 								</div>
 							</div>
-							<div class="tx_box" style="margin-top: 20px;margin-left: 23px;">수사중</div>
+							<div style="margin-top: 10px;font-size: 18px;margin-left: 12px;">수사중</div>
 						</li>
-						<li style="width: 130px;padding-top: 20px;margin-right: 0px;"">
-							<div class="icon_r1" style="width: 80px;height: 120px;" >
-								${caseSttus.ST_CNT2}
-								<div class="umbox" style="width: 45px;height: 45px;border-radius: 10px;right: -20px; bottom: -20px;">
-									<img src="/img/main_status07.png" alt="" style="width: 41px;padding-bottom: 10px;" />
+						<li style="width: 130px;padding-top: 0px;margin-right: 0px;">
+							<div class="icon_r3" style="width: 80px;height: 120px;">
+								<img src="/img/main_status07.png" alt="" style="padding-bottom: 10px;"/>
+								<div class="umbox" style="">
+								${caseSttus.ST_CNT2}<font color="black">건</font>
 								</div>
 							</div>
-							<div class="tx_box" style="margin-top: 20px;margin-left: 10px;">수사지휘건의</div>
+							<div style="margin-top: 10px;font-size: 18px;margin-left: -12px;">수사지휘건의</div>
 						</li>
-						<li style="width: 130px;">
-							<div class="icon_r2" style="width: 95px;height: 140px;">
-								${caseSttus.ST_CNT3}
-								<div class="umbox" style="width: 45px;height: 45px;border-radius: 10px;right: -20px; bottom: -20px;">
-									<img src="/img/main_status05.png" alt="" style="padding-bottom: 10px;"/>
+						<li style="width: 130px;padding-top: 0px;margin-right: 0px;">
+							<div class="icon_r3" style="width: 80px;height: 120px;">
+								<img src="/img/main_status05.png" alt="" style="padding-bottom: 10px;"/>
+								<div class="umbox" style="">
+								${caseSttus.ST_CNT3}<font color="black">건</font>
 								</div>
 							</div>
-							<div class="tx_box" style="margin-top: 20px;margin-left: 23px;">송치준비중</div>
+							<div style="margin-top: 10px;font-size: 18px;margin-left: -4px;">송치준비중</div>
 						</li>
-						<li style="width: 130px;padding-top: 20px;">
-							<div class="icon_r1" style="width: 80px;height: 120px;">
-								${caseSttus.ST_CNT4}
-								<div class="umbox" style="width: 45px;height: 45px;border-radius: 10px;right: -20px; bottom: -20px;">
-									<img src="/img/main_status06.png" alt="" style="padding-bottom: 10px;"/>
+						<li style="width: 80px;padding-top: 0px;">
+							<div class="icon_r3" style="width: 80px;height: 120px;">
+								<img src="/img/main_status06.png" alt="" style="padding-bottom: 10px;"/>
+								<div class="umbox" style="">
+								${caseSttus.ST_CNT4}<font color="black">건</font>
 								</div>
 							</div>
-							<div class="tx_box" style="margin-top: 20px;margin-left: 10px;">송치완료</div>
+							<div style="margin-top: 10px;font-size: 18px;margin-left: 3px;">송치완료</div>
 						</li>
 					</ul>
 				</div>
@@ -445,14 +504,15 @@ body span {
 						</c:if>
 						<c:forEach var="result" items="${noticeList}" varStatus="status">
 						<li>
-							<c:choose>
+							<%--<c:choose>
 								<c:when test="${result.NOTICE_YN eq 'Y'}">
-									<div class="icon"><img src="/img/notice_icon1.png" alt="" /></div>
+									<div class="icon"><img src="/img/icon_dot.png" alt="" /></div>
 								</c:when>
 								<c:otherwise>
-									<div class="icon"><img src="/img/notice_icon2.png" alt="" /></div>
+									<div class="icon"><img src="/img/icon_dot.png" alt="" /></div>
 								</c:otherwise>
-							</c:choose>
+							</c:choose> --%>
+							<div class="icon"><img src="/img/title_icon2.png" alt=""></div>
 							<div class="tx" style="font-size:12px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;"><a href="javascript:fnBbsDetail('00000000000000000001', '${result.BBS_SN}');">${result.NTT_SJ}</a></div>
 							<%-- <div class="date">${result.WRITNG_DE}</div> --%>
 						</li>
@@ -475,21 +535,24 @@ body span {
 							</c:if>
 							<c:forEach var="result" items="${workList}" varStatus="status">
 							<li >
-								<div style="font-size:12px; width: 100%; float: left; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
+								<div style="font-size:12px; width: 100%; float: left; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; margin-left: 29px;">
 								<a href="javascript:fnBbsDetail('00000000000000000002', '${result.BBS_SN}');"><c:if test="${result.NOTICE_YN eq 'Y'}">[공지]</c:if> ${result.NTT_SJ}</a>
 								</div>
 								<%-- <div style="font-size:12px; width: 30%; float: right;    text-align: right; ">${result.WRITNG_DE}</div> --%>
-								<c:if test="${result.NEW_YN eq 'Y'}">
+								<%-- <c:if test="${result.NEW_YN eq 'Y'}">
 								<div class="icon">
 									<img src="/img/icon_new2.png" alt="" />
 								</div>
-								</c:if>
+								</c:if> --%>
+								<div class="icon">
+									<img src="/img/title_icon2.png" alt="" />
+								</div>
 							</li>
 							</c:forEach>
 						</ul>
 					</div>
 				</div>
-				
+
 				<div class="main_notice_box">
 					<div class="title_box">
 						<div class="title_t">
@@ -502,20 +565,22 @@ body span {
 						<c:if test="${fn:length(qnaList) == 0}">
 						</c:if>
 						<c:forEach var="result" items="${qnaList}" varStatus="status">
+						
+						
 						<li>
-							<c:choose>
+							<%-- <c:choose>
 								<c:when test="${result.NOTICE_YN eq 'Y'}">
 									<div class="icon"><img src="/img/notice_icon1.png" alt="" /></div>
 								</c:when>
 								<c:otherwise>
 									<div class="icon"><img src="/img/notice_icon2.png" alt="" /></div>
 								</c:otherwise>
-							</c:choose>
+							</c:choose> --%>
+							<div class="icon"><img src="/img/title_icon2.png" alt=""></div>
 							<div class="tx" style="font-size:12px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;"><a href="javascript:fnBbsDetail('00000000000000000003', '${result.BBS_SN}');">${result.NTT_SJ}</a></div>
-							<%-- <div class="date">${result.WRITNG_DE}</div> --%>
 						</li>
 						</c:forEach>
-
+						
 						</ul>
 					</div>
 				</div>

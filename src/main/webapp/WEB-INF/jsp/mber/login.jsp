@@ -38,7 +38,7 @@
 	            $("#chkIdSave").attr("checked", true);
 
 	          	//아이디를 저장하기가 체크되어 있을 경우만 GPKI 자동 활성화
-				//fnGpkiRun ();
+				fnGpkiRun ();
 	        }
 
 	        if(!fnIsEmpty($.trim('${gpkiResult}'))) {

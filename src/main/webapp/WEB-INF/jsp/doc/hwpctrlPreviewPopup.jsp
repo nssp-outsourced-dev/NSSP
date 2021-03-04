@@ -217,11 +217,9 @@
 				<div class="hwp_toolbar_title" style="border-color: #333;">
 					<span id="down_event">다운로드</span>
 				</div>
-				<!-- 
 				<div class="hwp_toolbar_title" style="border-color: #333;">
 					<span id="test_event" onclick="test_event()">기능테스트</span>
 				</div>
-				 -->
 			</div>
 		</div>
 		
@@ -249,9 +247,7 @@
 			
 			$("#fileNm").val(data.fileNm);
 		}
-		
 		var param = "formatId="+$("#formatId").val();
-		
 		ajaxUrl = "<c:url value='/doc/selectHwpctrlPreviewAjax/'/>";			//한글 서식 preview
 		
 		Ajax.getJson(ajaxUrl, param, processAfterGet);

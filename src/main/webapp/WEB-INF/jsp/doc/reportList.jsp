@@ -208,7 +208,7 @@
 						fnDocFileDelete(items.DOC_ID, items.PBLICTE_SN);
 					}
 				} else {
-					if( confirm(items.FORMAT_NM+"를 삭제하시겠습니까?") ){
+					if(confirm(items.FORMAT_NM+"("+items.DOC_NO+")를 삭제하시겠습니까?")){
 						var iUrl = '<c:url value='/doc/reportDelAjax/'/>';
 						var queryString =  "docId=" + items.DOC_ID + "&pblicteSn=" + items.PBLICTE_SN;
 						var processAfterGet = function(data) {
@@ -221,7 +221,7 @@
 						Ajax.getJson(iUrl, queryString, processAfterGet);
 					}
 				}
-			} else {
+			}else{
 				alert("문서가 생성되지 않았습니다.");
 			}
 			break;

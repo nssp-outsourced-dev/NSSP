@@ -1273,7 +1273,7 @@
 			alert("파일을 생성하기 위한 정보가 부족합니다.\n\n다시 조회한 후 시도해 주세요.");
 			return;
 		}
-		docFileCmmPopup = dhtmlmodal.open('docFile', 'iframe', encodeURI('/doc/docFilePopup/?pDocNo='+pDocNo+'&pFileId='+pFileId+'&pFormatId='+pFormatId), '작성문서 파일목록', 'width=800px,height=450px,center=1,resize=0,scrolling=1');
+		docFileCmmPopup = dhtmlmodal.open('docFile', 'iframe', '/doc/docFilePopup/?pDocNo='+pDocNo+'&pFileId='+pFileId+'&pFormatId='+pFormatId, '작성문서 파일목록', 'width=800px,height=450px,center=1,resize=0,scrolling=1');
 		return docFileCmmPopup;
 	}
 

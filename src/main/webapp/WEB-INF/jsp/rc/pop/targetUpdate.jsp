@@ -220,7 +220,7 @@
 			<input type="hidden" id="hidWrcTel" 	name="hidWrcTel"   ><!-- 대상자 직장전화 	 -->
 			<input type="hidden" id="hidEtcTel" 	name="hidEtcTel"   ><!-- 대상자 기타 연락처 -->
 			<input type="hidden" id="hidAgentTel" 	name="hidAgentTel" ><!-- 대리인 전화번호	 -->
-			<input type="text" id="hidTrgterRrn" 	name="hidTrgterRrn"><!-- 대리인 주민번호	 -->
+			<input type="hidden" id="hidTrgterRrn" 	name="hidTrgterRrn"><!-- 대리인 주민번호	 -->
 			<!-- tabT 대상자정보 -->
 			<div id="contentT">
 				<div class="box_w2 mt_10">

@@ -77,7 +77,7 @@
 		<option>제목</option>
 	</select> 
 	<input type="text" id="searchNttSj" name="searchNttSj" maxlength="50" style="width: 250px" placeholder="검색할 키워드를 입력하세요" value="${searchNttSj}">
-	<input type="button" value="검색" class="btn icon_n" onclick="fnSearch();" style="z-index: 0">
+	<input type="button" value="검색" class="btn icon_n" onclick="fnSearch();">
 </div>
 
 <div id="bbs_box">

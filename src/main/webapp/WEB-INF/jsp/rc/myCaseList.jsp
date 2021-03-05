@@ -1016,7 +1016,9 @@ var targetGridId = "#grid_target_list";
 													if( data == "0" ){
 														alert("신청이 완료되었습니다.");
 														fnSearch();
-													} else {
+													}else if( data == "-2"){
+														alert("현재 진행상태에서는 사건변경할수없습니다."); 
+													}else {
 														alert("신청 중 오류가 발생하였습니다.");
 													}
 												 };

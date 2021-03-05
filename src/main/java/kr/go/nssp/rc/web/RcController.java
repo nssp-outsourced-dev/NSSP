@@ -330,6 +330,7 @@ public class RcController {
 					pMap.put( "choiceCharger", choiceCharger );		//사용자 고유 ID
 				}
 				pMap.put( "dept_cd", choiceDeptCd );
+				pMap.put(  "esntl_id", "" );		//담당자가 전체일경우에 종복 사용자 고유 ID 넣지 않도록 수정 by dgkim
 		        break;
 		    case "00070":
 		    	if( "dept".equals(searchStdr) ) {

@@ -209,12 +209,12 @@ public class TrnServiceImpl implements TrnService {
 		trnDAO.callProcedureTrnCheck(param);
 		int i = 0;
 		
-		if(Utility.nvl(param.get("RE_MSG")).equals("")||param.get("RE_MSG").equals("지문원지작성번호를 입력하지 않은 송치피의자가 있습니다.") ){
+		if("".equals(Utility.nvl(param.get("RE_MSG"))) || "지문원지작성번호를 입력하지 않은 송치피의자가 있습니다.".equals(param.get("RE_MSG")) ){
 			// 2019-07-24 송치의견에 따라 사건진행상태 update
 			//param.put("PROGRS_STTUS_CD", "00242"); // 송치			
 			
 			//2020.11.19 권종열 요청
-			if( param.get("RE_MSG").equals("지문원지작성번호를 입력하지 않은 송치피의자가 있습니다.") ){
+			if( "지문원지작성번호를 입력하지 않은 송치피의자가 있습니다.".equals(param.get("RE_MSG"))){
 				param.put("RE_MSG","");
 			}
 				// 2019-07-24 송치의견에 따라 사건진행상태 update

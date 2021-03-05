@@ -47,6 +47,7 @@
 			fnDatePickerImg("textReceiptDeStart", fnGetToday(12, 0), true);	//input Calendar setting
 			fnDatePickerImg("textReceiptDeEnd"	, null, true);	//input Calendar setting
 			initGrid();			//그리드 초기화
+			fnSearchDeptCharger();
 			fnChoiceGrid("F");	//화면 초기에 정식사건으로 그리드 지정
 		});
 

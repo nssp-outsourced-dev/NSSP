@@ -35,6 +35,8 @@
 		) AS ALOT_CNT
 		FROM CMN_USER U
 		WHERE USE_YN = 'Y' AND CONFM_YN = 'Y'
+		
+		<isNotEmpty property="dept_cd">
 		AND DEPT_CD IN (
 			SELECT DC.DEPT_CD
 			FROM CMN_DEPT_CD DC
@@ -42,10 +44,15 @@
 			START WITH DC.DEPT_CD = #dept_cd#
 			CONNECT BY PRIOR DC.DEPT_CD = DC.DEPT_UPPER_CD
 		)
+		</isNotEmpty>
 		<!-- 2019-08-02 인수인계를 위해 부서별 사용자 조회시 (선택 사건의 담당자는 제외) --> 
 		<isNotEmpty property="alot_job_se"><isEqual property="alot_job_se" compareValue="H">
 		AND ESNTL_ID <![CDATA[<>]]> #esntl_id#
 		</isEqual></isNotEmpty>
+		<!-- 2021.02.17 김지만 수사관 요청 사건배당시 직원 검색 기능 추가  -->
+		<isNotEmpty property="user_nm" prepend="AND">
+			USER_NM LIKE '%' || #user_nm# || '%'
+		</isNotEmpty>
 		ORDER BY DEPT_NM, USER_NM
 	</select>
 

@@ -199,11 +199,11 @@ $(function() {
 		});
 
 		saveInterval = setInterval(function() {
-			   //console.log('10분마다');
+			   //console.log('10분마다'); 10분 -> 1분으로 수정
 			   window.frames['Document_HwpCtrl'].HwpCtrl.SaveAs("${fileNm}.hwp", "HWP", "autosave:false", function (res) {
 					fnSaveHwp( res, true );
 			   });
-			}, 600000); 
+			}, 60000);//600000 
 		
 		
 		$("#character_table_toolbar").hide();
@@ -390,6 +390,10 @@ $(function() {
 	};
 
 	function fnSetDataMap(json) {
+		//기본적으로 웹한글 기안기는 문서 정보를 불러올때 커서정보를 불러오지 않기에 
+		// 첫번째 필드에 커서 위치하도록 수정
+		if(pHwpCtrl.FieldExist("INPUT_1")){ pHwpCtrl.MoveToField("INPUT_1", false, false, false); }
+		
 		$.each(json, function(key, value){
 			if(pHwpCtrl.FieldExist(key)){			//헤당 필드가 있을경우
 				pHwpCtrl.PutFieldText(key, value);	//설정된 필드 ID에 데이터 입력

@@ -80,7 +80,7 @@ body span {
 
 /* 메인상단 */
 .logo {
-	/* background-color: honeydew; */
+	background-color: honeydew;
 }
 
 .main_box {
@@ -104,7 +104,7 @@ body span {
 	background-color: antiquewhite;
 }
 .main_notice_box .title_box .title_t {
-	font-size: 14px;
+	font-size: 16px;
 }
 .main_notice_box{
 	padding: 0px 0px 10px 0px;
@@ -119,7 +119,7 @@ body span {
 	background-color: antiquewhite;
 }
 .main_alarm_box .title_box .title_t{
-	font-size: 14px;
+	font-size: 16px;
 }
 .main_alarm_box {
 	height: 180px;
@@ -140,7 +140,7 @@ body span {
 }
 
 .main_status_box .timebox .tx1 {
-	font-size: 26px;
+	font-size: 21px;
 }
 .main_status_box .timebox .todey .ttx1 {
 	/* font-size: 12px; */
@@ -155,15 +155,15 @@ body span {
 }
 
 .main_status_box .iconbox {
-	padding-left: 45px;
+	padding-left: 50px;
 	padding-top: 30px;
 	margin-left: 0px;
 	width: 687px; 
-	height: 215px; 
-	border: 1px solid black; 
+	height: 190px; 
+	/* border: 1px solid black;
 	border-radius: 10px;
 	border-top-width: 7px;
-	border-top-color: navy;
+	border-top-color: navy;  */
 }
 .main_status_box .iconbox ul li .icon_r1 {
 	height: 80px !important;
@@ -174,12 +174,6 @@ body span {
 	height: 95px !important;
 	background-color: saddlebrown;
 	font-size: 30px;
-}
-
-.main_status_box .iconbox ul li .icon_r3 {
-	height: 80px !important;
-	font-size: 30px;
-	border-radius: 15%;
 }
 
 /* 내사건 */
@@ -200,17 +194,23 @@ body span {
 }
 
 /**** 추가(2021-03-02) start  ****/
-.main_status_box .iconbox ul li .icon_r3{ width: 140px; height: 140px; background-color: #000000; text-align: center; position: relative;  }
-.main_status_box .iconbox ul li .icon_r3 img{ width: 140px; }
+.main_status_box .iconbox ul li .icon_r3{ 
+	width: 45px !important; 
+	background-color: #000000; 
+	text-align: center; 
+	position: relative;  
+	height: 45px !important;
+	font-size: 30px;
+	border-radius: 15%;
+	margin-top: 10px;
+}
+.main_status_box .iconbox ul li .icon_r3 img{ width: 45px; }
 .main_status_box .iconbox ul li .icon_r3 .umbox{ 
-	width: 163px; 
-	height: 63px; 
-	background-color: #transparent; 
-	/* color: #fff;  */
+	background-color: #transparent;
 	font-size: 20px; 
 	position: absolute; 
-	top:125px; 
-	left : 0px; 
+	top: 95px; 
+	left : -15px; 
 	font-weight: 900; 
 	width: 80px;
 	height: 30px; 
@@ -441,48 +441,48 @@ body span {
 					<ul>
 						<li style="width: 130px;padding-top: 0px;margin-right: 0px">
 							<div class="icon_r3" style="width: 80px;height: 120px;">
-								<img src="/img/main_status03.png" alt="" style="padding-bottom: 10px;"/>
+								<img src="/img/main_status04.png" alt="" style="padding-bottom: 10px;"/>
 								<div class="umbox" style=""><!-- background-color: #ada8ae; -->
 								${caseSttus.ST_CNT0}<font color="black">건</font>
 								</div>
 							</div>
-							<div style="margin-top: 10px;font-size: 18px;margin-left: 3px;">사건접수</div>
+							<div style="margin-top: 20px;font-size: 18px;margin-left: -13px;">사건접수</div>
 						</li>
 						<li style="width: 130px;padding-top: 0px;margin-right: 0px">
 							<div class="icon_r3" style="width: 80px;height: 120px;">
-								<img src="/img/main_status04.png" alt="" style="padding-bottom: 10px;"/>
+								<img src="/img/main_status06.png" alt="" style="padding-bottom: 10px;"/>
 								<div class="umbox" style=""><!-- background-color: #5f6283; -->
 								${caseSttus.ST_CNT1}<font color="black">건</font>
 								</div>
 							</div>
-							<div style="margin-top: 10px;font-size: 18px;margin-left: 12px;">수사중</div>
-						</li>
-						<li style="width: 130px;padding-top: 0px;margin-right: 0px;">
-							<div class="icon_r3" style="width: 80px;height: 120px;">
-								<img src="/img/main_status07.png" alt="" style="padding-bottom: 10px;"/>
-								<div class="umbox" style="">
-								${caseSttus.ST_CNT2}<font color="black">건</font>
-								</div>
-							</div>
-							<div style="margin-top: 10px;font-size: 18px;margin-left: -12px;">수사지휘건의</div>
+							<div style="margin-top: 20px;font-size: 18px;margin-left: -4px;">수사중</div>
 						</li>
 						<li style="width: 130px;padding-top: 0px;margin-right: 0px;">
 							<div class="icon_r3" style="width: 80px;height: 120px;">
 								<img src="/img/main_status05.png" alt="" style="padding-bottom: 10px;"/>
 								<div class="umbox" style="">
+								${caseSttus.ST_CNT2}<font color="black">건</font>
+								</div>
+							</div>
+							<div style="margin-top: 20px;font-size: 18px;margin-left: -33px;">수사지휘건의</div>
+						</li>
+						<li style="width: 130px;padding-top: 0px;margin-right: 0px;">
+							<div class="icon_r3" style="width: 80px;height: 120px;">
+								<img src="/img/main_status03.png" alt="" style="padding-bottom: 10px;"/>
+								<div class="umbox" style="">
 								${caseSttus.ST_CNT3}<font color="black">건</font>
 								</div>
 							</div>
-							<div style="margin-top: 10px;font-size: 18px;margin-left: -4px;">송치준비중</div>
+							<div style="margin-top: 20px;font-size: 18px;margin-left: -11px;">송치중</div>
 						</li>
 						<li style="width: 80px;padding-top: 0px;">
 							<div class="icon_r3" style="width: 80px;height: 120px;">
-								<img src="/img/main_status06.png" alt="" style="padding-bottom: 10px;"/>
+								<img src="/img/main_status07.png" alt="" style="padding-bottom: 10px;"/>
 								<div class="umbox" style="">
 								${caseSttus.ST_CNT4}<font color="black">건</font>
 								</div>
 							</div>
-							<div style="margin-top: 10px;font-size: 18px;margin-left: 3px;">송치완료</div>
+							<div style="margin-top: 20px;font-size: 18px;margin-left: -5px;">송치완료</div>
 						</li>
 					</ul>
 				</div>
@@ -513,7 +513,7 @@ body span {
 								</c:otherwise>
 							</c:choose> --%>
 							<div class="icon"><img src="/img/title_icon2.png" alt=""></div>
-							<div class="tx" style="font-size:12px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;"><a href="javascript:fnBbsDetail('00000000000000000001', '${result.BBS_SN}');">${result.NTT_SJ}</a></div>
+							<div class="tx" style="font-size:15px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;"><a href="javascript:fnBbsDetail('00000000000000000001', '${result.BBS_SN}');">${result.NTT_SJ}</a></div>
 							<%-- <div class="date">${result.WRITNG_DE}</div> --%>
 						</li>
 						</c:forEach>
@@ -527,7 +527,7 @@ body span {
 						<div class="al_icon" style="left:90px; top:20px;width: 23px">
 							<img src="/img/icon_new1.png" alt="" />
 						</div>
-						<div class="title_more" style="margin-left: 259px;"><a href="/bbs/00000000000000000002/list/"><b>+</b></a></div>
+						<div class="title_more" style="margin-left: 251px;"><a href="/bbs/00000000000000000002/list/"><b>+</b></a></div>
 					</div>
 					<div class="list_box">
 						<ul>
@@ -535,7 +535,7 @@ body span {
 							</c:if>
 							<c:forEach var="result" items="${workList}" varStatus="status">
 							<li >
-								<div style="font-size:12px; width: 100%; float: left; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; margin-left: 29px;">
+								<div style="font-size:15px; width: 100%; float: left; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; margin-left: 29px;">
 								<a href="javascript:fnBbsDetail('00000000000000000002', '${result.BBS_SN}');"><c:if test="${result.NOTICE_YN eq 'Y'}">[공지]</c:if> ${result.NTT_SJ}</a>
 								</div>
 								<%-- <div style="font-size:12px; width: 30%; float: right;    text-align: right; ">${result.WRITNG_DE}</div> --%>
@@ -577,7 +577,7 @@ body span {
 								</c:otherwise>
 							</c:choose> --%>
 							<div class="icon"><img src="/img/title_icon2.png" alt=""></div>
-							<div class="tx" style="font-size:12px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;"><a href="javascript:fnBbsDetail('00000000000000000003', '${result.BBS_SN}');">${result.NTT_SJ}</a></div>
+							<div class="tx" style="font-size:15px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;"><a href="javascript:fnBbsDetail('00000000000000000003', '${result.BBS_SN}');">${result.NTT_SJ}</a></div>
 						</li>
 						</c:forEach>
 						

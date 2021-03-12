@@ -38,6 +38,11 @@ public class AlotController {
         String hidDeptCd = SimpleUtils.default_set(request.getParameter("hidDeptCd"));
         String hidUserId = SimpleUtils.default_set(request.getParameter("hidUserId"));
         String chkAlotJobSe = SimpleUtils.default_set(request.getParameter("chkAlotJobSe"));
+        /* 
+    	 * 2021.02.17 김지만 수사관 요청 
+    	 * 사건배당시 직원 검색 기능 추가
+    	 */
+        String txtUserNm = SimpleUtils.default_set(request.getParameter("txtUserNm"));
 
         /**
          * 02101	접수대기
@@ -67,6 +72,11 @@ public class AlotController {
     	map.put("dept_cd", hidDeptCd);
     	map.put("esntl_id", hidUserId);
     	map.put("alot_job_se", chkAlotJobSe);
+    	/* 
+    	 * 2021.02.17 김지만 수사관 요청 
+    	 * 사건배당시 직원 검색 기능 추가
+    	 */
+    	map.put("user_nm", txtUserNm);
 
     	List<HashMap> result = alotService.getUserList(map);
 

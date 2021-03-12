@@ -125,6 +125,7 @@ var myGridID;
 		$('#hidUserId').val("");
 		$('#txtDeptNm').val("");
 		$('#hidDeptCd').val("");
+		$('#txtUserNm').val("");
 		fnSearch();
 	}
 </script>
@@ -179,17 +180,26 @@ var myGridID;
 	<div class="com_box mb_10">
 		<div class="tb_01_box">
 			<table  class="tb_01">
-				<col width="20%"/>
+				<col width="10%"/>
+				<col width=""/>
+				<col width="10%"/>
+				<col width=""/>
 				<col width=""/>
 				<tr>
 					<th>소속</th>
 					<td>
 						<div class="flex_r">
-							<input type="text" id="txtDeptNm" name="txtDeptNm" class="w_250px input_com" check="text" checkName="부서" readonly onfocus="fnDeptSelect();this.blur();" value="${alotInfo.ALOT_DEPT_SINGLE_NM}">	
+							<input type="text" id="txtDeptNm" name="txtDeptNm" class="w_250px input_com" check="text" checkName="부서" readonly onfocus="fnDeptSelect();this.blur();" value="<%-- ${alotInfo.ALOT_DEPT_SINGLE_NM} --%>">	
 							<input type="hidden" id="hidDeptCd" name="hidDeptCd" value="${alotInfo.ALOT_DEPT_CD}">
 							<input type="button" class="btn_search mr_10" onclick="fnDeptSelect();">
 							<%-- <input type="button" value="조직조회" class="btn_text" onclick="fnDeptSelect();"> --%>
 						</div>
+					</td>
+					<th>성명</th>
+					<td><input type="text" class="w_120px input_com" id="txtUserNm" name="txtUserNm"></td>
+					<td>
+						<input type="button" name="input_button" id="btnSearch" value="조회" onclick="fnSearch()" class="btn_st4 icon_n fl mr_m1">
+						<input type="button" name="" id="" value="초기화" onclick="fnClear()" class="btn_st4 icon_n fl mr_m1">
 					</td>
 				</tr>
 			</tbody>

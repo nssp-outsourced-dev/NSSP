@@ -92,7 +92,7 @@
 <style>
 	/* 메인상단 */
 	.logo {
-		/* background-color: honeydew; */
+		background-color: honeydew;
 	}
 </style>
 

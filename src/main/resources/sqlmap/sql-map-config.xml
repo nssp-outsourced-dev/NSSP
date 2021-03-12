@@ -32,5 +32,6 @@
 	<sqlMap resource="sqlmap/nssp/hwp_rc_db_sql.xml"/>		<!-- 접수/사건 관련 문서 -->
 	<sqlMap resource="sqlmap/nssp/hwp_sugest_db_sql.xml"/>	<!-- 접수/사건 관련 문서 -->
 	<sqlMap resource="sqlmap/nssp/polc_db_sql.xml"/>	<!-- 경찰 -->
+	<sqlMap resource="sqlmap/nssp/hwp_new_db_sql.xml"/> <!-- 법개정으로 인한 신규 문서 서식 -->
 		<!-- 생체로그인 -->
 </sqlMapConfig>

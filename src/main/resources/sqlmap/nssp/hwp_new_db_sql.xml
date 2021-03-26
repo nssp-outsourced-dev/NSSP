@@ -514,7 +514,7 @@
 	<!-- //////////////////////////////////////////////////////////////////////////////////////////////////////////////// -->
 	
 	<!-- 서식5 수사개시 보고 -->
-	<select id="selectHwp00000000000000000" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+	<select id="selectHwp00000000000000000289" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
 		SELECT 
 			A.TRGTER_NM /* 성명 */
 			, C.ITIV_NO /* 내사번호 */ 
@@ -531,7 +531,7 @@
 	</select>
 	
 	<!-- 서식8 범법자 출입국 규제 요청 지휘 건의 -->
-	<select id="selectHwp000000000000000000" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+	<select id="selectHwp00000000000000000299" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
 		SELECT
 			FN_CNVR_NO(X.SUGEST_NO) AS SUGEST_NO /* 건의 번호 */
 			--X.RC_NO,
@@ -575,7 +575,7 @@
 	</select>
 	
 	<!-- 서식27 수사사항조회 -->
-	<select id="selectHwp0000000000000000000" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+	<select id="selectHwp00000000000000000300" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
 		SELECT 
 			A.TRGTER_NM /* 성명 */
 			, C.ITIV_NO /* 내사번호 */
@@ -592,7 +592,7 @@
 	<!-- 송치 -->
 	<!-- //////////////////////////////////////////////////////////////////////////////////////////////////////////////// -->
 	<!-- 서식 - 수사진행상황 통지서  -->
-	<select id="selectHwpx" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+	<select id="selectHwp00000000000000000301" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
 		SELECT 
 			FN_CNVR_NO(TRN_NO) TRN_NO /* 송치번호 */
 			, FN_OZ_DATE(TO_CHAR(SYSDATE,'YYYYMMDD'),'') AS S_DATE /* 현재일 */
@@ -634,12 +634,12 @@
 	</select>
 	
 	<!-- 서식 - 서식 지명수배,지명통보자 전산입력요구서  -->
-	<select id="selectHwpxx" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+	<select id="selectHwp00000000000000000302" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
 		
 	</select>
 	
 	<!-- 서식138 추가 송부  -->
-	<select id="selectHwpxxx" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+	<select id="selectHwp00000000000000000303" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
 		SELECT 
 			FN_CNVR_NO(TRN_NO) TRN_NO /* 송치번호 */
 			, FN_OZ_DATE(TO_CHAR(SYSDATE,'YYYYMMDD'),'') AS S_DATE /* 현재일 */

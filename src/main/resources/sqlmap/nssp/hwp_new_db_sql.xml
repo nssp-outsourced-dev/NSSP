@@ -527,7 +527,7 @@
 			, A.REGBS_ADDR /* 등록 기본지 */
 		FROM RC_TMPR_TRGTER A
 			JOIN RC_TMPR C ON A.RC_NO = C.RC_NO
-		WHERE A.RC_NO = #P_RC_NO#
+		WHERE A.RC_NO = #P_RC_NO# AND A.TRGTER_SN = #P_TRGTER_SN#
 	</select>
 	
 	<!-- 서식8 범법자 출입국 규제 요청 지휘 건의 -->
@@ -589,14 +589,119 @@
 	</select>
 	
 	<!-- //////////////////////////////////////////////////////////////////////////////////////////////////////////////// -->
-	<!-- 영장 -->
-	<!-- //////////////////////////////////////////////////////////////////////////////////////////////////////////////// -->
-	
-	<!-- //////////////////////////////////////////////////////////////////////////////////////////////////////////////// -->
 	<!-- 송치 -->
 	<!-- //////////////////////////////////////////////////////////////////////////////////////////////////////////////// -->
+	<!-- 서식 - 수사진행상황 통지서  -->
+	<select id="selectHwpx" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		SELECT 
+			FN_CNVR_NO(TRN_NO) TRN_NO /* 송치번호 */
+			, FN_OZ_DATE(TO_CHAR(SYSDATE,'YYYYMMDD'),'') AS S_DATE /* 현재일 */
+			, FN_RC_TRGTER_NM(RC_NO, '00697') TRGTER_NM /* 피의자 성명 */
+			, FN_TRN_DOC_VIOLT(TRN_NO) VIOLT_NM_LIST /* 죄명 */
+			, FN_CNVR_NO(CASE_NO) CASE_NO /* 사건번호 */
+			, CMPTNC_EXMN_NM /* 송치기관 */
+			, NVL(TRN_DE, FN_OZ_DATE(NULL, NULL)) TRN_DE /* 송치 일자 */
+			, FN_TRN_DOC_OPTION(TRN_NO) TRN_OPTION_NM_LIST /*송치 의견 */
+			, TEL_NO /* 담당자 전화번호 */
+			, CLSF_NM /* 직급 */
+			, USER_NM /* 담당자명 */
+		FROM (
+			SELECT 
+				A.TRN_NO
+				, FN_OZ_DATE(TRN_DE, NULL) TRN_DE
+				, FN_EXMN_NM (A.CMPTNC_EXMN_CD) CMPTNC_EXMN_NM
+				--, FN_CD_NM (INV_PROVIS_CD) INV_PROVIS_NM
+				--, FN_OZ_DATE(TO_CHAR(RC_DT, 'YYYYMMDD'), NULL) RC_DT
+				, CASE_NO
+				--, FN_OZ_DATE(PRSCT_DE, NULL) PRSCT_DE /* 입건일자 */
+				, FN_CD_NM(CLSF_CD) CLSF_NM
+				--, C.USER_NM
+				, FN_USER_NM(B.CHARGER_ID) AS USER_NM -- 담당자로 변경 by dgkim
+				--, DECODE(EVDENC_YN, 'Y', '있음', '없음')  EVDENC_YN
+				--, EVDENC_DC
+				--, TRN_RM /* 송치 비고 */
+				, C.TEL_NO
+				, B.RC_NO
+			FROM TRN_CASE A
+				, RC_TMPR B
+				, CMN_USER C
+			WHERE A.RC_NO = B.RC_NO
+				AND A.USE_YN = 'Y'
+				AND B.USE_YN = 'Y'
+				AND B.WRITNG_ID = C.ESNTL_ID
+				AND A.TRN_NO = #P_TRN_NO#
+		) RIGHT JOIN DUAL ON 1=1
+	</select>
 	
+	<!-- 서식 - 서식 지명수배,지명통보자 전산입력요구서  -->
+	<select id="selectHwpxx" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		
+	</select>
+	
+	<!-- 서식138 추가 송부  -->
+	<select id="selectHwpxxx" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		SELECT 
+			FN_CNVR_NO(TRN_NO) TRN_NO /* 송치번호 */
+			, FN_OZ_DATE(TO_CHAR(SYSDATE,'YYYYMMDD'),'') AS S_DATE /* 현재일 */
+			, CMPTNC_EXMN_NM /* 송치기관 */
+			, FN_RC_TRGTER_NM(RC_NO, '00697') TRGTER_NM /* 피의자 성명 */
+			, NVL(TRN_DE, FN_OZ_DATE(NULL, NULL)) TRN_DE /* 송치 일자 */
+			, FN_CNVR_NO(CASE_NO) CASE_NO /* 사건번호 */
+			, TRN_RM
+			, CLSF_NM /* 직급 */
+			, USER_NM /* 담당자명 */
+		FROM 
+		(
+			SELECT 
+				A.TRN_NO
+				, FN_OZ_DATE(TRN_DE, NULL) TRN_DE
+				, FN_EXMN_NM (A.CMPTNC_EXMN_CD) CMPTNC_EXMN_NM
+				, CASE_NO
+				, FN_CD_NM(CLSF_CD) CLSF_NM
+				--, C.USER_NM
+				, FN_USER_NM(B.CHARGER_ID) AS USER_NM -- 담당자로 변경 by dgkim
+				, TRN_RM /* 송치 비고 */
+				, B.RC_NO
+			FROM TRN_CASE A
+				, RC_TMPR B
+				, CMN_USER C
+			WHERE A.RC_NO = B.RC_NO
+				AND A.USE_YN = 'Y'
+				AND B.USE_YN = 'Y'
+				AND B.WRITNG_ID = C.ESNTL_ID
+				AND A.TRN_NO = #P_TRN_NO#
+		) RIGHT JOIN DUAL ON 1=1
+	</select>
 	<!-- //////////////////////////////////////////////////////////////////////////////////////////////////////////////// -->
 	<!-- 사건대장 -->
 	<!-- //////////////////////////////////////////////////////////////////////////////////////////////////////////////// -->
+	
+	<!-- //////////////////////////////////////////////////////////////////////////////////////////////////////////////// -->
+	<!-- 영장 -->
+	<!-- //////////////////////////////////////////////////////////////////////////////////////////////////////////////// -->
+	<!-- 서식9 수사기일 연장지휘 건의 -->
+	<!-- 서식28 권리 고지 확인서 -->
+	<!-- 서식37 피의자 석방보고 -->
+	<!-- 서식44 체포ㆍ구속 통지 등 -->
+	<!-- 서식56 압수ㆍ수색ㆍ검증영장신청(금융계좌 추적용) -->
+	<!-- 서식57 압수ㆍ수색ㆍ검증영장신청(사후) -->
+	<!-- 서식59 전자정보 삭제ㆍ폐기 또는 반환 확인서 -->
+	<!-- 서식60 정보저장매체 복제 등 참관여부 확인서 -->
+	<!-- 서식61 정보저장매체 제출 등 참관여부 확인서 -->
+	<!-- 서식65 수색결과 증명서 -->
+	<!-- 서식93 통신사실 확인자료제공요청 집행사실 통지보고 -->
+	<!-- 서식94 송ㆍ수신이 완료된 전기통신에 대한 압수ㆍ수색ㆍ검증 집행사실 통지 -->
+	<!-- 서식98 통신사실 확인자료제공 요청 -->
+	<!-- 서식100 통신사실 확인자료제공 요청 집행조서 -->
+	<!-- 서식102 통신사실 확인자료제공 요청중지통지 -->
+	<!-- 서식103 통신사실 확인자료제공 요청 집행결과보고 -->
+	<!-- 서식104 통신사실 확인자료제공 요청허가신청 -->
+	<!-- 서식108 통신사실 확인자료제공 요청허가 신청(사후) -->
+	<!-- 서식109 통신사실 확인자료제공 요청 집행사실 통지 -->
+	<!-- 서식111 통신사실 확인자료제공 요청 집행사실 통지유예 승인신청 -->
+	<!-- 서식118 영장반환 보고 -->
+	<!-- 서식- 피의자 입감 지휘서 -->
+	<!-- 서식- 피의자 출감 지휘서 -->
+	<!-- 서식- 피의자(유치인)접견 등 금지요청서 -->
+	<!-- 서식- 피의자(유치인)접견 등 금지취소 요청 -->
 </sqlMap>

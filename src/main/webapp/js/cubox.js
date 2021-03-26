@@ -328,7 +328,12 @@
 	function fnHwpctrl (docId, pblicteSn, formatNm, ifrId, docType){
 		//alert(docId +","+ pblicteSn +","+ formatNm)
 		var strStatus = "width=1200,height=980,toolbar=no,status=no,location=no,scrollbars=yes,resizable=yes";
-		window.open('/doc/hwpctrlPopup/?docId='+docId+'&pblicteSn='+pblicteSn+'&ifrId='+ifrId+'&docType='+docType , formatNm, strStatus);
+		/*
+		 * 같은 서식명을 가진 문서라도 doc_id, pblicteSn가 다르면 새창으로 열리도록 창이름 변경(2021.03.10 김지만 수사관 요청)
+		 * 이는 A,B문서서식명이 같을 경우 A문서를 열어 A 문서의 내용을 복사하여 B문서를 열어 B문서에 붙여넣기 위함
+		 * */
+		//window.open('/doc/hwpctrlPopup/?docId='+docId+'&pblicteSn='+pblicteSn+'&ifrId='+ifrId+'&docType='+docType , formatNm, strStatus);
+		window.open('/doc/hwpctrlPopup/?docId='+docId+'&pblicteSn='+pblicteSn+'&ifrId='+ifrId+'&docType='+docType , formatNm + docId + pblicteSn, strStatus);
 	}
 
 	function fnOpenWin(valUrl, popNm, valWd, valHt, valscoll){

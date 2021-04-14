@@ -597,6 +597,7 @@
         							 )
         	  ORDER BY FORMAT_ID ASC, DOC_NO ASC
 			   ) A
+			WHERE A.FILE_NM IS NOT NULL
 		<!--
 		WHERE A.JSON_YN = 'Y'
 		-->

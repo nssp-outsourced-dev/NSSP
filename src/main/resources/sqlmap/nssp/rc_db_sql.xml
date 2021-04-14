@@ -612,6 +612,9 @@
 			 ,( SELECT IPT.TRNSF_RESN_DC  	FROM  INV_PRSCT_TRNSF IPT WHERE IPT.TRNSF_SN = RT.TRNSF_SN  ) AS TRNSF_RESN_DC 	  --이송사유
 			 ,( SELECT TO_CHAR( TO_DATE( IPT.TRNSF_DE, 'YYYY-MM-DD' ), 'YYYY-MM-DD' )  FROM  INV_PRSCT_TRNSF IPT WHERE IPT.TRNSF_SN = RT.TRNSF_SN ) AS TRNSF_DE --이송일
 			 ,CASE_END_SE_CHANGE_CD
+			 /* 2021.04.12 수정사항 사건상세 > 사건정보 > 담당자란에 담당자가 모두 관리자로 되어있음, 정작 사건관리대장에는 담당자가 개별 특사경이 담당자로 되어있음 */
+			 ,FN_USER_NM(CHARGER_ID) AS CHARGER_NM /* 담당자 */
+			 ,FN_DEPT_NM(CHARGER_DEPT_CD) AS DEPT_NM /*담당자 부서 */
 		  FROM RC_TMPR RT
 		 WHERE RC_NO = #rc_no#
 	</select>

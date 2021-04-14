@@ -411,8 +411,37 @@ var targetGridId = "#grid_target_list";
 		, { dataField : "grdTrgterClNm"	 , headerText : "분류"	, width : 60  }
 		, { dataField : "grdTrgterAge"	 , headerText : "나이"	, width : 30  }
 		, { dataField : "grdSexdstnNm"	 , headerText : "성별"	, width : 30  }
-		, { dataField : "grdTrgterRrn"	 , headerText : "주민번호"	, width : 80  }
-		, { dataField : "grdHpNo"		 , headerText : "휴대전화"	, width : 80  }
+		//, { dataField : "grdTrgterRrn"	 , headerText : "주민번호"	, width : 80  }
+		, { dataField : "grdTrgterRrn"	 , 
+			headerText : "주민번호(법인번호)"	, 
+			width : 80, 
+			labelFunction : function( rowIndex, columnIndex, value, headerText, item ){
+								var template = "";
+								
+								if(value != null && value != ""){
+									template += value;
+								}else if(item.grdTrgterCprn != null && item.grdTrgterCprn != ""){
+									template += item.grdTrgterCprn;
+								}
+								
+								return template;
+							}
+		}
+		, { dataField : "grdHpNo"		 , 
+			headerText : "휴대전화(직장전화)"	, 
+			width : 80,
+			labelFunction : function( rowIndex, columnIndex, value, headerText, item ){
+								var template = "";
+								
+								if(value != null && value != ""){
+									template += value;
+								}else if(item.grdWrcTel != null && item.grdWrcTel != "") {
+									template += item.grdWrcTel;
+								}
+								
+								return template;
+							}
+		}
 		, { dataField : "grdAdresAddr"	 , headerText : "주소지"	, width : 300 }
 	];
 

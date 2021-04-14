@@ -169,15 +169,22 @@
 	//피의자 검사처분 판결 내용 저장
 	function fnSaveSuspct() {
 		
-		var gData = AUIGrid.getGridData("#grid_list");
-		if( gData.length > 0 ){
+		//var gData = AUIGrid.getGridData("#grid_list");
+		
+		var items = AUIGrid.getSelectedItems("#grid_list");
+		console.log(items[0].item.TRN_NO);
+		if( fnIsEmpty( items[0].item.TRN_NO ) ){
+			alert(items[0].item.TRGTER_NM + "의 송치상태를 선택하세요.");
+			return;
+		}
+		/* if( gData.length > 0 ){
 			for( var i in gData ){
 				if( fnIsEmpty( gData[i].TRN_NO ) ){
 					alert(gData[i].TRGTER_NM + "의 송치상태를 선택하세요.");
 					return;
 				}
 			}
-		}
+		} */
 
 		var editedRowItems = AUIGrid.getEditedRowItems( "#grid_list" );
 		if( editedRowItems.length == 0 ){

@@ -44,7 +44,7 @@ public class MainController {
 
 		HashMap<String, Object> pMap = new HashMap<String, Object>();
 		pMap.put("startRow", 0);
-		pMap.put("endRow", 9);
+		pMap.put("endRow", 10);
 		pMap.put("esntl_id", esntl_id ); //배당자 ID
 		pMap.put("dept_cd", dept_cd ); //배당자 ID
 

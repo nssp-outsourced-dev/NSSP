@@ -18,6 +18,7 @@
 		     , DUMMY
 		     , FN_TRN_DOC_VIOLT(TRN_NO) VIOLT_NM_LIST
 		     , FN_TRN_DOC_OPTION(TRN_NO) TRN_OPTION_NM_LIST
+		     , CASE_YYYY || ' ' || NAME || ' 제' || CASE_NO2 || '호' AS RC_SE_NM
 		 FROM (
 		    SELECT A.TRN_NO
 		         , FN_OZ_DATE(TRN_DE, NULL) TRN_DE
@@ -32,6 +33,15 @@
 		         , DECODE(EVDENC_YN, 'Y', '있음', '없음')  EVDENC_YN
 		         , EVDENC_DC
 		         , TRN_RM
+		         , REGEXP_SUBSTR(CASE_NO, '[^-]+', 1, 1, 'i') AS CASE_YYYY
+			 	 , LTRIM(REGEXP_SUBSTR(CASE_NO, '[^-]+', 1, 2, 'i'),0) AS CASE_NO2
+		         , (CASE WHEN RC_SE_CD = 'F' THEN
+						'수사'
+    					WHEN RC_SE_CD = 'I' THEN
+    					'내사'
+   						WHEN RC_SE_CD = 'T' OR RC_SE_CD = NULL THEN
+    					''
+    					END) AS NAME 
 		      FROM TRN_CASE A
 		         , RC_TMPR B
 		         , CMN_USER C

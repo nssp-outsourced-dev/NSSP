@@ -5,6 +5,7 @@
 	<!-- 3.내사착수보고서 -->
 	<select id="selectHwp00000000000000000003_1" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
 		SELECT A.*
+				, A.ITIV_YYYY || ' ' || A.NAME || ' 제' ||  A.ITIV_NO || '호' AS RC_SE_NM
 		     --, FN_OZ_DATE(null, null) AS S_DATE -- 승인 일자로 수정 by dgkim
 		  FROM (
 				SELECT REGEXP_SUBSTR(ITIV_NO, '[^-]+', 1, 1, 'i') AS ITIV_YYYY
@@ -13,6 +14,13 @@
 			 		 , NVL(FN_RC_TRGTER_NM(RT.RC_NO, '00697'),' ') AS TRGTER_NM
 			 		 , NVL(FN_RC_VIOLT_ROOT_NM(RT.RC_NO),' ') AS VIOLT_NM
 			 		 , (SELECT NVL2(OUTSET_DT, TO_CHAR(OUTSET_DT, 'YYYY.fmMM.DD'), TO_CHAR(SYSDATE, 'YYYY.fmMM.DD')) FROM RC_ITIV_OUTSET WHERE RC_NO = RT.RC_NO) AS S_DATE -- 승인 일자로 수정 by dgkim
+			 		 ,(CASE WHEN RC_SE_CD = 'F' THEN
+						'수사'
+    					WHEN RC_SE_CD = 'I' THEN
+    					'내사'
+   						WHEN RC_SE_CD = 'T' OR RC_SE_CD = NULL THEN
+    					''
+    					END) AS NAME
 		  		  FROM RC_TMPR RT
 		 	     WHERE RT.RC_NO = #P_RC_NO#
 		 	   ) A RIGHT OUTER JOIN DUAL ON 1=1
@@ -55,6 +63,8 @@
 			 , A.TRGTER_NMS || CASE WHEN REGEXP_INSTR(SUBSTR(A.TRGTER_NMS,-1,1),'[0-9]') > 0 THEN '명' END AS TRGTER_NMS
 		     -- , FN_OZ_DATE(null, null) AS S_DATE
 		      , A.S_DATE -- 승인 일자로 수정 by dgkim 
+		      , A.NAME
+		      , A.ITIV_YYYY || ' ' || A.NAME || ' 제' || A.ITIV_NO || '호' AS RC_SE_NM
 		  FROM (
 				SELECT REGEXP_SUBSTR(ITIV_NO, '[^-]+', 1, 1, 'i') AS ITIV_YYYY
 			 		 , LTRIM(REGEXP_SUBSTR(ITIV_NO, '[^-]+', 1, 2, 'i'),0) AS ITIV_NO
@@ -62,7 +72,14 @@
 			 		 , FN_RC_VIOLT_ROOT_NM(RT.RC_NO) AS VIOLT_NM
 			 		 , FN_RC_VIOLT_ROOT_NM(RT.RC_NO) AS VIOLT_ROOT_NM
 		        	 , FN_RC_TRGTER_NM(RT.RC_NO, '00697') AS TRGTER_NMS
-		        	 , (SELECT NVL2(ITIV_RESULT_REPORT_DT, TO_CHAR(ITIV_RESULT_REPORT_DT, 'YYYY.fmMM.DD'), TO_CHAR(SYSDATE, 'YYYY.fmMM.DD')) FROM RC_ITIV_RESULT WHERE ITIV_NO = RT.ITIV_NO) AS S_DATE -- 승인 일자로 수정 by dgkim 
+		        	 , (SELECT NVL2(ITIV_RESULT_REPORT_DT, TO_CHAR(ITIV_RESULT_REPORT_DT, 'YYYY.fmMM.DD'), TO_CHAR(SYSDATE, 'YYYY.fmMM.DD')) FROM RC_ITIV_RESULT WHERE ITIV_NO = RT.ITIV_NO) AS S_DATE -- 승인 일자로 수정 by dgkim
+		        	 , (CASE WHEN RC_SE_CD = 'F' THEN
+						'수사'
+    					WHEN RC_SE_CD = 'I' THEN
+    					'내사'
+   						WHEN RC_SE_CD = 'T' OR RC_SE_CD = NULL THEN
+    					''
+    					END) AS NAME 
 		  		  FROM RC_TMPR RT
 		 	     WHERE RT.RC_NO = #P_RC_NO#
 		 	   ) A RIGHT OUTER JOIN DUAL ON 1=1

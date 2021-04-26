@@ -516,18 +516,12 @@
 	<!-- 서식5 수사개시 보고 -->
 	<select id="selectHwp00000000000000000289" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
 		SELECT 
-			A.TRGTER_NM /* 성명 */
-			, C.ITIV_NO /* 내사번호 */ 
+			FN_CNVR_NO(C.ITIV_NO) AS ITIV_NO /* 내사번호 */ 
 			, FN_RC_VIOLT_ROOT_NM(C.RC_NO) AS VIOLT_ROOT_NM /* 죄명 */
 			, FN_OZ_DATE(TO_CHAR(SYSDATE,'YYYYMMDD'),'') AS S_DATE /* 현재일 */
 			, FN_USER_NM(C.CHARGER_ID) AS CHARGER_NM /* 담당자 */
-			, DGUARD.DECRYPT('TBL','ENC', A.TRGTER_RRN) AS TRGTER_RRN /* 주민번호 */
-			, FN_CD_NM(A.OCCP_CD) AS OCCP_NM /* 직업 */
-			, A.ADRES_ADDR /* 주거 */
-			, A.REGBS_ADDR /* 등록 기본지 */
-		FROM RC_TMPR_TRGTER A
-			JOIN RC_TMPR C ON A.RC_NO = C.RC_NO
-		WHERE A.RC_NO = #P_RC_NO# AND A.TRGTER_SN = #P_TRGTER_SN#
+		FROM RC_TMPR C
+		WHERE C.RC_NO = #P_RC_NO#
 	</select>
 	
 	<!-- 서식8 범법자 출입국 규제 요청 지휘 건의 -->

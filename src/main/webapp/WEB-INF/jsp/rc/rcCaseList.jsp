@@ -793,7 +793,8 @@ var targetGridId = "#grid_target_list";
 		<div class="search_in" style="padding-left: 10px;width: 110px;border-right:0px">
 			<div class="input_radio4  w_70px t_left" style="width: 70px;margin-right: 0px;padding-left: 25px;padding-right: 0px">
 				<div class="stitle">접수대기</div>
-				<input class="to-labelauty-icon ch_st1" type="checkbox" name="chkRcCase" id="chkRcCase" value="Y" checked="checked"/>
+				<!-- 2021-04-27 hsno 접수대기 check 표시 해제  / 접수 대기 아닌것을 우선시 표출 -->
+				<input class="to-labelauty-icon ch_st1" type="checkbox" name="chkRcCase" id="chkRcCase" value="Y" /><!-- checked="checked" -->
 			</div>
 		</div>
 		<div class="go_search2"  id="btnSearch">검색</div>

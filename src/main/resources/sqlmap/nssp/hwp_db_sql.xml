@@ -1475,14 +1475,26 @@
 	<select id="hwp.selectHwp00000000000000000007_1" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
 		SELECT
             A.*,
-            FN_OZ_DATE(null, null) AS S_DATE
+            FN_OZ_DATE(null, null) AS S_DATE,
+            
+            A.CASE_NO1 || ' ' || A.NAME || ' 제' || A.CASE_NO2 || '호' AS RC_SE_NM /*2021-04-27 hsno 번죄 인지서 > 사건 번호 변경*/
+        
         FROM (
             SELECT
                 SUBSTR(A.CASE_NO,0,4) AS CASE_NO1,
                 TO_CHAR(TO_NUMBER(SUBSTR(A.CASE_NO , INSTR(A.CASE_NO, '-')+1))) AS CASE_NO2,
                 FN_CNVR_NO(A.CASE_NO) AS CASE_NO,
                 FN_RC_VIOLT_ROOT_NM (A.RC_NO) AS VIOLT_NM,
-                FN_USER_NM(A.WRITNG_ID) AS WRITNG_NM
+                FN_USER_NM(A.WRITNG_ID) AS WRITNG_NM,
+                
+                (CASE WHEN RC_SE_CD = 'F' THEN			/*2021-04-27 hsno 접수 구분 코드를 사용해 수사, 내사, 임시, NULL을 구분 / 번죄 인지서 > 사건 번호 변경*/
+			    '수사'
+			    WHEN RC_SE_CD = 'I' THEN
+			    '내사'
+    			WHEN RC_SE_CD = 'T' OR RC_SE_CD = NULL THEN
+    			''
+    			END) AS name
+    			
             FROM RC_TMPR A
             WHERE A.RC_NO = #P_RC_NO#
               AND A.USE_YN = 'Y'

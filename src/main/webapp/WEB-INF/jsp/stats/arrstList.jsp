@@ -46,8 +46,8 @@
 				children: [
 					{ dataField : "grdTrgterNm", headerText : "성명", width : 100},
 					{ dataField : "grdTrgterRrn", headerText : "주민등록번호", width : 150},
-					{ dataField : "grdOccpNm", headerText : "직업"},
-					{ dataField : "grdDwlsitAddr", headerText : "주거", style:'tbLft' },
+					{ dataField : "grdOccpNm", headerText : "직업"}/* , */
+					/* { dataField : "grdDwlsitAddr", headerText : "주거", style:'tbLft' } */,/* 2021-04-27 hsno 주거 Text 주석처리 */
 				]
 			},
 			{ dataField : "grdVioltRootNm", headerText : "죄명", style:'tbLft' },

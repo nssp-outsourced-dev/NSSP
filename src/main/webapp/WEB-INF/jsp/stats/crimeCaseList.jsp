@@ -44,9 +44,24 @@
 			{ headerText : "피의자",
 				children: [
 					{ dataField :   "TRGTER_NM", headerText :    "성명", width : 100, editable : false },
-					{ dataField :  "TRGTER_RRN", headerText : "주민번호", width : 100, editable : false },
-					{ dataField :	  "OCCP_NM", headerText :	"직업", width : 100, editable : false },
-					{ dataField : "DWLSIT_ADDR", headerText :   "주거", width : 150, editable : false }
+					{ dataField :  "TRGTER_RRN"
+						, headerText : "주민번호"
+						, width : 150
+						, editable : false
+						, labelFunction : function( rowIndex, columnIndex, value, headerText, item ){
+												var template = "";
+												if(value != null && value != ""){ /* 2021-04-28 hsno 주민번호의 값이 null이거나 공백일 경우 */
+													template += value;
+												}else if(item.TRGTER_CPRN != null && item.TRGTER_CPRN != ""){ /* 2021-04-28 hsno 법인번호의 값이 null이거나 공백일 경우 */
+													template += item.TRGTER_CPRN;
+												}else if(value == null && item.TRGTER_CPRN == null){ /* 2021-04-28 hsno 주민번호와 법인번호 모두 값이 없을때 */
+													template += "";
+												}
+												
+												return template;
+											}},
+					{ dataField :	  "OCCP_NM", headerText :	"직업", width : 100, editable : false }/* , */
+					/* { dataField : "DWLSIT_ADDR", headerText :   "주거", width : 150, editable : false } */ /* 2021-04-27 hsno 주거 Text 주석처리 */
 				]
 			},
 			{ dataField : "TEMP1", headerText : "조회", width : 70 , editable : false },

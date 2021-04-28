@@ -55,7 +55,20 @@
 			{ dataField : "OUTSET_RESN", headerText : "내사할 사항(지휘사항 포함)", width : 200},
 			{ dataField : "ITIV_DT", headerText : "착수일시", width : 100},
 			{ dataField : "RESULT_DT", headerText : "처리일시", width : 100},
-			{ dataField : "ITIV_RESULT_NM", headerText : "처리결과", width : 100},
+			{ dataField : "ITIV_RESULT_NM", headerText : "처리결과", width : 200,
+				
+				/* 2021-04-28 권종열 사무관 요청 hsno 처리결과 테이블에 내사종결시 괄호안에 종결 처분 코드가 나오도록 수정 */
+				labelFunction : function( rowIndex, columnIndex, value, headerText, item ){
+									var template = "";
+									
+									if(value != null && value != "" && value != undefined && item.ITIV_RESULT_CD == "00383"){ /* 처리결과가 null, 공백, undefined가 아니고 종결 처분 코드가 내사종결일때 */
+										template += value.concat("(", item.ED_DSPS_CD, ")");
+									}else if(item.ITIV_RESULT_NM != null && item.ITIV_RESULT_NM != "" && item.ITIV_RESULT_NM != undefined){ /* 처리결과가 null, 공백, undefined일때 */
+										template += item.ITIV_RESULT_NM;
+									}
+									
+									return template;
+								}},
 			{ dataField : "CHARGER_NM", headerText : "담당자", width : 100},
 			{ dataField : "TEMP3", headerText : "지휘자", width : 100},
 			{ dataField : "TEMP4", headerText : "비고", width : 100}

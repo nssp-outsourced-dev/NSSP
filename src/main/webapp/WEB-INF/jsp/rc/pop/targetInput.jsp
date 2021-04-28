@@ -659,7 +659,8 @@
 								        		</div>
 								        	</td>
 										</tr>
-										<tr class="indvdl">
+										<!-- 2021-04-27 hsno 주거 Text 주석처리 -->
+										<%-- <tr class="indvdl">
 											<th>주거지</th>
 											<td colspan="3">
 												<div class="flex_r">
@@ -668,7 +669,7 @@
 											    	<input type="button"id="Dwlsit" 		class="btn_search"		onclick="javascript:fnZipPopConnect(this)">
 										    	</div>
 											</td>
-										</tr>
+										</tr> --%>
 										<tr>
 											<th>이메일</th>
 											<td >

@@ -360,13 +360,15 @@ var myGridID = "#grid_wrap";
 					        		<label id="labRegbsAddr"></label>
 					        	</td>
 							</tr>
-							<tr class="trHeight indvdl">
+							
+							<!-- 2021-04-28 hsno 주거지 테이블 주석처리 -->
+							<!-- <tr class="trHeight indvdl">
 								<th>주거지</th>
 								<td colspan="3">
 									<label id="labDwlsitZip"></label>
 									<label id="labDwlsitAddr"></label>
 								</td>
-							</tr>
+							</tr> -->
 							<tr class="trHeight">
 								<th>이메일</th>
 								<td>

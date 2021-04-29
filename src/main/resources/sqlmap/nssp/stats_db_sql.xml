@@ -281,7 +281,7 @@
 		        X.TRGTER_RRN,
 		        X.DWLSIT_ADDR,
 		        X.ITIV_RESULT_CD,
-		        X.ED_DSPS_CD 				--종결 처분 코드
+		        X.ED_DSPS_NM 				--종결 처분 코드
 		 FROM
 		     (
 			SELECT A.*,			 
@@ -312,7 +312,7 @@
 				TO_CHAR(MAX(RIR.WRITNG_DT), 'YYYY-MM-DD') AS RESULT_DT,
 				FN_USER_NM(MAX(RT.CHARGER_ID)) AS CHARGER_NM,
 				FN_DEPT_NM(MAX(RT.CHARGER_DEPT_CD)) AS CHARGER_DEPT_NM,
-				FN_CD_NM(MAX(RIR.ED_DSPS_CD)) AS ED_DSPS_CD 			--종결코드
+				FN_CD_NM(MAX(RIR.ED_DSPS_CD)) AS ED_DSPS_NM 			--종결 처분 코드
 				FROM RC_TMPR RT
                 INNER JOIN RC_TMPR_TRGTER RTT ON RT.RC_NO = RTT.RC_NO
                 	AND RTT.TRGTER_SE_CD IN ( SELECT CC.ESNTL_CD FROM CMN_CD CC WHERE CC.UPPER_CD = '00102'  AND CC.CD_DC = 'suspct-Group' ) /*피의자 그룹*/
@@ -361,7 +361,7 @@
 				<isNotEmpty property="searchPrsctDeEnd" >
 					AND RT.WRITNG_DT <![CDATA[ <= ]]> TO_DATE(REPLACE(#searchPrsctDeEnd#,'-',''),'YYYYMMDD') + 0.999999
 				</isNotEmpty>
-				GROUP BY RT.RC_NO, RT.ITIV_NO, RT.CASE_NO, RIR.ED_DSPS_CD
+				GROUP BY RT.RC_NO, RT.ITIV_NO, RT.CASE_NO, RIR.ED_DSPS_NM
 			) A
 		) X
 		<isNotEmpty property="startRow" >

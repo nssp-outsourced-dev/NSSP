@@ -62,7 +62,7 @@
 									var template = "";
 									
 									if(value != null && value != "" && value != undefined && item.ITIV_RESULT_CD == "00383"){ /* 처리결과가 null, 공백, undefined가 아니고 종결 처분 코드가 내사종결일때 */
-										template += value.concat("(", item.ED_DSPS_CD, ")");
+										template += value.concat("(", item.ED_DSPS_NM, ")");
 									}else if(item.ITIV_RESULT_NM != null && item.ITIV_RESULT_NM != "" && item.ITIV_RESULT_NM != undefined){ /* 처리결과가 null, 공백, undefined일때 */
 										template += item.ITIV_RESULT_NM;
 									}

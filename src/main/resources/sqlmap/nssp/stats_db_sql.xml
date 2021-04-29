@@ -361,7 +361,7 @@
 				<isNotEmpty property="searchPrsctDeEnd" >
 					AND RT.WRITNG_DT <![CDATA[ <= ]]> TO_DATE(REPLACE(#searchPrsctDeEnd#,'-',''),'YYYYMMDD') + 0.999999
 				</isNotEmpty>
-				GROUP BY RT.RC_NO, RT.ITIV_NO, RT.CASE_NO, RIR.ED_DSPS_NM
+				GROUP BY RT.RC_NO, RT.ITIV_NO, RT.CASE_NO, RIR.ED_DSPS_CD
 			) A
 		) X
 		<isNotEmpty property="startRow" >

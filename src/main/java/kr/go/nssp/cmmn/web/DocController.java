@@ -722,6 +722,10 @@ public class DocController {
     		//배열에 한글자씩 저장하기
     		System.out.println("특수문자 불러오기::::"+characterTable);
     		array_word = characterTable.split(""); 
+    		
+    		for(int i=0;i<array_word.length;i++) { 
+    			System.out.println(array_word[i]);
+    		}
     	}
     	    
 		try {			

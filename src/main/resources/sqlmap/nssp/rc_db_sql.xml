@@ -558,64 +558,76 @@
 
 	<!-- 사건 정보 조회 -->
 	<select id="selectCaseInfo" parameterClass="java.util.HashMap" resultClass="java.util.HashMap" remapResults = "true">
-	    SELECT RC_NO 			--접수 번호
-	         , REGEXP_SUBSTR(RC_NO, '[^-]+', 1, 1, 'i')||'-'||LTRIM(REGEXP_SUBSTR(RC_NO, '[^-]+', 1, 2, 'i'),0) AS TRIM_RC_NO
-		  	 , CASE_NO 			--사건 번호
-		  	 , REGEXP_SUBSTR(CASE_NO, '[^-]+', 1, 1, 'i')||'-'||LTRIM(REGEXP_SUBSTR(CASE_NO, '[^-]+', 1, 2, 'i'),0) AS TRIM_CASE_NO
-			 , ITIV_NO 			--내사 번호
-		  	 , REGEXP_SUBSTR(ITIV_NO, '[^-]+', 1, 1, 'i')||'-'||LTRIM(REGEXP_SUBSTR(ITIV_NO, '[^-]+', 1, 2, 'i'),0) AS TRIM_ITIV_NO
-			 , TMPR_NO 			--임시 번호
-		  	 , REGEXP_SUBSTR(TMPR_NO, '[^-]+', 1, 1, 'i')||'-'||LTRIM(REGEXP_SUBSTR(TMPR_NO, '[^-]+', 1, 2, 'i'),0) AS TRIM_TMPR_NO
-			 , RC_SE_CD 		--접수 구분 코드
-			 , DECODE(RC_SE_CD , 'F', '정식', 'I', '내사', 'T', '임시') AS RC_SE_NM
-			 , PROGRS_STTUS_CD 	--진행 상태 코드
-			 , INV_PROVIS_CD 	--수사 단서 코드
-			 , TO_CHAR(OCCRRNC_BEGIN_DT, 'YYYY-MM-DD HH:MI') AS OCCRRNC_BEGIN_DT--발생 시작 일시
-			 , TO_CHAR(OCCRRNC_BEGIN_DT, 'YYYY-MM-DD') AS OCCRRNC_BEGIN_DE		--발생 시작 일
-		 	 , TO_CHAR(OCCRRNC_BEGIN_DT, 'HH') AS OCCRRNC_BEGIN_DE_HH			--발생 시작 시
-		  	 , TO_CHAR(OCCRRNC_BEGIN_DT, 'MI') AS OCCRRNC_BEGIN_DE_MI			--발생 시작 분
-			 , TO_CHAR(OCCRRNC_END_DT, 'YYYY-MM-DD HH:MI') AS OCCRRNC_END_DT	--발생 종료 일시
-		 	 , TO_CHAR(OCCRRNC_END_DT, 'YYYY-MM-DD') AS OCCRRNC_END_DE			--발생 종료 일
-		 	 , TO_CHAR(OCCRRNC_END_DT, 'HH') AS OCCRRNC_END_DE_HH				--발생 종료 시
-		 	 , TO_CHAR(OCCRRNC_END_DT, 'MI') AS OCCRRNC_END_DE_MI				--발생 종료  분
-			 , RC_STLE_CD 		--접수 형태 코드
-			 , OCCRRNC_ZIP 		--발생 우편번호
-			 , OCCRRNC_ADDR 	--발생 주소
-			 , DGUARD.DECRYPT('TBL','ENC',CPTTR_HP_NO) AS CPTTR_HP_NO 		--민원인 휴대폰 번호
-			 , CMPTNC_EXMN_CD 	--관할 검찰 코드
-			 , FN_EXMN_NM(CMPTNC_EXMN_CD) AS CMPTNC_EXMN_NM --관할 검찰명
-			 , CNSLT_MTH_CD 	--상담 방법 코드
-			 , TO_CHAR(CNSLT_DT, 'YYYY-MM-DD HH:MI') AS CNSLT_DT	--상담 일시
-			 , TO_CHAR(CNSLT_DT, 'YYYY-MM-DD HH:MI') AS CNSLT_DE	--상담 일
-			 , TO_CHAR(CNSLT_DT, 'HH') AS CNSLT_DE_HH				--상담 시
-			 , TO_CHAR(CNSLT_DT, 'MI') AS CNSLT_DE_MI				--상담 분
-			 , CASE_SUMRY 		--사건 개요
-			 , CRMNL_FACT 		--범죄 사실
-			 , PRF_DTA 			--입증 자료
-			 , ETC_CN 			--기타 내용
-			 , FILE_ID 			--파일 ID
-			 , DOC_ID 			--문서 ID
-			 , TRNSF_SN			--이송 일렬번호
-			 , USE_YN 			--사용 여부
-			 , WRITNG_DEPT_CD	--작성 소속 코드
-			 , WRITNG_ID		--작성 ID
-			 , WRITNG_DT 		--작성 일시
-			 , UPDT_ID 			--수정 ID
-			 , UPDT_DT 			--수정 일시
-  		     , PRSCT_DE			--입건 일자
-	         , TO_CHAR(RC_DT, 'YYYY-MM-DD HH:MI') AS RC_DT	 --접수 일시
-			 , SANCTN_ID 		--결재 ID
-			 , FN_RC_VIOLT_UPPER_NMS (RC_NO) AS VIOLT_NM
-			 , RT.TRNSF_SN      -- 이송 순번
-			 ,( SELECT IPT.TRNSF_INSTT_NM   FROM  INV_PRSCT_TRNSF IPT WHERE IPT.TRNSF_SN = RT.TRNSF_SN  ) AS TRNSF_INSTT_NM	  --이송 기관
-			 ,( SELECT IPT.TRNSF_INSTT_DEPT FROM  INV_PRSCT_TRNSF IPT WHERE IPT.TRNSF_SN = RT.TRNSF_SN	) AS TRNSF_INSTT_DEPT --이송 부서
-			 ,( SELECT IPT.TRNSF_RESN_DC  	FROM  INV_PRSCT_TRNSF IPT WHERE IPT.TRNSF_SN = RT.TRNSF_SN  ) AS TRNSF_RESN_DC 	  --이송사유
-			 ,( SELECT TO_CHAR( TO_DATE( IPT.TRNSF_DE, 'YYYY-MM-DD' ), 'YYYY-MM-DD' )  FROM  INV_PRSCT_TRNSF IPT WHERE IPT.TRNSF_SN = RT.TRNSF_SN ) AS TRNSF_DE --이송일
-			 ,CASE_END_SE_CHANGE_CD
-			 /* 2021.04.12 수정사항 사건상세 > 사건정보 > 담당자란에 담당자가 모두 관리자로 되어있음, 정작 사건관리대장에는 담당자가 개별 특사경이 담당자로 되어있음 */
-			 ,FN_USER_NM(CHARGER_ID) AS CHARGER_NM /* 담당자 */
-			 ,FN_DEPT_NM(CHARGER_DEPT_CD) AS DEPT_NM /*담당자 부서 */
-		  FROM RC_TMPR RT
+		SELECT RC_NO 			--접수 번호
+			, REGEXP_SUBSTR(RC_NO, '[^-]+', 1, 1, 'i')||'-'||LTRIM(REGEXP_SUBSTR(RC_NO, '[^-]+', 1, 2, 'i'),0) AS TRIM_RC_NO
+			, CASE_NO 			--사건 번호
+			, REGEXP_SUBSTR(CASE_NO, '[^-]+', 1, 1, 'i')||'-'||LTRIM(REGEXP_SUBSTR(CASE_NO, '[^-]+', 1, 2, 'i'),0) AS TRIM_CASE_NO
+			, ITIV_NO 			--내사 번호
+			, REGEXP_SUBSTR(ITIV_NO, '[^-]+', 1, 1, 'i')||'-'||LTRIM(REGEXP_SUBSTR(ITIV_NO, '[^-]+', 1, 2, 'i'),0) AS TRIM_ITIV_NO
+			, TMPR_NO 			--임시 번호
+			, REGEXP_SUBSTR(TMPR_NO, '[^-]+', 1, 1, 'i')||'-'||LTRIM(REGEXP_SUBSTR(TMPR_NO, '[^-]+', 1, 2, 'i'),0) AS TRIM_TMPR_NO
+			, RC_SE_CD 		--접수 구분 코드
+			, DECODE(RC_SE_CD , 'F', '정식', 'I', '내사', 'T', '임시') AS RC_SE_NM
+			, PROGRS_STTUS_CD 	--진행 상태 코드
+			, INV_PROVIS_CD 	--수사 단서 코드
+			, TO_CHAR(OCCRRNC_BEGIN_DT, 'YYYY-MM-DD HH:MI') AS OCCRRNC_BEGIN_DT--발생 시작 일시
+			, TO_CHAR(OCCRRNC_BEGIN_DT, 'YYYY-MM-DD') AS OCCRRNC_BEGIN_DE		--발생 시작 일
+			, TO_CHAR(OCCRRNC_BEGIN_DT, 'HH') AS OCCRRNC_BEGIN_DE_HH			--발생 시작 시
+			, TO_CHAR(OCCRRNC_BEGIN_DT, 'MI') AS OCCRRNC_BEGIN_DE_MI			--발생 시작 분
+			, TO_CHAR(OCCRRNC_END_DT, 'YYYY-MM-DD HH:MI') AS OCCRRNC_END_DT	--발생 종료 일시
+			, TO_CHAR(OCCRRNC_END_DT, 'YYYY-MM-DD') AS OCCRRNC_END_DE			--발생 종료 일
+			, TO_CHAR(OCCRRNC_END_DT, 'HH') AS OCCRRNC_END_DE_HH				--발생 종료 시
+			, TO_CHAR(OCCRRNC_END_DT, 'MI') AS OCCRRNC_END_DE_MI				--발생 종료  분
+			, RC_STLE_CD 		--접수 형태 코드
+			, OCCRRNC_ZIP 		--발생 우편번호
+			, OCCRRNC_ADDR 	--발생 주소
+			, DGUARD.DECRYPT('TBL','ENC',CPTTR_HP_NO) AS CPTTR_HP_NO 		--민원인 휴대폰 번호
+			, CMPTNC_EXMN_CD 	--관할 검찰 코드
+			, FN_EXMN_NM(CMPTNC_EXMN_CD) AS CMPTNC_EXMN_NM --관할 검찰명
+			, CNSLT_MTH_CD 	--상담 방법 코드
+			, TO_CHAR(CNSLT_DT, 'YYYY-MM-DD HH:MI') AS CNSLT_DT	--상담 일시
+			, TO_CHAR(CNSLT_DT, 'YYYY-MM-DD HH:MI') AS CNSLT_DE	--상담 일
+			, TO_CHAR(CNSLT_DT, 'HH') AS CNSLT_DE_HH				--상담 시
+			, TO_CHAR(CNSLT_DT, 'MI') AS CNSLT_DE_MI				--상담 분
+			, CASE_SUMRY 		--사건 개요
+			, CRMNL_FACT 		--범죄 사실
+			, PRF_DTA 			--입증 자료
+			, ETC_CN 			--기타 내용
+			, FILE_ID 			--파일 ID
+			, DOC_ID 			--문서 ID
+			, TRNSF_SN			--이송 일렬번호
+			, USE_YN 			--사용 여부
+			, WRITNG_DEPT_CD	--작성 소속 코드
+			, WRITNG_ID		--작성 ID
+			, WRITNG_DT 		--작성 일시
+			, UPDT_ID 			--수정 ID
+			, UPDT_DT 			--수정 일시
+			, PRSCT_DE			--입건 일자
+			, TO_CHAR(RC_DT, 'YYYY-MM-DD HH:MI') AS RC_DT	 --접수 일시
+			, SANCTN_ID 		--결재 ID
+			, FN_RC_VIOLT_UPPER_NMS (RC_NO) AS VIOLT_NM
+			, RT.TRNSF_SN      -- 이송 순번
+			,( SELECT IPT.TRNSF_INSTT_NM   FROM  INV_PRSCT_TRNSF IPT WHERE IPT.TRNSF_SN = RT.TRNSF_SN  ) AS TRNSF_INSTT_NM	  --이송 기관
+			,( SELECT IPT.TRNSF_INSTT_DEPT FROM  INV_PRSCT_TRNSF IPT WHERE IPT.TRNSF_SN = RT.TRNSF_SN	) AS TRNSF_INSTT_DEPT --이송 부서
+			,( SELECT IPT.TRNSF_RESN_DC  	FROM  INV_PRSCT_TRNSF IPT WHERE IPT.TRNSF_SN = RT.TRNSF_SN  ) AS TRNSF_RESN_DC 	  --이송사유
+			,( SELECT TO_CHAR( TO_DATE( IPT.TRNSF_DE, 'YYYY-MM-DD' ), 'YYYY-MM-DD' )  FROM  INV_PRSCT_TRNSF IPT WHERE IPT.TRNSF_SN = RT.TRNSF_SN ) AS TRNSF_DE --이송일
+			,CASE_END_SE_CHANGE_CD
+			/* 2021.04.12 수정사항 사건상세 > 사건정보 > 담당자란에 담당자가 모두 관리자로 되어있음, 정작 사건관리대장에는 담당자가 개별 특사경이 담당자로 되어있음 */
+			,FN_USER_NM(CHARGER_ID) AS CHARGER_NM /* 담당자 */
+			,FN_DEPT_NM(CHARGER_DEPT_CD) AS DEPT_NM /*담당자 부서 */
+			
+			, (CASE WHEN TO_CHAR(TMPR_CASE_RESULT_REPORT_DT) IS NULL THEN '임시사건 결과 보고 일시가 존재하지 않습니다.'
+				ELSE TO_CHAR(TMPR_CASE_RESULT_REPORT_DT, 'YYYY-MM-DD') END
+			) AS TMPR_CASE_RESULT_REPORT_DT /* 임시사건 결과 보고 일시 */
+			, (CASE WHEN TO_CHAR((SELECT OUTSET_REPORT_DT FROM RC_ITIV_OUTSET WHERE RC_NO = RT.RC_NO)) IS NULL THEN '내사착수일자가 존재하지 않습니다.'
+				ELSE TO_CHAR((SELECT OUTSET_REPORT_DT FROM RC_ITIV_OUTSET WHERE RC_NO = RT.RC_NO) , 'YYYY-MM-DD') END
+			) AS OUTSET_REPORT_DT /* 내사착수일자 */
+			, (CASE WHEN TO_CHAR((SELECT ITIV_RESULT_REPORT_DT FROM RC_ITIV_RESULT WHERE ITIV_NO = RT.ITIV_NO)) IS NULL THEN '내사결과보고일자가 존재하지 않습니다.'
+				ELSE TO_CHAR((SELECT ITIV_RESULT_REPORT_DT FROM RC_ITIV_RESULT WHERE ITIV_NO = RT.ITIV_NO) , 'YYYY-MM-DD') END
+			) AS ITIV_RESULT_REPORT_DT /* 내사결과보고일자 */
+			, NVL2(INV_RESMPT_DE, TO_CHAR(TO_DATE(INV_RESMPT_DE), 'YYYY-MM-DD') , '수사재개일시가 존재하지 않습니다.') AS INV_RESMPT_DE /* 수사재개일시 */
+	
+		 FROM RC_TMPR RT
 		 WHERE RC_NO = #rc_no#
 	</select>
 

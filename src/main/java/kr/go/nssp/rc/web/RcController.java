@@ -1347,6 +1347,15 @@ public class RcController {
 						
 						paramMap.put( "confm_job_se_cd", "01386");	// 승인업무구분 - 입건 (01386)
 						rcService.insertCaseConfmReqst(paramMap);	// 정식사건 승인요청
+						
+						/*
+						 * 2021.04.19 
+						 * coding by dgkim
+						 * 내사를 거쳐 정식사건으로 넘어갔음에도 내사사건부 > 처리결과에서는 반영되지 않아
+						 * 내사사건부 처리결과를 정식사건으로 변경하기 위해 추가
+						 * */
+						paramMap.put( "itiv_result_cd", "00381"); 
+						rcService.updateRcItivResult(paramMap);			// 내사결과 테이블 update
 					}
 					
 				} else {

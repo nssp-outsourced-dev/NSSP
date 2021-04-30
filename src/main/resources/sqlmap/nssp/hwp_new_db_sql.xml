@@ -627,11 +627,11 @@
 		) RIGHT JOIN DUAL ON 1=1
 	</select>
 	
-	<!-- 서식 - 서식 지명수배,지명통보자 전산입력요구서  -->
+	<!-- 서식 - 서식 지명수배,지명통보자 전산입력요구서
 	<select id="selectHwp00000000000000000302" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
 		
 	</select>
-	
+	  -->
 	<!-- 서식138 추가 송부  -->
 	<select id="selectHwp00000000000000000303" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
 		SELECT 

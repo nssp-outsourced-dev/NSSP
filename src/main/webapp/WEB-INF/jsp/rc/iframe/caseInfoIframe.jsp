@@ -2,6 +2,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>  
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 <%@ taglib prefix="ui" uri="http://egovframework.gov/ctl/ui"%>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 
 <jsp:include page="/inc/header.jsp" />
 <style>
@@ -46,7 +47,7 @@ var myGridID = "#grid_wrap";
 				    <tbody>
 		     			<tr class="trHeight">
 					        <th>접수번호 </th>
-					        <td class="t_left">
+					        <td colspan="3" class="t_left">
 					        	<c:if test="${caseInfo.RC_NO != null}">
 									${caseInfo.TRIM_RC_NO}
 								</c:if>
@@ -54,11 +55,46 @@ var myGridID = "#grid_wrap";
 									접수번호가 존재하지 않습니다.
 								</c:if>
 							</td>
-					        <th>접수일시 </th>
+							
+							<%-- 2021.04.19 --%>
+							<%-- 사건접수일시는 불필요하기에 안보이게 처리 --%>
+					        <%-- <th>접수일시 </th>
 					        <td class="t_left ">			
 								${caseInfo.RC_DT}
-			  				</td>
+			  				</td> --%>
 						</tr>
+						
+						<tr class="trHeight">
+							<th>임시사건<br>결과보고일시</th>
+							<td colspan="3" class="t_left">
+								${caseInfo.TMPR_CASE_RESULT_REPORT_DT}
+							</td>
+						</tr>
+						
+						<tr>
+							<th>내사착수일자</th>
+							<td class="t_left">
+								${caseInfo.OUTSET_REPORT_DT}
+							</td>
+							
+							<th>내사결과보고일자</th>
+							<td class="t_left">
+								${caseInfo.ITIV_RESULT_REPORT_DT}
+							</td>
+						</tr>
+						
+						<%-- <tr class="trHeight">
+							<th>입건일자</th>
+							<td colspan="3" class="t_left">${caseInfo.PRSCT_DE}</td>
+						</tr> --%>
+						
+						<tr class="trHeight">
+							<th>수사재개일시</th>
+							<td colspan="3" class="t_left">
+								${caseInfo.INV_RESMPT_DE}
+							</td>
+						</tr>
+						
 						<tr class="trHeight">
 							<th>내사번호 </th>
 						  	<td class="t_left">

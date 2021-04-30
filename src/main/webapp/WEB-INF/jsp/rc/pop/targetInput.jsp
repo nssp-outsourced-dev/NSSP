@@ -632,7 +632,7 @@
 										<tr class="indvdl">
 											<th>직장 주소지</th>
 								        	<td colspan="3">
-								        		<div class="flex_r">
+								        		<div class="flex_r" style="width: 708px;">
 									        		<input type="text" 	id="txtWrcZip"		name="txtWrcZip" 	     value="${items.grdWrcZip}"	    maxlength="10"  size="10"   class="w_80px input_com mr_5" >
 								          			<input type="text"	id="txtWrcAddr"		name="txtWrcAddr" 	     value="${items.grdWrcAddr}"	maxlength="150" size="150"  class="w_m85p input_com">
 								          			<input type="button"id="Wrc" 			class="btn_search"	     onclick="javascript:fnZipPopConnect(this)">
@@ -642,7 +642,7 @@
 										<tr>
 											<th>주소지</th>
 											<td colspan="3">
-												<div class="flex_r">
+												<div class="flex_r" style="width: 708px;">
 										    		<input type="text"	id="txtAdresZip"	name="txtAdresZip"		value="${items.grdAdresZip}"	maxlength="10"  size="10"  	class="w_80px input_com mr_5">
 										    		<input type="text"	id="txtAdresAddr" 	name="txtAdresAddr" 	value="${items.grdAdresAddr}"	maxlength="150" size="150"	class="w_m85p input_com">
 										    		<input type="button"id="Adres" 			class="btn_search"		onclick="javascript:fnZipPopConnect(this)">
@@ -652,7 +652,7 @@
 										<tr class="indvdl">
 											<th>등록지</th>
 								        	<td colspan="3">
-								        		<div class="flex_r">
+								        		<div class="flex_r" style="width: 708px;">
 									        		<input type="text" 	id="txtRegbsZip"	name="txtRegbsZip" 		value="${items.grdRegbsZip}"	maxlength="10"  size="10"   class="w_80px input_com mr_5"  >
 								          			<input type="text" 	id="txtRegbsAddr"	name="txtRegbsAddr" 	value="${items.grdRegbsAddr}"	maxlength="150" size="150"  class="w_m85p input_com">
 								          			<input type="button"id="Regbs" 			class="btn_search"		onclick="javascript:fnZipPopConnect(this)">

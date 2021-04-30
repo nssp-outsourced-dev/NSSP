@@ -419,12 +419,15 @@ var targetGridId = "#grid_target_list";
 								var template = "";
 								
 								if(value != null && value != ""){
-									template += value;
+									return value;
 								}else if(item.grdTrgterCprn != null && item.grdTrgterCprn != ""){
-									template += item.grdTrgterCprn;
+									return item.grdTrgterCprn;
+								}else if(
+									(value == null || value == "") &&
+									(item.grdTrgterCprn == null || item.grdTrgterCprn == "")
+								){
+									return "";	
 								}
-								
-								return template;
 							}
 		}
 		, { dataField : "grdHpNo"		 , 
@@ -437,6 +440,11 @@ var targetGridId = "#grid_target_list";
 									template += value;
 								}else if(item.grdWrcTel != null && item.grdWrcTel != "") {
 									template += item.grdWrcTel;
+								}else if(
+									(value == null || value == "") &&
+									(item.grdWrcTel == null || item.grdWrcTel == "")
+								){
+									return "";	
 								}
 								
 								return template;

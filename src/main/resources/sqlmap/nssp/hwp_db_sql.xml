@@ -1573,13 +1573,15 @@
 
 	<select id="hwp.selectHwp00000000000000000070_1" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
 		SELECT
-		    A.CASE_NO,
+    		A.CASE_NO,
 		    A.VIOLT_NM,
 		    A.VIOLT_ROOT_NM,
-		    A.TRGTER_NMS || CASE WHEN REGEXP_INSTR(SUBSTR(A.TRGTER_NMS,-1,1),'[0-9]') > 0 THEN '명' END AS TRGTER_NMS,
+		    A.TRGTER_NMS || CASE WHEN REGEXP_INSTR(SUBSTR(A.TRGTER_NMS,-1,1),'[0-9]') > 0 THEN '명' END AS TRGTER_NMS, 
 		    A.WRITNG_NM, 
 		    A.CHARGER_NM,
 		    A.CRMNL_FACT,
+		    A.NAME,
+		    SUBSTR(A.CASE_YYYY,0,4) || ' ' || A.NAME || ' 제' || TO_NUMBER(SUBSTR(A.CASE_YYYY , INSTR(A.CASE_YYYY, '-')+1)) || '호' AS RC_SE_NM, /*2021-05-03 hsno 수사 결과 보고서 > 사건 번호 변경*/
 		    FN_OZ_DATE(null, null) AS S_DATE
 		FROM (
 		    SELECT
@@ -1591,6 +1593,20 @@
 		        FN_USER_NM(A.CHARGER_ID) AS CHARGER_NM, -- 담당자로 수정 by dgkim
 				A.CRMNL_FACT
 				, A.PRSCT_DE -- 승인 일자로 수정 by dgkim
+				, (CASE WHEN RC_SE_CD = 'F' THEN  /*2021-05-03 hsno 접수 구분 코드를 사용해 수사, 내사, 임시, NULL을 구분 / 수사 결과 보고서 > 사건 번호 변경*/
+						CASE_NO
+    					WHEN RC_SE_CD = 'I' THEN
+    					ITIV_NO
+    					WHEN RC_SE_CD = 'T' OR RC_SE_CD IS NULL THEN
+    					TMPR_NO
+    					END) AS CASE_YYYY
+				, (CASE WHEN RC_SE_CD = 'F' THEN
+						'수사'
+    					WHEN RC_SE_CD = 'I' THEN
+    					'내사'
+   						WHEN RC_SE_CD = 'T' OR RC_SE_CD = NULL THEN
+    					'임시'
+    					END) AS NAME
 		    FROM RC_TMPR A
 		    WHERE A.RC_NO = #P_RC_NO#
 		) A

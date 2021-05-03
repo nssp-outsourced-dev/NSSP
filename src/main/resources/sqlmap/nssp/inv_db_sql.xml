@@ -2233,7 +2233,7 @@
 		    ) X
 		    INNER JOIN CMN_FORMAT_MANAGE FM ON X.FORMAT_ID = FM.FORMAT_ID
 		    WHERE FM.FORMAT_CL_CD IN ('01345','00445')
-		      AND FM.USE_YN = 'Y'
+		      AND FM.USE_YN = 'Y' AND X.FILE_NM IS NOT NULL /* 2021.4.30 by dgkim 조서관리 > 사건선택시 미리 생성 되는 문서 미리 생성도지 않게 처리요망 */
 		) A
 		JOIN RC_TMPR R ON R.RC_NO = A.RC_NO AND R.USE_YN = 'Y'
 		ORDER BY A.FORMAT_ID, A.DOC_SORT, A.UPDT_DT

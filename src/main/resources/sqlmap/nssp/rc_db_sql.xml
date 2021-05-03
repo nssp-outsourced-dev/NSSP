@@ -602,7 +602,7 @@
 			, WRITNG_DT 		--작성 일시
 			, UPDT_ID 			--수정 ID
 			, UPDT_DT 			--수정 일시
-			, PRSCT_DE			--입건 일자
+			, TO_DATE(PRSCT_DE, 'YYYY-MM-DD') AS PRSCT_DE  --입건 일자
 			, TO_CHAR(RC_DT, 'YYYY-MM-DD HH:MI') AS RC_DT	 --접수 일시
 			, SANCTN_ID 		--결재 ID
 			, FN_RC_VIOLT_UPPER_NMS (RC_NO) AS VIOLT_NM

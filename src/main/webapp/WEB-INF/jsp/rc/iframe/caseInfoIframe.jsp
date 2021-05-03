@@ -83,10 +83,17 @@ var myGridID = "#grid_wrap";
 							</td>
 						</tr>
 						
-						<%-- <tr class="trHeight">
+						<tr class="trHeight">
 							<th>입건일자</th>
-							<td colspan="3" class="t_left">${caseInfo.PRSCT_DE}</td>
-						</tr> --%>
+							<td colspan="3" class="t_left">
+								<c:choose>
+									<c:when test="${caseInfo.PRSCT_DE ne null}">
+										<fmt:formatDate value="${caseInfo.PRSCT_DE}" pattern="yyyy-MM-dd" />
+									</c:when>
+									<c:otherwise>입건일자가 존재하지 않습니다.</c:otherwise>
+								</c:choose>
+							</td>
+						</tr>
 						
 						<tr class="trHeight">
 							<th>수사재개일시</th>

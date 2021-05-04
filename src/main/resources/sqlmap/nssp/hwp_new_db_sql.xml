@@ -132,28 +132,64 @@
 	
 	<!-- 서식15 수사과정확인서(조사시) -->
 	<select id="selectHwp00000000000000000283" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
-		SELECT A.*, FN_OZ_DATE(null, null) AS S_DATE
+		SELECT
+		    A.*, FN_OZ_DATE(TO_CHAR(SYSDATE,'YYYYMMDD'),'') AS S_DATE
 		FROM (
-			SELECT
-				RC_NO,
-				FN_USER_NM(A.CHARGER_ID) AS CHARGER_NM
-			FROM RC_TMPR A
-			WHERE A.RC_NO = #P_RC_NO#
+	        SELECT
+	            FN_CNVR_NO(C.CASE_NO) AS CASE_NO,
+	            FN_CNVR_NO(A.RC_NO) AS RC_NO,
+	            A.TRGTER_SE_CD,
+	            A.TRGTER_SN,
+	            A.TRGTER_NM,
+	            DGUARD.DECRYPT('TBL','ENC',A.TRGTER_RRN) AS TRGTER_RRN,
+	            FN_CD_NM(A.OCCP_CD) || (CASE WHEN A.WRC_NM IS NOT NULL THEN ' (' || TRIM(A.WRC_NM) || ')' END) AS OCCP_NM,
+	            A.ADRES_ADDR AS DWLSIT_ADDR,    	/*주거지:DWLSIT_ZIP 주소:ADRES_ADDR*/
+	            A.REGBS_ADDR AS REGBS_ADDR,        	/*등록지*/
+	            A.WRC_ADDR AS WRC_ADDR,             /*직장주소*/
+	            DGUARD.DECRYPT('TBL','ENC',A.OWNHOM_TEL) AS OWNHOM_TEL,     /*자택전화*/
+	            DGUARD.DECRYPT('TBL','ENC',A.HP_NO) AS HP_NO,          		/*휴대전화*/
+	            A.WRC_TEL,          /*직장*/
+	            A.EMAIL,
+	            FN_RC_VIOLT_ROOT_NM(C.RC_NO) AS VIOLT_ROOT_NM,
+	            FN_USER_NM(C.CHARGER_ID) AS CHARGER_NM,
+				FN_USER_NM(A.WRITNG_ID) AS WRITNG_NM
+	        FROM RC_TMPR_TRGTER A
+	        JOIN RC_TMPR C ON A.RC_NO = C.RC_NO
+	        WHERE A.RC_NO 		= #P_RC_NO#
+	          AND A.TRGTER_SN 	= #P_TRGTER_SN#
 		) A
-		RIGHT JOIN DUAL D ON 1 = 1
+		RIGHT JOIN DUAL D ON 1=1
 	</select>
 	
 	<!-- 서식16 수사과정확인서(미조사시) -->
 	<select id="selectHwp00000000000000000284" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
-		SELECT A.*, FN_OZ_DATE(null, null) AS S_DATE
+		SELECT    
+		    A.*, FN_OZ_DATE(TO_CHAR(SYSDATE,'YYYYMMDD'),'') AS S_DATE
 		FROM (
-			SELECT
-				RC_NO,
-				FN_USER_NM(A.CHARGER_ID) AS CHARGER_NM
-			FROM RC_TMPR A
-			WHERE A.RC_NO = #P_RC_NO#
+	        SELECT
+	            FN_CNVR_NO(C.CASE_NO) AS CASE_NO,
+	            FN_CNVR_NO(A.RC_NO) AS RC_NO,
+	            A.TRGTER_SE_CD,
+	            A.TRGTER_SN,
+	            A.TRGTER_NM,
+	            DGUARD.DECRYPT('TBL','ENC',A.TRGTER_RRN) AS TRGTER_RRN,
+	            FN_CD_NM(A.OCCP_CD) || (CASE WHEN A.WRC_NM IS NOT NULL THEN ' (' || TRIM(A.WRC_NM) || ')' END) AS OCCP_NM,
+	            A.ADRES_ADDR AS DWLSIT_ADDR,    	/*주거지:DWLSIT_ZIP 주소:ADRES_ADDR*/
+	            A.REGBS_ADDR AS REGBS_ADDR,        	/*등록지*/
+	            A.WRC_ADDR AS WRC_ADDR,             /*직장주소*/
+	            DGUARD.DECRYPT('TBL','ENC',A.OWNHOM_TEL) AS OWNHOM_TEL,     /*자택전화*/
+	            DGUARD.DECRYPT('TBL','ENC',A.HP_NO) AS HP_NO,          		/*휴대전화*/
+	            A.WRC_TEL,          /*직장*/
+	            A.EMAIL,
+	            FN_RC_VIOLT_ROOT_NM(C.RC_NO) AS VIOLT_ROOT_NM,
+	            FN_USER_NM(C.CHARGER_ID) AS CHARGER_NM,
+				FN_USER_NM(A.WRITNG_ID) AS WRITNG_NM
+	        FROM RC_TMPR_TRGTER A
+	        JOIN RC_TMPR C ON A.RC_NO = C.RC_NO
+	        WHERE A.RC_NO 		= #P_RC_NO#
+	          AND A.TRGTER_SN 	= #P_TRGTER_SN#
 		) A
-		RIGHT JOIN DUAL D ON 1 = 1
+		RIGHT JOIN DUAL D ON 1=1
 	</select>
 	
 	<!-- 서식23 진술서 (서식 교체 기존 00000000000000000016)

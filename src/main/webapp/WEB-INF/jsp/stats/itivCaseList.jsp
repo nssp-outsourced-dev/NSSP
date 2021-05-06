@@ -49,8 +49,9 @@
 				children: [
 					{ dataField : "TRGTER_NM", headerText : "성명", width : 100},
 					{ dataField : "TRGTER_RRN", headerText : "주민번호", width : 150},
-					{ dataField : "DWLSIT_ADDR", headerText : "주소", width : 200}
-				]
+					{ dataField : "DWLSIT_ADDR", headerText : "주소", width : 200, visible : false}, /* 2021-05-06 hsno 주거지가 출력되던 주소 테이블을 안보이도록 처리 */
+					{ dataField : "ADRES_ADDR", headerText : "주소", width : 200} /* 2021-05-06 hsno 주소지가 출력되는 주소 테이즐 추가 */
+					]
 			},
 			{ dataField : "OUTSET_RESN", headerText : "내사할 사항(지휘사항 포함)", width : 200},
 			{ dataField : "ITIV_DT", headerText : "착수일시", width : 100},

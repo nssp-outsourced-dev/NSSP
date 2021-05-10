@@ -29,7 +29,7 @@ var myGridID;
 		$('#btnRcord').hide();
 		$('#btnClear').hide();
 		$('#btnAdd').hide();
-		$('#btnDelete').hide();
+		//$('#btnDelete').hide();
 
 
         $('#txtSugestCn').keyup(function(){
@@ -440,10 +440,10 @@ var myGridID;
 		if( $("#rcNo").val() == "" ){
 			$('#btnClear').hide();
 			$('#btnAdd').hide();
-			$('#btnDelete').hide();
+			//$('#btnDelete').hide();
 		} else {
 			$('#btnClear').hide();
-			$('#btnDelete').hide();
+			//$('#btnDelete').hide();
 
 			if( gbn == "sugestRcord" ){
 				$('#btnRcord').hide();
@@ -497,7 +497,7 @@ var myGridID;
 
  			$('#btnClear').show();
  			$('#btnAdd').show();
- 			$('#btnDelete').show();
+ 			//$('#btnDelete').show();
 	    };
 		Ajax.getJson(iUrl, queryString, processAfterGet);
 	}
@@ -820,7 +820,13 @@ var myGridID;
 			<a href="javascript:void(0);" id="btnRcord"  onClick="fnSugestRcord();" class="btn_st2_2 icon_n fl mr_m1">기록목록</a>
 			<a href="javascript:void(0);" id="btnClear"  onClick="fnClear();" 		class="btn_st2 icon_n fl mr_m1">신규</a>
 			<a href="javascript:void(0);" id="btnAdd" 	 onClick="fnAdd();" 		class="btn_st2 icon_n fl mr_m1">저장</a>
-			<a href="javascript:void(0);" id="btnDelete" onClick="fnDelete();" 		class="btn_st2 icon_n fl mr_m1">삭제</a>
+			<!-- 
+				2021.05.07 
+				by dgkim
+				건의 내용을 삭제하면 지휘건의번호간에 중간 공백이 있도록 설계되어있어 삭제못하도록 조치
+				건의내용을 삭제하지않고 수정하여 사용하도록 권종열 사무관과 협의
+			 -->
+			<!-- <a href="javascript:void(0);" id="btnDelete" onClick="fnDelete();" 		class="btn_st2 icon_n fl mr_m1">삭제</a> -->
 		</div>
 		<!--//버튼  -->
 	</div>

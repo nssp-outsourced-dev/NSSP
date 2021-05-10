@@ -32,6 +32,12 @@
 	function initGrid() {
 		var columnLayout = [
 			{ dataField : "RN", headerText : "순번", width : 50},
+			{ dataField : "ITIV_NO", headerText : "내사번호", width : 100,
+				renderer : {type : "TemplateRenderer"},
+				labelFunction : function (rowIndex, columnIndex, value, headerText, item ) {
+					return fnChangeNo (value);
+				}
+			},
 			{ dataField : "RC_NO", headerText : "접수번호", width : 100,
 				renderer : {type : "TemplateRenderer"},
 				labelFunction : function (rowIndex, columnIndex, value, headerText, item ) {
@@ -39,12 +45,6 @@
 				}
 			},
 			{ dataField : "RC_DT", headerText : "접수일시", width : 100},
-			{ dataField : "ITIV_NO", headerText : "내사번호", width : 100,
-				renderer : {type : "TemplateRenderer"},
-				labelFunction : function (rowIndex, columnIndex, value, headerText, item ) {
-					return fnChangeNo (value);
-				}
-			},
 			{ headerText : "내사 대상자",
 				children: [
 					{ dataField : "TRGTER_NM", headerText : "성명", width : 100},

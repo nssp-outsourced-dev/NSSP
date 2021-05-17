@@ -445,19 +445,19 @@
 
 	<update id="deleteBioTmpFile" parameterClass="java.util.HashMap">
 		UPDATE CMN_USER_TMPLAT SET
-		<isNotEmpty property="file_ty">
-			<isEqual property="file_ty" compareValue="face" prepend="AND">
+		<isNotEmpty property="fileTy">
+			<isEqual property="fileTy" compareValue="face"> /* 2021-05-17 hsno face ID 삭제 과정중 오류 수정 */
 				IMAGE_FILE_INFO = null,
 				IMAGE_UPDT_DT = SYSDATE
 			</isEqual>
-			<isEqual property="file_ty" compareValue="finger" prepend="AND">
+			<isEqual property="fileTy" compareValue="finger">/* 2021-05-17 hsno finger ID 삭제 과정중 오류 수정 */
 				FNGPRT_FILE_INFO = null,
 				FNGPRT_UPDT_DT = SYSDATE,
 				FNGPRT_WIDTH = TO_NUMBER(#fngprt_width#,0),
 				FNGPRT_VRTICL = TO_NUMBER(#fngprt_height#,0)
 			</isEqual>
 		</isNotEmpty>
-		WHERE ESNTL_ID = #esntl_id#
+		WHERE ESNTL_ID = #fileId#
 	</update>
 
 	<update id="updateUserGpkiDn" parameterClass="HashMap">

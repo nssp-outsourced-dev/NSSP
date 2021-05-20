@@ -287,6 +287,7 @@
 			FN_USER_NM(WRITNG_ID) AS WRITNG_NM,
 			FN_OZ_DATE(null, null) AS S_DATE
 			, A.USER_NM -- 담당자로 변경 by dgkim
+			, FN_USER_NM(WRITNG_ID) AS CHARGER_NM /* 2021-05-20 hsno 수사보고서 143번 웹기한기에 CHARGER_NM이 없어 추가 */
 		FROM (
 		    SELECT
 		    WRITNG_ID

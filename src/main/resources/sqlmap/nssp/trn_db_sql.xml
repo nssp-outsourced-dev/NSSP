@@ -25,7 +25,7 @@
 		          FROM INV_SUGEST A, RC_TMPR B
 		         WHERE A.USE_YN = 'Y'
 		           AND A.SUGEST_TY_CD = '01101' /* 건의 유형 코드(수사지휘건의) */
-		           AND A.SUGEST_RESULT_CD = 'Y' /* 건의 결과 코드(가) */
+		           -- AND A.SUGEST_RESULT_CD = 'Y' /* 건의 결과 코드(가) */ /* 2021-05-20 hsno 지휘건의에서 건의 결과가 '가'가 되지 않아도 사건 송치에 나오도록 수정 */
 		           AND B.USE_YN = 'Y'
 		           AND A.RC_NO = B.RC_NO
 		           AND (   (B.INV_RESMPT_YN = 'Y' AND B.INV_RESMPT_DE <= A.SUGEST_DE)

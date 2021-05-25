@@ -178,7 +178,7 @@
 				}
 			}, {
 				headerText : "지문원지작성번호", dataField : "FNGPRT_FORMS_NO", width : 120,
-				editRenderer : {
+				/* editRenderer : {
 					type : "InputEditRenderer",
 					//onlyNumeric : true, // Input 에서 숫자만 가능케 설정
 					// 에디팅 유효성 검사
@@ -197,11 +197,11 @@
 							var reg = /^(19|20)\d{2}-\d{6}$/;
 							isValid = reg.test(newValue);
 							msg = "2019-123456 형식으로 입력하세요.";
-						} */
+						}
 						
 						return { "validate" : isValid, "message" : msg };
 					}
-				}
+				} */  /* 2021-05-24 hsno 기업인 경우에도 지문원지작성번호 작성가능하도록 수정 */
 			}, {
 				headerText : "구속영장청구번호<span class='point'><img src='/img/icon_dot.png'/></span>", dataField : "ARSTT_RQEST_NO", width : 120
 			}, {
@@ -717,10 +717,10 @@
 					alert(gData[i].TRGTER_NM + "의 지문원지번호를 입력하세요.");
 					return;
 				} */
-				if(gData[i].TRGTER_TY_CD != "I" && !fnIsEmpty(gData[i].FNGPRT_FORMS_NO)) {
+				/* if(gData[i].TRGTER_TY_CD != "I" && !fnIsEmpty(gData[i].FNGPRT_FORMS_NO)) { 
 					alert("법인인 경우, 지문원지번호를 입력하지 않습니다.");
 					return;
-				}
+				} */  /* 2021-05-24 hsno 기업인 경우에도 지문원지작성번호 작성가능하도록 수정 */
 			}
 		}
 

@@ -31,12 +31,18 @@
 	function initGrid() {
 		var columnLayout = [
 			{ dataField : "RN", headerText : "순번", width : 50},
-			{ dataField : "RC_NO", headerText : "접수번호", width : 100,
+			/*
+				2021.05.24
+				by dgkim
+				접수번호는 수사업무 시스템에 필요없으므로 안보이게 처리
+				시스템상에서는 필요한 데이터 임으로 데이터는 유지하되 화면 에 보이지 안도록 처리
+			*/
+			/* { dataField : "RC_NO", headerText : "접수번호", width : 100,
 				renderer : {type : "TemplateRenderer"},
 				labelFunction : function (rowIndex, columnIndex, value, headerText, item ) {
 					return fnChangeNo (value);
 				}
-			},
+			}, */
 			{ dataField : "CASE_NO", headerText : "사건번호", width : 100,
 				renderer : {type : "TemplateRenderer"},
 				labelFunction : function (rowIndex, columnIndex, value, headerText, item ) {

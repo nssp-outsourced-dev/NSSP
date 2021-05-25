@@ -1353,8 +1353,13 @@ public class RcController {
 						 * coding by dgkim
 						 * 내사를 거쳐 정식사건으로 넘어갔음에도 내사사건부 > 처리결과에서는 반영되지 않아
 						 * 내사사건부 처리결과를 정식사건으로 변경하기 위해 추가
+						 * 
+						 * 2021.05.24
+						 * edit by dgkim
+						 * 내사사건부 처리결과에 정식사건이라고 나오면 안됨
 						 * */
-						paramMap.put( "itiv_result_cd", "00381"); 
+						//paramMap.put( "itiv_result_cd", "00381"); 
+						paramMap.put( "itiv_result_cd", "00383");
 						rcService.updateRcItivResult(paramMap);			// 내사결과 테이블 update
 					}
 					

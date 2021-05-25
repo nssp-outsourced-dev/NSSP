@@ -1284,7 +1284,12 @@ var targetGridId = "#grid_target_list";
 	<li id="liContextItem_FC03" class="FC cssCtTxt">내사사건 사건변경</li>
 	<li id="liContextItem_FC04" class="FC cssCtTxt">임시사건 사건변경</li>
 	<li id="liContextItem_FC05" class="FC cssCtTxt">범죄인지보고</li>
-	<li id="liContextItem_FC06" class="FC cssCtTxt">범죄인지보고서</li>
+	<!-- 
+		2021.05.24 
+		by dgkim 
+		범죄인지보고 메뉴와  범죄인지서(표지) 메뉴가 있어 궅이 필요없으므로 안보이게 처리
+	-->
+	<!-- <li id="liContextItem_FC06" class="FC cssCtTxt">범죄인지보고서</li> -->
 	<li id="liContextItem_FC07" class="FC cssCtTxt">범죄인지서(표지)</li>
 	<!--
 	<li id="liContextItem_FC06" class="FC">고소,고발 또는 수사이첩 접수부</li>

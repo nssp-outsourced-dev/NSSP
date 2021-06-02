@@ -49,7 +49,14 @@ public class FaceTmpMatcher {
 
 	public FaceTmpMatcher () {
 		try {
-			//NDataFileManager.getInstance().addFromDirectory("/usr/local/Neurotechnology/Data/", false);
+			//OS 확인
+			String os = System.getProperty("os.name").toLowerCase();
+			System.out.println("os : " + os);
+			if("win".equals(os)) {//윈도우 OS
+				NDataFileManager.getInstance().addFromDirectory("C:/DEV/Neurotechnology/Data/", false);
+			}else {//기타
+				NDataFileManager.getInstance().addFromDirectory("/usr/local/Neurotechnology/Data/", false);
+			}
 		} catch (Exception e) {
 			System.out.println("TESTTESTSETSTS:::path setting");
 			e.printStackTrace();

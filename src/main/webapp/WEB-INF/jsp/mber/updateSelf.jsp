@@ -212,7 +212,42 @@
 		if(fnIsEmpty(pid)) {
 			alert("사용자 아이디를 확인할 수 없습니다.");
 		} else {
-			location.href = "<c:url value='/file/getBioFileBinary/'/>?esntl_id=" + pid + "&file_ty=" + pty;
+			//location.href = "<c:url value='/file/getBioFileBinary/'/>?esntl_id=" + pid + "&file_ty=" + pty;
+			Ajax.getJson("<c:url value='/file/getBioFileBinary/'/>", {"esntl_id": pid, "file_ty": pty}, function(data){
+				if(data.result == "1"){
+					var format = "data:image/png;base64,";
+					var base64 = format + data.image;
+					var imgData = atob(base64.split(',')[1]);
+					var len = imgData.length;
+					var buf = new ArrayBuffer(len);
+					var view = new Uint8Array(buf);
+					var blob, i;
+					
+					for(i = 0; i < len; i++){
+						view[i] = imgData.charCodeAt(i) & 0xff;
+					}
+					
+					blob = new Blob([view], {type: "application/octet-stream"});
+					console.log(view);
+					console.log(blob);
+					if(window.navigator.msSaveOrOpenBlob){
+						window.navigator.msSaveOrOpenBlob(blob, "${sessionScope.esntl_id}" + ".jpg");
+					}else{
+						var a = document.createElement("a");
+						a.style = "display: none";
+						a.href = format + data.image;
+						a.download = "${sessionScope.esntl_id}" + ".jpg";
+						document.body.appendChild(a);
+						a.click();
+						
+						setTimeout(function(){
+							document.body.removeChild(a);
+						}, 1000);
+					}
+				}else{
+					alert("진행중 오류가 발생하였습니다.");
+				}
+			});
 		}		
 	}
 	

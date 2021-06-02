@@ -1,5 +1,7 @@
 package kr.go.nssp.utl;
 
+import java.util.Arrays;
+
 public class BioData {
 
 	private String id;				//클라이언트와의 통신 id
@@ -9,6 +11,8 @@ public class BioData {
     private String width;			//finger 사진 넓이
     private boolean bchk;			//bio 정보 여부
     private boolean chkTimeout;		//클라이언트 timeout
+    
+    private String byEncode;//인코딩된 bio 정보
 
 	public boolean isChkTimeout() {
 		return chkTimeout;
@@ -66,8 +70,16 @@ public class BioData {
         this.message = message;
     }
 
-    @Override
-    public String toString () {
-        return "Message [Id= " + id + ", Message= " + message + "]";
-    }
+	public String getByEncode() {
+		return byEncode;
+	}
+
+	public void setByEncode(String byEncode) {
+		this.byEncode = byEncode;
+	}
+	
+	@Override
+	public String toString() {
+		return "Message [Id= " + id + ", Message= " + message + "]";
+	}
 }

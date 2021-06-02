@@ -10,7 +10,15 @@ public class FingerMatcher {
 			 */
 			//System.loadLibrary("FingerMatcher");			
 			//System.load ("/usr/sbin/Face/libFingerMatcher.so");
-			System.load ("/usr/lib64/libFingerMatcher.so");
+			
+			//OS 확인
+			String os = System.getProperty("os.name").toLowerCase();
+			System.out.println("os : " + os);
+			if("win".equals(os)) {//윈도우 OS
+				System.load ("C:\\DEV\\Finger\\libFingerMatcher.so");
+			}else {//기타
+				System.load ("/usr/lib64/libFingerMatcher.so");
+			}
 		} catch (UnsatisfiedLinkError e) {
 			System.out.println(e.getMessage());
 			e.printStackTrace();

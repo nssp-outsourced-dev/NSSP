@@ -1,7 +1,9 @@
 package kr.go.nssp.mber.web;
 
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintWriter;
@@ -56,6 +58,21 @@ import com.gpki.servlet.GPKIHttpServletResponse;
 
 import twitter4j.internal.org.json.JSONObject;
 import egovframework.rte.ptl.mvc.tags.ui.pagination.PaginationInfo;
+import kr.co.siione.dist.utils.SimpleUtils;
+import kr.go.nssp.cmmn.service.CdService;
+import kr.go.nssp.cmmn.service.DeptService;
+import kr.go.nssp.face.web.FaceLgMatcher;
+import kr.go.nssp.face.web.FaceTmpMatcher;
+import kr.go.nssp.finger.web.FingerMatcher;
+import kr.go.nssp.mber.service.MberService;
+import kr.go.nssp.menu.service.MenuService;
+import kr.go.nssp.utl.BioData;
+import kr.go.nssp.utl.InvUtil;
+import kr.go.nssp.utl.LoginManager;
+import kr.go.nssp.utl.ObjectLock;
+import kr.go.nssp.utl.Utility;
+import kr.go.nssp.utl.egov.EgovProperties;
+import twitter4j.internal.org.json.JSONObject;
 
 @Controller
 @RequestMapping(value = "/member/")
@@ -139,7 +156,15 @@ public class MberController {
 		if (!txtFile.equals("") && !txtCookie.equals("")) {
 			try {
 				txtFile = txtFile.replace("-", "+");
-				binary = Base64.getMimeDecoder().decode(txtFile.getBytes(StandardCharsets.UTF_8));
+				//binary = Base64.getMimeDecoder().decode(txtFile.getBytes(StandardCharsets.UTF_8));
+				String version = System.getProperty("java.version");
+		        System.out.println("JAVA Version : " + version);
+		        
+		        if(version.contains("1.7")) {//java version이 1.7이면
+		        	binary = org.apache.commons.codec.binary.Base64.decodeBase64(txtFile.getBytes(StandardCharsets.UTF_8));
+		        }else if(version.contains("1.8")) {//java version이 1.8이면
+		        	binary = Base64.getMimeDecoder().decode(txtFile.getBytes(StandardCharsets.UTF_8));
+		        }
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
@@ -190,6 +215,7 @@ public class MberController {
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@RequestMapping(value = "/faceLogin/")
 	public ResponseEntity<Map> faceLogin(HttpServletRequest request, HttpServletResponse response) throws Exception {
+		System.out.println(this.getClass().getName() + " : " + request.getRequestURL());
 		int rstSt = 1;
 		String resultMsg = "접속";
 		
@@ -219,66 +245,73 @@ public class MberController {
 		byte[] binary = null;
 		
 		try {
+			if ((!txtFile.equals("")) && (!txtCookie.equals(""))) {
+		        txtFile = txtFile.replace("-", "+");
+		        System.out.println("txtFile : " + txtFile);
+		        System.out.println("binary : " + binary);
+		        System.out.println("txtFile.getBytes(StandardCharsets.UTF_8) : " + txtFile.getBytes(StandardCharsets.UTF_8));
+		        
+		        String version = System.getProperty("java.version");
+		        System.out.println("JAVA Version : " + version);
+		        
+		        if(version.contains("1.7")) {//java version이 1.7이면
+		        	binary = org.apache.commons.codec.binary.Base64.decodeBase64(txtFile.getBytes(StandardCharsets.UTF_8));System.out.println("binary2 : " + binary);
+		        }else if(version.contains("1.8")) {//java version이 1.8이면
+		        	binary = Base64.getMimeDecoder().decode(txtFile.getBytes(StandardCharsets.UTF_8));System.out.println("binary2 : " + binary);
+		        }
+		      }
 
-			if (!txtFile.equals("") && !txtCookie.equals("")) {			
-				txtFile = txtFile.replace("-", "+");
-				binary = Base64.getMimeDecoder().decode(txtFile.getBytes(StandardCharsets.UTF_8));
-			}
-			
-			//img -> tmp 로 변경
-			byte[] cvby = null;			
-			if(txtType != null && txtType.equals("9")) {	//timeout
-				cvrsti = 99999;
-			} else {
-				if(binary != null && binary.length > 0) {				
-					FaceTmpMatcher fm = new FaceTmpMatcher();
-					HashMap rstm = fm.setTemplateToByte(binary);
-					cvby 	 = (byte[]) rstm.get("imgbyte");
-					cvrstmsg = (String) rstm.get("rstmsg");
-					cvrsti 	 = (int) 	rstm.get("rstcode");
-				}
-			}
-			if(cvrsti == 1 || cvrsti == 99999) {
-				// lock 해제
-				ObjectLock obj = ObjectLock.getInstance();
-				BioData bd = obj.getMap(txtCookie);
-				if (bd != null) {										
-					if(cvrsti == 1) {
-						bd.setBchk(true);
-						bd.setChkTimeout(false);
-						bd.setMessage(txtCookie + "님의 face Login 이미지 도착");
-						bd.setBy(cvby);						
-					} else {
-						bd.setBchk(false);
-						bd.setChkTimeout(true);
-						bd.setMessage(txtCookie + "님 Timeout");						
-					}
-					System.out.println(">>>>> " + bd.getMessage());
-					obj.stopLock(txtCookie);
-					System.out.println("---------------------lock 해제------------------");
-					rstSt = 700;
-					resultMsg = "완료";
-					response.setStatus(rstSt);
-				} else {
-					rstSt = -9;
-					resultMsg = "락 해제 오류";
-					response.setStatus(rstSt);
-				}
-			} else {
-				rstSt = 500;
-				resultMsg = "이미지 부적합";
-				response.setStatus(rstSt);
-			}
+		      byte[] cvby = null;
+		      
+		      if ((binary != null) && (binary.length > 0)) {
+		        FaceTmpMatcher fm = new FaceTmpMatcher();
+		        HashMap rstm = fm.setTemplateToByte(binary);
+		        System.out.println("rstm : " + rstm.toString());
+		        cvby = (byte[])rstm.get("imgbyte");
+		        cvrstmsg = (String)rstm.get("rstmsg");
+		        cvrsti = ((Integer)rstm.get("rstcode")).intValue();
+		        System.out.println("cvby : " + cvby);
+		        System.out.println("cvrstmsg : " + cvrstmsg);
+		        System.out.println("cvrsti : " + cvrsti);
+		      }
+		      if (cvrsti == 1)
+		      {
+		        ObjectLock obj = ObjectLock.getInstance();
+		        BioData bd = obj.getMap(txtCookie);
+		        if (bd != null) {
+		          bd.setMessage(txtCookie + "님의 face Login 이미지 도착");
+		          bd.setBchk(true);
+		          bd.setBy(cvby);
+		          bd.setByEncode(txtFile);///
+		          System.out.println(">>>>> " + bd.getMessage());
+		          obj.stopLock(txtCookie);
+		          System.out.println("---------------------lock 해제------------------");
+		          rstSt = 700;
+		          resultMsg = "완료";
+		          response.setStatus(rstSt);
+		        } else {
+		          rstSt = -9;
+		          resultMsg = "락 해제 오류";
+		          response.setStatus(rstSt);
+		        }
+		        
+		        System.out.println("bd : " + bd.toString());
+		      } else {
+		        rstSt = 500;
+		        resultMsg = "이미지 부적합";
+		        response.setStatus(rstSt);
+		      }
 		} catch (Exception e) {
+			e.printStackTrace();
 			rstSt = -11;
 			resultMsg = "Exception";
 			response.setStatus(rstSt);
-			e.printStackTrace();
 		}
 		rmap.put("result", rstSt);
 		rmap.put("resultMsg", resultMsg);
 		rmap.put("cvresultMsg", cvrstmsg);
 		rmap.put("cvresultCode", cvrsti);
+		System.out.println("rmap : " + rmap.toString());
 		entity = new ResponseEntity<Map>(rmap, HttpStatus.CREATED);
 		return entity;
 	}
@@ -293,6 +326,8 @@ public class MberController {
 		String chkBiostep = Utility.nvl(request.getParameter("chkBiostep"));
 		String match = "[^\uAC00-\uD7A3xfe0-9a-zA-Z\\s]"; // "[^\uAC00-\uD7A3xfe0-9a-zA-Z\\s]";
 		strCoo = strCoo.replaceAll(match, "").substring(0, 55);
+		System.out.println("==============================================");
+		System.out.println("txtID : " + txtID + ", strCoo : " + strCoo + ", chkBiostep : " + chkBiostep);
 		
 		if (!strCoo.equals("")) {
 			ObjectLock obj = ObjectLock.getInstance();
@@ -320,7 +355,7 @@ public class MberController {
 					for (HashMap m : tmp_list) {
 						Blob b = m.get("FNGPRT_FILE_INFO") != null ? (Blob) m.get("FNGPRT_FILE_INFO") : null;
 						if (b != null) {
-							byte[] dby = b.getBytes(1, (int) b.length());
+							byte[] dby = b.getBytes(1L, (int)b.length());
 							// rm.put(dby.length, by.length);
 							int width = bd.getWidth() == null ? 0 : Integer.parseInt(bd.getWidth());
 							int height = bd.getHeight() == null ? 0 : Integer.parseInt(bd.getHeight());
@@ -331,7 +366,7 @@ public class MberController {
 							System.out.println(">>>>>>>>>> 점수 :" + resCode);
 							System.out.println(">>>>>>>>>> 결과 메시지 :" + msg);
 
-							if (resCode != null && resCode > 2500) {
+							if ((resCode != null) && (resCode.intValue() > 2500)) {
 								rtnmap.put("esntl_id", m.get("ESNTL_ID"));
 								break;
 							}
@@ -365,13 +400,15 @@ public class MberController {
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@RequestMapping(value = "/faceLoginAjax/")
 	public ModelAndView faceLoginAjax(HttpServletRequest request, HttpServletResponse response) throws Exception {
-		//System.out.println("faceLoginAjaxfaceLoginAjaxfaceLoginAjaxfaceLoginAjaxfaceLoginAjaxfaceLoginAjax");
+		System.out.println(this.getClass().getName() + " : " + request.getRequestURL());//System.out.println("faceLoginAjaxfaceLoginAjaxfaceLoginAjaxfaceLoginAjaxfaceLoginAjaxfaceLoginAjax");
 		String result = "-1";
 		boolean rstans = false;
 
 		String txtID = Utility.nvl(request.getParameter("txtID"));
 		String strCoo = Utility.nvl(request.getParameter("strCoo"));
 		String chkBiostep = Utility.nvl(request.getParameter("chkBiostep"));
+		System.out.println("==============================================");
+		System.out.println("txtID : " + txtID + ", strCoo : " + strCoo + ", chkBiostep : " + chkBiostep);
 
 		String match = "[^\uAC00-\uD7A3xfe0-9a-zA-Z\\s]"; // "[^\uAC00-\uD7A3xfe0-9a-zA-Z\\s]";
 		strCoo = strCoo.replaceAll(match, "").substring(0, 55);
@@ -1394,6 +1431,17 @@ public class MberController {
 					map.put("file_ty", "face");
 					map.put("file_info", cvby);
 					rnt = mberService.setFaceTemplate(map);
+					
+//					StringBuilder byEncode = new StringBuilder().toString();
+//					byEncode.append(org.apache.commons.codec.binary.StringUtils.newStringUtf8(org.apache.commons.codec.binary.Base64.encodeBase64(file.getBytes(), false)));
+					
+					this.saveFileInfo(esntl_id
+							, new StringBuilder(
+									org.apache.commons.codec.binary.StringUtils.newStringUtf8(
+											org.apache.commons.codec.binary.Base64.encodeBase64(
+													file.getBytes()
+													, false
+					))).toString());
 				}
 			} catch (Exception e) {
 				System.out.println("오류 >>> ");
@@ -1424,6 +1472,7 @@ public class MberController {
 	//
 	@RequestMapping(value = "/bioDtSaveAjax/")
 	public ModelAndView bioDtSaveAjax(HttpServletRequest request) throws Exception {
+		System.out.println(this.getClass().getName() + " : " + request.getRequestURL());
 		// 현재 페이지 파라메타
 		String txtID = Utility.nvl(request.getParameter("txtID"));
 		String strCoo = Utility.nvl(request.getParameter("strCoo"));
@@ -1468,8 +1517,11 @@ public class MberController {
 					// img 파일 > 템플릿 변경	
 					System.out.println("cvby >>> "+Arrays.toString(by));					
 					if(by != null) {
-						map.put("file_info", by);	
+						map.put("file_info", by);
+						System.out.println(this.getClass().getName() + " map : " + map);
 						rtn = mberService.setFaceTemplate(map);
+						
+						this.saveFileInfo(txtID, bd.getByEncode());
 					}									
 				}				
 			}
@@ -1478,6 +1530,7 @@ public class MberController {
 		HashMap cMap = new HashMap();
 		cMap.put("result", rtn);
 		cMap.put("rstans", rstans);
+		System.out.println(this.getClass().getName() + " cMap : " + cMap);
 		return new ModelAndView("ajaxView", "ajaxData", cMap);
 	}
 
@@ -1854,5 +1907,37 @@ public class MberController {
 		model.addAttribute("gpkiJoinMsg", "999");
 
 		return "mber/join";
+	}
+
+	/** 
+	 * @methodName : saveFileInfo
+	 * @date : 2021.05.25
+	 * @author : dgkim
+	 * @description : 기존 NSSP에서는 동작하지 않아 새로운 로직으로 재구현.<br>
+	 * 클라이언트(웹캠, 지문스캐너) encoding되어서 들어오는 문자열을 계정과 일치하는 파일명에 텍스트파일로 저장.
+	 * @param fileName
+	 * @param byEncode
+	 * @return
+	 * @throws Exception
+	 */
+	public int saveFileInfo(String fileName, String byEncode) throws Exception {
+		int result = 0;
+		try {
+			File file = new File(fileName + ".txt");
+			System.out.println("file.getAbsolutePath() : " + file.getAbsolutePath());
+			BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(file));
+            
+            if(file.isFile() && file.canWrite()){
+            	bufferedWriter.write(byEncode);//쓰기
+            	bufferedWriter.close();
+            }
+            
+            result = 1;
+		}catch (Exception e) {
+			result = 0;
+			System.out.println(e.getMessage());
+		}
+		
+		return result;
 	}
 }

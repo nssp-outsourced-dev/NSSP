@@ -4,8 +4,14 @@ import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.IOException;
 import java.io.PrintWriter;
 import java.net.URLEncoder;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.sql.Blob;
 import java.util.*;
 
@@ -18,6 +24,7 @@ import kr.co.siione.dist.ffmpeg.StreamView;
 import kr.co.siione.dist.utils.SimpleUtils;
 import kr.go.nssp.cmmn.service.FileService;
 
+import org.apache.commons.io.FileUtils;
 import org.springframework.http.*;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -235,6 +242,79 @@ public class FileController {
     }
     
     @RequestMapping(value="/getBioFileBinary/")
+    public ModelAndView getBioFileBinary(HttpServletRequest request, HttpServletResponse response) throws Exception {
+    	String esntl_id = SimpleUtils.default_set(request.getParameter("esntl_id"));
+        String file_ty = SimpleUtils.default_set(request.getParameter("file_ty"));
+        
+        int rtn = 0;
+        String image = "";
+        
+        HashMap map = new HashMap();
+    	map.put("esntl_id", esntl_id);
+        map.put("file_ty", file_ty);
+    	HashMap result = fileService.getBioFileDetail(map);
+    	
+    	if(result == null){
+            response.setContentType("text/html; charset=UTF-8");
+			PrintWriter writer = response.getWriter();
+			writer.println("<script type='text/javascript'>");
+			writer.println("alert('파일정보를 찾을 수 없습니다.');");
+			writer.println("history.back();");
+			writer.println("</script>");
+			writer.flush();
+		}else {
+	    	try {
+	    		File file = new File(esntl_id + ".txt");
+		    	
+		    	if(file.exists() && file.canRead()) {
+		    		//파일 내용 읽기
+					//파일 내용담을 리스트
+					List<String> list = new ArrayList<String>();
+					try{
+						list = Files.readAllLines(file.toPath(), StandardCharsets.UTF_8);
+					}catch(IOException e){
+						e.printStackTrace();
+					}
+					
+					for(String readLine : list){
+						image += readLine;
+					}
+					
+					rtn = 1;
+		    	}else {
+		    		response.setContentType("text/html; charset=UTF-8");
+					PrintWriter writer = response.getWriter();
+					writer.println("<script type='text/javascript'>");
+					writer.println("alert('해당 파일이 존재하지 않습니다.');");
+					writer.println("history.back();");
+					writer.println("</script>");
+					writer.flush();
+					writer.close();
+		    	}
+	    	}catch (Exception e) {
+	    		System.out.println("download error : " + e.getMessage());
+
+                response.setContentType("text/html; charset=UTF-8");
+    			PrintWriter writer = response.getWriter();
+				writer.println("<script type='text/javascript'>");
+				writer.println("alert('다운로드중 오류가 발생했습니다.');");
+				writer.println("history.back();");
+				writer.println("</script>");
+				writer.flush();
+    			writer.close();
+			}
+		}
+    	
+    	HashMap cMap = new HashMap();
+		cMap.put("result", rtn);
+		cMap.put("image", image);
+		
+		System.out.println("GetFile End");
+		
+		return new ModelAndView("ajaxView", "ajaxData", cMap);
+    }
+    
+    /* @RequestMapping(value="/getBioFileBinary/")
     public void getBioFileBinary(HttpServletRequest request, HttpServletResponse response) throws Exception {
 
         String esntl_id = SimpleUtils.default_set(request.getParameter("esntl_id"));
@@ -319,7 +399,7 @@ public class FileController {
 		}
 	   	System.out.println("GetFile End");
     }
-	/*
+	
     @RequestMapping(value="/getFileBinary/")
     public ResponseEntity<byte[]> getFileBinary(HttpServletRequest request, HttpServletResponse response, ModelMap model) throws Exception {
         ResponseEntity entity = null;

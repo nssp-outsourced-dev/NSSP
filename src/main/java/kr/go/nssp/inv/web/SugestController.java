@@ -14,6 +14,7 @@ import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -444,5 +445,37 @@ public class SugestController {
     	param.put("dept_cd", dept_cd);
 		int rtnVal = sugestService.saveTrgterOrder (param);
 		return rtnVal;
+	}
+	
+	/** 
+	 * @methodName : updateCmndPrsecNmAjax
+	 * @date : 2021.06.25
+	 * @author : dgkim
+	 * @description : 사건종결 후에도 지휘건의 검사명 수정가능하게끔 조치
+	 * @param session
+	 * @param param
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping(value = "/updateCmndPrsecNmAjax/")
+	public ModelAndView updateCmndPrsecNmAjax (HttpSession session, @RequestBody Map<String, Object> param) throws Exception {
+		String esntl_id = SimpleUtils.default_set(session.getAttribute("esntl_id").toString());
+		String result = "1";
+		
+		try {
+			List<Map<String, Object>> list = (List<Map<String, Object>>) param.get("sList");
+			for(Map<String, Object> obj : list) {
+				obj.put("esntl_id", esntl_id);
+			}
+			
+			sugestService.updateCmndPrsecNm(list);
+		}catch (Exception e) {
+			result = "-1";
+		}
+		
+		HashMap<String, Object> ret = new HashMap<String, Object>();
+		ret.put("result", result);
+		
+		return new ModelAndView("ajaxView", "ajaxData", ret);
 	}
 }

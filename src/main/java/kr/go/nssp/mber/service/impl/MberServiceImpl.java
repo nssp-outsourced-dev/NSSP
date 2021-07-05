@@ -97,4 +97,20 @@ public class MberServiceImpl implements MberService {
 	public int updateAllLoginType(HashMap map) throws Exception {
 		return mberDAO.updateAllLoginType(map);
 	}
+
+	/* (non-Javadoc)
+	 * @see kr.go.nssp.mber.service.MberService#insertAuthorizationLog(java.util.HashMap)
+	 */
+	@Override
+	public void insertAuthorizationLog(HashMap map) throws Exception {
+		mberDAO.insertAuthorizationLog(map);
+	}
+
+	/* (non-Javadoc)
+	 * @see kr.go.nssp.mber.service.MberService#selectAuthorizationLog(java.util.HashMap)
+	 */
+	@Override
+	public List<HashMap> selectAuthorizationLog(HashMap map) throws Exception {
+		return mberDAO.selectAuthorizationLog(map);
+	}
 }

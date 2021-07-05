@@ -465,5 +465,28 @@ public class RcServiceImpl implements RcService {
 	public HashMap<String, String> getOutsetConfmYN(String param)  throws Exception {
 		return rcDAO.selectOutsetConfm(param);
 	}
-	
+
+	/* (non-Javadoc)
+	 * @see kr.go.nssp.rc.service.RcService#updateDe(java.util.HashMap)
+	 */
+	@Override
+	public int updateDe(Map<String, Object> map) throws Exception {
+		return rcDAO.updateDe(map);
+	}
+
+	/* (non-Javadoc)
+	 * @see kr.go.nssp.rc.service.RcService#updateOutsetReportDt(java.util.Map)
+	 */
+	@Override
+	public int updateOutsetReportDt(Map<String, Object> param) throws Exception {
+		return rcDAO.updateOutsetReportDt(param);
+	}
+
+	/* (non-Javadoc)
+	 * @see kr.go.nssp.rc.service.RcService#updateItivResultRerortDt(java.util.Map)
+	 */
+	@Override
+	public int updateItivResultRerortDt(Map<String, Object> param) throws Exception {
+		return rcDAO.updateItivResultRerortDt(param);
+	}
 }

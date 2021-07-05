@@ -90,4 +90,29 @@ public class MberDAO extends EgovComAbstractDAO {
 	public int updateAllLoginType(HashMap map) throws Exception {
 		return update("mber.updateAllLoginType", map);
 	}
+	
+	/** 
+	 * @methodName : insertAuthorizationLog
+	 * @date : 2021.06.24
+	 * @author : dgkim
+	 * @description : 권한부여이력 저장
+	 * @param map
+	 * @throws Exception
+	 */
+	public void insertAuthorizationLog(HashMap map) throws Exception {
+		insert("mber.insertAuthorizationLog", map);
+	}
+	
+	/** 
+	 * @methodName : selectAuthorizationLog
+	 * @date : 2021.06.24
+	 * @author : dgkim
+	 * @description : 권한부여이력 조회
+	 * @param map
+	 * @return
+	 * @throws Exception
+	 */
+	public List<HashMap> selectAuthorizationLog(HashMap map) throws Exception {
+		return list("mber.selectAuthorizationLog", map);
+	}
 }

@@ -1,5 +1,6 @@
 package kr.go.nssp.inv.service.impl;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -141,5 +142,25 @@ public class SugestServiceImpl implements SugestService {
 			}
 		}
 		return rtn;
+	}
+
+	/* (non-Javadoc)
+	 * @see kr.go.nssp.inv.service.SugestService#updateCmndPrsecNm(java.util.Map)
+	 */
+	@Override
+	public int updateCmndPrsecNm(List<Map<String, Object>> param) throws Exception {
+		int cnt = 0;
+		
+		if(param.size() > 0 ){
+			for(Map<String, Object> map : param) {
+				cnt += sugestDAO.updateCmndPrsecNm(map);
+			}
+			
+			if(param.size() != cnt) {
+				throw new Exception("저장 중 오류 발생했습니다.");
+			}
+		}
+		
+		return cnt;
 	}
 }

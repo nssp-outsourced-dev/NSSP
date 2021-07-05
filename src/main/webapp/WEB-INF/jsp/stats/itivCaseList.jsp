@@ -61,22 +61,13 @@
 			},
 			{ dataField : "OUTSET_RESN", headerText : "내사할 사항(지휘사항 포함)", width : 200},
 			{ dataField : "ITIV_DT", headerText : "착수일시", width : 100},
-			{ dataField : "RESULT_DT", headerText : "처리일시", width : 100, 
-				/* 
-					2021.05.10
-					by dgkim
-					내사사건부, 처리일시 입건된 사건일 경우 입건일자, 
-					미입건사건일 경우 공란으로 수정
-				*/
-				/* labelFunction : function( rowIndex, columnIndex, value, headerText, item ){
-					
-					if(item.ED_DSPS_CD == '00601' && item.PRSCT_DE != undefined){
-						return item.PRSCT_DE;
-					}else{
-						return "";
-					}
-				} */
-			},
+			/*
+				2021.05.10
+				by dgkim
+				내사사건부, 처리일시 입건된 사건일 경우 입건일자, 
+				미입건사건일 경우 공란으로 수정
+			*/
+			{ dataField : "ITIV_RESULT_REPORT_DT", headerText : "처리일시", width : 100,},
 			{ dataField : "ITIV_RESULT_NM", headerText : "처리결과", width : 200,
 				
 				/* 2021-04-28 권종열 사무관 요청 hsno 처리결과 테이블에 내사종결시 괄호안에 종결 처분 코드가 나오도록 수정 */

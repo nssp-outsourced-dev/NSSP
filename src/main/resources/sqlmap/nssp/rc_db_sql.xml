@@ -602,7 +602,7 @@
 			, WRITNG_DT 		--작성 일시
 			, UPDT_ID 			--수정 ID
 			, UPDT_DT 			--수정 일시
-			, TO_DATE(PRSCT_DE, 'YYYY-MM-DD') AS PRSCT_DE  --입건 일자
+			, PRSCT_DE  --입건 일자
 			, TO_CHAR(RC_DT, 'YYYY-MM-DD HH:MI') AS RC_DT	 --접수 일시
 			, SANCTN_ID 		--결재 ID
 			, FN_RC_VIOLT_UPPER_NMS (RC_NO) AS VIOLT_NM
@@ -616,16 +616,10 @@
 			,FN_USER_NM(CHARGER_ID) AS CHARGER_NM /* 담당자 */
 			,FN_DEPT_NM(CHARGER_DEPT_CD) AS DEPT_NM /*담당자 부서 */
 			
-			, (CASE WHEN TO_CHAR(TMPR_CASE_RESULT_REPORT_DT) IS NULL THEN '임시사건 결과 보고 일시가 존재하지 않습니다.'
-				ELSE TO_CHAR(TMPR_CASE_RESULT_REPORT_DT, 'YYYY-MM-DD') END
-			) AS TMPR_CASE_RESULT_REPORT_DT /* 임시사건 결과 보고 일시 */
-			, (CASE WHEN TO_CHAR((SELECT OUTSET_REPORT_DT FROM RC_ITIV_OUTSET WHERE RC_NO = RT.RC_NO)) IS NULL THEN '내사착수일자가 존재하지 않습니다.'
-				ELSE TO_CHAR((SELECT OUTSET_REPORT_DT FROM RC_ITIV_OUTSET WHERE RC_NO = RT.RC_NO) , 'YYYY-MM-DD') END
-			) AS OUTSET_REPORT_DT /* 내사착수일자 */
-			, (CASE WHEN TO_CHAR((SELECT ITIV_RESULT_REPORT_DT FROM RC_ITIV_RESULT WHERE ITIV_NO = RT.ITIV_NO)) IS NULL THEN '내사결과보고일자가 존재하지 않습니다.'
-				ELSE TO_CHAR((SELECT ITIV_RESULT_REPORT_DT FROM RC_ITIV_RESULT WHERE ITIV_NO = RT.ITIV_NO) , 'YYYY-MM-DD') END
-			) AS ITIV_RESULT_REPORT_DT /* 내사결과보고일자 */
-			, NVL2(INV_RESMPT_DE, TO_CHAR(TO_DATE(INV_RESMPT_DE), 'YYYY-MM-DD') , '수사재개일시가 존재하지 않습니다.') AS INV_RESMPT_DE /* 수사재개일시 */
+			, TO_CHAR(TMPR_CASE_RESULT_REPORT_DT, 'YYYY-MM-DD') AS TMPR_CASE_RESULT_REPORT_DT /* 임시사건 결과 보고 일시 */
+			, (SELECT TO_CHAR(OUTSET_REPORT_DT, 'YYYY-MM-DD') FROM RC_ITIV_OUTSET WHERE RC_NO = RT.RC_NO) AS OUTSET_REPORT_DT /* 내사착수일자 */
+			, (SELECT TO_CHAR(ITIV_RESULT_REPORT_DT, 'YYYY-MM-DD') FROM RC_ITIV_RESULT WHERE ITIV_NO = RT.ITIV_NO) AS ITIV_RESULT_REPORT_DT /* 내사결과보고일자 */
+			, TO_CHAR(TO_DATE(INV_RESMPT_DE), 'YYYY-MM-DD') AS INV_RESMPT_DE /* 수사재개일시 */
 	
 		 FROM RC_TMPR RT
 		 WHERE RC_NO = #rc_no#
@@ -1448,7 +1442,7 @@
 		UPDATE RC_ITIV_OUTSET
 		   SET UPDT_ID 	= #esntl_id#
 			 , UPDT_DT 	= SYSDATE
-			 , OUTSET_REPORT_YN = #outset_report_yn#
+			 , OUTSET_REPORT_YN = #outset_report_yn# 
 			 , OUTSET_REPORT_DT = SYSDATE
 	 		<isNotEmpty property="outset_resn" >
 			 , OUTSET_RESN = #outset_resn#
@@ -1559,4 +1553,64 @@
 			 ORDER BY CONFM_SN DESC ) 
 		 WHERE ROWNUM = 1
 	</select>
+	
+	<!--
+		2021.06.25
+		coded by dgkim
+		시스템에서 자동 생성되는 일자가 맞지 않다면 수기로 작성하도록 수정.
+		임시사건 결과 보고일자, 입건일자, 수사재개일자 수기로 작성하게끔 수정.
+		김지만 수사관 요청
+	 -->
+	<update id="updateDe" parameterClass="java.util.HashMap">
+		UPDATE RC_TMPR 
+		SET
+			<isNotEmpty property="tmprCaseDt">
+				TMPR_CASE_RESULT_REPORT_DT = #tmprCaseDt#
+			</isNotEmpty>
+			
+			<isNotEmpty property="prsctDt">
+				PRSCT_DE = REPLACE(#prsctDt#, '-', '')
+			</isNotEmpty>
+			
+			<isNotEmpty property="invResmptDt">
+				INV_RESMPT_DE = REPLACE(#invResmptDt#, '-', '')
+			</isNotEmpty>
+			
+			, UPDT_ID = #esntl_id#
+			, UPDT_DT = SYSDATE
+			 
+		WHERE RC_NO = #rc_no#
+	</update>
+	
+	<!--
+		2021.06.29
+		coded by dgkim
+		시스템에서 자동 생성되는 일자가 맞지 않다면 수기로 작성하도록 수정.
+		임시사건 결과 보고일자, 입건일자, 수사재개일자 수기로 작성하게끔 수정.
+		김지만 수사관 요청
+	 -->
+	<update id="updateOutsetReportDt" parameterClass="java.util.HashMap">
+		UPDATE RC_ITIV_OUTSET
+		SET
+			OUTSET_REPORT_DT = TO_DATE(#outsetDt# || ' ' || TO_CHAR(OUTSET_REPORT_DT, 'hh24:mi:ss'), 'yyyy-mm-dd hh24:mi:ss')
+			, UPDT_ID = #esntl_id#
+			, UPDT_DT = SYSDATE
+		WHERE RC_NO = #rc_no#
+	</update>
+	
+	<!--
+		2021.06.29
+		coded by dgkim
+		시스템에서 자동 생성되는 일자가 맞지 않다면 수기로 작성하도록 수정.
+		임시사건 결과 보고일자, 입건일자, 수사재개일자 수기로 작성하게끔 수정.
+		김지만 수사관 요청
+	 -->
+	<update id="updateItivResultRerortDt" parameterClass="java.util.HashMap">
+		UPDATE RC_ITIV_RESULT
+		SET
+			ITIV_RESULT_REPORT_DT = TO_DATE(#resultDt# || ' ' || TO_CHAR(ITIV_RESULT_REPORT_DT, 'hh24:mi:ss'), 'yyyy-mm-dd hh24:mi:ss')
+			, UPDT_ID = #esntl_id#
+			, UPDT_DT = SYSDATE
+		WHERE ITIV_NO = (SELECT ITIV_NO FROM RC_TMPR WHERE RC_NO = #rc_no#)
+	</update>
 </sqlMap>

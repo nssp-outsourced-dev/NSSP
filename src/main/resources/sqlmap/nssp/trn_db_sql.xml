@@ -92,11 +92,12 @@
 					</isNotEmpty>
 				</isNotEmpty>
 				<isEmpty property="dataField">		
-					ROW_NUMBER() OVER(ORDER BY A.TRN_NO, A.SORT_ORDR) RN
+					ROW_NUMBER() OVER(ORDER BY A.TRN_NO) RN
+					<!-- ROW_NUMBER() OVER(ORDER BY A.TRN_NO, A.SORT_ORDR) RN -->
 				</isEmpty>
 			FROM
 			(
-				SELECT C.SORT_ORDR 
+				<!-- SELECT C.SORT_ORDR 
 					 , A.TRN_NO
 					 , A.RC_NO
 					 , B.CASE_NO
@@ -137,10 +138,70 @@
 				   AND A.RC_NO = C.RC_NO
 				   AND C.RC_NO = D.RC_NO
 				   AND C.TRGTER_SN = D.TRGTER_SN
-				   AND A.ED_YN = 'Y' <!-- 2019-07-24 사건:송치=1:n -->
-				   <!-- AND B.PROGRS_STTUS_CD = '00242' /*송치*/ -->
+				   AND A.ED_YN = 'Y' 2019-07-24 사건:송치=1:n
+				   AND B.PROGRS_STTUS_CD = '00242' /*송치*/
 				<isNotEmpty property="searchTrgterNm" >
 					AND D.TRGTER_NM = #searchTrgterNm#
+				</isNotEmpty>
+				<isNotEmpty property="searchChager" >
+					AND B.CHARGER_ID = #searchChager#
+				</isNotEmpty>
+				<isNotEmpty property="searchDeptCd" >
+					AND B.CHARGER_DEPT_CD IN (
+						SELECT DC.DEPT_CD
+						FROM CMN_DEPT_CD DC
+						WHERE DC.USE_YN = 'Y' AND DC.DEPT_CD != '00000'
+						START WITH DC.DEPT_CD = #searchDeptCd#
+						CONNECT BY PRIOR DC.DEPT_CD = DC.DEPT_UPPER_CD
+					)
+				</isNotEmpty>
+				<isNotEmpty property="searchTrnNoStart" >
+					AND A.TRN_NO <![CDATA[ >= ]]> #searchTrnNoStart#
+				</isNotEmpty>
+				<isNotEmpty property="searchTrnNoEnd" >
+					AND A.TRN_NO <![CDATA[ <= ]]> #searchTrnNoEnd#
+				</isNotEmpty>
+
+				<isNotEmpty property="searchTrnDeStart" >
+					AND A.TRN_DE <![CDATA[ >= ]]> REPLACE(#searchTrnDeStart#,'-','')
+				</isNotEmpty>
+				<isNotEmpty property="searchTrnDeEnd" >
+					AND A.TRN_DE <![CDATA[ <= ]]> REPLACE(#searchTrnDeEnd#,'-','')
+				</isNotEmpty> -->
+				SELECT 
+					A.TRN_NO
+					, A.RC_NO
+					, B.CASE_NO
+					, A.TRN_DE
+					, NVL2(A.EVDENC_DC, 'Y', 'N') EVDENC_YN
+					, A.EVDENC_DC
+					, A.TRN_RM
+					, FN_EXMN_NM(A.CMPTNC_EXMN_CD) CMPTNC_EXMN_NM
+					, FN_USER_NM(B.CHARGER_ID) CHARGER_NM
+					, FN_RC_TRGTER_NM (A.RC_NO, '00697')AS TRGTER_NM
+					, (SELECT FN_CD_NM(MIN(C.IMPR_STTUS_CD) KEEP(DENSE_RANK FIRST ORDER BY C.TRGTER_SN ASC))
+						FROM TRN_SUSPCT C
+						WHERE C.TRN_NO = A.TRN_NO 
+							AND C.RC_NO = B.RC_NO
+					) IMPR_STTUS_NM
+					, (SELECT LISTAGG(FN_VIOLT_NM(TV.VIOLT_CD),',') WITHIN GROUP (ORDER BY TV.VIOLT_CD)
+						FROM TRN_VIOLT TV
+						WHERE TV.TRN_NO = A.TRN_NO
+						AND TV.RC_NO = B.RC_NO
+					) AS VIOLT_NM
+					, (SELECT LISTAGG(FN_VIOLT_NM (TV.VIOLT_CD) || '('||FN_CD_NM(TV.TRN_OPINION_CD)||')',',') WITHIN GROUP (ORDER BY TV.VIOLT_CD)
+						FROM TRN_VIOLT TV
+						WHERE TV.TRN_NO = A.TRN_NO
+							AND TV.RC_NO = B.RC_NO
+					) TRN_VIOLT_OPINION
+				FROM TRN_CASE A
+	 				, RC_TMPR B
+				WHERE A.USE_YN= 'Y'
+					AND B.USE_YN = 'Y'
+					AND A.RC_NO = B.RC_NO
+					AND A.ED_YN = 'Y'
+				<isNotEmpty property="searchTrgterNm" >
+					AND A.RC_NO IN(SELECT RC_NO FROM RC_TMPR_TRGTER WHERE TRGTER_NM LIKE '%' || #searchTrgterNm# || '%')
 				</isNotEmpty>
 				<isNotEmpty property="searchChager" >
 					AND B.CHARGER_ID = #searchChager#
@@ -176,6 +237,11 @@
 	</select>
 
 	<!-- 대장/통계 > 발생통계원표부 -->
+	<!-- 
+		2021.06.25
+		coded by dgkim
+		사건송치부 >  같은 송치번호의 피의자 성명을 000외 1로으로 표기
+	 -->
 	<select id="selectOccZeroStatList" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
 		SELECT X.*
 		FROM
@@ -1350,6 +1416,17 @@
 	]]>
 	</insert>
 
+	<!-- 
+		2021.06.28
+		coded by dgkim
+		송치일자가 맞지 않을시 변경하도록 조치
+		김지만 수사관 요청
+	 -->
+	<update id="updateTrnDe" parameterClass="java.util.HashMap">
+		UPDATE TRN_CASE
+			SET TRN_DE = REPLACE(#TRN_DE#, '-' , '')
+			, UPDT_ID = #esntl_id#
+		 	, UPDT_DT = SYSDATE
+		 WHERE TRN_NO = #TRN_NO#
+	</update>
 </sqlMap>
-
-

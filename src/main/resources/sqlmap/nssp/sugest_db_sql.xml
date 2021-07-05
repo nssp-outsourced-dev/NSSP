@@ -344,4 +344,22 @@
 		WHERE RC_NO = #rc_no#
 		  AND TRGTER_SN = #trgter_sn#
 	</update>
+	
+	<!-- 
+		2021.06.25
+		coded by dgkim
+		사건종결 후에도 지휘건의 검사명 수정가능하게끔 조치
+	 -->
+	<update id="updateCmndPrsecNm" parameterClass="java.util.HashMap">
+		UPDATE INV_SUGEST
+		SET
+			<isNotEmpty>
+				CMND_PRSEC_NM = #CMND_PRSEC_NM#
+			</isNotEmpty>
+			
+			, UPDT_ID = #esntl_id#
+			, UPDT_DT = SYSDATE
+			
+		WHERE SUGEST_NO = #SUGEST_NO#
+	</update>
 </sqlMap>

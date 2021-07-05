@@ -17,9 +17,8 @@ var myGridID = "#grid_wrap";
 	$(function() {
 		
 		$(document).ready(function(){
-		
+			
 		});
-
 	});	// jQuery
 	
 </script>
@@ -67,38 +66,57 @@ var myGridID = "#grid_wrap";
 						<tr class="trHeight">
 							<th>임시사건<br>결과보고일시</th>
 							<td colspan="3" class="t_left">
-								${caseInfo.TMPR_CASE_RESULT_REPORT_DT}
+								<div class="calendar_box mr_5 fl w_150px">
+									<input type="text" class="w_120p input_com calendar" id="tmprCaseDt" name="tmprCaseDt" readonly="readonly" value="${caseInfo.TMPR_CASE_RESULT_REPORT_DT eq null ? '' : caseInfo.TMPR_CASE_RESULT_REPORT_DT}" disabled="disabled">
+								</div>
+								<input type="button" id="tmprCaseDtModBtn" value="수정" class="btn_st1 icon_n mr_2" style="width: 50px;padding-left: 0px;padding-right: 0px;">
+								<input type="button" id="tmprCaseDtSaveBtn" value="저장" class="btn_st1 icon_n mr_2" style="width: 50px;padding-left: 0px;padding-right: 0px; display: none;">
 							</td>
 						</tr>
 						
 						<tr>
 							<th>내사착수일자</th>
 							<td class="t_left">
-								${caseInfo.OUTSET_REPORT_DT}
+								<div class="calendar_box mr_5 fl w_150px">
+									<input type="text" class="w_120p input_com calendar" id="outsetDt" name="outsetDt" readonly="readonly" value="${caseInfo.OUTSET_REPORT_DT eq null ? '' : caseInfo.OUTSET_REPORT_DT}" disabled="disabled">
+								</div>
+								<input type="button" id="outsetDtModBtn" value="수정" class="btn_st1 icon_n mr_2" style="width: 50px;padding-left: 0px;padding-right: 0px;">
+								<input type="button" id="outsetDtSaveBtn" value="저장" class="btn_st1 icon_n mr_2" style="width: 50px;padding-left: 0px;padding-right: 0px; display: none;">
 							</td>
 							
 							<th>내사결과보고일자</th>
 							<td class="t_left">
-								${caseInfo.ITIV_RESULT_REPORT_DT}
+								<%-- ${caseInfo.ITIV_RESULT_REPORT_DT} --%>
+								<div class="calendar_box mr_5 fl w_150px">
+									<input type="text" class="w_120p input_com calendar" id="resultDt" name="resultDt" readonly="readonly" value="${caseInfo.ITIV_RESULT_REPORT_DT eq null ? '' : caseInfo.ITIV_RESULT_REPORT_DT}" disabled="disabled">
+								</div>
+								<input type="button" id="resultDtModBtn" value="수정" class="btn_st1 icon_n mr_2" style="width: 50px;padding-left: 0px;padding-right: 0px;">
+								<input type="button" id="resultDtSaveBtn" value="저장" class="btn_st1 icon_n mr_2" style="width: 50px;padding-left: 0px;padding-right: 0px; display: none;">
 							</td>
 						</tr>
 						
 						<tr class="trHeight">
 							<th>입건일자</th>
 							<td colspan="3" class="t_left">
-								<c:choose>
-									<c:when test="${caseInfo.PRSCT_DE ne null}">
-										<fmt:formatDate value="${caseInfo.PRSCT_DE}" pattern="yyyy-MM-dd" />
-									</c:when>
-									<c:otherwise>입건일자가 존재하지 않습니다.</c:otherwise>
-								</c:choose>
+								<fmt:parseDate value="${caseInfo.PRSCT_DE}" var="date" pattern="yyyymmdd" />
+								<fmt:formatDate value="${date}" pattern="yyyy-mm-dd" var="PRSCT_DE"/>
+								
+								<div class="calendar_box mr_5 fl w_150px">
+									<input type="text" class="w_120p input_com calendar" id="prsctDt"  name="prsctDt" readonly="readonly" value="${PRSCT_DE}" disabled="disabled">
+								</div>
+								<input type="button" id="prsctDtModBtn" value="수정" class="btn_st1 icon_n mr_2" style="width: 50px;padding-left: 0px;padding-right: 0px;">
+								<input type="button" id="prsctDtSaveBtn" value="저장" class="btn_st1 icon_n mr_2" style="width: 50px;padding-left: 0px;padding-right: 0px; display: none;">
 							</td>
 						</tr>
 						
 						<tr class="trHeight">
 							<th>수사재개일시</th>
 							<td colspan="3" class="t_left">
-								${caseInfo.INV_RESMPT_DE}
+								<div class="calendar_box mr_5 fl w_150px">
+									<input type="text" class="w_120p input_com calendar" id="invResmptDt" name="invResmptDt" readonly="readonly" value="${caseInfo.INV_RESMPT_DE eq null ? '' : caseInfo.INV_RESMPT_DE}" disabled="disabled">
+								</div>
+								<input type="button" id="invResmptDtModBtn" value="수정" class="btn_st1 icon_n mr_2" style="width: 50px;padding-left: 0px;padding-right: 0px;">
+								<input type="button" id="invResmptDtSaveBtn" value="저장" class="btn_st1 icon_n mr_2" style="width: 50px;padding-left: 0px;padding-right: 0px; display: none;">
 							</td>
 						</tr>
 						
@@ -250,4 +268,196 @@ var myGridID = "#grid_wrap";
 		</div>
 	</form>
 </div>
+
+<script type="text/javascript">
+	$(function() {
+		$("#tmprCaseDt, #outsetDt, #resultDt, #prsctDt, #invResmptDt").datepicker({
+			dateFormat : 'yy-mm-dd',
+			monthNames : [ '1월', '2월', '3월', '4월', '5월', '6월', '7월', '8월',
+					'9월', '10월', '11월', '12월' ],
+			monthNamesShort : [ '1월', '2월', '3월', '4월', '5월', '6월', '7월',
+					'8월', '9월', '10월', '11월', '12월' ],
+			dayNames : [ '일', '월', '화', '수', '목', '금', '토' ],
+			dayNamesShort : [ '일', '월', '화', '수', '목', '금', '토' ],
+			dayNamesMin : [ '일', '월', '화', '수', '목', '금', '토' ],
+			changeYear : true,
+			changeMonth : true,
+			showOn : 'both', /*button*/
+			buttonImageOnly : false,
+			//selectOtherMonths : true,
+			buttonImage : "/img/search_calendar.png",
+			beforeShow: function() {
+				setTimeout(function(){
+					$('.ui-datepicker').css('z-index', 99999999999999);
+				}, 0);
+			}
+		});
+		
+		/****************************임시사건 결과 보고 일시***************************************/
+		/* 임시사건 결과 보고 일시 수정 */
+		$("#tmprCaseDtModBtn").on("click", function(){
+			$("#tmprCaseDt").attr("disabled", !$("#tmprCaseDt").attr("disabled"));
+			$("#tmprCaseDtModBtn").hide();
+			$("#tmprCaseDtSaveBtn").show();
+		});
+		
+		/* 임시사건 결과 보고 일시 완료 */
+		$("#tmprCaseDtSaveBtn").on("click", function(){
+			var data = $("#tmprCaseDt").val();
+			if(data == "" || 
+					data.length == 0 || 
+					data == undefined){
+				alert("수정한 자료가 없습니다.");
+				return false;
+			}
+			
+			updateDeAjax({tmprCaseDt: data}, function(data){
+				if(data.result == "1"){
+					$("#tmprCaseDt").attr("disabled", !$("#tmprCaseDt").attr("disabled"));
+					$("#tmprCaseDtModBtn").show();
+					$("#tmprCaseDtSaveBtn").hide();
+				}else{
+					alert("진행중 오류가 발생하였습니다.");
+				}
+			});
+		});
+		/****************************임시사건 결과 보고 일시 END***********************************/
+		
+		/****************************입건일자***************************************/
+		/* 입건일자 수정 */
+		$("#prsctDtModBtn").on("click", function(){
+			$("#prsctDt").attr("disabled", !$("#prsctDt").attr("disabled"));
+			$("#prsctDtModBtn").hide();
+			$("#prsctDtSaveBtn").show();
+		});
+		
+		/* 입건일자 완료 */
+		$("#prsctDtSaveBtn").on("click", function(){
+			var data = $("#prsctDt").val();
+			if(data == "" || 
+					data.length == 0 || 
+					data == undefined){
+				alert("수정한 자료가 없습니다.");
+				return false;
+			}
+			
+			updateDeAjax({prsctDt: data}, function(data){
+				if(data.result == "1"){
+					$("#prsctDt").attr("disabled", !$("#prsctDt").attr("disabled"));
+					$("#prsctDtModBtn").show();
+					$("#prsctDtSaveBtn").hide();
+				}else{
+					alert("진행중 오류가 발생하였습니다.");
+				}
+			});
+		});
+		/****************************입건일자 END***********************************/
+		
+		/****************************수사재개일시***************************************/
+		/* 수사재개일시 수정 */
+		$("#invResmptDtModBtn").on("click", function(){
+			$("#invResmptDt").attr("disabled", !$("#invResmptDt").attr("disabled"));
+			$("#invResmptDtModBtn").hide();
+			$("#invResmptDtSaveBtn").show();
+		});
+		
+		/* 수사재개일시 완료 */
+		$("#invResmptDtSaveBtn").on("click", function(){
+			var data = $("#invResmptDt").val();
+			if(data == "" || 
+					data.length == 0 || 
+					data == undefined){
+				alert("수정한 자료가 없습니다.");
+				return false;
+			}
+			
+			updateDeAjax({invResmptDt: data}, function(data){
+				if(data.result == "1"){
+					$("#invResmptDt").attr("disabled", !$("#invResmptDt").attr("disabled"));
+					$("#invResmptDtModBtn").show();
+					$("#invResmptDtSaveBtn").hide();
+				}else{
+					alert("진행중 오류가 발생하였습니다.");
+				}
+			});
+		});
+		/****************************수사재개일시 END***********************************/
+		
+		/****************************내사착수일자***************************************/
+		/* 내사착수일자 수정 */
+		$("#outsetDtModBtn").on("click", function(){
+			console.log(!$("#outsetDt").attr("disabled"));
+			$("#outsetDt").attr("disabled", !$("#outsetDt").attr("disabled"));
+			$(this).hide();
+			$("#outsetDtSaveBtn").show();
+		});
+		
+		/* 내사착수일자 완료 */
+		$("#outsetDtSaveBtn").on("click", function(){
+			var data = $("#outsetDt").val();
+			if(data == "" || 
+					data.length == 0 || 
+					data == undefined){
+				alert("수정한 자료가 없습니다.");
+				return false;
+			}
+			
+			updateDeAjax({outsetDt: data}, function(data){
+				if(data.result == "1"){
+					$("#outsetDt").attr("disabled", !$("#outsetDt").attr("disabled"));
+					$("#outsetDtModBtn").show();
+					$("#outsetDtSaveBtn").hide();
+				}else{
+					alert("진행중 오류가 발생하였습니다.");
+				}
+			});
+		});
+		/****************************내사착수일자 END***********************************/
+		
+		/****************************내사결과보고일자***************************************/
+		/* 내사결과보고일자 수정 */
+		$("#resultDtModBtn").on("click", function(){
+			$("#resultDt").attr("disabled", !$("#resultDt").attr("disabled"));
+			$("#resultDtModBtn").hide();
+			$("#resultDtSaveBtn").show();
+		});
+		
+		/* 내사결과보고일자 완료 */
+		$("#resultDtSaveBtn").on("click", function(){
+			var data = $("#resultDt").val();
+			if(data == "" || 
+					data.length == 0 || 
+					data == undefined){
+				alert("수정한 자료가 없습니다.");
+				return false;
+			}
+			
+			updateDeAjax({resultDt: data}, function(data){
+				if(data.result == "1"){
+					$("#resultDt").attr("disabled", !$("#resultDt").attr("disabled"));
+					$("#resultDtModBtn").show();
+					$("#resultDtSaveBtn").hide();
+				}else{
+					alert("진행중 오류가 발생하였습니다.");
+				}
+			});
+		});
+		/****************************내사결과보고일자 END***********************************/
+		
+		/* 
+			2021.06.25
+			일자 수정
+			시스템에서 자동 생성되는 일자가 맞지 않다면 수기로 작성하도록 수정.
+			임시사건 결과 보고일자, 입건일자, 수사재개일자 수기로 작성하게끔 수정.
+			김지만 수사관 요청
+		*/
+		function updateDeAjax(param, fn){
+			if(confirm("저장하시겠습니까?")){
+				param.rc_no = "${caseInfo.RC_NO}";
+				
+				Ajax.getJson("<c:url value='/rc/updateDeAjax/'/>", param, fn);
+			}
+		}
+	});	
+</script>
 	

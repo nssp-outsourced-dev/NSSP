@@ -982,10 +982,20 @@ public class MberController {
 				map.put("pw_qestn_cd", selpwQestnCd);
 				map.put("pw_qestn_answer", txtpwQestnAnswer);
 
+				//권한부여이력 저장
+				HashMap logMap = new HashMap();
+				logMap.put("esntl_id", esntl_id);//권한부여자(고유 ID)
+				logMap.put("author_ip", request.getRemoteAddr());//부여자 IP
+				logMap.put("author_trgter", hidEsntlID);//부여대상
+				
 				if (hidEsntlID == null || hidEsntlID.equals("")) {
 					map.put("confm_yn", "Y");
 					map.put("user_pw", txtUserPw==null||txtUserPw.equals("")?utl.getSha256Encrypt(RESET_PASSWORD):utl.getSha256Encrypt(txtUserPw));
 					mberService.joinUser(map);
+					
+					logMap.put("author_job", "C");//권한부여
+					logMap.put("now_author_cd", selAuthorCd);//현재 권한 코드
+					mberService.insertAuthorizationLog(logMap);//권한부여이력 저장
 				} else {
 					HashMap qMap = new HashMap();
 					qMap.put("esntl_id", hidEsntlID);
@@ -997,6 +1007,26 @@ public class MberController {
 						if(selFaceLicense != null && !selFaceLicense.equals("")) {
 							map.put("face_license",selFaceLicense);
 							mberService.updateFaceLicense (map);
+						}
+						
+						//System.out.println("author_cd : " + String.valueOf(data.get("AUTHOR_CD")));
+						//System.out.println("selAuthorCd : " + selAuthorCd);
+						if(!"null".equals(String.valueOf(data.get("AUTHOR_CD"))) && //권한코드가 null아니고
+								!String.valueOf(data.get("AUTHOR_CD")).equals(selAuthorCd) && //권한코드가 비어있지 않고
+								"Y".equals(String.valueOf(data.get("CONFM_YN")))) {//승인완료상태이면
+							logMap.put("author_job", "U");//권한변경
+							logMap.put("prev_author_cd", String.valueOf(data.get("AUTHOR_CD")));//이전 권한 코드
+							logMap.put("now_author_cd", selAuthorCd);//현재 권한 코드
+							mberService.insertAuthorizationLog(logMap);//권한부여이력 저장
+						}
+						
+						if("N".equals(selUseYn)) {//사용여부를 사용안함으로 변경할때
+							logMap.put("author_job", "D");//권한삭제
+							mberService.insertAuthorizationLog(logMap);//권한부여이력 저장
+						}else if("Y".equals(selUseYn)){//사용여부를 사용안함에서 사용으로 변경할때
+							logMap.put("author_job", "C");//권한부여
+							logMap.put("now_author_cd", selAuthorCd);//현재 권한 코드
+							mberService.insertAuthorizationLog(logMap);//권한부여이력 저장
 						}
 					} else {
 						result = "-2";
@@ -1048,6 +1078,15 @@ public class MberController {
 					map.put("updt_id", esntl_id);
 					map.put("confm_yn", "Y");
 					mberService.updateEtc(map);
+					
+					//권한부여이력 저장
+					HashMap logMap = new HashMap();
+					logMap.put("esntl_id", esntl_id);//권한부여자(고유 ID)
+					logMap.put("author_ip", request.getRemoteAddr());//부여자 IP
+					logMap.put("author_trgter", hidEsntlID);//부여대상
+					logMap.put("now_author_cd", String.valueOf(data.get("AUTHOR_CD")));//현재 권한 코드
+					logMap.put("author_job", "C");//권한부여
+					mberService.insertAuthorizationLog(logMap);//권한부여이력 저장
 				}
 			} else {
 				result = "-2";
@@ -1939,5 +1978,88 @@ public class MberController {
 		}
 		
 		return result;
+	}
+	
+	/** 
+	 * @methodName : authorizationLog
+	 * @date : 2021.06.24
+	 * @author : dgkim
+	 * @description : 권한부여이력 저장
+	 * @param session
+	 * @param model
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping(value = "/authorizationLog/")
+	public String authorizationLog(HttpSession session, ModelMap model) throws Exception {
+		int pageBlock = 10;
+		model.addAttribute("hidPageBlock", pageBlock);
+
+		return "mber/authorizationLog";
+	}
+	
+	/** 
+	 * @methodName : authorizationLogAjax
+	 * @date : 2021.06.24
+	 * @author : dgkim
+	 * @description : 권한부여이력 조회
+	 * @param request
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping(value = "/authorizationLogAjax/")
+	public ModelAndView authorizationLogAjax(HttpServletRequest request) throws Exception {
+
+		HttpSession session = request.getSession();
+		String esntl_id = SimpleUtils.default_set(session.getAttribute("esntl_id").toString());
+		String dept_cd = SimpleUtils.default_set(session.getAttribute("dept_cd").toString());
+
+		String searchUserID = SimpleUtils.default_set(request.getParameter("searchUserID"));
+		String searchUserNm = SimpleUtils.default_set(request.getParameter("searchUserNm"));
+		String searchAccesIp = SimpleUtils.default_set(request.getParameter("searchAccesIp"));
+		String searchDe1 = SimpleUtils.default_set(request.getParameter("searchDe1"));
+		String searchDe2 = SimpleUtils.default_set(request.getParameter("searchDe2"));
+
+		// 현재 페이지 파라메타
+		String hidPage = SimpleUtils.default_set(request.getParameter("hidPage"));
+		int intPage = 1;
+		if (!"".equals(hidPage))
+			intPage = Integer.parseInt((String) hidPage);
+
+		String hidPageBlock = SimpleUtils.default_set(request.getParameter("hidPageBlock"));
+		if (hidPageBlock == null || hidPageBlock.equals("")) {
+			hidPageBlock = "10";
+		}
+		int pageBlock = Integer.parseInt((String) hidPageBlock);
+
+		// 페이지 기본설정
+		int pageArea = 10;
+
+		// page
+		PaginationInfo paginationInfo = new PaginationInfo();
+		paginationInfo.setCurrentPageNo(intPage);
+		paginationInfo.setRecordCountPerPage(pageBlock);
+		paginationInfo.setPageSize(pageArea);
+
+		HashMap map = new HashMap();
+		map.put("startRow", paginationInfo.getFirstRecordIndex());
+		map.put("endRow", paginationInfo.getLastRecordIndex());
+		map.put("searchUserID", searchUserID);
+		map.put("searchUserNm", searchUserNm);
+		map.put("searchAccesIp", searchAccesIp);
+		map.put("searchDe1", searchDe1);
+		map.put("searchDe2", searchDe2);
+
+		int list_cnt = 0;
+		List<HashMap> list = mberService.selectAuthorizationLog(map);
+
+		if (list.size() > 0) {
+			list_cnt = Integer.parseInt(list.get(0).get("TOT_CNT").toString());
+		}
+
+		HashMap cMap = new HashMap();
+		cMap.put("list", list);
+		cMap.put("cnt", list_cnt);
+		return new ModelAndView("ajaxView", "ajaxData", cMap);
 	}
 }

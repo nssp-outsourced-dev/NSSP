@@ -121,6 +121,8 @@ public class SessionCheck extends HandlerInterceptorAdapter {
 		defaultAccessUrls.add("/alot/historyAjax/");
 		defaultAccessUrls.add("/inv/sugestHistoryPopup/");
 		defaultAccessUrls.add("/inv/sugestHistoryAjax/");
+		defaultAccessUrls.add("/inv/updateCmndPrsecNmAjax/");//사건종결 후에도 지휘건의 검사명 수정가능하게끔 조치
+		defaultAccessUrls.add("/trn/updateTrnDeAjax/");//송치일자가 맞지 않을시 변경하도록 조치
 		defaultAccessUrls.add("/trn/trnInfoPopup/");
 		defaultAccessUrls.add("/trn/trnCaseListPopAjax/");
 		defaultAccessUrls.add("/trn/trnSuspctListPopAjax/");

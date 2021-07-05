@@ -26,4 +26,16 @@ public interface TrnService {
 	public Map<String, Object> completTrnCase(Map<String, Object> param) throws Exception;
 	public int saveTrnSuspct(Map<String, Object> param) throws Exception;
 	public int saveTrnViolt(Map<String, Object> param) throws Exception;
+	
+	
+	/** 
+	 * @methodName : updateTrnDe
+	 * @date : 2021.06.29
+	 * @author : dgkim
+	 * @description : 송치일자가 맞지 않을시 변경하도록 조치 
+	 * @param param
+	 * @return
+	 * @throws Exception
+	 */
+	public int updateTrnDe(List<Map<String, Object>> param) throws Exception;
 }

@@ -454,4 +454,16 @@ public class TrnDAO extends EgovComAbstractDAO {
 		insert("trn.insertDocPblicteForSugestDoc", param);
 	}
 	
+	/** 
+	 * @methodName : updateTrnDe
+	 * @date : 2021.06.29
+	 * @author : dgkim
+	 * @description : 송치일자가 맞지 않을시 변경하도록 조치
+	 * @param param
+	 * @return
+	 * @throws Exception
+	 */
+	public int updateTrnDe(Map<String, Object> param) throws Exception {
+		return update("trn.updateTrnDe", param);
+	}
 }

@@ -38,7 +38,7 @@
 					return fnChangeNo (value);
 				}
 			},
-			{ dataField :      "PRSCT_DE", headerText :     "수리", width : 120, cellMerge : true, editable : false},
+			{ dataField :      "PRSCT_DE", headerText :     "수리", width : 120, cellMerge : true, dataType : "date", formatString : "yyyy-mm-dd", editable : false},
 			{ dataField : "INV_PROVIS_NM", headerText :     "구분", width :  60, cellMerge : false, editable : false},
 			{ dataField :    "CHARGER_NM", headerText : "수사담당자", width : 100, cellMerge : false, editable : false},
 			{ headerText : "피의자",

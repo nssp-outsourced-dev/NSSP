@@ -291,6 +291,25 @@ public class TrnServiceImpl implements TrnService {
 		}
 		
 		return cnt;
-	}	
+	}
+
+	/* (non-Javadoc)
+	 * @see kr.go.nssp.trn.service.TrnService#updateTrnDe(java.util.List)
+	 */
+	@Override
+	public int updateTrnDe(List<Map<String, Object>> param) throws Exception {
+		int cnt = 0;
+		
+		if(param.size() > 0 ){
+			for(Map<String, Object> map : param) {
+				cnt += trnDAO.updateTrnDe(map);
+			}
 			
+			if(param.size() != cnt) {
+				throw new Exception("저장 중 오류 발생했습니다.");
+			}
+		}
+		
+		return cnt;
+	}
 }

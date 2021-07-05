@@ -1724,9 +1724,6 @@ public class RcController {
 		return new ModelAndView("ajaxView", "ajaxData", result);
 	}
 
-
-
-
 	/**
 	 * 첨부파일 업로드
 	 * @param request
@@ -1771,5 +1768,43 @@ public class RcController {
 		return new ModelAndView("ajaxView", "ajaxData", file_id);
 	}
 
+	/** 
+	 * @methodName : updateDe
+	 * @date : 2021.06.25
+	 * @author : dgkim
+	 * @description : 
+	 * 		시스템에서 자동 생성되는 일자가 맞지 않다면 수기로 작성하도록 수정.
+			임시사건 결과 보고일자, 입건일자, 수사재개일자 수기로 작성하게끔 수정.
+			김지만 수사관 요청
+	 * @param session
+	 * @param param
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping(value = "/updateDeAjax/")
+	public ModelAndView updateDe(HttpSession session, @RequestParam Map<String, Object> param) throws Exception {
+		String esntl_id = SimpleUtils.default_set(session.getAttribute("esntl_id").toString());
+		String result = "1";
 
+		try {
+			param.put("esntl_id", esntl_id);
+
+			if(param.containsKey("outsetDt")) {//내사착수일시 수정이면 
+				rcService.updateOutsetReportDt(param);//내사착수일시 update
+			}else if(param.containsKey("resultDt")) {//내사결과보고일자 수정이면
+				rcService.updateItivResultRerortDt(param);//내사결과보고일자 update
+			}else if(param.containsKey("tmprCaseDt") || //임시사건결과보고일시 수정이거나
+					param.containsKey("prsctDt") || //입건일자 수정이거나
+					param.containsKey("invResmptDt")) {//수사재개일시 수정이면
+				rcService.updateDe(param);//임시사건결과보고일시, 입건일자, 수사재개일시 update
+			}
+		} catch (Exception e){
+			result = "-1";
+		}
+
+		HashMap<String, Object> ret = new HashMap<String, Object>();
+		ret.put("result", result);
+
+		return new ModelAndView("ajaxView", "ajaxData", ret);
+	}
 }

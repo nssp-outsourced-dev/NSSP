@@ -359,4 +359,52 @@ public class RcDAO extends EgovComAbstractDAO {
 		
 		return (HashMap<String, String>) selectByPk("rc.selectOutsetConfm", param);
 	}
+	
+	/** 
+	 * @methodName : updateDe
+	 * @date : 2021.06.24
+	 * @author : dgkim
+	 * @description : 
+	 * 		시스템에서 자동 생성되는 일자가 맞지 않다면 수기로 작성하도록 수정.
+	 * 		임시사건 결과 보고일자, 입건일자, 수사재개일자 수기로 작성하게끔 수정.
+	 * 		김지만 수사관 요청
+	 * @param map
+	 * @return
+	 * @throws Exception
+	 */
+	public int updateDe(Map<String, Object> param) throws Exception {
+		return update("rc.updateDe", param);
+	}
+	
+	/** 
+	 * @methodName : updateOutsetReportDt
+	 * @date : 2021.06.29
+	 * @author : dgkim
+	 * @description : 
+	 * 		시스템에서 자동 생성되는 일자가 맞지 않다면 수기로 작성하도록 수정.
+	 * 		임시사건 결과 보고일자, 입건일자, 수사재개일자 수기로 작성하게끔 수정.
+	 * 		김지만 수사관 요청
+	 * @param param
+	 * @return
+	 * @throws Exception
+	 */
+	public int updateOutsetReportDt(Map<String, Object> param) throws Exception {
+		return update("rc.updateOutsetReportDt", param);
+	}
+	
+	/** 
+	 * @methodName : updateItivResultRerortDt
+	 * @date : 2021.06.29
+	 * @author : dgkim
+	 * @description : 
+	 * 		시스템에서 자동 생성되는 일자가 맞지 않다면 수기로 작성하도록 수정.
+	 * 		임시사건 결과 보고일자, 입건일자, 수사재개일자 수기로 작성하게끔 수정.
+	 * 		김지만 수사관 요청
+	 * @param param
+	 * @return
+	 * @throws Exception
+	 */
+	public int updateItivResultRerortDt(Map<String, Object> param) throws Exception {
+		return update("rc.updateItivResultRerortDt", param);
+	}
 }

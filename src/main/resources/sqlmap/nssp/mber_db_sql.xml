@@ -543,5 +543,85 @@
 			UPDT_DT = SYSDATE
 		WHERE 1=1
 	</update>
-
+	
+	<!-- 권한부여이력 저장 -->
+	<insert id="insertAuthorizationLog" parameterClass="HashMap">
+		INSERT INTO CMN_AUTHOR_HIST (
+			AUTHOR_DT
+			, ESNTL_ID
+			, AUTHOR_IP
+			, AUTHOR_JOB
+			, AUTHOR_TRGTER
+			, PREV_AUTHOR_CD
+			, NOW_AUTHOR_CD
+		) 
+		VALUES (
+			SYSDATE
+			, #esntl_id#
+			, #author_ip#
+			, #author_job#
+			, #author_trgter#
+			, #prev_author_cd#
+			, #now_author_cd#
+		)
+	</insert>
+	
+	<!-- 권한부여이력 조회 -->
+	<select id="selectAuthorizationLog" parameterClass="HashMap" resultClass="HashMap">
+		SELECT
+			X.*
+		FROM
+		(
+			SELECT A.*,
+				ROWNUM AS RN, COUNT(*) OVER() AS TOT_CNT
+			FROM
+			(
+				SELECT 
+					TO_CHAR(AUTHOR_DT, 'YYYY-MM-DD HH24:MI:SS') AS AUTHOR_DT
+					, ESNTL_ID
+					, (SELECT USER_NM FROM CMN_USER WHERE ESNTL_ID = cah.ESNTL_ID) AS AUTHOR_NM
+					, AUTHOR_IP
+					, AUTHOR_JOB
+					, DECODE(AUTHOR_JOB, 'C', '권한부여', 'U', '변경', 'D', '말소') AS AUTHOR_JOB_NM
+					, AUTHOR_TRGTER
+					, (SELECT USER_NM FROM CMN_USER WHERE ESNTL_ID = cah.AUTHOR_TRGTER) AS AUTHOR_TRGTER_NM
+					, PREV_AUTHOR_CD
+					, (
+						SELECT AUTHOR_NM FROM CMN_AUTHOR_CL WHERE AUTHOR_CD = cah.PREV_AUTHOR_CD
+					) AS PREV_AUTHOR_NM
+					, NOW_AUTHOR_CD
+					, (
+						SELECT AUTHOR_NM FROM CMN_AUTHOR_CL WHERE AUTHOR_CD = cah.NOW_AUTHOR_CD
+					) AS NOW_AUTHOR_NM
+					, (SELECT LISTAGG(cmd.MENU_NM, ', ') WITHIN GROUP(ORDER BY cmd.SORT_ORDR)
+							FROM CMN_AUTHOR_MANAGE cam INNER JOIN
+								CMN_MENU_DETAIL cmd ON cam.MENU_CD = cmd.MENU_CD 
+							WHERE cmd.USE_YN = 'Y' AND cam.AUTHOR_CD = cah.NOW_AUTHOR_CD
+					) AS MENUS
+				FROM CMN_AUTHOR_HIST cah
+				<dynamic prepend="WHERE">
+					<isNotEmpty property="searchUserID" prepend="AND">
+						ESNTL_ID IN(SELECT ESNTL_ID FROM CMN_USER WHERE USER_ID LIKE '%' || #searchUserID# || '%')
+					</isNotEmpty>
+					
+					<isNotEmpty property="searchUserNm" prepend="AND">
+						ESNTL_ID IN(SELECT ESNTL_ID FROM CMN_USER WHERE USER_NM LIKE '%' || #searchUserNm# || '%')
+					</isNotEmpty>
+					
+					<isNotEmpty property="searchAccesIp" prepend="AND">
+						 AUTHOR_IP LIKE '%' || #searchAccesIp# || '%'
+					</isNotEmpty>
+					
+					<isNotEmpty property="searchDe1">
+						<isNotEmpty property="searchDe2" prepend="AND" >
+							AUTHOR_DT BETWEEN TO_DATE(#searchDe1# || '00:00:00', 'YYYY-MM-DD HH24:MI:SS') AND TO_DATE(#searchDe2# || '23:59:59', 'YYYY-MM-DD HH24:MI:SS')
+						</isNotEmpty>
+					</isNotEmpty>
+				</dynamic>
+				ORDER BY AUTHOR_DT DESC
+			) A
+		) X
+		WHERE (RN <![CDATA[ > ]]> #startRow# AND RN <![CDATA[ <= ]]> #endRow#)
+		ORDER BY RN ASC
+	</select>
 </sqlMap>

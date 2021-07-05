@@ -72,4 +72,16 @@ public class SugestDAO extends EgovComAbstractDAO {
 		return update("sugest.saveTrgterOrder", map);
 	}
 
+	/** 
+	 * @methodName : updateCmndPrsecNm
+	 * @date : 2021.06.25
+	 * @author : dgkim
+	 * @description : 사건종결 후에도 지휘건의 검사명 수정가능하게끔 조치
+	 * @param param
+	 * @return
+	 * @throws Exception
+	 */
+	public int updateCmndPrsecNm(Map<String, Object> param) throws Exception {
+		return update("sugest.updateCmndPrsecNm", param);
+	}
 }

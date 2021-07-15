@@ -232,8 +232,9 @@ $(function() {
 							break;
 						}
 					}
+					
 					if( null == $('#sel'+strTel+'1').val() || "" == $('#sel'+strTel+'1').val() ){
-						if( ($('#txt'+strTel+'2').val().length + $('#txt'+strTel+'3').val().length ) > 0){
+						if($('#txt'+strTel+'2').length && ($('#txt'+strTel+'2').val().length + $('#txt'+strTel+'3').val().length ) > 0){
 							errorCnt++;
 							telNm = strTel;
 							break;
@@ -244,7 +245,6 @@ $(function() {
 							$('#hid'+strTel+'').val($('#sel'+strTel+'1').val()+"-"+$('#txt'+strTel+'2').val()+"-"+$('#txt'+strTel+'3').val());
 						}
 					}
-					
 				}
 				
 				if( errorCnt > 0 ){

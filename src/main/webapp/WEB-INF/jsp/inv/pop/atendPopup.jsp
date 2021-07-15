@@ -20,7 +20,7 @@
            		}
            	},
 			{ dataField : "grdTrgterNm", 		headerText : "대상자"},
-			{ dataField : "grdAtendDemandDt", 	headerText : "출석요구일시", 	dataType : "date", formatString : "yyyy-mm-dd hh:mm"},
+			{ dataField : "grdAtendDemandDt", 	headerText : "출석요구일시", 	dataType : "date", formatString : "yyyy-mm-dd hh:MM"},
 			{ dataField : "grdAtendNticeDe", 	headerText : "통지일자", 		dataType : "date", formatString : "yyyy-mm-dd"},
 			{ dataField : "grdAtendNticeCd", 	headerText : "통지방법",		width : 80,
             	labelFunction : function(  rowIndex, columnIndex, value, headerText, item ) {

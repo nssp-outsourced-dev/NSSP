@@ -122,8 +122,8 @@ public class RcDAO extends EgovComAbstractDAO {
 	 *사건 대상자 등록
 	 * @param map
 	 */
-	public void insertRcTmprTrgter(HashMap<String, Object> map) throws Exception  {
-		insert("rc.insertRcTmprTrgter", map);
+	public int insertRcTmprTrgter(HashMap<String, Object> map) throws Exception  {
+		return (int) insert("rc.insertRcTmprTrgter", map);
 	}
 	
 	/**
@@ -406,5 +406,31 @@ public class RcDAO extends EgovComAbstractDAO {
 	 */
 	public int updateItivResultRerortDt(Map<String, Object> param) throws Exception {
 		return update("rc.updateItivResultRerortDt", param);
+	}
+	
+	/** 
+	 * @methodName : insertTrgterChghst
+	 * @date : 2021.07.09
+	 * @author : dgkim
+	 * @description : 피의자 정보 변경 이력 추가 (개인정보 보안 지침의 의한 신규 추가)
+	 * @param param
+	 * @return
+	 * @throws Exception
+	 */
+	public void insertTrgterChghstLog(Map<String, Object> param) throws Exception {
+		insert("rc.insertTrgterChghstLog", param);
+	}
+	
+	/** 
+	 * @methodName : selectTrgterChghst
+	 * @date : 2021.07.09
+	 * @author : dgkim
+	 * @description : 피의자 정보 변경 이력 조회 (개인정보 보안 지침의 의한 신규 추가)
+	 * @param param
+	 * @return
+	 * @throws Exception
+	 */
+	public List<Map<String, Object>> selectTrgterChghstLog(Map<String, Object> param) throws Exception {
+		return list("rc.selectTrgterChghstLog", param);
 	}
 }

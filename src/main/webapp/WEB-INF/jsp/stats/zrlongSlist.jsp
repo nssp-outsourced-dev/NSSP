@@ -55,7 +55,9 @@
 					{ dataField : "grdTrgterNm", headerText : "성명", width : 100},
 					{ dataField : "grdTrgterRrn", headerText : "주민등록번호", width : 150},
 					{ dataField : "grdOccpNm", headerText : "직업"},
+					/*  2021-07-08 dgkim 주거지 테이블 주석처리
 					{ dataField : "grdDwlsitAddr", headerText : "주거", style:'tbLft'},
+					*/
 				]
 			},
 			{ dataField : "grdVioltRootNm", headerText : "죄명", style:'tbLft'},

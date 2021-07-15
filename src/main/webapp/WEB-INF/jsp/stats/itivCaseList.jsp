@@ -50,7 +50,12 @@
 					return fnChangeNo (value);
 				}
 			}, */
-			{ dataField : "RC_DT", headerText : "접수일시", width : 100},
+			/*
+				2021.07.12
+				by dgkim
+				내사사건의 접수일시는 착수일시이기 때문에 접수일시를 착수일시로 사용
+			*/
+			{ dataField : "ITIV_DT", headerText : "접수일시", width : 100},//{ dataField : "RC_DT", headerText : "접수일시", width : 100},
 			{ headerText : "내사 대상자",
 				children: [
 					{ dataField : "TRGTER_NM", headerText : "성명", width : 100},
@@ -60,7 +65,13 @@
 					]
 			},
 			{ dataField : "OUTSET_RESN", headerText : "내사할 사항(지휘사항 포함)", width : 200},
-			{ dataField : "ITIV_DT", headerText : "착수일시", width : 100},
+			/*
+				2021.07.12
+				by dgkim
+				내사사건부 양식 개편으로 인한 사용하지 않음
+				내사사건의 접수일시는 착수일시이기 때문에 접수일시를 착수일시로 사용
+			*/
+			//{ dataField : "ITIV_DT", headerText : "착수일시", width : 100},
 			/*
 				2021.05.10
 				by dgkim
@@ -83,7 +94,7 @@
 									return template;
 								}},
 			{ dataField : "CHARGER_NM", headerText : "담당자", width : 100},
-			{ dataField : "TEMP3", headerText : "지휘자", width : 100},
+			{ dataField : "CMND_PRSEC_NM", headerText : "지휘자", width : 100},
 			{ dataField : "TEMP4", headerText : "비고", width : 100}
 		];
 

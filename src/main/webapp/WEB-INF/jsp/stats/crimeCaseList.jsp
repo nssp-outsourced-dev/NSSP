@@ -78,7 +78,7 @@
 				]
 			},
 			{ dataField :     "TEMP2", headerText : "피해정도", width : 80,  editable : false },
-			{ dataField : "SUFRER_NM", headerText :  "피해자", width : 100, editable : false },
+			{ dataField : "SUFRER_NM", headerText :  "피해자 등", width : 100, editable : false },
 			{ headerText : "체포/구속",
 				children: [
 					{ dataField : "TEMP22", headerText :    "체포영장", width : 100, editable : false },

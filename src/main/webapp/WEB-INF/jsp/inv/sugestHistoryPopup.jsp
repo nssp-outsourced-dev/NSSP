@@ -44,9 +44,9 @@
 			{ dataField : "ARRST_SN", headerText : "ARRST_SN", visible : false, editable : false},
 			{ dataField : "DOC_ID", headerText : "DOC_ID", visible : false, editable : false},
 			{ dataField : "SUGEST_TY_NM", headerText : "건의구분", editable : false},
-			{ dataField : "SUGEST_DE", headerText : "건의일자", width : 130, dataType : "date", formatString : "yyyy-mm-dd", editable : false},
+			{ dataField : "SUGEST_DE", headerText : "건의일자<span class='point'><img src='/img/icon_dot.png'/></span>", width : 130, dataType : "date", formatString : "yyyy-mm-dd", editable : true},
 			{ dataField : "SUGEST_RESULT_NM", headerText : "건의결과", editable : false},
-			{ dataField : "CMND_DE", headerText : "지휘일자", width : 130, dataType : "date", formatString : "yyyy-mm-dd", editable : false},
+			{ dataField : "CMND_DE", headerText : "지휘일자<span class='point'><img src='/img/icon_dot.png'/></span>", width : 130, dataType : "date", formatString : "yyyy-mm-dd", editable : true},
 			{ dataField : "CMPTNC_EXMN_NM", headerText : "검찰청", editable : false},
 			{ dataField : "CMND_PRSEC_NM", headerText : "지휘검사<span class='point'><img src='/img/icon_dot.png'/></span>", editable : true}
 		];

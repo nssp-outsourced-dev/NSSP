@@ -505,7 +505,13 @@ public class RcController {
 		trgterList = commonUtil.getConvertUnderscoreNameGrid(trgterList);
 
 		pMap.put( "list", trgterList );
-
+		
+		for(Map<String, Object> param : trgterList) {
+			param.put("rc_no", rcNo);
+			param.put("trgter_sn", param.get("grdTrgterSn"));
+			this.insertTrgterChghstLog(request, param, "R");
+		}
+		
 		return new ModelAndView( "ajaxView", "ajaxData", pMap );
 	}
 
@@ -722,8 +728,11 @@ public class RcController {
 
 		int returnVal = 0;
 		try {
-			rcService.insertRcTmprTrgter(targetInfoMap);	//대상자 등록
+			int trgter_sn = rcService.insertRcTmprTrgter(targetInfoMap);	//대상자 등록
 			returnVal++;
+			
+			targetInfoMap.put("trgter_sn", trgter_sn);//등록된 대상자 일련번호
+			this.insertTrgterChghstLog(request, targetInfoMap, "C");
 		} catch (Exception e) {
 			returnVal = -1;
 		}
@@ -758,9 +767,10 @@ public class RcController {
 		HashMap aMap = (HashMap) commonUtil.getParameterMapConvert(request);
 
 		try {
-	    	aMap.put( "esntl_id", esntl_id );
-         	rcService.updateTargetInfo(aMap);
-
+			aMap.put( "esntl_id", esntl_id );
+			rcService.updateTargetInfo(aMap);
+			
+			this.insertTrgterChghstLog(request, aMap, "U");
 		} catch( Exception e ){
 			result = "-1";
 		}
@@ -794,6 +804,8 @@ public class RcController {
 
         try {
          	rcService.deleteTargetInfo(pMap);
+         	
+         	this.insertTrgterChghstLog(request, pMap, "D");
 		} catch ( Exception e ){
 			result = "-1";
 		}
@@ -965,6 +977,14 @@ public class RcController {
     	cMap.put( "upper_cd", "00470" );										//국번 코드
     	model.addAttribute(     "telofcnoCdList", cdService.getCdList(cMap) );	//국번코드 목록
 
+    	/* */
+    	cMap.put("upper_cd", "01324" );										//이메일
+    	model.addAttribute("emailList", cdService.getCdList(cMap) );		//이메일 코드 목록
+    	
+    	cMap.put("upper_cd", "00939" );										//휴대폰번호 앞자리
+    	model.addAttribute("hpNoCdList", cdService.getCdList(cMap) );		//휴대폰번호 목록
+    	/* END */
+    	
     	cMap.clear();
 
 		return "rc/iframe/caseTrgterInfoIframe";
@@ -1679,7 +1699,8 @@ public class RcController {
 
     	Map dtlMap = rcService.getTargetInfoByFormBindAjax(map);
     	dtlMap = commonUtil.getConvertUnderscoreName(dtlMap);
-
+    	
+    	this.insertTrgterChghstLog(request, map, "R");
 		return dtlMap;
 	}
 
@@ -1806,5 +1827,126 @@ public class RcController {
 		ret.put("result", result);
 
 		return new ModelAndView("ajaxView", "ajaxData", ret);
+	}
+	
+	/** 
+	 * @methodName : trgterChghstLog
+	 * @date : 2021.07.09
+	 * @author : dgkim
+	 * @description : 피의자 정보 변경 화면
+	 * @param session
+	 * @param model
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping(value = "/trgterChghstLog/")
+	public String trgterChghstLog(HttpSession session, ModelMap model) throws Exception {
+		int pageBlock = 10;
+		model.addAttribute("hidPageBlock", pageBlock);
+
+		return "rc/trgterChghstLog";
+	}
+	
+	/** 
+	 * @methodName : trgterChghstLogAjax
+	 * @date : 2021.07.09
+	 * @author : dgkim
+	 * @description : 피의자 정보 변경 이력 조회
+	 * @param request
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping(value = "/trgterChghstLogAjax/")
+	public ModelAndView trgterChghstLogAjax(HttpServletRequest request) throws Exception {
+
+		HttpSession session = request.getSession();
+		String esntl_id = SimpleUtils.default_set(session.getAttribute("esntl_id").toString());
+		String dept_cd = SimpleUtils.default_set(session.getAttribute("dept_cd").toString());
+
+		String searchUserID = SimpleUtils.default_set(request.getParameter("searchUserID"));
+		String searchUserNm = SimpleUtils.default_set(request.getParameter("searchUserNm"));
+		String searchAccesIp = SimpleUtils.default_set(request.getParameter("searchAccesIp"));
+		String searchDe1 = SimpleUtils.default_set(request.getParameter("searchDe1"));
+		String searchDe2 = SimpleUtils.default_set(request.getParameter("searchDe2"));
+
+		// 현재 페이지 파라메타
+		String hidPage = SimpleUtils.default_set(request.getParameter("hidPage"));
+		int intPage = 1;
+		if (!"".equals(hidPage))
+			intPage = Integer.parseInt((String) hidPage);
+
+		String hidPageBlock = SimpleUtils.default_set(request.getParameter("hidPageBlock"));
+		if (hidPageBlock == null || hidPageBlock.equals("")) {
+			hidPageBlock = "10";
+		}
+		int pageBlock = Integer.parseInt((String) hidPageBlock);
+
+		// 페이지 기본설정
+		int pageArea = 10;
+
+		// page
+		PaginationInfo paginationInfo = new PaginationInfo();
+		paginationInfo.setCurrentPageNo(intPage);
+		paginationInfo.setRecordCountPerPage(pageBlock);
+		paginationInfo.setPageSize(pageArea);
+
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("startRow", paginationInfo.getFirstRecordIndex());
+		map.put("endRow", paginationInfo.getLastRecordIndex());
+		map.put("searchUserID", searchUserID);
+		map.put("searchUserNm", searchUserNm);
+		map.put("searchAccesIp", searchAccesIp);
+		map.put("searchDe1", searchDe1);
+		map.put("searchDe2", searchDe2);
+
+		int list_cnt = 0;
+		List<Map<String, Object>> list = rcService.selectTrgterChghstLog(map);
+
+		if (list.size() > 0) {
+			list_cnt = Integer.parseInt(list.get(0).get("TOT_CNT").toString());
+		}
+
+		HashMap cMap = new HashMap();
+		cMap.put("list", list);
+		cMap.put("cnt", list_cnt);
+		return new ModelAndView("ajaxView", "ajaxData", cMap);
+	}
+	
+	/** 
+	 * @methodName : insertTrgterChghstLog
+	 * @date : 2021.07.09
+	 * @author : dgkim
+	 * @description : 공통 개인정보 열람 이력 추가
+	 * @param request
+	 * @param param
+	 * @param author_job
+	 * @throws Exception
+	 */
+	private void insertTrgterChghstLog(HttpServletRequest request, Map<String, Object> param, String author_job) throws Exception {
+		//접속 ID
+		if( !param.containsKey("esntl_id") ) {
+			HttpSession session = request.getSession();
+			param.put("esntl_id", SimpleUtils.default_set(session.getAttribute("esntl_id").toString()));
+		}
+		
+		//접속 IP
+		param.put("acces_ip", request.getRemoteAddr());
+		
+		//이전 접속 URL
+		String referer = (String)request.getHeader("REFERER");
+		
+		referer = referer.replace("http://", "")
+					.replace(request.getServerName(), "")
+					.replace(String.valueOf(request.getServerPort()), "")
+					.replace(":", "");
+		
+		if(referer.indexOf("?") != -1) {
+			referer = referer.substring(0, referer.indexOf("?"));
+		}
+		
+		param.put("acces_url", referer);
+		param.put("author_job", author_job);//처리작업(C: 추가, R: 조회, U: 수정, D: 삭제)
+		
+		rcService.insertTrgterChghstLog(param);
 	}
 }

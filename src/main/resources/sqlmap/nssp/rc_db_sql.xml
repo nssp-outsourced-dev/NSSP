@@ -1105,6 +1105,14 @@
 				     , A.OCCP_CD
 				     , FN_CD_NM( A.OCCP_CD) OCCP_NM
 				     , A.WRC_NM
+				     , A.WRC_ZIP
+				     , A.WRC_ADDR AS WRC_ADDR2
+				     , A.ADRES_ZIP
+				     , A.ADRES_ADDR AS ADRES_ADDR2
+				     , A.REGBS_ZIP
+				     , A.REGBS_ADDR AS REGBS_ADDR2
+				     , A.DWLSIT_ZIP
+				     , A.DWLSIT_ADDR AS DWLSIT_ADDR2
 				     , DECODE(    A.WRC_ADDR, NULL, '',    A.WRC_ADDR || ' 우 : ' || A.WRC_ZIP   ) AS WRC_ADDR
 				     , DECODE(  A.ADRES_ADDR, NULL, '',  A.ADRES_ADDR || ' 우 : ' || A.ADRES_ZIP ) AS ADRES_ADDR
 				     , DECODE(  A.REGBS_ADDR, NULL, '',  A.REGBS_ADDR || ' 우 : ' || A.REGBS_ZIP ) AS REGBS_ADDR
@@ -1245,6 +1253,10 @@
 					, SYSDATE       --수정 일시
 					, #file_id#
 					)
+					
+			<selectKey keyProperty="sn" type="post" resultClass="int">
+				SELECT MAX(TRGTER_SN) FROM RC_TMPR_TRGTER WHERE RC_NO = #rc_no#
+			</selectKey>
 	</insert>
 
 	<!-- 내사 착수 보고 등록-->
@@ -1321,10 +1333,13 @@
 	<!-- 대상자 정보 수정 -->
 	<update id="updateTargetInfo" parameterClass="java.util.HashMap">
 		UPDATE RC_TMPR_TRGTER
-		   SET UPDT_ID      = #esntl_id#
-			 , UPDT_DT      = SYSDATE
-		     <isEqual property="trgter_ty_cd" compareValue="I">
-			 , TRGTER_SE_CD = #trgter_se_cd# 	--대상자 구분 코드
+			SET UPDT_ID      = #esntl_id#
+				, UPDT_DT      = SYSDATE
+			<isEqual property="trgter_ty_cd" compareValue="I">
+				<isNotEmpty property="trgter_se_cd">
+					, TRGTER_SE_CD = #trgter_se_cd# 	--대상자 구분 코드
+				</isNotEmpty>
+			 
 			 , TRGTER_TY_CD = #trgter_ty_cd# 	--대상자 유형 코드
 			 , TRGTER_NM 	= #trgter_nm# 	 	--대상자 성명
 			 , TRGTER_ENG_NM= #trgter_eng_nm# 	--대상자 영문 성명
@@ -1356,9 +1371,13 @@
 			 , TRGTER_CPRN 	= '' 	--법인등록번호
 			 , TRGTER_CRN 	= ''	--사업자등록번호
 			 , RPRSNTV_NM 	= ''	--기업대표자
-		     </isEqual>
-		     <isEqual property="trgter_ty_cd" compareValue="E">
-			 , TRGTER_SE_CD = #trgter_se_cd# 	--대상자 구분 코드
+			</isEqual>
+			
+			<isEqual property="trgter_ty_cd" compareValue="E">
+				<isNotEmpty property="trgter_se_cd">
+					, TRGTER_SE_CD = #trgter_se_cd# 	--대상자 구분 코드
+				</isNotEmpty>
+			 
 			 , TRGTER_TY_CD = #trgter_ty_cd# 	--대상자 유형 코드
 			 , TRGTER_NM 	= #trgter_nm# 	 	--기업명
 			 , TRGTER_ENG_NM= #trgter_eng_nm#	--기업명 영문
@@ -1390,10 +1409,10 @@
 			 , DWLSIT_ADDR 	= '' --주거지 주소
 			 , NLTY_CD 		= '' --국적 코드
 			 , PASPORT_NO 	= '' --여권 번호
-		     </isEqual>
-		 WHERE RC_NO = #rc_no#
-		   AND TRGTER_SN = #trgter_sn#
-		   AND USE_YN = 'Y'
+			</isEqual>
+		WHERE RC_NO = #rc_no#
+			AND TRGTER_SN = #trgter_sn#
+			AND USE_YN = 'Y'
 	</update>
 
 	<!-- 접수 진행상태 수정 -->
@@ -1613,4 +1632,96 @@
 			, UPDT_DT = SYSDATE
 		WHERE ITIV_NO = (SELECT ITIV_NO FROM RC_TMPR WHERE RC_NO = #rc_no#)
 	</update>
+	
+	<!-- 
+		2021.07.09
+		coded by dgkim
+		피의자 정보 변경 이력 추가
+		(개인정보 보안 지침의 의한 신규 추가)
+	 -->
+	<insert id="insertTrgterChghstLog" parameterClass="java.util.HashMap">
+		INSERT INTO CMN_TRGTER_CHGHST 
+			(
+				ACCES_DT
+				, ESNTL_ID
+				, RC_NO
+				, TRGTER_SN
+				, ACCES_IP
+				, ACCES_URL
+				, AUTHOR_JOB
+			) 
+		VALUES
+			(
+				SYSDATE
+				, #esntl_id#
+				, #rc_no#
+				, #trgter_sn#
+				, #acces_ip#
+				, #acces_url#
+				, #author_job#
+			)
+	</insert>
+	
+	<!-- 
+		2021.07.09
+		coded by dgkim
+		피의자 정보 변경 이력 조회
+		(개인정보 보안 지침의 의한 신규 추가)
+	 -->
+	<select id="selectTrgterChghstLog" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		SELECT
+			X.*
+		FROM
+		(
+			SELECT A.*,
+				ROWNUM AS RN, COUNT(*) OVER() AS TOT_CNT
+			FROM
+			(
+				SELECT 
+					TO_CHAR(ctc.ACCES_DT, 'YYYY-MM-DD HH24:MI:SS') AS ACCES_DT
+					, ctc.RC_NO
+					, ctc.ACCES_IP
+					, rtt.TRGTER_NM
+					, (SELECT USER_ID FROM CMN_USER WHERE ESNTL_ID = ctc.ESNTL_ID) AS USER_ID
+					, (SELECT USER_NM FROM CMN_USER WHERE ESNTL_ID = ctc.ESNTL_ID) AS USER_NM
+					, DECODE(AUTHOR_JOB, 'C', '추가', 'R', '조회', 'U', '수정', 'D', '삭제') AS AUTHOR_JOB_NM
+					, (
+						SELECT 
+							cmc.MENU_CL_NM || ' > ' || cmd.MENU_NM || ' > ' || cmru.RELATE_NM
+						FROM CMN_MENU_CL cmc
+							, CMN_MENU_DETAIL cmd
+							, CMN_MENU_RELATE_URL cmru
+						WHERE
+							cmc.MENU_CL_CD = cmd.MENU_CL_CD 
+							AND cmd.MENU_CD = cmru.MENU_CD
+							AND cmru.RELATE_URL = ctc.ACCES_URL
+					) AS MENU_NM
+				FROM CMN_TRGTER_CHGHST ctc
+					INNER JOIN RC_TMPR_TRGTER rtt
+					ON ctc.RC_NO = rtt.RC_NO AND ctc.TRGTER_SN = rtt.TRGTER_SN 
+				<dynamic prepend="WHERE">
+					<isNotEmpty property="searchUserID" prepend="AND">
+						ctc.ESNTL_ID IN(SELECT ESNTL_ID FROM CMN_USER WHERE USER_ID LIKE '%' || #searchUserID# || '%')
+					</isNotEmpty>
+					
+					<isNotEmpty property="searchUserNm" prepend="AND">
+						ctc.ESNTL_ID IN(SELECT ESNTL_ID FROM CMN_USER WHERE USER_NM LIKE '%' || #searchUserNm# || '%')
+					</isNotEmpty>
+					
+					<isNotEmpty property="searchAccesIp" prepend="AND">
+						 ctc.ACCES_IP LIKE '%' || #searchAccesIp# || '%'
+					</isNotEmpty>
+					
+					<isNotEmpty property="searchDe1">
+						<isNotEmpty property="searchDe2" prepend="AND" >
+							ctc.ACCES_DT BETWEEN TO_DATE(#searchDe1# || '00:00:00', 'YYYY-MM-DD HH24:MI:SS') AND TO_DATE(#searchDe2# || '23:59:59', 'YYYY-MM-DD HH24:MI:SS')
+						</isNotEmpty>
+					</isNotEmpty>
+				</dynamic>
+				ORDER BY ctc.ACCES_DT DESC
+			) A
+		) X
+		WHERE (RN <![CDATA[ > ]]> #startRow# AND RN <![CDATA[ <= ]]> #endRow#)
+		ORDER BY RN ASC
+	</select>
 </sqlMap>

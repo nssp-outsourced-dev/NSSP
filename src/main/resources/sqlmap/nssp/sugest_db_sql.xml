@@ -353,9 +353,9 @@
 	<update id="updateCmndPrsecNm" parameterClass="java.util.HashMap">
 		UPDATE INV_SUGEST
 		SET
-			<isNotEmpty>
-				CMND_PRSEC_NM = #CMND_PRSEC_NM#
-			</isNotEmpty>
+			CMND_PRSEC_NM = #CMND_PRSEC_NM#
+			, SUGEST_DE = REPLACE(#SUGEST_DE#, '-' ,'')
+			, CMND_DE = REPLACE(#CMND_DE#, '-' ,'')
 			
 			, UPDT_ID = #esntl_id#
 			, UPDT_DT = SYSDATE

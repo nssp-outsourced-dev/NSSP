@@ -375,10 +375,10 @@ public class RcServiceImpl implements RcService {
 
 	//대상자 등록
 	@Override
-	public void insertRcTmprTrgter(HashMap<String, Object> map) throws Exception {
+	public int insertRcTmprTrgter(HashMap<String, Object> map) throws Exception {
 		map.put( "doc_id", docService.getDocID()  ); 
 		map.put("file_id", fileService.getFileID()); 
-		rcDAO.insertRcTmprTrgter(map);	//대상자 등록
+		return rcDAO.insertRcTmprTrgter(map);	//대상자 등록
 	}
 
 	//대상자 삭제
@@ -488,5 +488,21 @@ public class RcServiceImpl implements RcService {
 	@Override
 	public int updateItivResultRerortDt(Map<String, Object> param) throws Exception {
 		return rcDAO.updateItivResultRerortDt(param);
+	}
+
+	/* (non-Javadoc)
+	 * @see kr.go.nssp.rc.service.RcService#insertTrgterChghst(java.util.Map)
+	 */
+	@Override
+	public void insertTrgterChghstLog(Map<String, Object> param) throws Exception {
+		rcDAO.insertTrgterChghstLog(param);
+	}
+
+	/* (non-Javadoc)
+	 * @see kr.go.nssp.rc.service.RcService#selectTrgterChghst(java.util.Map)
+	 */
+	@Override
+	public List<Map<String, Object>> selectTrgterChghstLog(Map<String, Object> param) throws Exception {
+		return rcDAO.selectTrgterChghstLog(param);
 	}
 }

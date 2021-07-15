@@ -184,7 +184,7 @@ public interface RcService {
 	 * @param map
 	 * @throws Exception
 	 */
-	public void insertRcTmprTrgter(HashMap<String, Object> map)  throws Exception ;
+	public int insertRcTmprTrgter(HashMap<String, Object> map)  throws Exception ;
 	
 	/**
 	 * 대상자 삭제
@@ -249,4 +249,26 @@ public interface RcService {
 	 * @throws Exception
 	 */
 	public int updateItivResultRerortDt(Map<String, Object> param) throws Exception;
+	
+	/** 
+	 * @methodName : insertTrgterChghst
+	 * @date : 2021.07.09
+	 * @author : dgkim
+	 * @description : 피의자 정보 변경 이력 추가 (개인정보 보안 지침의 의한 신규 추가)
+	 * @param param
+	 * @return
+	 * @throws Exception
+	 */
+	public void insertTrgterChghstLog(Map<String, Object> param) throws Exception;
+	
+	/** 
+	 * @methodName : selectTrgterChghst
+	 * @date : 2021.07.09
+	 * @author : dgkim
+	 * @description : 피의자 정보 변경 이력 조회 (개인정보 보안 지침의 의한 신규 추가)
+	 * @param param
+	 * @return
+	 * @throws Exception
+	 */
+	public List<Map<String, Object>> selectTrgterChghstLog(Map<String, Object> param) throws Exception;
 }

@@ -85,6 +85,24 @@ public class RcServiceImpl implements RcService {
 		caseMap.put( "writng_dept_cd", param.get("writng_dept_cd"));
 		caseMap.put( "rc_no", rcNo);
 
+		/*
+		 * 2021.07.20
+		 * coded by dgkim
+		 * 기존 안되어있는 기능 추가
+		 * updateCaseInfo method에만 구현 되어 있는 기능 복사하여 사용
+		 * */
+		//발생 시작일/발생종료일 처리
+		String occrrnc_begin_dt = caseMap.get("occrrnc_begin_de").toString() + caseMap.get("occrrnc_begin_de_hh").toString() + caseMap.get("occrrnc_begin_de_mi").toString();
+		String occrrnc_end_dt = caseMap.get("occrrnc_end_de").toString() + caseMap.get("occrrnc_end_de_hh").toString() + caseMap.get("occrrnc_end_de_mi").toString();
+		
+		if( occrrnc_begin_dt.length() > 0 ){
+			caseMap.put("occrrnc_begin_dt", occrrnc_begin_dt);
+		}
+		
+		if( occrrnc_end_dt.length() > 0 ){
+			caseMap.put("occrrnc_end_dt", occrrnc_end_dt);
+		}
+		/* 기존 안되어있는 기능 추가 END */
 		String rcSeCd = "";
 
 		if( null != caseMap.get("rc_se_cd") ) {

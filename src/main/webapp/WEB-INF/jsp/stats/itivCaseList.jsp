@@ -31,8 +31,8 @@
 
 	function initGrid() {
 		var columnLayout = [
-			{ dataField : "RN", headerText : "순번", width : 50},
-			{ dataField : "ITIV_NO", headerText : "내사번호", width : 100,
+			{ dataField : "RN", headerText : "순번", width : 50, editable : false},
+			{ dataField : "ITIV_NO", headerText : "내사번호", width : 100, editable : false,
 				renderer : {type : "TemplateRenderer"},
 				labelFunction : function (rowIndex, columnIndex, value, headerText, item ) {
 					return fnChangeNo (value);
@@ -55,16 +55,16 @@
 				by dgkim
 				내사사건의 접수일시는 착수일시이기 때문에 접수일시를 착수일시로 사용
 			*/
-			{ dataField : "ITIV_DT", headerText : "접수일시", width : 100},//{ dataField : "RC_DT", headerText : "접수일시", width : 100},
+			{ dataField : "ITIV_DT", headerText : "접수일시", width : 100, editable : false},//{ dataField : "RC_DT", headerText : "접수일시", width : 100},
 			{ headerText : "내사 대상자",
 				children: [
-					{ dataField : "TRGTER_NM", headerText : "성명", width : 100},
-					{ dataField : "TRGTER_RRN", headerText : "주민번호", width : 150},
-					{ dataField : "DWLSIT_ADDR", headerText : "주소", width : 200, visible : false}, /* 2021-05-06 hsno 주거지가 출력되던 주소 테이블을 안보이도록 처리 */
-					{ dataField : "ADRES_ADDR", headerText : "주소", width : 200} /* 2021-05-06 hsno 주소지가 출력되는 주소 테이즐 추가 */
+					{ dataField : "TRGTER_NM", headerText : "성명", width : 100, editable : false},
+					{ dataField : "TRGTER_RRN", headerText : "주민번호", width : 150, editable : false},
+					{ dataField : "DWLSIT_ADDR", headerText : "주소", width : 200, visible : false, editable : false}, /* 2021-05-06 hsno 주거지가 출력되던 주소 테이블을 안보이도록 처리 */
+					{ dataField : "ADRES_ADDR", headerText : "주소", width : 200, editable : false} /* 2021-05-06 hsno 주소지가 출력되는 주소 테이즐 추가 */
 					]
 			},
-			{ dataField : "OUTSET_RESN", headerText : "내사할 사항(지휘사항 포함)", width : 200},
+			{ dataField : "OUTSET_RESN", headerText : "내사할 사항(지휘사항 포함)", width : 200, editable : false},
 			/*
 				2021.07.12
 				by dgkim
@@ -78,8 +78,8 @@
 				내사사건부, 처리일시 입건된 사건일 경우 입건일자, 
 				미입건사건일 경우 공란으로 수정
 			*/
-			{ dataField : "ITIV_RESULT_REPORT_DT", headerText : "처리일시", width : 100,},
-			{ dataField : "ITIV_RESULT_NM", headerText : "처리결과", width : 200,
+			{ dataField : "ITIV_RESULT_REPORT_DT", headerText : "처리일시", width : 100, editable : false},
+			{ dataField : "ITIV_RESULT_NM", headerText : "처리결과", width : 200, editable : false,
 				
 				/* 2021-04-28 권종열 사무관 요청 hsno 처리결과 테이블에 내사종결시 괄호안에 종결 처분 코드가 나오도록 수정 */
 				labelFunction : function( rowIndex, columnIndex, value, headerText, item ){
@@ -93,9 +93,9 @@
 									
 									return template;
 								}},
-			{ dataField : "CHARGER_NM", headerText : "담당자", width : 100},
-			{ dataField : "CMND_PRSEC_NM", headerText : "지휘자", width : 100},
-			{ dataField : "TEMP4", headerText : "비고", width : 100}
+			{ dataField : "CHARGER_NM", headerText : "담당자", width : 100, editable : false},
+			{ dataField : "CMNDER", headerText : "지휘자<span class='point'><img src='/img/icon_dot.png'/></span>", width : 100, editable : true},
+			{ dataField : "TEMP4", headerText : "비고", width : 100, editable : false}
 		];
 
 
@@ -106,6 +106,8 @@
 			useGroupingPanel : false,
 			showRowNumColumn : false,
 			displayTreeOpen : true,
+			editBeginMode : "click",
+			editable : true,
 			groupingMessage : "여기에 칼럼을 드래그하면 그룹핑이 됩니다."
 		};
 		myGridID = AUIGrid.create("#grid_list", columnLayout, gridPros);
@@ -154,7 +156,28 @@
 			});
 		}
 	};
-
+	
+	/*
+		2021.07.20
+		coded by dgkim
+		사건대장 > 내사사건부 개편으로 인한 지휘자 칼럼 추가 및 업데이트 기능 추가
+		김지만 수사관 요청
+	*/
+	function fnSaveCmnder() {
+		var editedRowItems = AUIGrid.getEditedRowItems( "#grid_list" );
+		if( editedRowItems.length == 0 ){
+			alert("수정한 자료가 없습니다.");
+			return;
+		}
+		
+		var data = fnAjaxAction( "/stats/updateCmnderAjax/", JSON.stringify({ sList:editedRowItems }) );
+		if( data.result == "1" ){
+			alert("저장 되었습니다.");
+			fnSearch();
+		} else {
+			alert("피의자 저장중 오류가 발생했습니다.");
+		}
+	}
 </script>
 
 <!--검색박스 -->
@@ -227,6 +250,7 @@
 	<!-- 안내박스  -->
 	<!--버튼 -->
 	<div class="right_btn fr mb_10">
+		<a href="javascript:fnSaveCmnder();" class="btn_st2 icon_n fl mr_m1">저장</a>
 		<a href="javascript:fnExportTo();" class="btn_st2 icon_n fl mr_m1">엑셀출력</a>
 		<a href="javascript:fnCaseDetail();" class="btn_st2_2 icon_n fl mr_m1">사건상세보기</a>
 	</div>

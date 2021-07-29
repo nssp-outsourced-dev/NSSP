@@ -466,4 +466,34 @@ public class TrnDAO extends EgovComAbstractDAO {
 	public int updateTrnDe(Map<String, Object> param) throws Exception {
 		return update("trn.updateTrnDe", param);
 	}
+	
+	/** 
+	 * @methodName : updateTrnCaseZeroNo
+	 * @date : 2021.07.19
+	 * @author : dgkim
+	 * @description : 
+	 * 		송치완료 후에도 피의자 원표 번호 수정 가능하도록 조치
+	 * 		김지만 수사관 요청
+	 * @param param
+	 * @return
+	 * @throws Exception
+	 */
+	public int updateTrnCaseZeroNo(Map<String, Object> param) throws Exception {
+		return update("trn.updateTrnCaseZeroNo", param);
+	}
+	
+	/** 
+	 * @methodName : updateTrnSuspctZeroNo
+	 * @date : 2021.07.19
+	 * @author : dgkim
+	 * @description : 
+	 * 		송치완료 후에도 피의자 원표 번호 수정 가능하도록 조치
+	 * 		김지만 수사관 요청
+	 * @param param
+	 * @return
+	 * @throws Exception
+	 */
+	public int updateTrnSuspctZeroNo(Map<String, Object> param) throws Exception {
+		return update("trn.updateTrnSuspctZeroNo", param);
+	}
 }

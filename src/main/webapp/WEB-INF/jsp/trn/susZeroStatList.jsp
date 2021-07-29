@@ -36,25 +36,25 @@
 
 	function initGrid() {
 		var columnLayout = [{
-				headerText : "순번", dataField : "RN", width : 50
+				headerText : "순번", dataField : "RN", width : 50, editable : false,
 			}, {
-				headerText : "년", dataField : "SUSPCT_ZERO_YEAR", width : 100
+				headerText : "년<span class='point'><img src='/img/icon_dot.png'/></span>", dataField : "SUSPCT_ZERO_YEAR", width : 100, editable : true,
 			}, {
-				headerText : "월", dataField : "SUSPCT_ZERO_MON", width : 100
+				headerText : "월<span class='point'><img src='/img/icon_dot.png'/></span>", dataField : "SUSPCT_ZERO_MON", width : 100, editable : true,
 			}, {
-				headerText : "본표번호", dataField : "SUSPCT_ZERO_NUM", width : 100
+				headerText : "본표번호<span class='point'><img src='/img/icon_dot.png'/></span>", dataField : "SUSPCT_ZERO_NUM", width : 100, editable : true,
 			}, {
-				headerText : "사건번호", dataField : "CASE_NO", width : 150,
+				headerText : "사건번호", dataField : "CASE_NO", width : 150, editable : false,
 				labelFunction : function (rowIndex, columnIndex, value, headerText, item ) {
 					return fnChangeNo (value);
 				}
 			}, {
-				headerText : "피의자(업체명)", dataField : "TRGTER_NM", width : 200, style : "grid_td_left"
+				headerText : "피의자(업체명)", dataField : "TRGTER_NM", width : 200, style : "grid_td_left", editable : false,
 			}, {
-				headerText : "죄명", dataField : "VIOLT_NM", width : 400, style : "grid_td_left"
+				headerText : "죄명", dataField : "VIOLT_NM", width : 400, style : "grid_td_left", editable : false,
 			}, {
-				headerText : "비고", dataField : "ETC", width : 150
-			}
+				headerText : "비고", dataField : "ETC", width : 150, editable : false,
+			}, {headerText : "", dataField : "TRGTER_SN", visible:false}
 		];
 
 		var gridPros = {
@@ -69,6 +69,8 @@
 			showRowNumColumn : false,
 			displayTreeOpen : true,
 			showAutoNoDataMessage : false,
+			editBeginMode : "click",
+			editable : true,
 			groupingMessage : "여기에 칼럼을 드래그하면 그룹핑이 됩니다."
 		};
 		myGridID = AUIGrid.create("#grid_list", columnLayout, gridPros);
@@ -117,7 +119,30 @@
 			});
 		}
 	};
-
+	
+	/* 
+	2021.07.19
+		coded by dgkim
+		송치완료 후에도 발생 원표 번호, 검거 원표 번호 수정 가능하도록 조치
+		김지만 수사관 요청
+	*/
+	function fnSaveZeroNo(){
+		var items = AUIGrid.getSelectedItems("#grid_list");
+		
+		var editedRowItems = AUIGrid.getEditedRowItems( "#grid_list" );
+		if( editedRowItems.length == 0 ){
+			alert("수정한 자료가 없습니다.");
+			return;
+		}
+		
+		var data = fnAjaxAction( "/trn/updateZeroNoAjax/", JSON.stringify({ sList:editedRowItems }) );
+		if( data.result == "1" ){
+			alert("저장 되었습니다.");
+			fnSearch();
+		} else {
+			alert("저장중 오류가 발생했습니다.");
+		}
+	}
 </script>
 
 <!--검색박스 -->
@@ -190,6 +215,7 @@
 	<!-- 안내박스  -->
 	<!--버튼 -->
 	<div class="right_btn fr mb_10">
+		<a href="javascript:fnSaveZeroNo();" class="btn_st2 icon_n fl mr_m1">저장</a>
 		<a href="javascript:fnExportTo();" class="btn_st2 icon_n fl mr_m1">엑셀출력</a>
 		<a href="javascript:fnCaseDetail();" class="btn_st2_2 icon_n fl mr_m1">사건상세보기</a>
 	</div>

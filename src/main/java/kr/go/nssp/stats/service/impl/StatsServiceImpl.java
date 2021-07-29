@@ -62,4 +62,23 @@ public class StatsServiceImpl implements StatsService {
 		return cnt;
 	}
 
+	/* (non-Javadoc)
+	 * @see kr.go.nssp.stats.service.StatsService#updateCmnder(java.util.Map)
+	 */
+	@Override
+	public int updateCmnder(List<Map<String, Object>> param) throws Exception {
+		int cnt = 0;
+		
+		if(param.size() > 0 ){
+			for(Map<String, Object> map : param) {
+				cnt += statsDAO.updateCmnder(map);
+			}
+			
+			if(param.size() != cnt) {
+				throw new Exception("저장 중 오류 발생했습니다.");
+			}
+		}
+		
+		return cnt;
+	}
 }

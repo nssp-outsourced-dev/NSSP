@@ -1668,8 +1668,6 @@ public class RcController {
 		return new ModelAndView("ajaxView", "ajaxData", ret);
 	}
 
-
-
 	/**
 	 * 사건정보 조회
 	 * @param request
@@ -1810,13 +1808,14 @@ public class RcController {
 		try {
 			param.put("esntl_id", esntl_id);
 
-			if(param.containsKey("outsetDt")) {//내사착수일시 수정이면 
+			if( param.containsKey("outsetDt") ) {//내사착수일시 수정이면 
 				rcService.updateOutsetReportDt(param);//내사착수일시 update
 			}else if(param.containsKey("resultDt")) {//내사결과보고일자 수정이면
 				rcService.updateItivResultRerortDt(param);//내사결과보고일자 update
-			}else if(param.containsKey("tmprCaseDt") || //임시사건결과보고일시 수정이거나
+			}else if( param.containsKey("tmprCaseDt") || //임시사건결과보고일시 수정이거나
 					param.containsKey("prsctDt") || //입건일자 수정이거나
-					param.containsKey("invResmptDt")) {//수사재개일시 수정이면
+					param.containsKey("invResmptDt") //수사재개일시 수정이면
+					||  (param.containsKey("occrrnc_begin_dt") && param.containsKey("occrrnc_end_dt")) ) {//발생일시 수정이면
 				rcService.updateDe(param);//임시사건결과보고일시, 입건일자, 수사재개일시 update
 			}
 		} catch (Exception e){

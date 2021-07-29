@@ -38,9 +38,9 @@
 					return fnChangeNo (value);
 				}
 			},
-			{ dataField :      "PRSCT_DE", headerText :     "수리", width : 120, cellMerge : true, dataType : "date", formatString : "yyyy-mm-dd", editable : false},
-			{ dataField : "INV_PROVIS_NM", headerText :     "구분", width :  60, cellMerge : false, editable : false},
-			{ dataField :    "CHARGER_NM", headerText : "수사담당자", width : 100, cellMerge : false, editable : false},
+			{ dataField :      "PRSCT_DE", headerText :     "수리", width : 120, cellMerge : true, mergePolicy:"restrict", mergeRef: "CASE_NO", dataType : "date", formatString : "yyyy-mm-dd", editable : false},
+			{ dataField : "INV_PROVIS_NM", headerText :     "구분", width :  60, cellMerge : true, mergePolicy:"restrict", mergeRef: "CASE_NO", editable : false},
+			{ dataField :    "CHARGER_NM", headerText : "수사담당자", width : 100, cellMerge : true, mergePolicy:"restrict", mergeRef: "CASE_NO", editable : false},
 			{ headerText : "피의자",
 				children: [
 					{ dataField :   "TRGTER_NM", headerText :    "성명", width : 100, editable : false },
@@ -65,20 +65,26 @@
 				]
 			},
 			{ dataField : "TEMP1", headerText : "조회", width : 70 , editable : false },
-			{ headerText : "죄명(위반죄명)",
+			/* 
+				2021.7.27
+				범죄사건부 > 죄명이 2번 들어가 있음
+				김지만 수사관 요청
+			*/
+			/* { headerText : "죄명(위반죄명)",
 				children: [
-					{ dataField :     "VIOLT_NM", headerText : "수리", width : 150 , editable : false },
-					{ dataField : "TRN_VIOLT_NM", headerText : "송치", width : 150 , editable : false }
+					{ dataField :     "VIOLT_NM", headerText : "수리", width : 150 , editable : false, cellMerge : true, mergePolicy:"restrict", mergeRef: "CASE_NO"},
+					{ dataField : "TRN_VIOLT_NM", headerText : "송치", width : 150 , editable : false, cellMerge : true, mergePolicy:"restrict", mergeRef: "CASE_NO"}
 				]
-			},
+			}, */
+			{ dataField : "VIOLT_NM", headerText : "죄명(위반죄명)", width : 250 , editable : false },
 			{ headerText : "범죄",
 				children: [
-					{ dataField : "OCCRRNC_BEGIN_DT", headerText : "(발생)일시", width : 120, editable : false },
-					{ dataField :    "OCCRRNC_ADDR" , headerText : "(발생)장소", width : 150, editable : false }
+					{ dataField : "OCCRRNC_BEGIN_DT", headerText : "(발생)일시", width : 120, editable : false, cellMerge : true, mergePolicy:"restrict", mergeRef: "CASE_NO" },
+					{ dataField :    "OCCRRNC_ADDR" , headerText : "(발생)장소", width : 150, editable : false, cellMerge : true, mergePolicy:"restrict", mergeRef: "CASE_NO" }
 				]
 			},
 			{ dataField :     "TEMP2", headerText : "피해정도", width : 80,  editable : false },
-			{ dataField : "SUFRER_NM", headerText :  "피해자 등", width : 100, editable : false },
+			{ dataField : "SUFRER_NM", headerText :  "피해자 등", width : 100, cellMerge : true, mergePolicy:"restrict", mergeRef: "CASE_NO", editable : false },
 			{ headerText : "체포/구속",
 				children: [
 					{ dataField : "TEMP22", headerText :    "체포영장", width : 100, editable : false },
@@ -187,7 +193,7 @@
 		//var gData = AUIGrid.getGridData("#grid_list");
 		
 		var items = AUIGrid.getSelectedItems("#grid_list");
-		console.log(items[0].item.TRN_NO);
+		//console.log(items[0].item.TRN_NO);
 		if( fnIsEmpty( items[0].item.TRN_NO ) ){
 			alert(items[0].item.TRGTER_NM + "의 송치상태를 선택하세요.");
 			return;

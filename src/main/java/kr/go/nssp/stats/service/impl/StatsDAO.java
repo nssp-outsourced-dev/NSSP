@@ -38,4 +38,19 @@ public class StatsDAO extends EgovComAbstractDAO {
 	public int updateCrimeCaseSuspct( Map<String, Object> param ) throws Exception {
 		return update( "stats.updateCrimeCaseSuspct", param );
 	}
+	
+	/** 
+	 * @methodName : updateCmnder
+	 * @date : 2021.07.20
+	 * @author : dgkim
+	 * @description : 
+	 * 		사건대장 > 내사사건부 개편으로 인한 지휘자 칼럼 추가 및 업데이트 기능 추가
+	 *		김지만 수사관 요청
+	 * @param param
+	 * @return
+	 * @throws Exception
+	 */
+	public int updateCmnder(Map<String, Object> param) throws Exception {
+		return update("stats.updateCmnder", param);
+	}
 }

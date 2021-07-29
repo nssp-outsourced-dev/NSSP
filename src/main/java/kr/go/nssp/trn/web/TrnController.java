@@ -1437,7 +1437,9 @@ public class TrnController {
 	 * @methodName : updateTrnDe
 	 * @date : 2021.06.29
 	 * @author : dgkim
-	 * @description : 송치일자가 맞지 않을시 변경하도록 조치
+	 * @description : 
+	 * 		송치일자가 맞지 않을시 변경하도록 조치
+	 * 		김지만 수사관 요청
 	 * @param session
 	 * @param param
 	 * @return
@@ -1455,6 +1457,40 @@ public class TrnController {
 			}
 			
 			trnService.updateTrnDe(list);
+		}catch (Exception e) {
+			result = "-1";
+		}
+		
+		HashMap<String, Object> ret = new HashMap<String, Object>();
+		ret.put("result", result);
+		
+		return new ModelAndView("ajaxView", "ajaxData", ret);
+	}
+	
+	/** 
+	 * @methodName : updateZeroNoAjax
+	 * @date : 2021.07.19
+	 * @author : dgkim
+	 * @description : 
+	 * 		송치완료 후에도 피의자 원표 번호 수정 가능하도록 조치
+	 * 		김지만 수사관 요청
+	 * @param session
+	 * @param param
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping(value = "/updateZeroNoAjax/")
+	public ModelAndView updateZeroNoAjax(HttpSession session, @RequestBody Map<String, Object> param) throws Exception {
+		String esntl_id = SimpleUtils.default_set(session.getAttribute("esntl_id").toString());
+		String result = "1";
+		
+		try{
+			List<Map<String, Object>> list = (List<Map<String, Object>>) param.get("sList");
+			for(Map<String, Object> obj : list) {
+				obj.put("esntl_id", esntl_id);
+			}
+			
+			trnService.updateZeroNo(list);
 		}catch (Exception e) {
 			result = "-1";
 		}

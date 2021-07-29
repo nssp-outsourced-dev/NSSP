@@ -32,10 +32,25 @@ public interface TrnService {
 	 * @methodName : updateTrnDe
 	 * @date : 2021.06.29
 	 * @author : dgkim
-	 * @description : 송치일자가 맞지 않을시 변경하도록 조치 
+	 * @description : 
+	 * 		송치일자가 맞지 않을시 변경하도록 조치 
+	 * 		김지만 수사관 요청
 	 * @param param
 	 * @return
 	 * @throws Exception
 	 */
 	public int updateTrnDe(List<Map<String, Object>> param) throws Exception;
+	
+	/** 
+	 * @methodName : updateZeroNo
+	 * @date : 2021.07.19
+	 * @author : dgkim
+	 * @description : 
+	 * 		송치완료 후에도 피의자 원표 번호 수정 가능하도록 조치
+	 * 		김지만 수사관 요청
+	 * @param param
+	 * @return
+	 * @throws Exception
+	 */
+	public int updateZeroNo(List<Map<String, Object>> param) throws Exception;
 }

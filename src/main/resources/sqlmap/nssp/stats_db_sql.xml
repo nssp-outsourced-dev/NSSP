@@ -292,7 +292,7 @@
 		        X.ED_DSPS_NM, --종결 처분 코드
 		        X.PRSCT_DE, --입건일자
 		        X.ITIV_RESULT_REPORT_DT, --내사결과보고일시
-		        X.CMND_PRSEC_NM --지휘 검사 명
+		        X.CMNDER --내사 지휘자
 		 FROM
 		     (
 			SELECT A.*,			 
@@ -328,7 +328,7 @@
 				FN_CD_NM(MAX(RIR.ED_DSPS_CD)) AS ED_DSPS_NM, 			--종결 처분 코드
 				MAX(RT.PRSCT_DE) AS PRSCT_DE, --입건일자
 				TO_CHAR(MAX(RIR.ITIV_RESULT_REPORT_DT), 'YYYY-MM-DD') AS ITIV_RESULT_REPORT_DT, --내사결과보고일시
-				(SELECT MAX(CMND_PRSEC_NM) KEEP(DENSE_RANK FIRST ORDER BY SUGEST_NO) FROM INV_SUGEST WHERE RC_NO = RT.RC_NO) AS CMND_PRSEC_NM --지휘 검사 명
+				MAX(RT.CMNDER) AS CMNDER --내사 지휘자
 				FROM RC_TMPR RT
                 INNER JOIN RC_TMPR_TRGTER RTT ON RT.RC_NO = RTT.RC_NO
                 	AND RTT.TRGTER_SE_CD IN ( SELECT CC.ESNTL_CD FROM CMN_CD CC WHERE CC.UPPER_CD = '00102'  AND CC.CD_DC = 'suspct-Group' ) /*피의자 그룹*/
@@ -428,5 +428,18 @@
 		   AND TRGTER_SN = #TRGTER_SN#
 	]]>
 	</update>
-
+	
+	<!-- 
+		2021.07.20
+		coded by dgkim
+		사건대장 > 내사사건부 개편으로 인한 지휘자 칼럼 추가 및 업데이트 기능 추가
+		김지만 수사관 요청
+	 -->
+	<update id="updateCmnder" parameterClass="java.util.HashMap">
+		UPDATE RC_TMPR
+			SET CMNDER = #CMNDER# --지휘자
+			, UPDT_ID = #esntl_id#
+			, UPDT_DT = SYSDATE
+		WHERE RC_NO = #RC_NO#
+	</update>
 </sqlMap>

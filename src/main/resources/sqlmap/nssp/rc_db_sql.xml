@@ -1584,15 +1584,22 @@
 		UPDATE RC_TMPR 
 		SET
 			<isNotEmpty property="tmprCaseDt">
-				TMPR_CASE_RESULT_REPORT_DT = #tmprCaseDt#
+				TMPR_CASE_RESULT_REPORT_DT = #tmprCaseDt# --임시사건 결과 보고 일시
 			</isNotEmpty>
 			
 			<isNotEmpty property="prsctDt">
-				PRSCT_DE = REPLACE(#prsctDt#, '-', '')
+				PRSCT_DE = REPLACE(#prsctDt#, '-', '') --입건 일자
 			</isNotEmpty>
 			
 			<isNotEmpty property="invResmptDt">
-				INV_RESMPT_DE = REPLACE(#invResmptDt#, '-', '')
+				INV_RESMPT_DE = REPLACE(#invResmptDt#, '-', '') --수사 재개 일자
+			</isNotEmpty>
+			
+			<isNotEmpty property="occrrnc_begin_dt">
+				<isNotEmpty property="occrrnc_end_dt">
+					OCCRRNC_BEGIN_DT = TO_DATE(#occrrnc_begin_dt#, 'YYYY-MM-DD HH24:MI:SS') --발생 시작 일시
+					, OCCRRNC_END_DT = TO_DATE(#occrrnc_end_dt#, 'YYYY-MM-DD HH24:MI:SS') --발생 종료 일시
+				</isNotEmpty>
 			</isNotEmpty>
 			
 			, UPDT_ID = #esntl_id#

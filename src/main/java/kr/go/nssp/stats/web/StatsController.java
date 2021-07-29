@@ -399,6 +399,38 @@ public class StatsController {
     	cMap.put("cnt", list_cnt);
 		return new ModelAndView("ajaxView", "ajaxData", cMap);
 	}
+	
+	/** 
+	 * @methodName : updateCmnderAjax
+	 * @date : 2021.07.20
+	 * @author : dgkim
+	 * @description : 
+	 * 		사건대장 > 내사사건부 개편으로 인한 지휘자 칼럼 추가 및 업데이트 기능 추가
+	 * 		김지만 수사관 요청
+	 * @param session
+	 * @param param
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping(value = "/updateCmnderAjax/")
+	public ModelAndView updateCmnderAjax(HttpSession session, @RequestBody Map<String, Object> param) throws Exception {
+		String esntl_id = SimpleUtils.default_set(session.getAttribute("esntl_id").toString());
+		String result = "1";
+		
+		try{
+			List<Map<String, Object>> list = (List<Map<String, Object>>) param.get("sList");
+			for(Map<String, Object> obj : list) {
+				obj.put("esntl_id", esntl_id);
+			}
+			
+			statsService.updateCmnder(list);
+		}catch (Exception e) {
+			result = "-1";
+		}
 
+		Map<String, String> ret = new HashMap<String, String>();
+		ret.put("result", result);
+
+		return new ModelAndView("ajaxView", "ajaxData", ret);
+	}
 }
-

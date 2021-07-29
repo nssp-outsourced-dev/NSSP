@@ -429,6 +429,7 @@
 				     , FN_RC_VIOLT_NM(B.RC_NO) VIOLT_NM
 				     , FN_CD_NM(B.PROGRS_STTUS_CD) PROGRS_STTUS_NM
 				     , C.TRGTER_NM
+				     , C.TRGTER_SN
 				  FROM TRN_CASE A
 				     , RC_TMPR B
 				     , RC_TMPR_TRGTER C
@@ -1260,9 +1261,9 @@
 		   SET OCCRRNC_ZERO_NO = (SELECT NVL((SELECT ZERO_NO1||'-'||(ZERO_NO2+1)
 		                                        FROM (SELECT SUBSTR(OCCRRNC_ZERO_NO, 1,7) ZERO_NO1, MAX(TO_NUMBER(SUBSTR(OCCRRNC_ZERO_NO, 9))) ZERO_NO2
 		                                                FROM TRN_CASE
-		                                               WHERE OCCRRNC_ZERO_NO LIKE (SELECT TO_CHAR(RC_DT, 'YYYY-MM') FROM RC_TMPR WHERE RC_NO = #RC_NO#)||'%'
+		                                               WHERE OCCRRNC_ZERO_NO LIKE (SELECT TO_CHAR(TO_DATE(PRSCT_DE), 'YYYY-MM') FROM RC_TMPR WHERE RC_NO = #RC_NO#)||'%'
 		                                               GROUP BY SUBSTR(OCCRRNC_ZERO_NO, 1,7))),
-		                                    (SELECT TO_CHAR(RC_DT, 'YYYY-MM')||'-1' FROM RC_TMPR WHERE RC_NO = #RC_NO#))
+		                                    (SELECT TO_CHAR(TO_DATE(PRSCT_DE), 'YYYY-MM')||'-1' FROM RC_TMPR WHERE RC_NO = #RC_NO#))
 		                            FROM DUAL)
 		 WHERE TRN_NO = #TRN_NO#
 	]]>
@@ -1428,5 +1429,51 @@
 			, UPDT_ID = #esntl_id#
 		 	, UPDT_DT = SYSDATE
 		 WHERE TRN_NO = #TRN_NO#
+	</update>
+	
+	<!-- 
+		2021.07.19
+		coded by dgkim
+		송치완료 후에도 발생 원표 번호, 검거 원표 번호 수정 가능하도록 조치
+		김지만 수사관 요청
+	 -->
+	<update id="updateTrnCaseZeroNo" parameterClass="java.util.HashMap">
+		UPDATE TRN_CASE
+			SET 
+				<isNotEmpty property="OCCRRNC_ZERO_NO">
+					OCCRRNC_ZERO_NO = #OCCRRNC_ZERO_YEAR# || '-' || 
+					CASE WHEN LENGTH(TO_CHAR(#OCCRRNC_ZERO_MON#)) <![CDATA[ < ]]> 2 THEN LPAD(TO_CHAR(#OCCRRNC_ZERO_MON#), 2, '0') ELSE TO_CHAR(#OCCRRNC_ZERO_MON#) END
+					 || '-' || #OCCRRNC_ZERO_NUM#
+				</isNotEmpty>
+				
+				<isNotEmpty property="ARREST_ZERO_NO">
+					ARREST_ZERO_NO = #ARREST_ZERO_YEAR# || '-' || 
+					CASE WHEN LENGTH(TO_CHAR(#ARREST_ZERO_MON#)) <![CDATA[ < ]]> 2 THEN LPAD(TO_CHAR(#ARREST_ZERO_MON#), 2, '0') ELSE TO_CHAR(#ARREST_ZERO_MON#) END 
+					|| '-' || #ARREST_ZERO_NUM#
+				</isNotEmpty>
+				
+			, UPDT_ID = #esntl_id#
+			, UPDT_DT = SYSDATE
+		WHERE TRN_NO = #TRN_NO#
+			AND RC_NO = #RC_NO#
+	</update>
+	
+	<!-- 
+		2021.07.19
+		coded by dgkim
+		송치완료 후에도 피의자 원표 번호 수정 가능하도록 조치
+		김지만 수사관 요청
+	 -->
+	<update id="updateTrnSuspctZeroNo" parameterClass="java.util.HashMap">
+		UPDATE TRN_SUSPCT
+			SET 
+				SUSPCT_ZERO_NO = #SUSPCT_ZERO_YEAR# || '-' || 
+				CASE WHEN LENGTH(TO_CHAR(#SUSPCT_ZERO_MON#)) <![CDATA[ < ]]> 2 THEN LPAD(TO_CHAR(#SUSPCT_ZERO_MON#), 2, '0') ELSE TO_CHAR(#SUSPCT_ZERO_MON#) END
+				|| '-' || #SUSPCT_ZERO_NUM#
+				, UPDT_ID = #esntl_id#
+				, UPDT_DT = SYSDATE
+		WHERE TRN_NO = #TRN_NO#
+			AND RC_NO = #RC_NO#
+			AND TRGTER_SN = #TRGTER_SN#
 	</update>
 </sqlMap>

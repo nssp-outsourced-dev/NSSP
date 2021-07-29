@@ -312,4 +312,42 @@ public class TrnServiceImpl implements TrnService {
 		
 		return cnt;
 	}
+
+	/* (non-Javadoc)
+	 * @see kr.go.nssp.trn.service.TrnService#updateZeroNo(java.util.List)
+	 */
+	@Override
+	public int updateZeroNo(List<Map<String, Object>> param) throws Exception {
+		int cnt = 0;
+		
+		if(param.size() > 0 ){
+			for(Map<String, Object> map : param) {
+				if(map.containsKey("OCCRRNC_ZERO_NO")) {//발생통계원표번호가 존재하면
+					if(map.containsKey("OCCRRNC_ZERO_YEAR") && !"".equals(String.valueOf(map.get("OCCRRNC_ZERO_YEAR")))//년이 있으면
+							&& map.containsKey("OCCRRNC_ZERO_MON") && !"".equals(String.valueOf(map.get("OCCRRNC_ZERO_MON")))//월이 있으면
+							&& map.containsKey("OCCRRNC_ZERO_NUM") && !"".equals(String.valueOf(map.get("OCCRRNC_ZERO_NUM")))) {//본표번호가 있으면
+						cnt += trnDAO.updateTrnCaseZeroNo(map);
+					}
+				}else if(map.containsKey("ARREST_ZERO_NO")){
+					if(map.containsKey("ARREST_ZERO_YEAR") && !"".equals(String.valueOf(map.get("ARREST_ZERO_YEAR")))//년이 있으면
+							&& map.containsKey("ARREST_ZERO_MON") && !"".equals(String.valueOf(map.get("ARREST_ZERO_MON")))//월이 있으면
+							&& map.containsKey("ARREST_ZERO_NUM") && !"".equals(String.valueOf(map.get("ARREST_ZERO_NUM")))) {//본표번호가 있으면
+						cnt += trnDAO.updateTrnCaseZeroNo(map);
+					}
+				}else if(map.containsKey("SUSPCT_ZERO_NO")) {
+					if(map.containsKey("SUSPCT_ZERO_YEAR") && !"".equals(String.valueOf(map.get("SUSPCT_ZERO_YEAR")))//년이 있으면
+							&& map.containsKey("SUSPCT_ZERO_MON") && !"".equals(String.valueOf(map.get("SUSPCT_ZERO_MON")))//월이 있으면
+							&& map.containsKey("SUSPCT_ZERO_NUM") && !"".equals(String.valueOf(map.get("SUSPCT_ZERO_NUM")))) {//본표번호가 있으면
+						cnt += trnDAO.updateTrnSuspctZeroNo(map);
+					}
+				}
+			}
+			
+			if(param.size() != cnt) {
+				throw new Exception("저장 중 오류 발생했습니다.");
+			}
+		}
+		
+		return cnt;
+	}
 }

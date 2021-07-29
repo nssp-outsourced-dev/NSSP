@@ -39,7 +39,7 @@ var myGridID = "#grid_wrap";
 	 			<table class="tb_01">
 				    <colgroup>
 				    	<col width="150px">
-					    <col width="400px" style="min-width: 500px; max-width: 700px;">
+					    <col width="520px" style="min-width: 500px; max-width: 700px;">
 					    <col width="150px">
 					    <col width="">
 				    </colgroup>
@@ -155,11 +155,34 @@ var myGridID = "#grid_wrap";
 		     			<tr class="trHeight">
 		       				<th>발생일시</th>
 							<td class="t_left">
-						   		${caseInfo.OCCRRNC_BEGIN_DT}
-						   		<c:if test="${NULL != caseInfo.OCCRRNC_BEGIN_DT}">
+								<div class=" flex_r">
+									<!--달력폼-->
+									<div class="calendar_box  w_120px  mr_5">
+										<input type="text" 	 id="txtOccrrncBeginDe"	  name="txtOccrrncBeginDe"	class="w_100p input_com calendar"	readonly="readonly" value="${caseInfo.OCCRRNC_BEGIN_DE}" disabled="disabled">
+									</div>
+									<div class="fl">
+										<input type="text"   id="txtOccrrncBeginDeHh" name="txtOccrrncBeginDeHh" class="input_com" onkeyup="fnHHMMChk(event,'HH')" maxlength="2" style="width: 40px;" value="${caseInfo.OCCRRNC_BEGIN_DE_HH}" disabled="disabled"/>:
+										<input type="text"   id="txtOccrrncBeginDeMi" name="txtOccrrncBeginDeMi" class="input_com" onkeyup="fnHHMMChk(event,'MM')" maxlength="2" style="width: 40px;" value="${caseInfo.OCCRRNC_BEGIN_DE_MI}" disabled="disabled"/>
+									</div>
 									&nbsp;~&nbsp;
-								</c:if>  
-								${caseInfo.OCCRRNC_END_DT}
+									<!--달력폼-->
+									<div class="calendar_box  w_120px ml_5 mr_5">
+										<input type="text" 	 id="txtOccrrncEndDe"	  name="txtOccrrncEndDe"	class="w_100p input_com calendar"	readonly="readonly" value="${caseInfo.OCCRRNC_END_DE}" disabled="disabled">
+									</div>
+									<div class="fl">
+										<input type="text"   id="txtOccrrncEndDeHh"   name="txtOccrrncEndDeHh" class="input_com" onkeyup="fnHHMMChk(event,'HH')" maxlength="2" style="width: 40px;" value="${caseInfo.OCCRRNC_END_DE_HH}" disabled="disabled" />:
+										<input type="text"   id="txtOccrrncEndDeMi"   name="txtOccrrncEndDeMi" class="input_com" onkeyup="fnHHMMChk(event,'MM')" maxlength="2" style="width: 40px;" value="${caseInfo.OCCRRNC_END_DE_MI}" disabled="disabled" />
+									</div>
+									&nbsp;
+									<input type="button" id="OccrrncModBtn" value="수정" class="btn_st1 icon_n mr_2" style="width: 50px;padding-left: 0px;padding-right: 0px;">
+									<input type="button" id="OccrrncSaveBtn" value="저장" class="btn_st1 icon_n mr_2" style="width: 50px;padding-left: 0px;padding-right: 0px; display: none;">
+								<%-- ${caseInfo.OCCRRNC_BEGIN_DT}
+								<c:if test="${NULL != caseInfo.OCCRRNC_BEGIN_DT}">
+									&nbsp;~&nbsp;
+								</c:if>
+								${caseInfo.OCCRRNC_END_DT} --%>
+								</div>
+								
 							</td>
 							<th>접수형태 </th>
 						   	<td class="t_left">
@@ -271,7 +294,7 @@ var myGridID = "#grid_wrap";
 
 <script type="text/javascript">
 	$(function() {
-		$("#tmprCaseDt, #outsetDt, #resultDt, #prsctDt, #invResmptDt").datepicker({
+		$("#tmprCaseDt, #outsetDt, #resultDt, #prsctDt, #invResmptDt, #txtOccrrncBeginDe, #txtOccrrncEndDe").datepicker({
 			dateFormat : 'yy-mm-dd',
 			monthNames : [ '1월', '2월', '3월', '4월', '5월', '6월', '7월', '8월',
 					'9월', '10월', '11월', '12월' ],
@@ -458,6 +481,47 @@ var myGridID = "#grid_wrap";
 				Ajax.getJson("<c:url value='/rc/updateDeAjax/'/>", param, fn);
 			}
 		}
+		
+		/************************************************************************************/
+		$("#OccrrncModBtn").on("click", function(){
+			var isDisabled = $("#txtOccrrncBeginDe").attr("disabled");
+			$("#txtOccrrncBeginDe, #txtOccrrncBeginDeHh, #txtOccrrncBeginDeMi, #txtOccrrncEndDe, #txtOccrrncEndDeHh, #txtOccrrncEndDeMi").attr("disabled", !isDisabled);
+			
+			$(this).hide();
+			$("#OccrrncSaveBtn").show();
+		});
+		
+		$("#OccrrncSaveBtn").on("click", function(){
+			var occrrnc_begin_dt = $("#txtOccrrncBeginDe").val() + $("#txtOccrrncBeginDeHh").val() + $("#txtOccrrncBeginDeMi").val();
+			var occrrnc_end_dt = $("#txtOccrrncEndDe").val() + $("#txtOccrrncEndDeHh").val() + $("#txtOccrrncEndDeMi").val()
+			
+			if(occrrnc_begin_dt == "" || 
+					occrrnc_begin_dt.length == 0 || 
+					occrrnc_begin_dt == undefined){
+				alert("수정한 자료가 없습니다.");
+				return false;
+			}
+			
+			if(occrrnc_end_dt == "" || 
+					occrrnc_end_dt.length == 0 || 
+					occrrnc_end_dt == undefined){
+				alert("수정한 자료가 없습니다.");
+				return false;
+			}
+			
+			updateDeAjax({occrrnc_begin_dt: occrrnc_begin_dt, occrrnc_end_dt: occrrnc_end_dt}, function(data){
+				if(data.result == "1"){
+					var isDisabled = $("#txtOccrrncBeginDe").attr("disabled");
+					$("#txtOccrrncBeginDe, #txtOccrrncBeginDeHh, #txtOccrrncBeginDeMi, #txtOccrrncEndDe, #txtOccrrncEndDeHh, #txtOccrrncEndDeMi").attr("disabled", !isDisabled);
+					
+					$("#OccrrncSaveBtn").hide();
+					$("#OccrrncModBtn").show();
+				}else{
+					alert("진행중 오류가 발생하였습니다.");
+				}
+			});
+		});
+		/************************************************************************************/
 	});	
 </script>
 	

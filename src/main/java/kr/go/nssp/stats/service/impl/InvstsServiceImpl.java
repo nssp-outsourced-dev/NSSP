@@ -3,6 +3,7 @@ package kr.go.nssp.stats.service.impl;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.annotation.Resource;
 
@@ -52,5 +53,44 @@ public class InvstsServiceImpl implements InvstsService {
 	public List<HashMap> selectVidoTrplant(HashMap map) throws Exception {
 		return invstsDAO.selectVidoTrplant(map);
 	}
-
+	
+	/* (non-Javadoc)
+	 * @see kr.go.nssp.stats.service.InvstsService#updateAtend(java.util.Map)
+	 */
+	@Override
+	public int updateAtend(List<Map<String, Object>> param) throws Exception {
+		int cnt = 0;
+		
+		if(param.size() > 0 ){
+			for(Map<String, Object> map : param) {
+				cnt += invstsDAO.updateAtend(map);
+			}
+			
+			if(param.size() != cnt) {
+				throw new Exception("저장 중 오류 발생했습니다.");
+			}
+		}
+		
+		return cnt;
+	}
+	
+	/* (non-Javadoc)
+	 * @see kr.go.nssp.stats.service.InvstsService#updateSugestStats(java.util.Map)
+	 */
+	@Override
+	public int updateSugestStats(List<HashMap> param) throws Exception {
+		int cnt = 0;
+		
+		if(param.size() > 0 ){
+			for(HashMap map : param) {
+				cnt += invstsDAO.updateSugestStats(map);
+			}
+			
+			if(param.size() != cnt) {
+				throw new Exception("저장 중 오류 발생했습니다.");
+			}
+		}
+		
+		return cnt;
+	}
 }

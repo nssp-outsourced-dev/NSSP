@@ -321,7 +321,9 @@
 						FN_CD_NM(A.ATEND_NTICE_CD) AS ATEND_NTICE_NM,
 						DECODE(A.ATEND_YN,'Y','출석','N','미출석','') AS ATEND_RST,
 						FN_USER_NM(CHARGER_ID) AS CHARGER_NM,
-						A.VIEW_SN
+						A.VIEW_SN,
+						A.TRGTER_SN, --대상자 일련번호
+						A.ATEND_YN --조회 일련번호
 					FROM INV_PRSCT_ATEND A
 					LEFT JOIN RC_TMPR_TRGTER D ON A.RC_NO = D.RC_NO AND A.TRGTER_SN = D.TRGTER_SN
 					LEFT JOIN RC_TMPR C ON A.RC_NO = C.RC_NO
@@ -499,7 +501,8 @@
 					FN_RC_TRGTER_NM (S.RC_NO, '00697') AS TRGTER_NM_S,  /*피의자*/
 					FN_CD_NM (C.INV_PROVIS_CD) AS INV_PROVIS_NM,
 					DECODE(C.RC_SE_CD, 'T' ,'임시','I','내사','F','정식') AS RC_SE_NM,
-					FN_RC_VIOLT_ROOT_NM (S.RC_NO) AS VIOLT_ROOT_NM
+					FN_RC_VIOLT_ROOT_NM (S.RC_NO) AS VIOLT_ROOT_NM,
+					S.PRESENTER /* 제출자 */
 					FROM INV_SUGEST S
 					JOIN RC_TMPR C ON S.RC_NO = C.RC_NO
 					WHERE S.USE_YN = 'Y'
@@ -1003,7 +1006,38 @@
 		<isNotEmpty property="startRow" >
 			WHERE (RN <![CDATA[ > ]]> #startRow# AND RN <![CDATA[ <= ]]> #endRow#)
 		</isNotEmpty>
-		ORDER BY RN ASC
 	</select>
-
+	
+	<!-- 
+		2021.08.02
+		coded by dgkim
+		출석요구통지부 > 출석요구시간 및 결과 수정 기능 추가
+		김지만 수사관 요청
+	 -->
+	<update id="updateAtend" parameterClass="java.util.HashMap">
+		UPDATE INV_PRSCT_ATEND
+			SET ATEND_DEMAND_DT = TO_DATE(#grdAtendDemandDt#, 'YYYY-MM-DD HH24:MI') --출석 요구 일시
+				, ATEND_YN = #grdAtendYn# --출석 여부
+				, UPDT_ID = #esntl_id# --수정 ID
+				, UPDT_DT = SYSDATE --수정 일시
+		WHERE RC_NO = #grdRcNo# --접수 번호
+			AND TRGTER_SN = #grdTrgterSn# --대상자 일련번호
+			AND DEMAND_SN = #grdDemandSn# --요구 일련번호
+			AND VIEW_SN = #grdViewSn# --조회 일련번호
+	</update>
+	
+	<!-- 
+		2021.08.03
+		coded by dgkim
+		지휘건의부 제출자 입력란 추가
+		김지만 수사관 요청
+	 -->
+	 <update id="updateSugestStats" parameterClass="java.util.HashMap">
+		UPDATE INV_SUGEST
+			SET PRESENTER = #grdPresenter# --제출자
+				, UPDT_ID = #esntl_id# --수정 ID
+				, UPDT_DT = SYSDATE --수정 일시
+		WHERE SUGEST_NO = #grdSugestNo# --건의 번호
+			AND RC_NO = #grdRcNo# --접수 번호
+	 </update>
 </sqlMap>

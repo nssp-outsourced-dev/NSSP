@@ -30,35 +30,37 @@
 
 	function initGrid() {
 		var columnLayout = [
-			{ dataField : "grdRn", 				headerText : "순번", 			width : 50},		
-			{ dataField : "grdSugestNo", 		headerText : "지휘번호(접수번호)", 	width : 150,
+			{ dataField : "grdRn", 				headerText : "순번", 			width : 50, editable : false },		
+			{ dataField : "grdSugestNo", 		headerText : "지휘번호(접수번호)", 	width : 150,editable : false,
 				renderer : {type : "TemplateRenderer"},
 				labelFunction : function (rowIndex, columnIndex, value, headerText, item ) {
 					return fnChangeNo (value);
 				}
 			},
-			{ dataField : "grdSugestDe", 		headerText : "지휘요구일자", 	width : 130, dataType : "date", formatString : "yyyy-mm-dd"},
-			{ dataField : "grdTrgterNmS", 		headerText : "피의자"	  },
-			{ dataField : "grdVioltRootNm", 	headerText : "죄명"	  },
-			{ dataField : "", 		headerText : "제출지", width : 130 },
-			{ dataField : "grdCmndPrsecNm", 	headerText : "지휘검사", 			width : 130 },
-			{ dataField : "grdCmptncExmnNm", 	headerText : "지휘관서"  },
-			{ dataField : "grdCmndDe", 			headerText : "지휘일자", 	width : 130, dataType : "date", formatString : "yyyy-mm-dd"},
-			{ dataField : "grdSugestResultNm", 	headerText : "건의결과",  	width : 100  },
-			{ dataField : "grdCaseNo", 			headerText : "사건번호",  	width : 130,
+			{ dataField : "grdSugestDe", 		headerText : "지휘요구일자", 	width : 130, dataType : "date", formatString : "yyyy-mm-dd", editable : false },
+			{ dataField : "grdTrgterNmS", 		headerText : "피의자"	, editable : false },
+			{ dataField : "grdVioltRootNm", 	headerText : "죄명"	 , editable : false },
+			{ dataField : "grdPresenter", 		headerText : "제출자<span class='point'><img src='/img/icon_dot.png'/></span>", width : 130, editable : true },
+			{ dataField : "grdCmndPrsecNm", 	headerText : "지휘검사", 			width : 130, editable : false },
+			{ dataField : "grdCmptncExmnNm", 	headerText : "지휘관서", editable : false },
+			{ dataField : "grdCmndDe", 			headerText : "지휘일자", 	width : 130, dataType : "date", formatString : "yyyy-mm-dd", editable : false },
+			{ dataField : "grdSugestResultNm", 	headerText : "건의결과",  	width : 100, editable : false },
+			{ dataField : "grdCaseNo", 			headerText : "사건번호",  	width : 130, editable : false,
 				renderer : {type : "TemplateRenderer"},
 				labelFunction : function (rowIndex, columnIndex, value, headerText, item ) {
 					return fnChangeNo (value);
 				}
 			},
-			{ dataField : "", 		headerText : "수령자", width : 130  }  
+			{ dataField : "", 		headerText : "수령자", width : 130, editable : false }  
 		];
 		var gridPros = {
 			headerHeight : 30,
 			rowHeight: 30,
 			//noDataMessage:"조회 목록이 없습니다.",
 			fillColumnSizeMode : true,
-			showRowNumColumn : false
+			showRowNumColumn : false,
+			editBeginMode : "click",
+			editable : true
 		};
 		myGridID = AUIGrid.create("#grid_list", columnLayout, gridPros);
 		AUIGrid.bind("#grid_list", "cellDoubleClick", function(event) {
@@ -106,7 +108,23 @@
 			});
 		}
 	};
-
+	
+	/**/
+	function fnSaveSugestStats(){
+		var editedRowItems = AUIGrid.getEditedRowItems( "#grid_list" );
+		if( editedRowItems.length == 0 ){
+			alert("수정한 자료가 없습니다.");
+			return;
+		}
+		//console.log(editedRowItems);
+		var data = fnAjaxAction( "/invsts/updateSugestStatsAjax/", JSON.stringify({ sList:editedRowItems }) );
+		if( data.result == "1" ){
+			alert("저장 되었습니다.");
+			fnSearch();
+		} else {
+			alert("저장중 오류가 발생했습니다.");
+		}
+	}
 </script>
 
 <!--검색박스 -->
@@ -180,6 +198,7 @@
 	<!-- 안내박스  -->
 	<!--버튼 -->
 	<div class="right_btn fr mb_10">
+		<a href="javascript:fnSaveSugestStats();" class="btn_st2 icon_n fl mr_m1">저장</a>
 		<a href="javascript:fnExportTo();" class="btn_st2 icon_n fl mr_m1">엑셀출력</a>
 		<a href="javascript:fnCaseDetail();" class="btn_st2_2 icon_n fl mr_m1">사건상세보기</a>
 	</div>

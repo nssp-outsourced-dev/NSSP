@@ -2,6 +2,7 @@ package kr.go.nssp.stats.service.impl;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.stereotype.Repository;
 
@@ -45,5 +46,34 @@ public class InvstsDAO extends EgovComAbstractDAO {
 	public List<HashMap> selectVidoTrplant(HashMap map) throws Exception {
 		return list("invsts.selectVidoTrplant", map);
 	}
+	
+	/** 
+	 * @methodName : updateAtend
+	 * @date : 2021.08.02
+	 * @author : dgkim
+	 * @description : 
+	 * 		출석요구통지부 > 출석요구시간 및 결과 수정 기능 추가
+	 * 		김지만 수사관 요청
+	 * @param param
+	 * @return
+	 * @throws Exception
+	 */
+	public int updateAtend(Map<String, Object> param) throws Exception {
+		return update("invsts.updateAtend", param);
+	}
 
-}
+	/** 
+	 * @methodName : updateSugestStats
+	 * @date : 2021.08.03
+	 * @author : dgkim
+	 * @description : 
+	 * 		지휘건의부 제출자 입력란 추가
+	 * 		김지만 수사관 요청
+	 * @param map
+	 * @return
+	 * @throws Exception
+	 */
+	public int updateSugestStats(HashMap map) throws Exception {
+		return update("invsts.updateSugestStats", map);
+	}
+}		

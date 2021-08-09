@@ -467,8 +467,7 @@
         LEFT JOIN RC_TMPR P ON A.RC_NO = P.RC_NO AND P.USE_YN = 'Y'
 		WHERE A.USE_YN != 'N'
 		  AND A.RC_NO    		= #rc_no#
-		  AND P.CHARGER_DEPT_CD = #dept_cd#
-		  AND P.CHARGER_ID 		= #esntl_id#
+		  
 		<isNotEmpty property="trgter_sn" open="AND">
 			A.TRGTER_SN 	= #trgter_sn#
 		</isNotEmpty>

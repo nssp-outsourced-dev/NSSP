@@ -17,6 +17,7 @@ import kr.go.nssp.utl.Utility;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -1087,5 +1088,73 @@ public class InvstsController {
 		cMap.put("cnt", list_cnt);
 		return new ModelAndView("ajaxView", "ajaxData", cMap);
 	}
-}
+	
+	/** 
+	 * @methodName : updateAtendAjax
+	 * @date : 2021.08.02
+	 * @author : dgkim
+	 * @description : 
+	 * 		출석요구통지부 > 출석요구시간 및 결과 수정 기능 추가
+	 * 		김지만 수사관 요청
+	 * @param session
+	 * @param param
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping(value = "/updateAtendAjax/")
+	public ModelAndView updateAtendAjax(HttpSession session, @RequestBody Map<String, Object> param) throws Exception {
+		String esntl_id = SimpleUtils.default_set(session.getAttribute("esntl_id").toString());
+		String result = "1";
+		
+		try{
+			List<Map<String, Object>> list = (List<Map<String, Object>>) param.get("sList");
+			for(Map<String, Object> obj : list) {
+				obj.put("esntl_id", esntl_id);
+			}
+			
+			invstsService.updateAtend(list);
+		}catch (Exception e) {
+			result = "-1";
+		}
 
+		Map<String, String> ret = new HashMap<String, String>();
+		ret.put("result", result);
+
+		return new ModelAndView("ajaxView", "ajaxData", ret);
+	}
+	
+	/** 
+	 * @methodName : updateSugestStatsAjax
+	 * @date : 2021.08.03
+	 * @author : dgkim
+	 * @description : 
+	 * 		지휘건의부 제출자 입력란 추가
+	 * 		김지만 수사관 요청
+	 * @param session
+	 * @param param
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping(value = "/updateSugestStatsAjax/")
+	public ModelAndView updateSugestStatsAjax(HttpSession session, @RequestBody Map<String, Object> param) throws Exception {
+		String esntl_id = SimpleUtils.default_set(session.getAttribute("esntl_id").toString());
+		String result = "1";
+		
+		try{
+			List<HashMap> list = (List<HashMap>) param.get("sList");
+			
+			for(HashMap obj : list) {
+				obj.put("esntl_id", esntl_id);
+			}
+			
+			invstsService.updateSugestStats(list);
+		}catch (Exception e) {
+			result = "-1";
+		}
+
+		Map<String, String> ret = new HashMap<String, String>();
+		ret.put("result", result);
+
+		return new ModelAndView("ajaxView", "ajaxData", ret);
+	}
+}

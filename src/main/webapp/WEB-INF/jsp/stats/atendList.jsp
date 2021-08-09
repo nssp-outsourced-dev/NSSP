@@ -30,21 +30,50 @@
 
 	function initGrid() {
 		var columnLayout = [
-			{ dataField : "grdRn", 		headerText : "순번", width : 50},
-			{ dataField : "grdViewSn", 	headerText : "출석요구번호", width : 120,
+			{dataField : "grdTrgterSn", visible: false},
+			{ dataField : "grdRn", 		headerText : "순번", width : 50, editable : false },
+			{ dataField : "grdViewSn", 	headerText : "출석요구번호", width : 120, editable : false,
 				renderer : {type : "TemplateRenderer"},
 				labelFunction : function (rowIndex, columnIndex, value, headerText, item ) {
 					return fnChangeNo (value);
 				}
 			},
-			{ dataField : "grdAtendDemandDt", headerText : "출석요구일시" },
-			{ dataField : "grdTrgterSeNm", headerText : "출석자구분", width : 120},
-			{ dataField : "grdTrgterNm", headerText : "출석자성명", width : 120},
-			{ dataField : "grdCaseNo", headerText : "사건번호", width : 130},
-			{ dataField : "grdAtendNticeDe", headerText : "출석요구통지일", width : 140, dataType : "date", formatString : "yyyy-mm-dd" },
-			{ dataField : "grdAtendNticeNm", headerText : "출석요구통지방법" },
-			{ dataField : "grdAtendRst", headerText : "결과" },
-			{ dataField : "grdChargerNm", headerText : "담당자" }
+			{ dataField : "grdAtendDemandDt", headerText : "출석요구일시<span class='point'><img src='/img/icon_dot.png'/></span>", editable : true  },
+			{ dataField : "grdTrgterSeNm", headerText : "출석자구분", width : 120, editable : false },
+			{ dataField : "grdTrgterNm", headerText : "출석자성명", width : 120, editable : false },
+			{ dataField : "grdCaseNo", headerText : "사건번호", width : 130, editable : false },
+			{ dataField : "grdAtendNticeDe", headerText : "출석요구통지일", width : 140, dataType : "date", formatString : "yyyy-mm-dd", editable : false },
+			{ dataField : "grdAtendNticeNm", headerText : "출석요구통지방법", editable : false },
+			{ dataField : "grdAtendYn", headerText : "결과<span class='point'><img src='/img/icon_dot.png'/></span>", editable : true,
+				labelFunction : function(  rowIndex, columnIndex, value, headerText, item ) { 
+					var retStr = "";
+					/* for(var i=0, len = resultList.length; i < len; i++) {
+						if(resultList[i]["ATEND_YN"] == value) {
+							retStr = resultList[i]["ATEND_RST"];
+							break;
+						}
+					} */
+					resultList.forEach(function(i){
+						if(value == undefined){
+							retStr = "";
+						} else if(i.ATEND_YN == value){
+							retStr = i.ATEND_RST;
+							return;
+						}
+					});
+					
+					return retStr;// == "" ? value : retStr;
+				},
+				editRenderer : {// 편집 모드 진입 시 드랍다운리스트 출력하고자 할 때
+					type : "DropDownListRenderer",
+					showEditorBtn: true,
+					showEditorBtnOver: true,
+					list : resultList,
+					keyField: "ATEND_YN",
+					valueField: "ATEND_RST"
+				} 
+			},
+			{ dataField : "grdChargerNm", headerText : "담당자", editable : false }
 		];
 
 		var gridPros = {
@@ -52,7 +81,9 @@
 			rowHeight: 30,
 			//noDataMessage:"조회 목록이 없습니다.",
 			fillColumnSizeMode : true,
-			showRowNumColumn : false
+			showRowNumColumn : false,
+			editBeginMode : "click",
+			editable : true,
 		};
 		myGridID = AUIGrid.create("#grid_list", columnLayout, gridPros);
 		AUIGrid.bind("#grid_list", "cellDoubleClick", function(event) {
@@ -101,6 +132,49 @@
 		}
 	};
 
+	/*
+		2021.08.02
+		coded by dgkim
+		출석요구통지부 > 출석요구시간 및 결과 수정 기능 추가
+		김지만 수사관 요청
+	*/
+	var resultList = [
+		{"ATEND_YN": "", "ATEND_RST": "선택안함"},
+		{"ATEND_YN": "Y", "ATEND_RST": "출석"},
+		{"ATEND_YN": "N", "ATEND_RST": "미출석"}
+	];
+	
+	function fnSaveAtend(){
+		var editedRowItems = AUIGrid.getEditedRowItems( "#grid_list" );
+		if( editedRowItems.length == 0 ){
+			alert("수정한 자료가 없습니다.");
+			return;
+		}
+		
+		/* 날짜 형식 체크 */
+		//날짜시간 정규식(ex: 2020.07.28.12:00)
+		//참고 : https://junghn.tistory.com/entry/JavaScript-%EC%9E%90%EB%B0%94%EC%8A%A4%ED%81%AC%EB%A6%BD%ED%8A%B8%EB%A1%9C-%EB%82%A0%EC%A7%9C-%EC%8B%9C%EA%B0%84-%EC%9C%A0%ED%9A%A8%EC%84%B1-%EC%B2%B4%ED%81%AC-%EB%82%A0%EC%A7%9C-%EC%8B%9C%EA%B0%84-%EC%A0%95%EA%B7%9C%EC%8B%9D-%ED%91%9C%ED%98%84-%EB%B0%A9%EB%B2%95
+		var regex = RegExp(/^(19|20)\d{2}.(0[1-9]|1[012]).(0[1-9]|[12][0-9]|3[0-1]).([1-9]|[01][0-9]|2[0-3]):([0-5][0-9])$/);
+		var check = true;
+		
+		editedRowItems.forEach(function(item){
+			if( !regex.test(item.grdAtendDemandDt) ){
+				alert("날짜 형식이 맞지 않습니다.");
+				check = false;
+				return;
+			}
+		});
+		
+		if( !check ) return;
+			
+		var data = fnAjaxAction( "/invsts/updateAtendAjax/", JSON.stringify({ sList:editedRowItems }) );
+		if( data.result == "1" ){
+			alert("저장 되었습니다.");
+			fnSearch();
+		} else {
+			alert("저장중 오류가 발생했습니다.");
+		}
+	}
 </script>
 
 <!--검색박스 -->
@@ -174,6 +248,7 @@
 	<!-- 안내박스  -->
 	<!--버튼 -->
 	<div class="right_btn fr mb_10">
+		<a href="javascript:fnSaveAtend();" class="btn_st2 icon_n fl mr_m1">저장</a>
 		<a href="javascript:fnExportTo();" class="btn_st2 icon_n fl mr_m1">엑셀출력</a>
 		<a href="javascript:fnCaseDetail();" class="btn_st2_2 icon_n fl mr_m1">사건상세보기</a>
 	</div>

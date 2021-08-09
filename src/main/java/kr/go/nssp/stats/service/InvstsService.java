@@ -16,4 +16,29 @@ public interface InvstsService {
 	public List<HashMap> selectRefeList(HashMap map) throws Exception;
 	public List<HashMap> selectVidoTrplant(HashMap map) throws Exception;
 
+	/** 
+	 * @methodName : updateAtend
+	 * @date : 2021.08.02
+	 * @author : dgkim
+	 * @description : 
+	 * 		출석요구통지부 > 출석요구시간 및 결과 수정 기능 추가
+	 * 		김지만 수사관 요청
+	 * @param param
+	 * @return
+	 * @throws Exception
+	 */
+	public int updateAtend(List<Map<String, Object>> param) throws Exception;
+	
+	/** 
+	 * @methodName : updateSugestStats
+	 * @date : 2021.08.03
+	 * @author : dgkim
+	 * @description : 
+	 * 		지휘건의부 제출자 입력란 추가
+	 * 		김지만 수사관 요청
+	 * @param param
+	 * @return
+	 * @throws Exception
+	 */
+	public int updateSugestStats(List<HashMap> param) throws Exception;
 }

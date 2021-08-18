@@ -33,9 +33,17 @@
 	}
 
 	function initGrid() {
+		/*
+			2021.08.02
+			coded by dgkim
+			양식 변경으로 인한 서식 변경
+			원안위도 아래 정확한 내용을 모르기 때문에 화면만 재구성
+			정확한 데이터 작업은 추후 진행
+			김지만 수사관 요청
+		*/
 		var columnLayout = [
 			{ dataField : "grdRn", 		headerText : "순번", width : 50},
-			{ dataField : "grdArrstSn", headerText : "진행번호", width : 80},
+			{ dataField : "grdArrstSn", headerText : "집행번호", width : 80},
 			{ dataField : "grdCaseNo", 	headerText : "사건번호", width : 120,
 				renderer : {type : "TemplateRenderer"},
 				labelFunction : function (rowIndex, columnIndex, value, headerText, item ) {
@@ -46,17 +54,16 @@
 				children: [
 					{ dataField : "grdTrgterNm", headerText : "성명", width : 100},
 					{ dataField : "grdTrgterRrn", headerText : "주민등록번호", width : 150},
-					{ dataField : "grdOccpNm", headerText : "직업"}/* , */
-					/* { dataField : "grdDwlsitAddr", headerText : "주거", style:'tbLft' } */,/* 2021-04-27 hsno 주거 Text 주석처리 */
+					{ dataField : "grdOccpNm", headerText : "직업"},
 				]
 			},
 			{ dataField : "grdVioltRootNm", headerText : "죄명", style:'tbLft' },
-			{ dataField : "grdWritngDt", headerText : "긴급체포서작성<br/>연월일", width : 120},
+			{ dataField : "grdWritngDt", headerText : "긴급체포서작성연월일", width : 150},
 			{ headerText : "긴급체포",
 				children: [
 					{ dataField : "grdArrstDt", headerText : "체포일시", width : 120},
 					{ dataField : "grdArrstPlace", headerText : "체포장소", width : 120, style:'tbLft'},
-					{ dataField : "grdArrester", headerText : "체포자의 관직<br/>및 성명", width : 120},
+					{ dataField : "grdArrester", headerText : "체포자의 집급 및 성명", width : 150},
 					{ dataField : "grdAttractDt", headerText : "인치일시", width : 120},
 					{ dataField : "grdAttractPlace", headerText : "인치장소", style:'tbLft' },
 					{ dataField : "grdCnfnmDt", headerText : "구금일시", width : 120},
@@ -89,10 +96,72 @@
 			},
 			{ headerText : "구속영장신청",
 				children: [
-					{ dataField : "grdZrlongReqstYn", headerText : "신청여부" }
+					{ dataField : "", headerText : "신청부번호" },
+					{ dataField : "", headerText : "발부연월일", dataType : "date", formatString : "yyyy-mm-dd"}
 				]
-			}
+			},
+			{ dataField : "", headerText : "비고"},
 		];
+		/* var columnLayout = [
+		{ dataField : "grdRn", 		headerText : "순번", width : 50},
+		{ dataField : "grdArrstSn", headerText : "진행번호", width : 80},
+		{ dataField : "grdCaseNo", 	headerText : "사건번호", width : 120,
+			renderer : {type : "TemplateRenderer"},
+			labelFunction : function (rowIndex, columnIndex, value, headerText, item ) {
+				return fnChangeNo (value);
+			}
+		},
+		{ headerText : "피의자",
+			children: [
+				{ dataField : "grdTrgterNm", headerText : "성명", width : 100},
+				{ dataField : "grdTrgterRrn", headerText : "주민등록번호", width : 150},
+				{ dataField : "grdOccpNm", headerText : "직업"},
+				//{ dataField : "grdDwlsitAddr", headerText : "주거", style:'tbLft' }, //2021-04-27 hsno 주거 Text 주석처리
+			]
+		},
+		{ dataField : "grdVioltRootNm", headerText : "죄명", style:'tbLft' },
+		{ dataField : "grdWritngDt", headerText : "긴급체포서작성<br/>연월일", width : 120},
+		{ headerText : "긴급체포",
+			children: [
+				{ dataField : "grdArrstDt", headerText : "체포일시", width : 120},
+				{ dataField : "grdArrstPlace", headerText : "체포장소", width : 120, style:'tbLft'},
+				{ dataField : "grdArrester", headerText : "체포자의 관직<br/>및 성명", width : 120},
+				{ dataField : "grdAttractDt", headerText : "인치일시", width : 120},
+				{ dataField : "grdAttractPlace", headerText : "인치장소", style:'tbLft' },
+				{ dataField : "grdCnfnmDt", headerText : "구금일시", width : 120},
+				{ dataField : "grdCnfnmPlace", headerText : "구금장소", style:'tbLft' },
+				{ headerText : "검사지휘",
+					children: [
+						{ dataField : "grdSugestResultY", headerText : "승인",  	width : 60,
+							renderer : {
+								type : "CheckBoxEditRenderer",
+								checkValue : 'Y',
+								unCheckValue : 'N'
+							}
+						},
+						{ dataField : "grdSugestResultN", headerText : "불승인", 	width : 60,
+							renderer : {
+								type : "CheckBoxEditRenderer",
+								checkValue : 'Y',
+								unCheckValue : 'N'
+							}
+						},
+					]
+				}
+			]
+		},
+		{ headerText : "석방",
+			children: [
+				{ dataField : "grdRslDt", headerText : "일시", width : 120},
+				{ dataField : "grdRslResn", headerText : "사유", style:'tbLft' }
+			]
+		},
+		{ headerText : "구속영장신청",
+			children: [
+				{ dataField : "grdZrlongReqstYn", headerText : "신청여부" }
+			]
+		}
+	]; */
 
 		var gridPros = {
 			headerHeight : 30,

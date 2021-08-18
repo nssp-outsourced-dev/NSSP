@@ -33,7 +33,72 @@
 	}
 
 	function initGrid() {
+		/*
+			2021.08.02
+			coded by dgkim
+			양식 변경으로 인한 서식 변경
+			원안위도 아래 정확한 내용을 모르기 때문에 화면만 재구성
+			정확한 데이터 작업은 추후 진행
+			김지만 수사관 요청
+		*/
 		var columnLayout = [
+			{ dataField : "grdRn", 		headerText : "순번", width : 50},
+			{ dataField : "grdArrstSn", headerText : "진행번호", width : 60},
+			{ dataField : "grdCaseNo", 	headerText : "사건번호", width : 120,
+				renderer : {type : "TemplateRenderer"},
+				labelFunction : function (rowIndex, columnIndex, value, headerText, item ) {
+					return fnChangeNo (value);
+				}
+			},
+			{ headerText : "피의자",
+				children: [
+					{ dataField : "grdTrgterNm", headerText : "성명", width : 100},
+					{ dataField : "grdTrgterRrn", headerText : "주민등록번호", width : 150},
+					{ dataField : "grdOccpNm", headerText : "직업"},
+				]
+			},
+			{ dataField : "grdVioltRootNm", headerText : "죄명", style:'tbLft' },
+			{ dataField : "grdWritngDt", headerText : "현행범인체포서<br/>또는<br/>현행범인인수서<br/>작성일", width : 120},
+			{ headerText : "현행범인체포 및 인수",
+				children: [
+					{ dataField : "grdArrstDt", headerText : "체포한 일시", width : 120},
+					{ dataField : "grdArrstPlace", headerText : "체포한 장소", width : 120, style:'tbLft' },
+					{ headerText : "체포자",
+						children: [
+							{ dataField : "grdArresterNm", headerText : "성명", width : 100},
+							{ dataField : "grdArresterRrn", headerText : "주민등록번호", width : 120},
+							{ dataField : "grdArresterDwlsit", headerText : "주거 또는 직급",width : 120, style:'tbLft' },
+						]
+					},
+					{ dataField : "grdUndtakeDt", headerText : "인수한 일시", width : 120},
+					{ dataField : "grdUndtakePlace", headerText : "인수한 장소"},
+					{ headerText : "인수한자",
+						children: [
+							{ dataField : "grdAcptrClss", headerText : "직급" },
+							{ dataField : "grdAcptrNm", headerText : "성명" },
+						]
+					},
+					{ dataField : "grdAttractDt", headerText : "인치한 일시", width : 120},
+					{ dataField : "grdAttractPlace", headerText : "인치한 장소", style:'tbLft' },
+					{ dataField : "grdCnfnmDt", headerText : "구금한 일시", width : 120},
+					{ dataField : "grdCnfnmPlace", headerText : "구금한 장소", style:'tbLft' },
+				]
+			},
+			{ headerText : "석방",
+				children: [
+					{ dataField : "grdRslDt", headerText : "일시", width : 120},
+					{ dataField : "grdRslResn", headerText : "사유", style:'tbLft' }
+				]
+			},
+			{ headerText : "구속영장신청",
+				children: [
+					{ dataField : "", headerText : "신청부번호", width : 120 },
+					{ dataField : "", headerText : "발부연월일", width : 120 }
+				]
+			},
+			{ dataField : "", headerText : "비고",}
+		];
+		/* var columnLayout = [
 			{ dataField : "grdRn", 		headerText : "순번", width : 50},
 			{ dataField : "grdArrstSn", headerText : "진행<br/>번호", width : 60},
 			{ dataField : "grdCaseNo", 	headerText : "사건번호", width : 120,
@@ -47,9 +112,8 @@
 					{ dataField : "grdTrgterNm", headerText : "성명", width : 100},
 					{ dataField : "grdTrgterRrn", headerText : "주민등록번호", width : 150},
 					{ dataField : "grdOccpNm", headerText : "직업"},
-					/*  2021-07-08 dgkim 주거지 테이블 주석처리
-					{ dataField : "grdDwlsitAddr", headerText : "주거", style:'tbLft' },
-					*/
+					//2021-07-08 dgkim 주거지 테이블 주석처리
+					//{ dataField : "grdDwlsitAddr", headerText : "주거", style:'tbLft' },
 				]
 			},
 			{ dataField : "grdVioltRootNm", headerText : "죄명", style:'tbLft' },
@@ -91,7 +155,7 @@
 					{ dataField : "grdZrlongReqstYn", headerText : "신청여부", width : 120 }
 				]
 			}
-		];
+		]; */
 
 		var gridPros = {
 			headerHeight : 30,

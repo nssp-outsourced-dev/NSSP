@@ -33,7 +33,87 @@
 	}
 
 	function initGrid() {
+		/*
+			2021.08.02
+			coded by dgkim
+			양식 변경으로 인한 서식 변경
+			원안위도 아래 정확한 내용을 모르기 때문에 화면만 재구성
+			정확한 데이터 작업은 추후 진행
+			김지만 수사관 요청
+		*/
 		var columnLayout = [
+			{ dataField : "grdRn", 		headerText : "순번", width : 50},
+			{ dataField : "grdZrlongReqstNo", headerText : "진행번호", width : 120,
+				renderer : {type : "TemplateRenderer"},
+				labelFunction : function (rowIndex, columnIndex, value, headerText, item ) {
+					return fnChangeNo (value);
+				}
+			},
+			{ dataField : "grdCaseNo", headerText : "사건번호", width : 120,
+				renderer : {type : "TemplateRenderer"},
+				labelFunction : function (rowIndex, columnIndex, value, headerText, item ) {
+					return fnChangeNo (value);
+				}
+			},
+			{ dataField : "", headerText : "주임검사" },
+			{ dataField : "", headerText : "신청관서" },
+			{ headerText : "피의자",
+				children: [
+					{ dataField : "grdTrgterNm", headerText : "성명", width : 100},
+					{ dataField : "grdTrgterRrn", headerText : "주민등록번호", width : 150},
+					{ dataField : "grdOccpNm", headerText : "직업"},
+				]
+			},
+			{ dataField : "grdVioltRootNm", headerText : "죄명", style:'tbLft'},
+			{ dataField : "grdArrstDt", headerText : "체포일시 및 유형", colSpan : 2,
+				renderer : {type : "TemplateRenderer"},
+				labelFunction : function (rowIndex, columnIndex, value, headerText, item ) {
+					return "시 분";
+				}
+			},
+			{ dataField : "grdArsttNm",
+				renderer : {type : "TemplateRenderer"},
+				labelFunction : function (rowIndex, columnIndex, value, headerText, item ) {
+					return "체포 긴급체포 형행범인 체포(진행번호 )";
+				}
+			},
+			{ headerText : "영장신청 및 발부",
+				children: [
+					{ dataField : "grdPDsmsslInstt", headerText : "검사기각", width : 120 },
+					{ dataField : "grdCDsmsslInstt", headerText : "판사기각", width : 120 },
+					{ dataField : "grdIsueDt", headerText : "발부", width : 120},
+					{ headerText : "재신청",
+						children: [
+							{ dataField : "grdReReqstDe", headerText : "신청", width : 120},
+							{ dataField : "grdRePDsmsslInstt", headerText : "검사기각", width : 120 },
+							{ dataField : "grdReCDsmsslInstt", headerText : "판사기각", width : 120 },
+							{ dataField : "grdReIsueDt", headerText : "발부", width : 120},
+						]
+					},
+					{ headerText : "피의자 심문",
+						children: [
+							{ dataField : "", headerText : "신청인"},
+							{ dataField : "", headerText : "일련번호"},
+							{ dataField : "", headerText : "검사 또는 판사 성명"},
+							{ dataField : "", headerText : "접수일시"},
+							{ dataField : "", headerText : "접수자 직급 성명"},
+							{ dataField : "", headerText : "구인일시"},
+						]
+					},
+				]
+			},
+			{ dataField : "grdValidDt", headerText : "유효기간", width : 120},
+			{ headerText : "석방",
+				children: [
+					{ dataField : "grdRslDt", headerText : "연월일", width : 120},
+					{ dataField : "grdRslResn", headerText : "사유"}
+				]
+			},
+			{ dataField : "", headerText : "반환", width : 120},
+			{ dataField : "", headerText : "비고", width : 120},
+		];
+		
+		/* var columnLayout = [
 			{ dataField : "grdRn", 		headerText : "순번", width : 50},
 			{ dataField : "grdZrlongReqstNo", headerText : "신청번호", width : 120,
 				renderer : {type : "TemplateRenderer"},
@@ -48,16 +128,15 @@
 					return fnChangeNo (value);
 				}
 			},
-			/* { dataField : "", headerText : "주임검사" },
-			{ dataField : "", headerText : "신청관서" }, */
+			//{ dataField : "", headerText : "주임검사" },
+			//{ dataField : "", headerText : "신청관서" },
 			{ headerText : "피의자",
 				children: [
 					{ dataField : "grdTrgterNm", headerText : "성명", width : 100},
 					{ dataField : "grdTrgterRrn", headerText : "주민등록번호", width : 150},
 					{ dataField : "grdOccpNm", headerText : "직업"},
-					/*  2021-07-08 dgkim 주거지 테이블 주석처리
-					{ dataField : "grdDwlsitAddr", headerText : "주거", style:'tbLft'},
-					*/
+					//2021-07-08 dgkim 주거지 테이블 주석처리
+					//{ dataField : "grdDwlsitAddr", headerText : "주거", style:'tbLft'},
 				]
 			},
 			{ dataField : "grdVioltRootNm", headerText : "죄명", style:'tbLft'},
@@ -76,16 +155,16 @@
 							{ dataField : "grdReIsueDt", headerText : "발부", width : 120},
 						]
 					},
-					/* { headerText : "피의자 심문",
-						children: [
-							{ dataField : "", headerText : "신청인"},
-							{ dataField : "", headerText : "일련번호"},
-							{ dataField : "", headerText : "검사또는판사명"},
-							{ dataField : "", headerText : "접수일시"},
-							{ dataField : "", headerText : "접수자관직및성명"},
-							{ dataField : "", headerText : "구인일시"},
-						]
-					}, */
+					//{ headerText : "피의자 심문",
+						//children: [
+							//{ dataField : "", headerText : "신청인"},
+							//{ dataField : "", headerText : "일련번호"},
+							//{ dataField : "", headerText : "검사또는판사명"},
+							//{ dataField : "", headerText : "접수일시"},
+							//{ dataField : "", headerText : "접수자관직및성명"},
+							//{ dataField : "", headerText : "구인일시"},
+						//]
+					//},
 				]
 			},
 			{ dataField : "grdValidDt", headerText : "유효기간", width : 120},
@@ -95,7 +174,7 @@
 					{ dataField : "grdRslResn", headerText : "사유"}
 				]
 			}
-		];
+		]; */
 
 		var gridPros = {
 			headerHeight : 30,

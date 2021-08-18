@@ -93,4 +93,12 @@ public class InvstsServiceImpl implements InvstsService {
 		
 		return cnt;
 	}
+	
+	/* (non-Javadoc)
+	 * @see kr.go.nssp.stats.service.InvstsService#selectArrstNmstList(java.util.HashMap)
+	 */
+	@Override
+	public List<HashMap> selectArrstNmstList(HashMap map) throws Exception {
+		return invstsDAO.selectArrstNmstList(map);
+	}
 }

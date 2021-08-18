@@ -49,7 +49,35 @@
 					return fnChangeNo (value);
 				}
 			}, {
-				headerText : "검거 년월일", dataField : "ARR_DT", width : 150, editable : false, //dataType : "date", formatString : "yyyy-mm-dd HH:MM"
+				headerText : "검거 년월일<span class='point'><img src='/img/icon_dot.png'/></span>"
+				, dataField : "ARR_DT"
+				, width : 150
+				, editable : true
+				, dataType : "date"
+				, formatString : "yyyy.mm.dd"
+				, dateInputFormat: "yyyy.mm.dd"
+				, renderer: {
+					type : "IconRenderer"
+					, iconWidth : 16 // icon 사이즈, 지정하지 않으면 rowHeight에 맞게 기본값 적용됨
+					, iconHeight : 16
+					, iconPosition : "aisleRight"
+					, iconTableRef :  { // icon 값 참조할 테이블 레퍼런스
+						"default" : "/AUIGrid/images/calendar-icon.png" // default
+					},
+					onClick : function(event) {
+						// 달력 아이콘 클릭하면 실제로 달력을 띄움.
+						// 즉, 수정으로 진입함.
+						AUIGrid.openInputer(event.pid);
+					}
+				},
+				editRenderer : {
+					type : "CalendarRenderer"
+					, defaultFormat : "yyyy.mm.dd" // 달력 선택 시 데이터에 적용되는 날짜 형식
+					, showEditorBtn : false
+					, showEditorBtnOver : false // 마우스 오버 시 에디터버턴 출력 여부
+					, onlyCalendar : true // 사용자 입력 불가, 즉 달력으로만 날짜입력 (기본값 : true)
+					, showExtraDays : true // 지난 달, 다음 달 여분의 날짜(days) 출력
+				}
 			}, {
 				headerText : "죄명", dataField : "VIOLT_NM", width : 400, style : "grid_td_left", editable : false,
 			}, {
@@ -136,7 +164,7 @@
 			alert("수정한 자료가 없습니다.");
 			return;
 		}
-		console.log(editedRowItems);
+		
 		var data = fnAjaxAction( "/trn/updateZeroNoAjax/", JSON.stringify({ sList:editedRowItems }) );
 		if( data.result == "1" ){
 			alert("저장 되었습니다.");

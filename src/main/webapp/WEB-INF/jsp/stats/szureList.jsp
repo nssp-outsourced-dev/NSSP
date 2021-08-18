@@ -33,7 +33,78 @@
 	}
 
 	function initGrid() {
+		/*
+			2021.08.02
+			coded by dgkim
+			양식 변경으로 인한 서식 변경
+			원안위도 아래 정확한 내용을 모르기 때문에 화면만 재구성
+			정확한 데이터 작업은 추후 진행
+			김지만 수사관 요청
+		*/
 		var columnLayout = [
+			{ dataField : "grdRn", 		headerText : "순번", width : 50, cellMerge : true },
+			{ dataField : "grdArrstSn", headerText : "진행번호", width : 100},
+			{ dataField : "grdCaseNo", headerText : "사건번호", width : 120,
+				cellMerge : true,
+				mergeRef : "grdZrlongReqstNo",
+				mergePolicy : "restrict",
+				renderer : {type : "TemplateRenderer"},
+				labelFunction : function (rowIndex, columnIndex, value, headerText, item ) {
+					return fnChangeNo (value);
+				}
+			},
+			{ dataField : "grdReqstDe", headerText : "신청연월일", width : 130, dataType : "date", formatString : "yyyy-mm-dd",
+				cellMerge : true,
+				mergeRef : "grdZrlongReqstNo",
+				mergePolicy : "restrict"
+			},
+			{ dataField : "grdReqstNm", headerText : "신청자 직급 및 성명", width : 150,
+				cellMerge : true,
+				mergeRef : "grdZrlongReqstNo",
+				mergePolicy : "restrict"
+			},
+			{ headerText : "피의자",
+				children: [
+					{ dataField : "grdTrgterNm", 	headerText : "성명", 		width : 100 },
+					{ dataField : "grdTrgterRrn", 	headerText : "주민등록번호",	width : 150},
+					{ dataField : "grdOccpNm", 		headerText : "직업", 		style : 'tbLft'},
+				]
+			},
+			{ dataField : "grdVioltRootNm", headerText : "죄명", style:'tbLft',
+				cellMerge : true,
+				mergeRef : "grdZrlongReqstNo",
+				mergePolicy : "restrict"
+			},
+			{ dataField : "grdPpDsmsslInstt", headerText : "검사기각", width : 120,
+				cellMerge : true,
+				mergeRef : "grdZrlongReqstNo",
+				mergePolicy : "restrict"
+			},
+			{ dataField : "grdCcDsmsslInstt", headerText : "판사기각", width : 120,
+				cellMerge : true,
+				mergeRef : "grdZrlongReqstNo",
+				mergePolicy : "restrict"
+			},
+			{ dataField : "grdIsueDt", headerText : "발부", width : 120,
+				cellMerge : true,
+				mergeRef : "grdZrlongReqstNo",
+				mergePolicy : "restrict"
+			},
+			{ dataField : "grdValidDt", headerText : "유효기간", width : 120, dataType : "date", formatString : "yyyy-mm-dd",
+				cellMerge : true,
+				mergeRef : "grdZrlongReqstNo",
+				mergePolicy : "restrict"
+			},
+			{ headerText : "집행",
+				children: [
+					{ dataField : "grdSzureRstExcutDt", 	headerText : "일시", 		width : 100 },
+					{ dataField : "grdExcutPlace2", 	headerText : "장소", 		width : 100 },
+					{ dataField : "grdExcutSeCd", 	headerText : "처리결과", 		width : 100 },
+				]
+			},
+			{ dataField : "", 		headerText : "비고", width : 50, cellMerge : true },
+		];	
+		/* var columnLayout = [
 			{ dataField : "grdRn", 		headerText : "순번", width : 50, cellMerge : true },
 			{ dataField : "grdZrlongReqstNo", headerText : "신청번호", width : 120, cellMerge : true,
 				renderer : {type : "TemplateRenderer"},
@@ -70,9 +141,8 @@
 					{ dataField : "grdTrgterNm", 	headerText : "성명", 		width : 100 },
 					{ dataField : "grdTrgterRrn", 	headerText : "주민등록번호",	width : 150},
 					{ dataField : "grdOccpNm", 		headerText : "직업", 		style : 'tbLft'},
-					/*  2021-07-08 dgkim 주거지 테이블 주석처리
-					{ dataField : "grdDwlsitAddr", 	headerText : "주거", 		style:'tbLft' },
-					*/
+					//2021-07-08 dgkim 주거지 테이블 주석처리
+					//{ dataField : "grdDwlsitAddr", 	headerText : "주거", 		style:'tbLft' },
 				]
 			},
 			{ dataField : "grdVioltRootNm", headerText : "죄명", style:'tbLft',
@@ -100,14 +170,14 @@
 				mergeRef : "grdZrlongReqstNo",
 				mergePolicy : "restrict"
 			}
-			/* { headerText : "석방",
-				children: [
-					{ dataField : "grdRslDt", headerText : "일시", width : 120},
-					{ dataField : "grdRslResn", headerText : "장소"},
-					{ dataField : "", headerText : "처리결과"}
-				]
-			} */ /*석방정보 없음- 집행일시 대체할까?*/
-		];
+			//{ headerText : "석방",
+				//children: [
+					//{ dataField : "grdRslDt", headerText : "일시", width : 120},
+					//{ dataField : "grdRslResn", headerText : "장소"},
+					//{ dataField : "", headerText : "처리결과"}
+				//]
+			//} //석방정보 없음- 집행일시 대체할까?
+		]; */
 
 		var gridPros = {
 			headerHeight : 30,

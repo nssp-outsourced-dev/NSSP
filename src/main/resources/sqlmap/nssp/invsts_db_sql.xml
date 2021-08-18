@@ -1040,4 +1040,107 @@
 		WHERE SUGEST_NO = #grdSugestNo# --건의 번호
 			AND RC_NO = #grdRcNo# --접수 번호
 	 </update>
+	 
+	 <!-- 
+	 	2021.08.10
+	 	coded by dgkim
+	 	체포구속인명부 메뉴 추가
+	 	김지만 수사관 요청
+	  -->
+	 <select id="selectArrstNmstList" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		SELECT X.*
+		FROM (
+			SELECT A.*,
+				COUNT(*) OVER() AS TOT_CNT,
+				<isNotEmpty property="dataField">
+					<isNotEmpty property="sortType">
+						ROW_NUMBER() OVER(ORDER BY A.$dataField$ $sortType$ NULLS LAST) RN
+					</isNotEmpty>
+				</isNotEmpty>
+				<isEmpty property="dataField">		
+					ROW_NUMBER() OVER(ORDER BY A.ARRST_SN, A.CASE_NO) AS RN
+				</isEmpty>
+			FROM
+				(
+					SELECT 
+						ipa.RC_NO
+						, FN_CASE_NO(ipa.RC_NO) AS CASE_NO --사건번호
+						, ipa.ARRST_SN
+						
+						--체포구속
+						, DECODE('C', 'C', 'Y', 'D', '', 'I', '') AS TRTMNT_CHFCLRK --취급자(계장) 
+						, DECODE('C', 'C', '', 'D', 'Y', 'I', '') AS TRTMNT_DRHF --취급자(과장)
+						, DECODE('C', 'C', '', 'D', '', 'I', 'Y') AS TRTMNT_ISTDR --취급자(기관장)
+						
+						, ipa.ARRST_DT --체포,구속 연월일
+						, FN_CD_NM(ipa.ARRST_TY_CD) AS ARRST_TY_NM --체포,구속 유형
+						
+						--석방
+						, DECODE('I', 'C', 'Y', 'D', '', 'I', '') AS TRTMNT2_CHFCLRK --취급자(계장)
+						, DECODE('I', 'C', '', 'D', 'Y', 'I', '') AS TRTMNT2_DRHF --취급자(과장)
+						, DECODE('I', 'C', '', 'D', '', 'I', 'Y') AS TRTMNT2_ISTDR --취급자(기관장)
+				
+						, ipa.RSL_DT --석방 연월일시
+						, ipa.RSL_RESN_ETC --사유
+						, FN_RC_VIOLT_ROOT_NM(ipa.RC_NO) AS VIOLT_NM --(SELECT FN_VIOLT_NM(VIOLT_CD) FROM RC_TMPR_VIOLT WHERE RC_NO = ipa.RC_NO AND VIOLT_SN = rtt.TRGTER_SN) AS VIOLT_NM --죄명
+						, '' AS HEIGHT--키
+						, '' AS BODY --몸집
+						, '' AS WIG --머리털
+						, '' AS EYEBrOW --눈썹
+						, '' AS MUSTACHE --수염
+						, '' AS BROW --이마
+						, '' AS EAR --귀
+						, '' AS EYE --눈
+						, '' AS MOUTH --입
+						, '' AS TEETH --이
+						, '' AS NOSE --코
+						, '' AS ASPECT --용모
+						, '' AS FACE --얼굴
+						, '' AS FACE_COLOR --얼굴색
+						, '' AS ETC --기타특징
+						, '' AS CLOTHING --착의
+						, rtt.TRGTER_NM --성명
+						, DGUARD.DECRYPT('TBL','ENC', rtt.TRGTER_RRN) AS TRGTER_RRN --주민번호
+						, rtt.REGBS_ADDR --등록기준지
+						, '' AS PRE_CONVICTION --전과
+						, '' AS COMPLC --공범 성명
+						, '' AS FAMILY_RELATIONS --가족관계
+					FROM INV_PRSCT_ARRST ipa
+						INNER JOIN RC_TMPR_TRGTER rtt
+						ON ipa.RC_NO = rtt.RC_NO AND ipa.TRGTER_SN = rtt.TRGTER_SN
+						
+						INNER JOIN RC_TMPR rt
+						ON rt.RC_NO = rtt.RC_NO
+					WHERE rt.USE_YN = 'Y'
+						<isNotEmpty property="trgter_nm" >
+							AND rtt.TRGTER_NM LIKE '%' || #trgter_nm# || '%'
+						</isNotEmpty>
+						
+						<isNotEmpty property="chager" >
+							AND rt.CHARGER_ID = #chager#
+						</isNotEmpty>
+						
+						<isNotEmpty property="dept_cd" >
+							AND rt.CHARGER_DEPT_CD IN (
+								SELECT DC.DEPT_CD
+								FROM CMN_DEPT_CD DC
+								WHERE DC.USE_YN = 'Y' AND DC.DEPT_CD != '00000'
+								START WITH DC.DEPT_CD = #dept_cd#
+								CONNECT BY PRIOR DC.DEPT_CD = DC.DEPT_UPPER_CD
+							)
+						</isNotEmpty>
+						
+						<isNotEmpty property="prsct_de1">
+							<isNotEmpty property="prsct_de2">
+								AND ipa.ARRST_DT BETWEEN TO_DATE(#prsct_de1#, 'YYYY-MM-DD') AND TO_DATE(#prsct_de2#, 'YYYY-MM-DD') + 0.99999
+							</isNotEmpty>
+						</isNotEmpty>
+				) A
+		) X
+		<isNotEmpty property="startRow" >
+			WHERE (RN <![CDATA[ > ]]> #startRow# AND RN <![CDATA[ <= ]]> #endRow#)
+		</isNotEmpty>
+		
+		ORDER BY RN ASC
+	 </select>
 </sqlMap>

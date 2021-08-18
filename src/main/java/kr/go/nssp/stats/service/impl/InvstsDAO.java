@@ -76,4 +76,19 @@ public class InvstsDAO extends EgovComAbstractDAO {
 	public int updateSugestStats(HashMap map) throws Exception {
 		return update("invsts.updateSugestStats", map);
 	}
+	
+	/** 
+	 * @methodName : selectArrstNmstList
+	 * @date : 2021.08.10
+	 * @author : dgkim
+	 * @description : 
+	 * 		체포구속인명부 메뉴 추가
+	 * 		김지만 수사관 요청
+	 * @param map
+	 * @return
+	 * @throws Exception
+	 */
+	public List<HashMap> selectArrstNmstList(HashMap map) throws Exception {
+		return list("invsts.selectArrstNmstList", map);
+	}
 }		

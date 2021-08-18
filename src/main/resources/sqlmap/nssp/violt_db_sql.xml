@@ -35,7 +35,13 @@
 		  )
 		START WITH DC.VIOLT_UPPER_CD = #start_cd#
 		CONNECT BY PRIOR DC.VIOLT_CD = DC.VIOLT_UPPER_CD
-    	ORDER SIBLINGS BY DC.SORT_ORDR ASC, DC.VIOLT_CD ASC
+		/*
+			2021.08.02
+			coded by dgkim
+			죄명 가나다 순서로 재정렬
+			김지만 수사관 요청
+		*/
+    	ORDER SIBLINGS BY DC.SORT_ORDR ASC, TO_NUMBER(REGEXP_REPLACE(SUBSTR(DC.VIOLT_NM, 0, INSTR(DC.VIOLT_NM, '조')), '[^0-9]')) ASC,  DC.VIOLT_CD ASC --ORDER SIBLINGS BY DC.SORT_ORDR ASC, DC.VIOLT_CD ASC
 	</select>
 
 	<select id="selectVioltList" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">

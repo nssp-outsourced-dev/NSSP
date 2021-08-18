@@ -339,29 +339,37 @@
 			(
 				SELECT '' AS ETC
 					 , A.ARREST_ZERO_NO
-				     , TO_NUMBER(SUBSTR(A.ARREST_ZERO_NO, 1, 4)) ARREST_ZERO_YEAR
-				     , TO_NUMBER(SUBSTR(A.ARREST_ZERO_NO, 6, 2)) ARREST_ZERO_MON
-				     , TO_NUMBER(SUBSTR(A.ARREST_ZERO_NO, 9)) ARREST_ZERO_NUM
-				     , A.TRN_NO
-				     , A.RC_NO
-				     , B.CASE_NO
-				     , FN_RC_VIOLT_NM(B.RC_NO) VIOLT_NM
-				     , FN_CD_NM(B.PROGRS_STTUS_CD) PROGRS_STTUS_NM
-				     , FN_RC_SUSPCT_NM(B.RC_NO) TRGTER_NM
-				     , (SELECT TO_CHAR(MIN(WRITNG_DT), 'YYYY.MM.DD')
+					, TO_NUMBER(SUBSTR(A.ARREST_ZERO_NO, 1, 4)) ARREST_ZERO_YEAR
+					, TO_NUMBER(SUBSTR(A.ARREST_ZERO_NO, 6, 2)) ARREST_ZERO_MON
+					, TO_NUMBER(SUBSTR(A.ARREST_ZERO_NO, 9)) ARREST_ZERO_NUM
+					, A.TRN_NO
+					, A.RC_NO
+					, B.CASE_NO
+					, FN_RC_VIOLT_NM(B.RC_NO) VIOLT_NM
+					, FN_CD_NM(B.PROGRS_STTUS_CD) PROGRS_STTUS_NM
+					, FN_RC_SUSPCT_NM(B.RC_NO) TRGTER_NM
+					, A.ARR_DT --, TO_CHAR(A.ARR_DT, 'YYYY.MM.DD') AS ARR_DT
+					/* 
+						2021.08.10
+						coded by dgkim
+						검거통계원표부 
+						칼럼 추가하여 저장하여 조회하도록 수정
+						김지만 수사관 요청
+					, (SELECT TO_CHAR(MIN(WRITNG_DT), 'YYYY.MM.DD')
 								FROM CMN_DOC_PBLICTE
 								WHERE USE_YN = 'Y'
 								AND FORMAT_ID IN ('00000000000000000032', '00000000000000000033')
 								AND DOC_ID IN (SELECT DOC_ID FROM RC_TMPR X WHERE X.USE_YN = 'Y' AND X.RC_NO = B.RC_NO
-								               UNION ALL
-								               SELECT DOC_ID FROM RC_TMPR_TRGTER Y WHERE Y.USE_YN = 'Y' AND Y.RC_NO = B.RC_NO)) ARR_DT
-				  FROM TRN_CASE A
-				     , RC_TMPR B
-				 WHERE A.USE_YN = 'Y'
-				   AND B.USE_YN = 'Y'
-				   AND A.RC_NO = B.RC_NO
-				   AND A.ED_YN = 'Y'
-				   AND A.ARREST_ZERO_NO IS NOT NULL
+									UNION ALL
+									SELECT DOC_ID FROM RC_TMPR_TRGTER Y WHERE Y.USE_YN = 'Y' AND Y.RC_NO = B.RC_NO)) ARR_DT
+					*/
+				FROM TRN_CASE A
+					, RC_TMPR B
+				WHERE A.USE_YN = 'Y'
+					AND B.USE_YN = 'Y'
+					AND A.RC_NO = B.RC_NO
+					AND A.ED_YN = 'Y'
+					AND A.ARREST_ZERO_NO IS NOT NULL
 				<isNotEmpty property="searchTrgterNm" >
 					AND B.RC_NO IN (
 						SELECT TT.RC_NO
@@ -1452,6 +1460,9 @@
 					|| '-' || #ARREST_ZERO_NUM#
 				</isNotEmpty>
 				
+				<isNotEmpty property="ARR_DT">
+					, ARR_DT = TO_DATE(#ARR_DT#, 'YYYY-MM-DD HH24:MI') --검거년월일
+				</isNotEmpty>
 			, UPDT_ID = #esntl_id#
 			, UPDT_DT = SYSDATE
 		WHERE TRN_NO = #TRN_NO#

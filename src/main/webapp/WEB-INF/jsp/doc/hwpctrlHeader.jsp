@@ -293,8 +293,12 @@ $(function() {
 					<span id="print_event">인쇄</span>
 				</div> 
 				-->
+				<!--  -->
+				<div class="hwp_toolbar_title" style="border-color: #333; cursor: default;"><span id="saveTime">자동 저장 전</span></div>
+				
 				<div id="docTypeMode" class="hwp_toolbar_title" style="margin-left: 350px;">
 				</div>
+				
 <!-- 				<div id="docTypeMode" class="hwp_toolbar_title" style="margin-left: 350px;">
 				</div> -->
 				<!--
@@ -334,7 +338,7 @@ $(function() {
 <script type="text/javascript">
 
 	var pHwpCtrl;
-
+	
 	/*
 	 * 쿼리 및 한글 파일 호출
 	 */
@@ -343,6 +347,71 @@ $(function() {
 			if(!fnIsEmpty(data.prFilePath)) {
 				pHwpCtrl.Open(data.prFilePath, "HWP", "", function (res) {
 					if(res.result) {
+						
+					<%-- 
+						/* 전자 서명 */	
+						if(pHwpCtrl.FieldExist("sign")){
+							pHwpCtrl.MoveToField("sign", false, false, false);
+							
+							/* 
+							pHwpCtrl.InsertPicture(
+									'get/default/${sessionScope.esntl_id}.png'//path : 이미지 URL
+									, true//embeded : 이미지 파일을 문서내에 포함할지 여부 (True/False). 생략하면 True
+									, 2//sizeoption : 삽입할 그림의 크기를 지정하는 옵션 2: width는 셀의 width만큼, height는 셀의 height만큼 확대/축소된다.
+									, false//reverse : 이미지의 반전 유무 (True/False)
+									, false//watermark : watermark효과 유무 (True/False)
+									, 0//그림 효과 0 실제 이미지 그대로, 1 그레이 스케일, 2 흑백효과
+									, 0//width : 그림의 가로 크기 지정. 단위는 mm
+									, 0//height : 그림의 높이 크기 지정. 단위는 mm
+									, function(ctrl){//callback : InsertPicture 함수가 동작을 마친 후 수행될 함수 - Parameter 1, ctrl: 성공시 생성된 컨트롤 오브젝트, 실패시 null
+										console.log(ctrl);
+									}
+							);
+							*/
+							
+							pHwpCtrl.InsertBackgroundPicture(
+									/*
+										bordertype : 배경 유형을 지정
+										"SelectedCell" : 현재 선택된 표의 셀의 배경을 변경한다.
+										"SelectedCellDelete" 현재 선택된 표의 셀의 배경을 지운다.
+									*/
+									"SelectedCell"
+									, 'get/default/${sessionScope.esntl_id}.jpg'//path : 이미지 URL
+									, true//embeded : 이미지 파일을 문서내에 포함할지 여부 (True/False). 생략하면 True
+									/*
+										filloption : 삽입할 그림의 크기를 지정하는 옵션
+										0 바둑판식으로 - 모두
+										1 바둑판식으로 - 가로/위
+										2 바둑판식으로 - 가로/아로
+										3 바둑판식으로 - 세로/왼쪽
+										4 바둑판식으로 - 세로/오른쪽
+										5 크기에 맞추어 설정하지 않았을 때 
+										기본값
+										6 가운데로
+										7 가운데 위로
+										8 가운데 아래로
+										9 왼쪽 가운데로
+										10 왼쪽 위로
+										11 왼쪽 아래로
+										12 오른쪽 가운데로
+										13 오른쪽 위로
+										14 오른쪽 아래로
+									*/
+									, 5
+									, false//watermark : watermark효과 유무 (True/False) 이 옵션이 true이면 brightness 와 contrast 옵션이 무시된다.
+									/*
+										effect : 이미지효과
+										0 원래 그림 설정하지 않았을 때 
+										기본값
+										1 그래이 스케일
+										2 흑백으로
+									*/
+									, 0
+									, 0//brightness : 밝기 지정(-100 ~ 100), 기본값 : 0
+									, 0//contrast : 선명도 지정(-100 ~ 100), 기본값 : 0
+							);
+						}
+					 --%>	
 						fnSetParam (data);  // 문서마다 만들어야 할 코드
 
 						/*권한이 없을 경우 읽기 전용모드 전환*/
@@ -382,7 +451,7 @@ $(function() {
 		}
 		Ajax.getJson(ajaxUrl, param, processAfterGet);
 	}
-
+	
 	//한글기안기 최초 셋팅 후 호출되는 함수
 	function hanCreateEditor(event, ee){
 		pHwpCtrl = window.frames['Document_HwpCtrl'].HwpCtrl;  //한글 기안기 컨트롤 설정

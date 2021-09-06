@@ -53,4 +53,17 @@ public class StatsDAO extends EgovComAbstractDAO {
 	public int updateCmnder(Map<String, Object> param) throws Exception {
 		return update("stats.updateCmnder", param);
 	}
+	
+	/** 
+	 * @methodName : selectVdecRequstPrmisnReqstList
+	 * @date : 2021.08.19
+	 * @author : dgkim
+	 * @description : 통신사실 확인자료제공 요청허가 신청부(신규 문서 서식)
+	 * @param param
+	 * @return
+	 * @throws Exception
+	 */
+	public List selectVdecRequstPrmisnReqstList(HashMap param) throws Exception {
+		return list("stats.selectVdecRequstPrmisnReqstList", param);
+	}
 }

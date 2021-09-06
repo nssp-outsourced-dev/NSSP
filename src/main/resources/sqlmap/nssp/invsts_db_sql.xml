@@ -1023,7 +1023,6 @@
 		WHERE RC_NO = #grdRcNo# --접수 번호
 			AND TRGTER_SN = #grdTrgterSn# --대상자 일련번호
 			AND DEMAND_SN = #grdDemandSn# --요구 일련번호
-			AND VIEW_SN = #grdViewSn# --조회 일련번호
 	</update>
 	
 	<!-- 

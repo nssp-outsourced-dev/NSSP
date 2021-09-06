@@ -5,12 +5,9 @@ import java.util.List;
 import java.util.Map;
 
 import javax.annotation.Resource;
-import javax.servlet.http.*;
-
-import kr.co.siione.dist.utils.SimpleUtils;
-import kr.go.nssp.cmmn.service.CdService;
-import kr.go.nssp.stats.service.StatsService;
-import kr.go.nssp.utl.Utility;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -19,6 +16,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
 import egovframework.rte.ptl.mvc.tags.ui.pagination.PaginationInfo;
+import kr.co.siione.dist.utils.SimpleUtils;
+import kr.go.nssp.cmmn.service.CdService;
+import kr.go.nssp.stats.service.StatsService;
+import kr.go.nssp.utl.InvUtil;
+import kr.go.nssp.utl.Utility;
 
 @Controller
 @RequestMapping(value = "/stats/")
@@ -432,5 +434,103 @@ public class StatsController {
 		ret.put("result", result);
 
 		return new ModelAndView("ajaxView", "ajaxData", ret);
+	}
+	
+	/** 
+	 * @methodName : vrprList
+	 * @date : 2021.08.19
+	 * @author : dgkim
+	 * @description : 통신사실 확인자료제공 요청허가 신청부(신규 문서 서식) 화면
+	 * @param request
+	 * @param response
+	 * @param model
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping(value = "/vrprList/")
+	public String vrprList(HttpServletRequest request, HttpServletResponse response, ModelMap model) throws Exception {
+		HttpSession session = request.getSession();
+		String esntl_id = SimpleUtils.default_set(session.getAttribute("esntl_id").toString());
+		String dept_cd = SimpleUtils.default_set(session.getAttribute("dept_cd").toString());
+		String dept_single_nm = SimpleUtils.default_set(session.getAttribute("dept_single_nm").toString());
+		String mngr_yn = SimpleUtils.default_set(session.getAttribute("mngr_yn").toString());
+		model.addAttribute("esntl_id", esntl_id);
+		model.addAttribute("dept_cd", dept_cd);
+		model.addAttribute("dept_single_nm", dept_single_nm);
+		model.addAttribute("mngr_yn", mngr_yn);
+
+		int pageBlock = 50;
+		model.addAttribute("hidPageBlock", pageBlock);
+
+		//대상자구분
+		HashMap cMap = new HashMap();
+		cMap.put("upper_cd", "00102");
+		List<HashMap> trgterClList = cdService.getCdList(cMap);
+		model.addAttribute("trgterClList", trgterClList);
+
+		return "stats/vrprList";
+	}
+	
+	/** 
+	 * @methodName : vrprListAjax
+	 * @date : 2021.08.19
+	 * @author : dgkim
+	 * @description : 통신사실 확인자료제공 요청허가 신청부(신규 문서 서식) 조회
+	 * @param request
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping (value = "/vrprListAjax/")
+	public ModelAndView vrprListAjax (HttpServletRequest request) throws Exception {
+		HttpSession session = request.getSession();
+		String esntl_id = SimpleUtils.default_set(session.getAttribute("esntl_id").toString());
+		String dept_cd = SimpleUtils.default_set(session.getAttribute("dept_cd").toString());
+		InvUtil commonUtil = InvUtil.getInstance();
+		HashMap map = commonUtil.getParameterMapConvert(request);
+
+		//현재 페이지 파라메타
+		String hidPage = SimpleUtils.default_set(request.getParameter("hidPage"));
+		int intPage = 1;
+		if(!"".equals(hidPage))	intPage = Integer.parseInt((String)hidPage);
+		String hidPageBlock = SimpleUtils.default_set(request.getParameter("hidPageBlock"));
+		if( hidPageBlock== null || hidPageBlock.equals("")){
+			//전체조회
+			hidPageBlock = "10";
+			map.put("startRow", "");
+			map.put("endRow", "");
+		}else{
+			//페이징조회
+			int pageBlock = Integer.parseInt((String)hidPageBlock);
+			//페이지 기본설정
+			int pageArea = 10;
+			//page
+			PaginationInfo paginationInfo = new PaginationInfo();
+			paginationInfo.setCurrentPageNo(intPage);
+			paginationInfo.setRecordCountPerPage(pageBlock);
+			paginationInfo.setPageSize(pageArea);
+			map.put("startRow", paginationInfo.getFirstRecordIndex());
+			map.put("endRow", paginationInfo.getLastRecordIndex());
+		}
+		
+		String sortingFields = (String) map.get("fields");		
+		if(sortingFields != null && !sortingFields.equals("")) {			
+			Map<String, Object> sortingField = Utility.getGridSortList(sortingFields);
+			if(sortingField != null && sortingField.size() > 0 ) {				
+				map.put("dataField", sortingField.get("dataField"));
+				map.put("sortType", sortingField.get("sortType"));
+			}
+		}
+		
+		int list_cnt = 0;
+		List<HashMap> list = statsService.selectVdecRequstPrmisnReqstList(map);
+		
+		if(list.size() > 0){
+			list_cnt = Integer.parseInt(list.get(0).get("TOT_CNT").toString());
+		}
+		
+		HashMap cMap = new HashMap();
+		cMap.put("list", list);
+		cMap.put("cnt", list_cnt);
+		return new ModelAndView("ajaxView", "ajaxData", cMap);
 	}
 }

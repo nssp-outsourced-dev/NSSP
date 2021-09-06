@@ -72,7 +72,7 @@
 				#violt_cd_not_arr[]#
 			</iterate>
 		</isNotEmpty>
-		ORDER BY DC.SORT_ORDR ASC, DC.VIOLT_CD ASC
+		ORDER BY DC.SORT_ORDR ASC, TO_NUMBER(REGEXP_REPLACE(SUBSTR(DC.VIOLT_NM, 0, INSTR(DC.VIOLT_NM, '조')), '[^0-9]')) ASC, DC.VIOLT_CD ASC
 	</select>
 
 	<select id="selectVioltDetail" parameterClass="java.util.HashMap" resultMap="violtMap">

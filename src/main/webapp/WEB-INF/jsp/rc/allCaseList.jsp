@@ -98,9 +98,9 @@
 
 		$('#btnSearch').click(function() {
 
-			if( !fnSearchAllValidate() ){
+			/* if( !fnSearchAllValidate() ){
 				return;
-			}
+			} */
 
 			fnMoveGridPage( "/rc/getCaseListAjax/", "frmList", caseGridId, 1 );
 		});
@@ -541,7 +541,13 @@
 				~
 				<input type="text" id="textSearchNoEnd" 	name="textSearchNoEnd"		class="w_30p input_com_s onlyNumber rc_search"	maxlength="6">
 			</div>
-			<div class="input_radio4  w_70px t_left" style="width: 70px; margin-right: 0px; padding-left: 0px;">
+			<!--
+				2021.08.24
+				coded by dgkim
+				날짜 검색 기능 삭제
+				권종렬 사무관 요청
+			  -->
+			<!-- <div class="input_radio4  w_70px t_left" style="width: 70px; margin-right: 0px; padding-left: 0px;">
 				<div class="stitle ">접수일자</div>
 			</div>
 			<div class="r_box ">
@@ -554,9 +560,15 @@
 					<input type="text"	id="textReceiptDeEnd" 	name="textReceiptDeEnd"	class="w_120p input_com_s datetimepicker rc_search" maxlength="10" checkName="접수일자">
 				  	<div id="divReceiptDeEnd" class="calendarOverlay"></div>
 				</div>
-			</div>
+			</div> -->
 		</div>
-		<div class="search_in" style="padding-left: 10px;width: 110px;border-right:0px">
+		<!--
+			2021.08.24
+			coded by dgkim
+			날짜 검색 기능 삭제
+			권종렬 사무관 요청
+		  -->
+		<!-- <div class="search_in" style="padding-left: 10px;width: 110px;border-right:0px">
 			<div class="input_radio4  w_70px t_left" style="width: 70px;margin-right: 0px;padding-left: 25px;padding-right: 0px">
 				<div class="stitle">미제사건</div>
 				<input class="to-labelauty-icon ch_st1" type="checkbox" name="chkColdCase" id="chkColdCase" value="Y"/>
@@ -567,6 +579,24 @@
 			</div>
 		</div>
 		<div class="search_in" style="padding-left: 0px;padding-right: 0px;width: 110px;">
+			<div class="input_radio4  w_70px t_left" style="width: 70px;margin-right: 0px;padding-left: 25px;">
+				<div class="stitle">송치사건</div>
+				<input class="to-labelauty-icon ch_st1" type="checkbox" name="chkTrnCase"	id="chkTrnCase"	value="Y"/>
+			</div>
+		</div> -->
+		<div class="search_in" style="padding-left: 10px;width: 110px;border-right:0px">
+			<div class="input_radio4  w_70px t_left" style="width: 70px;margin-right: 0px;padding-left: 25px;padding-right: 0px">
+				<div class="stitle">미제사건</div>
+				<input class="to-labelauty-icon ch_st1" type="checkbox" name="chkColdCase" id="chkColdCase" value="Y"/>
+			</div>
+		</div>
+		<div class="search_in" style="padding-left: 10px;width: 110px;border-right:0px">
+			<div class="input_radio4  w_70px t_left" style="width: 70px;margin-right: 0px;padding-left: 25px;">
+				<div class="stitle">중지사건</div>
+				<input class="to-labelauty-icon ch_st1" type="checkbox" name="chkStopCase"	id="chkStopCase"	value="Y"/>
+			</div>
+		</div>
+		<div class="search_in" style="padding-left: 10px;width: 110px;border-right:0px">
 			<div class="input_radio4  w_70px t_left" style="width: 70px;margin-right: 0px;padding-left: 25px;">
 				<div class="stitle">송치사건</div>
 				<input class="to-labelauty-icon ch_st1" type="checkbox" name="chkTrnCase"	id="chkTrnCase"	value="Y"/>

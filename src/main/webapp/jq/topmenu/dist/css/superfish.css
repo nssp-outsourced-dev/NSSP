@@ -119,9 +119,9 @@ width: 100%; /* no auto sub width for IE7, see white-space comment below */   z-
 
 .sf-menu li.sfHover>a{	color: #3c4199;
 }
-.sf-menu li ul li a{	color: #fff;  background-color: #586dd4;; height: 40px; line-height: 40px
+.sf-menu li ul li a{	color: #fff;  background-color: #586dd4;; /*height: 40px;*/ line-height: 40px
 }
-.sf-menu li.sfHover ul li:hover a{	color: #fff;  background-color: #333; height: 40px; line-height: 40px
+.sf-menu li.sfHover ul li:hover a{	color: #fff;  background-color: #333; /*height: 40px;*/ line-height: 40px
 }
 .sf-menu  li i{ position: absolute; right: 0px; top: 13px; display: none; font-size: 25px}
 .sf-menu  li.current i{ position: absolute; right: 0px; top: 13px; display: block}

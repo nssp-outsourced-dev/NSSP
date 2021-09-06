@@ -1367,6 +1367,16 @@
 				if( data.rst > 0){
 					if( !autoSave ){
 						alert("저장되었습니다.");
+					} else {//자동저장일 경우
+						//저장시 저장완료 시간 표출
+						if( $("#saveTime") ){
+							var time = new Date();
+							$("#saveTime").text(fnGetToday(0, 0) + " " + time.getHours() + ":" + time.getMinutes() + " 자동 저장됨");
+						}
+					}
+				} else {//저장시 오류발생시
+					if( $("#saveTime") ){
+						$("#saveTime").text("저장중 문제가 발생하였습니다. 문서를 다시 열어 작업하십시오.");
 					}
 				}
 			}

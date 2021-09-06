@@ -185,21 +185,26 @@
 	    <div class="icon"><img src="/img/menu_${iconImg}.png"  alt=""/></div>
 	    <div class="title">${LayoutMenuClName}</div>
 	</div>
-	<ul class="nav" id="demo1" >
-	<c:forEach var="resultDtl" items="${LayoutMenuLeftList}" varStatus="statusDtl">
-		<li <c:if test="${LayoutMenuCd eq resultDtl.MENU_CD}">class="active open"</c:if>><a href="${resultDtl.MENU_URL}">${resultDtl.MENU_NM}</a></li>
-	</c:forEach>
-	</ul>
+	
+	<div class="view" style="width:100%; height:100%; overflow: hidden;">
+		<div class="scrollBlind" style="width:110%; height:90%; overflow-y:scroll;"><!-- width:200px; -->
+			<ul class="nav" id="demo1" >
+				<c:forEach var="resultDtl" items="${LayoutMenuLeftList}" varStatus="statusDtl">
+					<li <c:if test="${LayoutMenuCd eq resultDtl.MENU_CD}">class="active open"</c:if>><a href="${resultDtl.MENU_URL}">${resultDtl.MENU_NM}</a></li>
+				</c:forEach>
+			</ul>
+		</div>
+	</div>
 </nav>
 <main>
 <div class="sub_box">
 <!--타이틀 공통 -->
 <div class="title_box">
-	<div class="title_tx">${LayoutMenuName}</div>
+	<div class="title_tx"><c:out value='${LayoutMenuName.replaceAll("\\\<.*?\\\>"," ")}' /></div>
 	<div class="title_time"><em>${LayoutNowDate}</em> 기준 </div>
 	<div class="route">
     <div class="icon"><img src="/img/icon_home.png" alt=""/></div>
-    HOME  > ${LayoutMenuClName} > <em>${LayoutMenuName}</em> </div>
+    HOME  > ${LayoutMenuClName} > <em><c:out value='${LayoutMenuName.replaceAll("\\\<.*?\\\>"," ")}' /></em> </div>
 </div>
 <!--//타이틀 공통 -->
 

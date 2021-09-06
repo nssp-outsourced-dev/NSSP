@@ -12,6 +12,15 @@
 .tbLft {
 	text-align: left;
 }
+
+	/*
+		2021.08.11
+		coded by dgkim
+		수사시스템 화면 비율 조정
+		권종열 사무관 요청
+	*/
+	#gridR_wrap { height: 200px !important; }/* 사건목록 */
+	#ifrReport { height: 250px !important; }/* 작성문서목록 */
 </style>
 <script type="text/javascript">
 var docNo = "00454";  /*출석요구*/
@@ -356,26 +365,12 @@ function jusoReturnValue (returnValue) {
 		</div>
 		<!--테이블 시작 -->
 		<div class="com_box">
-			<!-- 
-				2021.08.11
-				coded by dgkim
-				수사시스템 화면 비율 조정
-				권종열 사무관 요청
-			 -->
-			<div id="gridR_wrap" class="gridResize tb_01_box" style="width: 100%; height: 230px;"></div>
-			<!-- <div id="gridR_wrap" class="gridResize tb_01_box" style="width: 100%; height: 280px;"></div> -->
+			<div id="gridR_wrap" class="gridResize tb_01_box" style="width: 100%; height: 280px;"></div>
 		</div>
 	</div>
 	<div class="box_w2_2b">
 		<!--테이블 시작 -->
-		<!-- 
-			2021.08.11
-			coded by dgkim
-			수사시스템 화면 비율 조정
-			권종열 사무관 요청
-		 -->
-		<iframe name="ifrReport" id="ifrReport" scrolling="no" frameborder="0" width="100%;" height="280px"></iframe>
-		<!-- <iframe name="ifrReport" id="ifrReport" scrolling="no" frameborder="0" width="100%;" height="330px"></iframe> -->
+		<iframe name="ifrReport" id="ifrReport" scrolling="no" frameborder="0" width="100%;" height="330px"></iframe>
 	</div>
 </div>
 <form id="atendForm" name="atendForm" method="post">

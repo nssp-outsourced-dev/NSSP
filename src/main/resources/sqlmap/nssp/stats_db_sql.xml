@@ -442,4 +442,77 @@
 			, UPDT_DT = SYSDATE
 		WHERE RC_NO = #RC_NO#
 	</update>
+	
+	<!-- 
+		2021.08.19
+		coded by dgkim
+		통신사실 확인자료제공 요청허가 신청부
+		신규 문서 서식
+	 -->
+	<select id="selectVdecRequstPrmisnReqstList" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		SELECT X.*
+		FROM (
+			SELECT A.*,
+				COUNT(*) OVER() AS TOT_CNT,
+				<isNotEmpty property="dataField">
+					<isNotEmpty property="sortType">
+						ROW_NUMBER() OVER(ORDER BY A.$dataField$ $sortType$ NULLS LAST) RN
+					</isNotEmpty>
+				</isNotEmpty>
+				<isEmpty property="dataField">		
+					ROW_NUMBER() OVER(ORDER BY A.PRMISN_PROGRS_NO, A.CASE_NO, A.TRGTER_SN) AS RN
+				</isEmpty>
+			FROM
+				(
+					SELECT 
+						icp.RC_NO --접수번호
+						, icp.PRMISN_PROGRS_NO --허가 진행 번호
+						, (SELECT FN_CNVR_NO(CASE_NO) FROM RC_TMPR WHERE RC_NO = icp.RC_NO) AS CASE_NO --사건번호
+						, rtt.TRGTER_SN --대상자 일련번호
+						, rtt.TRGTER_NM --성명
+						, DGUARD.DECRYPT('TBL', 'ENC', rtt.TRGTER_RRN) AS TRGTER_RRN --주민번호
+						, FN_CD_NM(rtt.OCCP_CD) AS OCCP_NM --직업
+						, FN_CD_NM(PRMISN_SE_CD) AS PRMISN_SE_NM --종류
+						, FN_RC_VIOLT_ROOT_NM (icp.RC_NO) AS VIOLT_NM --죄명
+						, icp.DTA_SCOPE --대상 및 범위
+						, '' AS EMERGENCY_DE --긴급으로 자료 제공받은 일시
+						, TO_CHAR(TO_DATE(icp.REQST_DE, 'YYYYMMDD'), 'YYYY-MM-DD') AS REQST_DE--신청일일시
+						, TO_CHAR(TO_DATE(icp.ISUE_DE, 'YYYYMMDD'), 'YYYY-MM-DD') AS ISUE_DE -- 발부일시
+						, '' AS RECEIPT --수령연월일
+						, '' AS RECIPIENT --수령자 직급, 성명
+						, icp.RETURN_DE--검찰반환연월일
+						, '' AS NOTE --비고
+					FROM INV_COMMN_PRMISN icp
+						INNER JOIN RC_TMPR_TRGTER rtt
+						ON icp.RC_NO = rtt.RC_NO AND icp.TRGTER_SN = rtt.TRGTER_SN
+					WHERE icp.USE_YN = 'Y'
+						<isNotEmpty property="trgter_nm">
+							AND rtt.TRGTER_NM LIKE '%' || #trgter_nm# || '%'
+						</isNotEmpty>
+						
+						<isNotEmpty property="chager">
+							AND icp.RC_NO IN(
+								SELECT RC_NO FROM RC_TMPR WHERE CHARGER_ID = #chager#
+							)
+						</isNotEmpty>
+						
+						<isNotEmpty property="dept_cd">
+							AND icp.RC_NO IN(
+								SELECT RC_NO FROM RC_TMPR WHERE CHARGER_DEPT_CD IN(
+									SELECT DC.DEPT_CD
+									FROM CMN_DEPT_CD DC
+									WHERE DC.USE_YN = 'Y' AND DC.DEPT_CD != '00000'
+									START WITH DC.DEPT_CD = #dept_cd#
+									CONNECT BY PRIOR DC.DEPT_CD = DC.DEPT_UPPER_CD
+								)
+							)
+						</isNotEmpty>
+				) A
+		) X
+		<isNotEmpty property="startRow" >
+			WHERE (RN <![CDATA[ > ]]> #startRow# AND RN <![CDATA[ <= ]]> #endRow#)
+		</isNotEmpty>
+		
+		ORDER BY RN ASC
+	</select>
 </sqlMap>

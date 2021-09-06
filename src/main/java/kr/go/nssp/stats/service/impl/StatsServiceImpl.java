@@ -81,4 +81,12 @@ public class StatsServiceImpl implements StatsService {
 		
 		return cnt;
 	}
+
+	/* (non-Javadoc)
+	 * @see kr.go.nssp.stats.service.StatsService#selectVdecRequstPrmisnReqstList(java.util.Map)
+	 */
+	@Override
+	public List<HashMap> selectVdecRequstPrmisnReqstList(HashMap param) throws Exception {
+		return statsDAO.selectVdecRequstPrmisnReqstList(param);
+	}
 }

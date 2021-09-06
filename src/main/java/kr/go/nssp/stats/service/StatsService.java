@@ -29,4 +29,15 @@ public interface StatsService {
 	 * @throws Exception
 	 */
 	public int updateCmnder(List<Map<String, Object>> param) throws Exception;
+	
+	/** 
+	 * @methodName : selectVdecRequstPrmisnReqstList
+	 * @date : 2021.08.19
+	 * @author : dgkim
+	 * @description : 통신사실 확인자료제공 요청허가 신청부(신규 문서 서식)
+	 * @param param
+	 * @return
+	 * @throws Exception
+	 */
+	public List<HashMap> selectVdecRequstPrmisnReqstList(HashMap param) throws Exception;
 }

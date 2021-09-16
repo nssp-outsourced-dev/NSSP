@@ -64,161 +64,177 @@
 <jsp:include page="/inc/header.jsp"/>
 <link rel="stylesheet" type="text/css" href="/css/main_menu.css" media="all">
 <style type="text/css">
-body span {
-    display: block;
-}
-.mainOverflow {
-	overflow: hidden;
-	text-overflow: ellipsis;
-	white-space: nowrap;
-	width: 180px;
-	height: 30px;
-	text-align: left;
-	padding-top: 4px;
-	font-size:15px;
-}
-
-/* 메인상단 */
-.logo {
-	background-color: honeydew;
-}
-
-.main_box {
-	padding: 100px 0px 20px 0px;
-}
-.main_box .ininbox{
-	margin: 10px auto 10px;
-}
-
-/* 사건조회 */
-.main_search_box .icon {
-	border: 2px white solid;
-}
-.main_search_box, .main_search_box .tx {
-	background-color: lavender !important;
-}
-
-/* 공지사항 및 문의사항 */
-.main_notice_box .title_box {
-	height: 50px;
-	background-color: antiquewhite;
-}
-.main_notice_box .title_box .title_t {
-	font-size: 16px;
-}
-.main_notice_box{
-	padding: 0px 0px 10px 0px;
-}
-.main_notice_box .list_box ul li .tx {
-	width: 100%;
-}
-
-/* 업무알림 */
-.main_alarm_box .title_box{
-	height: 50px;
-	background-color: antiquewhite;
-}
-.main_alarm_box .title_box .title_t{
-	font-size: 16px;
-}
-.main_alarm_box {
-	height: 180px;
-}
-
-.main_alarm_box .list_box ul li div {
-	width: 3%;
-}
-
-.main_alarm_box .list_box ul li .icon {
-	right: 335px;
-	margin-top: 6px;
-}
-
-/* 통계 */
-.main_status_box .timebox {
-	width: 292px;
-}
-
-.main_status_box .timebox .tx1 {
-	font-size: 21px;
-}
-.main_status_box .timebox .todey .ttx1 {
-	/* font-size: 12px; */
-}
-.main_status_box .timebox .todey .ttx2 {
-	font-size: 20px;
-	margin-bottom: 0px
-}
-.main_status_box .timebox .todey .ttx3 {
-	font-size: 15px;
-	margin-bottom: 0px
-}
-
-.main_status_box .iconbox {
-	padding-left: 50px;
-	padding-top: 30px;
-	margin-left: 0px;
-	width: 687px; 
-	height: 190px; 
-	/* border: 1px solid black;
-	border-radius: 10px;
-	border-top-width: 7px;
-	border-top-color: navy;  */
-}
-.main_status_box .iconbox ul li .icon_r1 {
-	height: 80px !important;
-	font-size: 30px;
-}
-
-.main_status_box .iconbox ul li .icon_r2 {
-	height: 95px !important;
-	background-color: saddlebrown;
-	font-size: 30px;
-}
-
-/* 내사건 */
-.main_case_box .title_box {
-    background-color: navy; /* teal */
-}
-
-.tb_07 tbody td .ing_box .ing1 {
-	/* background-color: #7a7ae6; */
-}
-.tb_07 tbody td .ing_box .ing4 {
-	background-color: crimson;
-}
-
-/* 내사건 하단 */
-.main_case_box {
-	height: 563px;
-}
-
-/**** 추가(2021-03-02) start  ****/
-.main_status_box .iconbox ul li .icon_r3{ 
-	width: 45px !important; 
-	background-color: #000000; 
-	text-align: center; 
-	position: relative;  
-	height: 45px !important;
-	font-size: 30px;
-	border-radius: 15%;
-	margin-top: 10px;
-}
-.main_status_box .iconbox ul li .icon_r3 img{ width: 45px; }
-.main_status_box .iconbox ul li .icon_r3 .umbox{ 
-	background-color: #transparent;
-	font-size: 20px; 
-	position: absolute; 
-	top: 95px; 
-	left : -15px; 
-	font-weight: 900; 
-	width: 80px;
-	height: 30px; 
-	border-radius: 10px;
-	right: -20px; 
-	color: #cc1d2a;
-}
-/**** 추가(2021-03-02) end  ****/
+	body span {
+	    display: block;
+	}
+	.mainOverflow {
+		overflow: hidden;
+		text-overflow: ellipsis;
+		white-space: nowrap;
+		width: 180px;
+		height: 30px;
+		text-align: left;
+		padding-top: 4px;
+		font-size:15px;
+	}
+	
+	/* 메인상단 */
+	.logo {
+		background-color: honeydew;
+	}
+	
+	.main_box {
+		padding: 100px 0px 20px 0px;
+	}
+	.main_box .ininbox{
+		margin: 10px auto 10px;
+	}
+	
+	/* 사건조회 */
+	.main_search_box .icon {
+		border: 2px white solid;
+	}
+	.main_search_box, .main_search_box .tx {
+		background-color: lavender !important;
+	}
+	
+	/* 공지사항 및 문의사항 */
+	.main_notice_box .title_box {
+		height: 50px;
+		background-color: antiquewhite;
+	}
+	.main_notice_box .title_box .title_t {
+		font-size: 16px;
+	}
+	.main_notice_box{
+		padding: 0px 0px 10px 0px;
+	}
+	.main_notice_box .list_box ul li .tx {
+		width: 100%;
+	}
+	
+	/* 업무알림 */
+	.main_alarm_box .title_box{
+		height: 50px;
+		background-color: antiquewhite;
+	}
+	.main_alarm_box .title_box .title_t{
+		font-size: 16px;
+	}
+	.main_alarm_box {
+		height: 180px;
+	}
+	
+	.main_alarm_box .list_box ul li div {
+		width: 3%;
+	}
+	
+	.main_alarm_box .list_box ul li .icon {
+		/* right: 335px; *//* 아래 재정의 */
+		margin-top: 6px;
+	}
+	
+	/* 통계 */
+	.main_status_box .timebox {
+		width: 292px;
+	}
+	
+	.main_status_box .timebox .tx1 {
+		font-size: 21px;
+	}
+	.main_status_box .timebox .todey .ttx1 {
+		/* font-size: 12px; */
+	}
+	.main_status_box .timebox .todey .ttx2 {
+		font-size: 20px;
+		margin-bottom: 0px
+	}
+	.main_status_box .timebox .todey .ttx3 {
+		font-size: 15px;
+		margin-bottom: 0px
+	}
+	
+	.main_status_box .iconbox {
+		padding-left: 50px;
+		padding-top: 30px;
+		margin-left: 0px;
+		width: 687px; 
+		height: 190px; 
+		/* border: 1px solid black;
+		border-radius: 10px;
+		border-top-width: 7px;
+		border-top-color: navy;  */
+	}
+	.main_status_box .iconbox ul li .icon_r1 {
+		height: 80px !important;
+		font-size: 30px;
+	}
+	
+	.main_status_box .iconbox ul li .icon_r2 {
+		height: 95px !important;
+		background-color: saddlebrown;
+		font-size: 30px;
+	}
+	
+	/* 내사건 */
+	.main_case_box .title_box {
+	    background-color: navy; /* teal */
+	}
+	
+	.tb_07 tbody td .ing_box .ing1 {
+		/* background-color: #7a7ae6; */
+	}
+	.tb_07 tbody td .ing_box .ing4 {
+		background-color: crimson;
+	}
+	
+	/* 내사건 하단 */
+	.main_case_box {
+		height: 563px;
+	}
+	
+	/**** 추가(2021-03-02) start  ****/
+	.main_status_box .iconbox ul li .icon_r3{ 
+		width: 45px !important; 
+		background-color: #000000; 
+		text-align: center; 
+		position: relative;  
+		height: 45px !important;
+		font-size: 30px;
+		border-radius: 15%;
+		margin-top: 10px;
+	}
+	.main_status_box .iconbox ul li .icon_r3 img{ width: 45px; }
+	.main_status_box .iconbox ul li .icon_r3 .umbox{ 
+		background-color: #transparent;
+		font-size: 20px; 
+		position: absolute; 
+		top: 95px; 
+		left : -15px; 
+		font-weight: 900; 
+		width: 80px;
+		height: 30px; 
+		border-radius: 10px;
+		right: -20px; 
+		color: #cc1d2a;
+	}
+	/**** 추가(2021-03-02) end  ****/
+	
+	/*
+		2021.08.23
+		coded by dgkim
+		화면비율 조정
+		권종열 사무관 요청
+	*/
+	.main_box .ininbox { width: 1700px; }/* 상단 사건 조회, 나의 현황 */
+	.main_search_box { width: 450px; }/* 사건조회 */
+	.main_status_box { width: calc( 100% - 500px ); padding-left: 165px; }/* 나의 현황 */
+	.main_notice_box { width: 450px; }/* 좌측 공지사항, 문의사항 */
+	.main_alarm_box { width: 450px }/* 좌측 업무알림 */
+	.main_alarm_box .title_box .title_more { margin-left: 331px; }/* 업무알림 + 아이콘 */
+	.main_alarm_box .list_box ul li .icon { right: 413px; }/* 좌측 업무알림 왼쪽 아이콘 */
+	.main_r_box { width: calc( 100% - 480px ); }/* 내사건 */
+	.mainOverflow { width: 370px; }/* 내사건 위반죄명 */
 </style>
 <script type="text/javascript">
 	$(function() {
@@ -415,13 +431,21 @@ body span {
 					<div class="tx">사건정보&nbsp;</div>
 
 				</div>
-				<div class="input_div" style="width: 300px;">
+				<div class="input_div">
 					<select name="selSearchType" id="selSearchType" size="1" class="input_com mr_5" style="width: 120px;">
 						<option value="Nm"><c:out value="성명/법인명"/></option>
 						<option value="Dt"><c:out value="생년월일" /></option>
 					</select>
 					<!-- <input type="text" id="txtCaseNo1" name="txtCaseNo1" class="w_80px input_com2 mr_5 onlyNumber" maxlength="4"> -->
-					<input type="text" id="txtSearchText" name="txtSearchText" class="w_100px input_com" maxlength="200">
+					
+					<!-- 
+						2021.08.23
+						coded by dgkim
+						화면비율 조정
+						권종열 사무관 요청
+					 -->
+					<!-- <input type="text" id="txtSearchText" name="txtSearchText" class="w_100px input_com" maxlength="200"> -->
+					<input type="text" id="txtSearchText" name="txtSearchText" class="w_170px input_com" maxlength="200">
 					<input type="button" value="검색" class="btn_st2 icon_n" onclick="fnInputCaseDetail();">
 				</div>
 			</div>
@@ -527,7 +551,7 @@ body span {
 						<div class="al_icon" style="left:90px; top:20px;width: 23px">
 							<img src="/img/icon_new1.png" alt="" />
 						</div>
-						<div class="title_more" style="margin-left: 251px;"><a href="/bbs/00000000000000000002/list/"><b>+</b></a></div>
+						<div class="title_more"><a href="/bbs/00000000000000000002/list/"><b>+</b></a></div>
 					</div>
 					<div class="list_box">
 						<ul>
@@ -775,7 +799,7 @@ body span {
 									<td>${result.ITIV_NO}</td>
 									<td>${result.INV_PROVIS_NM}</td>
 									<td>${result.RC_SE_NM}</td>
-									<td style="width:200px;"><div class="mainOverflow">${result.VIOLT_NM}</div></td>
+									<td style="width: 400px;"><div class="mainOverflow">${result.VIOLT_NM}</div></td>
 									<td>
 										<c:if test="${result.PROGRS_STTUS_NM != null}">
 										<div class="ing_box">

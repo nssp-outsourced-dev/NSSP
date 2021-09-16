@@ -533,4 +533,102 @@ public class StatsController {
 		cMap.put("cnt", list_cnt);
 		return new ModelAndView("ajaxView", "ajaxData", cMap);
 	}
+	
+	/** 
+	 * @methodName : suspctMatrDscvryList
+	 * @date : 2021.09.14
+	 * @author : dgkim
+	 * @description : 피의자 등 소재발견처리부(신규 문서 서식) 화면
+	 * @param request
+	 * @param response
+	 * @param model
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping(value = "/suspctMatrDscvryList/")
+	public String suspctMatrDscvryList(HttpServletRequest request, HttpServletResponse response, ModelMap model) throws Exception {
+		HttpSession session = request.getSession();
+		String esntl_id = SimpleUtils.default_set(session.getAttribute("esntl_id").toString());
+		String dept_cd = SimpleUtils.default_set(session.getAttribute("dept_cd").toString());
+		String dept_single_nm = SimpleUtils.default_set(session.getAttribute("dept_single_nm").toString());
+		String mngr_yn = SimpleUtils.default_set(session.getAttribute("mngr_yn").toString());
+		model.addAttribute("esntl_id", esntl_id);
+		model.addAttribute("dept_cd", dept_cd);
+		model.addAttribute("dept_single_nm", dept_single_nm);
+		model.addAttribute("mngr_yn", mngr_yn);
+
+		int pageBlock = 50;
+		model.addAttribute("hidPageBlock", pageBlock);
+
+		//대상자구분
+		HashMap cMap = new HashMap();
+		cMap.put("upper_cd", "00102");
+		List<HashMap> trgterClList = cdService.getCdList(cMap);
+		model.addAttribute("trgterClList", trgterClList);
+System.out.println("stats/suspctMatrDscvryList");
+		return "stats/suspctMatrDscvryList";
+	}
+	
+	/** 
+	 * @methodName : suspctMatrDscvryListAjax
+	 * @date : 2021.09.14
+	 * @author : dgkim
+	 * @description : 피의자 등 소재발견처리부(신규 문서 서식) 조회
+	 * @param request
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping (value = "/suspctMatrDscvryListAjax/")
+	public ModelAndView suspctMatrDscvryListAjax (HttpServletRequest request) throws Exception {
+		HttpSession session = request.getSession();
+		String esntl_id = SimpleUtils.default_set(session.getAttribute("esntl_id").toString());
+		String dept_cd = SimpleUtils.default_set(session.getAttribute("dept_cd").toString());
+		InvUtil commonUtil = InvUtil.getInstance();
+		HashMap map = commonUtil.getParameterMapConvert(request);
+
+		//현재 페이지 파라메타
+		String hidPage = SimpleUtils.default_set(request.getParameter("hidPage"));
+		int intPage = 1;
+		if(!"".equals(hidPage))	intPage = Integer.parseInt((String)hidPage);
+		String hidPageBlock = SimpleUtils.default_set(request.getParameter("hidPageBlock"));
+		if( hidPageBlock== null || hidPageBlock.equals("")){
+			//전체조회
+			hidPageBlock = "10";
+			map.put("startRow", "");
+			map.put("endRow", "");
+		}else{
+			//페이징조회
+			int pageBlock = Integer.parseInt((String)hidPageBlock);
+			//페이지 기본설정
+			int pageArea = 10;
+			//page
+			PaginationInfo paginationInfo = new PaginationInfo();
+			paginationInfo.setCurrentPageNo(intPage);
+			paginationInfo.setRecordCountPerPage(pageBlock);
+			paginationInfo.setPageSize(pageArea);
+			map.put("startRow", paginationInfo.getFirstRecordIndex());
+			map.put("endRow", paginationInfo.getLastRecordIndex());
+		}
+		
+		String sortingFields = (String) map.get("fields");		
+		if(sortingFields != null && !sortingFields.equals("")) {			
+			Map<String, Object> sortingField = Utility.getGridSortList(sortingFields);
+			if(sortingField != null && sortingField.size() > 0 ) {				
+				map.put("dataField", sortingField.get("dataField"));
+				map.put("sortType", sortingField.get("sortType"));
+			}
+		}
+		
+		int list_cnt = 0;
+		List<HashMap> list = statsService.selectSuspctMatrDscvryList(map);
+		
+		if(list.size() > 0){
+			list_cnt = Integer.parseInt(list.get(0).get("TOT_CNT").toString());
+		}
+		
+		HashMap cMap = new HashMap();
+		cMap.put("list", list);
+		cMap.put("cnt", list_cnt);
+		return new ModelAndView("ajaxView", "ajaxData", cMap);
+	}
 }

@@ -42,6 +42,7 @@
 			김지만 수사관 요청
 		*/
 		var columnLayout = [
+			{ dataField : "grdRcNo", visible : false},
 			{ dataField : "grdRn", 		headerText : "순번", width : 50},
 			{ dataField : "grdZrlongReqstNo", headerText : "진행번호", width : 120,
 				renderer : {type : "TemplateRenderer"},

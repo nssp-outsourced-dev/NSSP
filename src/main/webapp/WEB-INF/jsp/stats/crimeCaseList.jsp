@@ -33,7 +33,11 @@
 	function initGrid() {
 		var columnLayout = [
 			{ dataField : "CASE_NO", headerText : "사건번호", width : 100, cellMerge : true, editable : false,
-				renderer : {type : "TemplateRenderer"},
+				renderer : {type : "TemplateRenderer",
+					aliasFunction : function(rowIndex, columnIndex, value, headerText, item) {//엑셀, PDF 등 내보내기 시 값 가공 함수 
+						return fnChangeNo (value); 
+					}
+				},
 				labelFunction : function (rowIndex, columnIndex, value, headerText, item ) {
 					return fnChangeNo (value);
 				}
@@ -98,7 +102,16 @@
 			{ headerText : "송치",
 				children: [
 					{ dataField : "TRN_DE", headerText : "연월일", width : 100, dataType : "date", formatString : "yyyy-mm-dd", editable : false},
-					{ dataField : "TRN_NO", headerText : "번호", width : 100, editable : false},
+					{ dataField : "TRN_NO", headerText : "번호", width : 100, editable : false, 
+						renderer : {type : "TemplateRenderer",
+							aliasFunction : function(rowIndex, columnIndex, value, headerText, item) {//엑셀, PDF 등 내보내기 시 값 가공 함수 
+								return fnChangeNo (value); 
+							}
+						},
+						labelFunction : function (rowIndex, columnIndex, value, headerText, item ) {
+							return fnChangeNo (value);
+						},
+					},
 					{ dataField : "TRN_OPINION_NM", headerText : "의견", width : 100, editable : false}
 				]
 			},

@@ -66,4 +66,17 @@ public class StatsDAO extends EgovComAbstractDAO {
 	public List selectVdecRequstPrmisnReqstList(HashMap param) throws Exception {
 		return list("stats.selectVdecRequstPrmisnReqstList", param);
 	}
+	
+	/** 
+	 * @methodName : selectSuspctMatrDscvryList
+	 * @date : 2021.09.14
+	 * @author : dgkim
+	 * @description : 피의자 등 소재발견처리부(신규 문서 서식)
+	 * @param param
+	 * @return
+	 * @throws Exception
+	 */
+	public List selectSuspctMatrDscvryList(HashMap param) throws Exception {
+		return list("stats.selectSuspctMatrDscvryList", param);
+	}
 }

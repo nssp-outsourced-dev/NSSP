@@ -12,6 +12,17 @@ input[type=radio] {
 }
 .box_w2_1b_ov{ width:calc(70% - 10px); float:left; box-sizing: border-box; padding: 0px 0px 0px 0px; max-height: 195px; overflow-x: hidden; overflow-y: auto }
 .box_w2_2b_ov{ width:calc(30% - 10px); float:left; box-sizing: border-box; padding: 0px 0px 0px 0px; max-height: 195px; overflow-x: hidden; overflow-y: auto }
+
+	/* 
+		2021.08.11
+		coded by dgkim
+		수사시스템 화면 비율 조정
+		권종열 사무관 요청
+	*/
+	.box_w2_1b_ov { height: 160px !important; }/* 사건목록 영역 */
+	#showinbox { height: 190px; }
+	#gridT1_wrap, #gridT2_wrap, #grid_list { height: 152px !important; }/* 사건목록, 압수물 목록 */
+	#ifrReport { height: 202px !important; }/* 작성문서목록 */
 </style>
 <script type="text/javascript">
 	var sFormatId = "00448";

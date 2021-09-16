@@ -6,6 +6,15 @@
 .grid_td_left {text-align:left}
 .box_w2_1z{ width:70%; height: 100%;  float:left; box-sizing: border-box;  padding: 0px 10px 0px 0px }
 .box_w2_2z{ width:30%; height: 100%; float:left; box-sizing: border-box; padding: 0px 0px 0px 10px}
+
+	/*
+		2021.08.11
+		coded by dgkim
+		수사시스템 화면 비율 조정
+		권종열 사무관 요청
+	*/
+	#gridCaseList { height: 132px !important; }/* 사건목록 */
+	#gridSuspctList, #gridVioltList, #gridRcordList, #gridCcdrcList, #gridZeroNoList { height: 150px !important; }/* 피의자 정보, 위반사항, 기록목록 정보, 압수물 정보, 통계원표 */
 </style>
 <script type="text/javascript">
 	var sFormatId = "00452";  //송치양식

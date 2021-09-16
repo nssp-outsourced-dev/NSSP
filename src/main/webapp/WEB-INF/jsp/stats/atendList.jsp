@@ -33,7 +33,11 @@
 			{dataField : "grdTrgterSn", visible: false},
 			{ dataField : "grdRn", 		headerText : "순번", width : 50, editable : false },
 			{ dataField : "grdViewSn", 	headerText : "출석요구번호", width : 120, editable : false,
-				renderer : {type : "TemplateRenderer"},
+				renderer : {type : "TemplateRenderer",
+					aliasFunction : function(rowIndex, columnIndex, value, headerText, item) {//엑셀, PDF 등 내보내기 시 값 가공 함수 
+						return fnChangeNo (value); 
+					}
+				},
 				labelFunction : function (rowIndex, columnIndex, value, headerText, item ) {
 					return fnChangeNo (value);
 				}
@@ -41,7 +45,16 @@
 			{ dataField : "grdAtendDemandDt", headerText : "출석요구일시<span class='point'><img src='/img/icon_dot.png'/></span>", editable : true  },
 			{ dataField : "grdTrgterSeNm", headerText : "출석자구분", width : 120, editable : false },
 			{ dataField : "grdTrgterNm", headerText : "출석자성명", width : 120, editable : false },
-			{ dataField : "grdCaseNo", headerText : "사건번호", width : 130, editable : false },
+			{ dataField : "grdCaseNo", headerText : "사건번호", width : 130, editable : false, 
+				renderer : {type : "TemplateRenderer",
+					aliasFunction : function(rowIndex, columnIndex, value, headerText, item) {//엑셀, PDF 등 내보내기 시 값 가공 함수 
+						return fnChangeNo (value); 
+					}
+				},
+				labelFunction : function (rowIndex, columnIndex, value, headerText, item ) {
+					return fnChangeNo (value);
+				}
+			},
 			{ dataField : "grdAtendNticeDe", headerText : "출석요구통지일", width : 140, dataType : "date", formatString : "yyyy-mm-dd", editable : false },
 			{ dataField : "grdAtendNticeNm", headerText : "출석요구통지방법", editable : false },
 			{ dataField : "grdAtendYn", headerText : "결과<span class='point'><img src='/img/icon_dot.png'/></span>", editable : true,

@@ -44,13 +44,21 @@
 				}
 			}, */
 			{ dataField : "CASE_NO", headerText : "사건번호", width : 100,
-				renderer : {type : "TemplateRenderer"},
+				renderer : {type : "TemplateRenderer",
+					aliasFunction : function(rowIndex, columnIndex, value, headerText, item) {//엑셀, PDF 등 내보내기 시 값 가공 함수 
+						return fnChangeNo (value); 
+					}
+				},
 				labelFunction : function (rowIndex, columnIndex, value, headerText, item ) {
 					return fnChangeNo (value);
 				}
 			},
 			{ dataField : "ITIV_NO", headerText : "내사번호", width : 100,
-				renderer : {type : "TemplateRenderer"},
+				renderer : {type : "TemplateRenderer",
+					aliasFunction : function(rowIndex, columnIndex, value, headerText, item) {//엑셀, PDF 등 내보내기 시 값 가공 함수
+						return fnChangeNo (value); 
+					}	
+				},
 				labelFunction : function (rowIndex, columnIndex, value, headerText, item ) {
 					return fnChangeNo (value);
 				}

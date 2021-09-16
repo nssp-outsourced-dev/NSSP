@@ -344,7 +344,13 @@
 			A.VIOLT_ROOT_NM AS INPUT_13,
 			FN_OZ_DATE(TO_CHAR(SYSDATE,'YYYYMMDD'),'') AS INPUT_14,
 			A.CHARGER_NM 	AS INPUT_15,
-			WRITNG_NM 		AS INPUT_16
+			WRITNG_NM 		AS INPUT_16,
+			/*
+		    	2021.09.09
+		    	coded by dgkim
+		    	진술조서 OOO외명으로 표시하도록 수정
+		    */
+		    SUSPCT_NM AS INPUT_17
 		FROM (
 			SELECT
 				TRGTER_SN,
@@ -362,6 +368,12 @@
 				FN_RC_VIOLT_ROOT_NM(RC_NO) AS VIOLT_ROOT_NM,
 				CHARGER_NM,
 				WRITNG_NM,
+				/*
+			    	2021.09.09
+			    	coded by dgkim
+			    	진술조서 OOO외명으로 표시하도록 수정
+			    */
+			    SUSPCT_NM,
 				SORT_ORDR
 			FROM (
 				SELECT
@@ -390,6 +402,12 @@
 						AND RT.RC_NO  = A.RC_NO
 						AND RT.TRGTER_SE_CD = '00697'
 					) TRGTER_NM_S,	/*피의자*/
+					/*
+				    	2021.09.09
+				    	coded by dgkim
+				    	진술조서 OOO외명으로 표시하도록 수정
+				    */
+					FN_RC_TRGTER_NM(A.RC_NO,'00697') AS SUSPCT_NM,
 					A.SORT_ORDR
 				FROM RC_TMPR_TRGTER A
 				JOIN RC_TMPR C ON A.RC_NO = C.RC_NO
@@ -417,7 +435,13 @@
 			A.VIOLT_ROOT_NM AS INPUT_13,
 			FN_OZ_DATE(TO_CHAR(SYSDATE,'YYYYMMDD'),'') AS INPUT_14,
 			A.CHARGER_NM 	AS INPUT_15,
-			WRITNG_NM 		AS INPUT_16
+			WRITNG_NM 		AS INPUT_16,
+			/*
+		    	2021.09.09
+		    	coded by dgkim
+		    	진술조서 OOO외명으로 표시하도록 수정
+		    */
+		    SUSPCT_NM AS INPUT_17
 		FROM (
 			SELECT
 				TRGTER_SN,
@@ -435,6 +459,12 @@
 				FN_RC_VIOLT_ROOT_NM(RC_NO) AS VIOLT_ROOT_NM,
 				CHARGER_NM,
 				WRITNG_NM,
+				/*
+			    	2021.09.09
+			    	coded by dgkim
+			    	진술조서 OOO외명으로 표시하도록 수정
+			    */
+			    SUSPCT_NM,
 				SORT_ORDR
 			FROM (
 				SELECT
@@ -463,6 +493,12 @@
 						AND RT.RC_NO  = A.RC_NO
 						AND RT.TRGTER_SE_CD = '00697'
 					) TRGTER_NM_S,	/*피의자*/
+					/*
+				    	2021.09.09
+				    	coded by dgkim
+				    	진술조서 OOO외명으로 표시하도록 수정
+				    */
+					FN_RC_TRGTER_NM(A.RC_NO,'00697') AS SUSPCT_NM,
 					A.SORT_ORDR
 				FROM RC_TMPR_TRGTER A
 				JOIN RC_TMPR C ON A.RC_NO = C.RC_NO
@@ -847,7 +883,7 @@
 	</select>
 	
 	<!-- 서식56 압수ㆍ수색ㆍ검증영장신청(금융계좌 추적용) -->
-	<select id="selectHwp0" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+	<select id="selectHwp00000000000000000358" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
 		SELECT 
 			FN_CNVR_NO(tc.TRN_NO) AS TRN_NO --송치번호
 			, FN_OZ_DATE(TO_CHAR(SYSDATE,'YYYYMMDD'),'') AS S_DATE --현재일
@@ -864,7 +900,7 @@
 	</select>
 	
 	<!-- 서식57 압수ㆍ수색ㆍ검증영장신청(사후) -->
-	<select id="selectHwp00" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+	<select id="selectHwp00000000000000000359" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
 		SELECT 
 			FN_CNVR_NO(tc.TRN_NO) AS TRN_NO --송치번호
 			, FN_OZ_DATE(TO_CHAR(SYSDATE,'YYYYMMDD'),'') AS S_DATE --현재일
@@ -885,7 +921,7 @@
 	<!-- 서식61 정보저장매체 제출 등 참관여부 확인서 -->
 	
 	<!-- 서식65 수색결과 증명서 -->
-	<select id="selectHwp000" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+	<select id="selectHwp00000000000000000360" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
 		SELECT 
 			FN_CASE_NO(rq.RC_NO) AS CASE_NO --사건번호
 			, FN_OZ_DATE(TO_CHAR(SYSDATE,'YYYYMMDD'),'') AS S_DATE --현재일
@@ -913,8 +949,76 @@
 	<!-- 서식109 통신사실 확인자료제공 요청 집행사실 통지 -->
 	<!-- 서식111 통신사실 확인자료제공 요청 집행사실 통지유예 승인신청 -->
 	<!-- 서식118 영장반환 보고 -->
+	
 	<!-- 서식- 피의자 입감 지휘서 -->
+	<select id="selectHwp00000000000000000378" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		SELECT 
+			NVL(TO_CHAR(R.CNFNM_DT, 'YY'), '') AS Y --입감 년도
+			, NVL(TO_CHAR(R.CNFNM_DT, 'MM'), '') AS M --입감 월
+			, NVL(TO_CHAR(R.CNFNM_DT, 'DD'), '') AS D --입감 일
+			, NVL(TO_CHAR(R.CNFNM_DT, 'HH24'), '') AS H --입감 시
+			, NVL(TO_CHAR(R.CNFNM_DT, 'MI'), '') AS MI --입감 분
+			, A.TRGTER_NM --피의자 성명
+			, A.TRGTER_AGE --피의자 나이
+			, A.ADRES_ADDR --피의자 주소
+			, FN_CD_NM(A.OCCP_CD) AS OCCP_NM --피의자 직업
+			, A.WRC_TEL --직장 전화
+			, FN_RC_VIOLT_ROOT_NM(C.RC_NO) AS VIOLT_ROOT_NM --죄명
+		FROM RC_TMPR_TRGTER A
+			JOIN RC_TMPR C ON A.RC_NO = C.RC_NO
+			JOIN INV_ZRLONG_REQST R ON R.RC_NO = A.RC_NO AND R.TRGTER_SN = A.TRGTER_SN 
+		WHERE A.RC_NO = #P_RC_NO# AND A.TRGTER_SN = #P_TRGTER_SN# AND R.ZRLONG_REQST_NO = #P_ZRLONG_REQST_NO#
+	</select>
+	
 	<!-- 서식- 피의자 출감 지휘서 -->
+	<select id="selectHwp00000000000000000379" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		SELECT 
+			NVL(TO_CHAR(R.CNFNM_DT, 'YY'), '') AS Y --입감 년도
+			, NVL(TO_CHAR(R.CNFNM_DT, 'MM'), '') AS M --입감 월
+			, NVL(TO_CHAR(R.CNFNM_DT, 'DD'), '') AS D --입감 일
+			, NVL(TO_CHAR(R.CNFNM_DT, 'HH24'), '') AS H --입감 시
+			, NVL(TO_CHAR(R.CNFNM_DT, 'MI'), '') AS MI --입감 분
+			, A.TRGTER_NM --피의자 성명
+			, A.TRGTER_AGE --피의자 나이
+			, A.ADRES_ADDR --피의자 주소
+			, FN_CD_NM(A.OCCP_CD) AS OCCP_NM --피의자 직업
+			, A.WRC_TEL --직장 전화
+			, FN_RC_VIOLT_ROOT_NM(C.RC_NO) AS VIOLT_ROOT_NM --죄명
+		FROM RC_TMPR_TRGTER A
+			JOIN RC_TMPR C ON A.RC_NO = C.RC_NO
+			JOIN INV_ZRLONG_REQST R ON R.RC_NO = A.RC_NO AND R.TRGTER_SN = A.TRGTER_SN 
+		WHERE A.RC_NO = #P_RC_NO# AND A.TRGTER_SN = #P_TRGTER_SN# AND R.ZRLONG_REQST_NO = #P_ZRLONG_REQST_NO#
+	</select>
+	
 	<!-- 서식- 피의자(유치인)접견 등 금지요청서 -->
+	<select id="selectHwp00000000000000000380" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		SELECT 
+			FN_CNVR_NO(R.ZRLONG_REQST_NO) AS ZRLONG_REQST_NO --영장 신청 번호
+			, FN_OZ_DATE(TO_CHAR(SYSDATE,'YYYYMMDD'),'') AS S_DATE --현재일
+			, FN_CNVR_NO(C.CASE_NO) AS CASE_NO --사건번호
+			, FN_RC_VIOLT_ROOT_NM(C.RC_NO) AS VIOLT_ROOT_NM --죄명
+			, A.TRGTER_NM --피의자 성명
+			, DGUARD.DECRYPT('TBL','ENC', A.TRGTER_RRN) AS TRGTER_RRN --피의자 주민번호
+			, FN_CD_NM(A.OCCP_CD) AS OCCP_NM --피의자 직업
+		FROM RC_TMPR_TRGTER A
+			JOIN RC_TMPR C ON A.RC_NO = C.RC_NO
+			JOIN INV_ZRLONG_REQST R ON R.RC_NO = A.RC_NO AND R.TRGTER_SN = A.TRGTER_SN 
+		WHERE A.RC_NO = #P_RC_NO# AND A.TRGTER_SN = #P_TRGTER_SN# AND R.ZRLONG_REQST_NO = #P_ZRLONG_REQST_NO#
+	</select>
+	
 	<!-- 서식- 피의자(유치인)접견 등 금지취소 요청 -->
+	<select id="selectHwp00000000000000000381" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		SELECT 
+			FN_CNVR_NO(R.ZRLONG_REQST_NO) AS ZRLONG_REQST_NO --영장 신청 번호
+			, FN_OZ_DATE(TO_CHAR(SYSDATE,'YYYYMMDD'),'') AS S_DATE --현재일
+			, FN_CNVR_NO(C.CASE_NO) AS CASE_NO --사건번호
+			, FN_RC_VIOLT_ROOT_NM(C.RC_NO) AS VIOLT_ROOT_NM --죄명
+			, A.TRGTER_NM --피의자 성명
+			, DGUARD.DECRYPT('TBL','ENC', A.TRGTER_RRN) AS TRGTER_RRN --피의자 주민번호
+			, FN_CD_NM(A.OCCP_CD) AS OCCP_NM --피의자 직업
+		FROM RC_TMPR_TRGTER A
+			JOIN RC_TMPR C ON A.RC_NO = C.RC_NO
+			JOIN INV_ZRLONG_REQST R ON R.RC_NO = A.RC_NO AND R.TRGTER_SN = A.TRGTER_SN 
+		WHERE A.RC_NO = #P_RC_NO# AND A.TRGTER_SN = #P_TRGTER_SN# AND R.ZRLONG_REQST_NO = #P_ZRLONG_REQST_NO#
+	</select>
 </sqlMap>

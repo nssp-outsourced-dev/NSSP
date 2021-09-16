@@ -32,7 +32,11 @@
 		var columnLayout = [
 			{ dataField : "grdRn", 				headerText : "순번", 			width : 50, editable : false },		
 			{ dataField : "grdSugestNo", 		headerText : "지휘번호(접수번호)", 	width : 150,editable : false,
-				renderer : {type : "TemplateRenderer"},
+				renderer : {type : "TemplateRenderer",
+					aliasFunction : function(rowIndex, columnIndex, value, headerText, item) {//엑셀, PDF 등 내보내기 시 값 가공 함수 
+						return fnChangeNo (value); 
+					}
+				},
 				labelFunction : function (rowIndex, columnIndex, value, headerText, item ) {
 					return fnChangeNo (value);
 				}
@@ -46,7 +50,11 @@
 			{ dataField : "grdCmndDe", 			headerText : "지휘일자", 	width : 130, dataType : "date", formatString : "yyyy-mm-dd", editable : false },
 			{ dataField : "grdSugestResultNm", 	headerText : "건의결과",  	width : 100, editable : false },
 			{ dataField : "grdCaseNo", 			headerText : "사건번호",  	width : 130, editable : false,
-				renderer : {type : "TemplateRenderer"},
+				renderer : {type : "TemplateRenderer",
+					aliasFunction : function(rowIndex, columnIndex, value, headerText, item) {//엑셀, PDF 등 내보내기 시 값 가공 함수 
+						return fnChangeNo (value); 
+					}
+				},
 				labelFunction : function (rowIndex, columnIndex, value, headerText, item ) {
 					return fnChangeNo (value);
 				}

@@ -32,10 +32,16 @@
 					/* 
 						2021.07.12
 						by dgkim
-						사건번호순으로 정렬로 변경
+						사건번호순으로 정렬로 변경(사건번호 > 내사번호)
 						김지만 수사관 요청
 					 */
-					ROW_NUMBER() OVER(ORDER BY A.CASE_NO) RN --ROW_NUMBER() OVER(ORDER BY A.RC_NO) RN
+					 /* 
+						2021.09.08
+						by dgkim
+						사건번호 > 내사번호 > 접수번호 순으로 정렬로 변경
+						김지만 수사관 요청
+					 */
+					ROW_NUMBER() OVER(ORDER BY A.CASE_NO ASC, A.ITIV_NO ASC, A.RC_NO ASC) RN --ROW_NUMBER() OVER(ORDER BY A.RC_NO) RN
 				</isEmpty>				
 			FROM
 			(
@@ -507,6 +513,156 @@
 								)
 							)
 						</isNotEmpty>
+				) A
+		) X
+		<isNotEmpty property="startRow" >
+			WHERE (RN <![CDATA[ > ]]> #startRow# AND RN <![CDATA[ <= ]]> #endRow#)
+		</isNotEmpty>
+		
+		ORDER BY RN ASC
+	</select>
+	
+	<!-- 
+		2021.09.14
+		coded by dgkim
+		피의자 등 소재발견처리부
+		신규 문서 서식
+	 -->
+	<select id="selectSuspctMatrDscvryList" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		SELECT X.*
+		FROM (
+			SELECT A.*,
+				COUNT(*) OVER() AS TOT_CNT,
+				<isNotEmpty property="dataField">
+					<isNotEmpty property="sortType">
+						ROW_NUMBER() OVER(ORDER BY A.$dataField$ $sortType$ NULLS LAST) RN
+					</isNotEmpty>
+				</isNotEmpty>
+				<isEmpty property="dataField">		
+					ROW_NUMBER() OVER(ORDER BY A.CASE_NO ASC, A.TRGTER_SN ASC) AS RN
+				</isEmpty>
+			FROM
+				(
+					SELECT T.* FROM
+					(
+						(/* 기소중지 */
+							SELECT
+								T.RC_NO, --접수번호
+								TT.TRGTER_NM, --피의자 또는 참고인
+								TT.TRGTER_SN, --대상자 일련번호
+								I.DSCVRY_DE, --소재발견일자
+								I.DSCVRY_RESN, --소재발견사유
+								I.DSCVRY_REPORT_DE, --소재발견 보고일
+								FN_RC_VIOLT_ROOT_NM (RT.RC_NO) AS VIOLT_NM, --죄명
+								I.SRCCRM_RELIS_DE, --수배해제일자
+								T.CASE_NO, --재기전 사건번호
+								(SELECT MAX(B.TRN_DE) FROM TRN_CASE B WHERE RC_NO = T.RC_NO AND B.USE_YN = 'Y') AS TRN_DE, --송치일
+								FN_USER_NM(T.CHARGER_ID) AS CHARGER_NM --담당자
+								--비고
+							FROM (
+								SELECT RC_NO FROM (
+									SELECT A.RC_NO FROM RC_TMPR A
+									WHERE A.USE_YN = 'Y'
+										AND A.PROGRS_STTUS_CD = '02124'            /*기소중지*/
+										AND A.RC_NO IN (
+											SELECT DISTINCT TT.RC_NO
+											FROM RC_TMPR_TRGTER TT
+											JOIN RC_TMPR RR ON TT.RC_NO = RR.RC_NO AND RR.USE_YN = 'Y' AND RR.PROGRS_STTUS_CD = '02124'
+											WHERE TT.USE_YN = 'Y'
+												AND TT.TRGTER_SE_CD IN (SELECT CC.ESNTL_CD FROM CMN_CD CC WHERE CC.UPPER_CD = '00102'  AND CC.CD_DC = 'suspct-Group' )         /*피의자*/
+									)
+									UNION ALL
+									SELECT B.RC_NO FROM INV_STPRSC B
+									JOIN RC_TMPR C ON B.RC_NO = C.RC_NO
+									WHERE C.USE_YN = 'Y'
+								) GROUP BY RC_NO
+							) RT
+							JOIN RC_TMPR T ON RT.RC_NO = T.RC_NO
+							JOIN (
+								SELECT
+									CC.RC_NO,
+									CC.TRGTER_SN,
+									RT.TRGTER_NM,
+									MAX(CC.TRN_NO) AS TRN_NO,
+									MAX(D.TRN_DE) KEEP(DENSE_RANK FIRST ORDER BY CC.TRN_NO DESC) AS TRN_DE
+									FROM TRN_VIOLT CC
+									JOIN TRN_CASE D ON D.TRN_NO = CC.TRN_NO AND D.USE_YN = 'Y'
+									JOIN RC_TMPR CT ON CC.RC_NO = CT.RC_NO
+									JOIN RC_TMPR_TRGTER RT ON CT.RC_NO = RT.RC_NO AND CC.TRGTER_SN = RT.TRGTER_SN AND RT.USE_YN = 'Y'
+								WHERE CC.USE_YN = 'Y'
+									AND D.ED_YN = 'Y'                        /*종결여부*/
+									AND CC.TRN_OPINION_CD = '01367'        /*피의자소재불명*/
+									AND RT.TRGTER_SE_CD IN (SELECT CC.ESNTL_CD FROM CMN_CD CC WHERE CC.UPPER_CD = '00102'  AND CC.CD_DC = 'suspct-Group' ) /*피의자 그룹*/
+								GROUP BY CC.RC_NO, CC.TRGTER_SN, RT.TRGTER_NM
+							) TT ON T.RC_NO = TT.RC_NO
+							LEFT JOIN INV_STPRSC_DSCVRY I ON TT.RC_NO = I.RC_NO AND TT.TRGTER_SN = I.TRGTER_SN
+							LEFT JOIN INV_STPRSC_REPORT B ON TT.RC_NO = B.RC_NO AND TT.TRGTER_SN = B.TRGTER_SN
+							WHERE T.USE_YN = 'Y'
+						)
+						UNION
+						(/* 잠고인중지 */
+							SELECT
+								T.RC_NO, --접수번호
+								TT.TRGTER_NM, --피의자 또는 참고인
+								TT.TRGTER_SN, --대상자 일련번호
+								I.DSCVRY_DE, --소재발견일자
+								I.DSCVRY_RESN, --소재발견사유
+								I.DSCVRY_REPORT_DE, --소재발견 보고일
+								FN_RC_VIOLT_ROOT_NM (T.RC_NO) AS VIOLT_NM, --죄명
+								'' AS SRCCRM_RELIS_DE,--수배해제일자
+								T.CASE_NO,--재기전 사건번호
+								(SELECT MAX(B.TRN_DE) FROM TRN_CASE B WHERE RC_NO = T.RC_NO AND B.USE_YN = 'Y') AS TRN_DE, --송치일
+								FN_USER_NM(T.CHARGER_ID) AS CHARGER_NM --담당자
+								--비고
+							FROM (
+								SELECT RC_NO FROM (
+									SELECT A.RC_NO FROM RC_TMPR A
+									WHERE A.USE_YN = 'Y'
+										AND A.PROGRS_STTUS_CD = '02125' /*참고인중지*/
+										AND A.RC_NO IN (
+											SELECT DISTINCT TT.RC_NO
+											FROM RC_TMPR_TRGTER TT
+											JOIN RC_TMPR RR ON TT.RC_NO = RR.RC_NO AND RR.USE_YN = 'Y' AND RR.PROGRS_STTUS_CD = '02125' /*참고인중지*/
+											WHERE TT.USE_YN = 'Y'
+												AND TT.TRGTER_SE_CD IN (SELECT CC.ESNTL_CD FROM CMN_CD CC WHERE CC.UPPER_CD = '00102'  AND CC.CD_DC = 'accs-Group' ) /*참고인 그룹*/
+										)
+									UNION ALL
+									SELECT B.RC_NO FROM INV_REFESTPGE B
+									JOIN RC_TMPR C ON B.RC_NO = C.RC_NO
+									WHERE C.USE_YN = 'Y'
+								) GROUP BY RC_NO
+							) RT
+							JOIN RC_TMPR T ON RT.RC_NO = T.RC_NO
+							JOIN RC_TMPR_TRGTER TT ON T.RC_NO = TT.RC_NO AND TT.USE_YN = 'Y'
+								AND TT.TRGTER_SE_CD IN (SELECT CC.ESNTL_CD FROM CMN_CD CC WHERE CC.UPPER_CD = '00102'  AND CC.CD_DC = 'accs-Group' )
+								LEFT JOIN INV_REFE_DSCVRY I ON TT.RC_NO = I.RC_NO AND TT.TRGTER_SN = I.TRGTER_SN
+								LEFT JOIN INV_REFE_REPORT B ON TT.RC_NO = B.RC_NO AND TT.TRGTER_SN = B.TRGTER_SN
+							WHERE T.USE_YN = 'Y'
+						)
+					) T
+					<dynamic prepend="WHERE">
+						<isNotEmpty property="chager" prepend="AND">
+							T.RC_NO IN(
+								SELECT RC_NO FROM RC_TMPR WHERE CHARGER_ID = #chager#
+							)
+						</isNotEmpty>
+						
+						<isNotEmpty property="dept_cd" prepend="AND">
+							T.RC_NO IN(
+								SELECT RC_NO FROM RC_TMPR WHERE CHARGER_DEPT_CD IN(
+									SELECT DC.DEPT_CD
+									FROM CMN_DEPT_CD DC
+									WHERE DC.USE_YN = 'Y' AND DC.DEPT_CD != '00000'
+									START WITH DC.DEPT_CD = #dept_cd#
+									CONNECT BY PRIOR DC.DEPT_CD = DC.DEPT_UPPER_CD
+								)
+							)
+						</isNotEmpty>
+						
+						<isNotEmpty property="trgter_nm" prepend="AND">
+							T.TRGTER_NM LIKE '%' || #trgter_nm# || '%'
+						</isNotEmpty>
+					</dynamic>
 				) A
 		) X
 		<isNotEmpty property="startRow" >

@@ -33,7 +33,11 @@
 		var columnLayout = [
 			{ dataField : "RN", headerText : "순번", width : 50, editable : false},
 			{ dataField : "ITIV_NO", headerText : "내사번호", width : 100, editable : false,
-				renderer : {type : "TemplateRenderer"},
+				renderer : {type : "TemplateRenderer",
+					aliasFunction : function(rowIndex, columnIndex, value, headerText, item) {//엑셀, PDF 등 내보내기 시 값 가공 함수 
+						return fnChangeNo (value); 
+					}
+				},
 				labelFunction : function (rowIndex, columnIndex, value, headerText, item ) {
 					return fnChangeNo (value);
 				}

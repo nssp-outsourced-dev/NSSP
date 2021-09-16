@@ -89,4 +89,12 @@ public class StatsServiceImpl implements StatsService {
 	public List<HashMap> selectVdecRequstPrmisnReqstList(HashMap param) throws Exception {
 		return statsDAO.selectVdecRequstPrmisnReqstList(param);
 	}
+
+	/* (non-Javadoc)
+	 * @see kr.go.nssp.stats.service.StatsService#selectSuspctMatrDscvryList(java.util.HashMap)
+	 */
+	@Override
+	public List selectSuspctMatrDscvryList(HashMap param) throws Exception {
+		return statsDAO.selectSuspctMatrDscvryList(param);
+	}
 }

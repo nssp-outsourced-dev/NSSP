@@ -55,7 +55,13 @@
 		    A.VIOLT_ROOT_NM AS INPUT_13,
 		    FN_OZ_DATE(TO_CHAR(SYSDATE,'YYYYMMDD'),'') AS INPUT_14,
 			A.CHARGER_NM 	AS INPUT_15,
-		    WRITNG_NM 		AS INPUT_16
+		    WRITNG_NM 		AS INPUT_16,
+		    /*
+		    	2021.09.09
+		    	coded by dgkim
+		    	진술조서 OOO외명으로 표시하도록 수정
+		    */
+		    SUSPCT_NM AS INPUT_17
 		FROM (
 		    SELECT
 		        TRGTER_SN,
@@ -73,6 +79,12 @@
 		        FN_RC_VIOLT_ROOT_NM(RC_NO) AS VIOLT_ROOT_NM,
 				CHARGER_NM,
 			    WRITNG_NM,
+			    /*
+			    	2021.09.09
+			    	coded by dgkim
+			    	진술조서 OOO외명으로 표시하도록 수정
+			    */
+			    SUSPCT_NM,
 			    SORT_ORDR
 		    FROM (
 		        SELECT
@@ -101,6 +113,12 @@
 						AND RT.RC_NO  = A.RC_NO
 						AND RT.TRGTER_SE_CD = '00697'
 					) TRGTER_NM_S,	/*피의자*/
+					/*
+				    	2021.09.09
+				    	coded by dgkim
+				    	진술조서 OOO외명으로 표시하도록 수정
+				    */
+					FN_RC_TRGTER_NM(A.RC_NO,'00697') AS SUSPCT_NM,
 					A.SORT_ORDR
 		        FROM RC_TMPR_TRGTER A
 		        JOIN RC_TMPR C ON A.RC_NO = C.RC_NO

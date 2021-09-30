@@ -879,11 +879,17 @@
 							, DOC_ID 			--문서 ID
 							, SANCTN_ID 		--결재 ID
 							, USE_YN 			--사용 여부
+							<!-- 
+								2021.09.28
+								coded by dgkim
+								권종열 사무관 요청
+								정식사건일때 승인 및 배당을 자동으로 하도록 요청 받아 구현하였으나
+								내사 접수 방식과 같게 해달라는 재요청으로 주석처리
 							<isEqual property="rc_se_cd" compareValue="F">
-							, CHARGER_DEPT_CD	--담당 소속 코드
-							, CHARGER_ID		--담당자 ID
-							, PRSCT_DE			--입건 일자
-							</isEqual>
+							, CHARGER_DEPT_CD	
+							, CHARGER_ID
+							, PRSCT_DE
+							</isEqual> -->
 							, WRITNG_DEPT_CD 	--작성 소속 코드
 							, WRITNG_ID 		--작성 ID
 							, WRITNG_DT 		--작성 일시
@@ -915,11 +921,17 @@
 							, #doc_id# 			--문서 id
 							, #sanctn_id#		--결재 id
 							, 'Y' 				--사용 여부
+							<!-- 
+								2021.09.28
+								coded by dgkim
+								권종열 사무관 요청
+								정식사건일때 승인 및 배당을 자동으로 하도록 요청 받아 구현하였으나
+								내사 접수 방식과 같게 해달라는 재요청으로 주석처리
 							<isEqual property="rc_se_cd" compareValue="F">
-							, #writng_dept_cd#  --담당자 소속 코드
-							, #charger_id# 		--담당자 id
-							, TO_CHAR(SYSDATE, 'YYYYMMDD')	--입건 일자
-							</isEqual>
+							, #writng_dept_cd#
+							, #charger_id# 
+							, TO_CHAR(SYSDATE, 'YYYYMMDD')
+							</isEqual> -->
 							, #writng_dept_cd#  --작성 소속 코드
 							, #esntl_id# 		--작성 id
 							, SYSDATE 			--작성 일시
@@ -1141,6 +1153,28 @@
 					 , B.PROGRS_STTUS_CD
 					 , B.CHARGER_ID
 					 , B.RC_SE_CD
+					 /* 
+					 	2021.09.28
+					 	coded by dgkim
+					 	사건 송치 이후에도 대상자 수정 가능하도록 하였으나 
+					 	전화번호 부분이 빠져있어 추가
+					  */
+					 --휴대폰 번호
+					 , REGEXP_SUBSTR(DGUARD.DECRYPT('TBL','ENC',A.HP_NO), '[^-]+', 1, 1) AS HP_NO_1
+					 , REGEXP_SUBSTR(DGUARD.DECRYPT('TBL','ENC',A.HP_NO), '[^-]+', 1, 2) AS HP_NO_2
+					 , REGEXP_SUBSTR(DGUARD.DECRYPT('TBL','ENC',A.HP_NO), '[^-]+', 1, 3) AS HP_NO_3
+					 --자택 전화
+					 , REGEXP_SUBSTR(DGUARD.DECRYPT('TBL','ENC',A.OWNHOM_TEL), '[^-]+', 1, 1) AS OWNHOM_TEL_1
+					 , REGEXP_SUBSTR(DGUARD.DECRYPT('TBL','ENC',A.OWNHOM_TEL), '[^-]+', 1, 2) AS OWNHOM_TEL_2
+					 , REGEXP_SUBSTR(DGUARD.DECRYPT('TBL','ENC',A.OWNHOM_TEL), '[^-]+', 1, 3) AS OWNHOM_TEL_3
+					 --직장 전화
+					 , REGEXP_SUBSTR(A.WRC_TEL, '[^-]+', 1, 1) AS WRC_TEL_1
+					 , REGEXP_SUBSTR(A.WRC_TEL, '[^-]+', 1, 2) AS WRC_TEL_2
+					 , REGEXP_SUBSTR(A.WRC_TEL, '[^-]+', 1, 3) AS WRC_TEL_3
+					 --기타 전화
+					 , REGEXP_SUBSTR(A.ETC_TEL, '[^-]+', 1, 1) AS ETC_TEL_1
+					 , REGEXP_SUBSTR(A.ETC_TEL, '[^-]+', 1, 2) AS ETC_TEL_2
+					 , REGEXP_SUBSTR(A.ETC_TEL, '[^-]+', 1, 3) AS ETC_TEL_3
 				  FROM RC_TMPR_TRGTER A
 				     , RC_TMPR B
 				 WHERE A.RC_NO = B.RC_NO

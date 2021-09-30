@@ -1382,7 +1382,14 @@ public class RcController {
 						paramMap.put( "itiv_result_cd", "00383");
 						rcService.updateRcItivResult(paramMap);			// 내사결과 테이블 update
 					}
-					
+					/*
+					 * 2021.09.17
+					 * coded by dgkim
+					 * 사건 종결 선택시 입건이 아닌 경우 사건 진행상태 변경하도록 수정
+					 * */
+					else {
+						rcService.updateRcTmprSttus(paramMap);	// 임시결과/내사착수/내사결과 - 승인없이 사건 진행상태 변경
+					}
 				} else {
 					rcService.updateRcTmprSttus(paramMap);	// 임시결과/내사착수/내사결과 - 승인없이 사건 진행상태 변경
 				}

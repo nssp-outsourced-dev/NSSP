@@ -125,7 +125,15 @@ public class RcServiceImpl implements RcService {
 		 */
 		
 		if( "F".equals( rcSeCd ) ) {		//정식사건
-			caseMap.put("progrs_sttus_cd", "02103");
+			/*
+			 * 2021.09.28
+			 * coded by dgkim
+			 * 권종열 사무관 요청
+			 * 정식사건일때 승인 및 배당을 자동으로 하도록 요청 받아 구현하였으나
+			 * 내사 접수 방식과 같게 해달라는 재요청으로 주석처리
+			 * */
+			caseMap.put("progrs_sttus_cd", "02101");
+			//caseMap.put("progrs_sttus_cd", "02103");
 		} else if( "I".equals( rcSeCd ) ) {	//내사사건
 
 			/* old
@@ -160,21 +168,27 @@ public class RcServiceImpl implements RcService {
 		
 		caseMap.put("doc_id", docService.getDocID());	//문서 ID생성
 
-		
-		if( "F".equals( rcSeCd ) ) {			//정식사건은 배당자 등록
-			caseMap.put(   "alot_se_cd", "A" );	//A: 담당자 배당 완료 코드
-			caseMap.put( "alot_user_id", caseMap.get("esntl_id") );		  //배당받은자 ID
-			caseMap.put( "alot_dept_cd", caseMap.get("writng_dept_cd") ); //배당받은자 부서 코드
-			//caseMap.put(      "case_no", prsctDAO.selectCaseNo());	  //사건번호 채번 2020.07.28 정식사건으로 접수시 승인후 채번하는것으로 변경
-			
-			caseMap.put( "regist_path", "정식사건 접수" );
-			caseMap.put( "dept_cd", caseMap.get("writng_dept_cd") );
-			
-			alotDAO.insertRcTmprAlot(caseMap);	// 배당 테이블 등록
-			
-			caseMap.put( "confm_job_se_cd", "01386"); // 승인업무구분 - 입건 (01386)
-			insertCaseConfmReqst(caseMap);	          // 정식사건 승인요청
-		}
+		/*
+		 * 2021.09.28
+		 * coded by dgkim
+		 * 권종열 사무관 요청
+		 * 정식사건일때 승인 및 배당을 자동으로 하도록 요청 받아 구현하였으나
+		 * 내사 접수 방식과 같게 해달라는 재요청으로 주석처리
+		 * */
+//		if( "F".equals( rcSeCd ) ) {			//정식사건은 배당자 등록
+//			caseMap.put(   "alot_se_cd", "A" );	//A: 담당자 배당 완료 코드
+//			caseMap.put( "alot_user_id", caseMap.get("esntl_id") );		  //배당받은자 ID
+//			caseMap.put( "alot_dept_cd", caseMap.get("writng_dept_cd") ); //배당받은자 부서 코드
+//			//caseMap.put(      "case_no", prsctDAO.selectCaseNo());	  //사건번호 채번 2020.07.28 정식사건으로 접수시 승인후 채번하는것으로 변경
+//			
+//			caseMap.put( "regist_path", "정식사건 접수" );
+//			caseMap.put( "dept_cd", caseMap.get("writng_dept_cd") );
+//			
+//			alotDAO.insertRcTmprAlot(caseMap);	// 배당 테이블 등록
+//			
+//			caseMap.put( "confm_job_se_cd", "01386"); // 승인업무구분 - 입건 (01386)
+//			insertCaseConfmReqst(caseMap);	          // 정식사건 승인요청
+//		}
 		
 		rcDAO.insertRcTmpr(caseMap);			//접수사건 등록
 

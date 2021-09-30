@@ -350,7 +350,7 @@
 		    	coded by dgkim
 		    	진술조서 OOO외명으로 표시하도록 수정
 		    */
-		    SUSPCT_NM AS INPUT_17
+		    SUSPCT_NM || '명' AS INPUT_17
 		FROM (
 			SELECT
 				TRGTER_SN,
@@ -441,7 +441,7 @@
 		    	coded by dgkim
 		    	진술조서 OOO외명으로 표시하도록 수정
 		    */
-		    SUSPCT_NM AS INPUT_17
+		    SUSPCT_NM || '명' AS INPUT_17
 		FROM (
 			SELECT
 				TRGTER_SN,

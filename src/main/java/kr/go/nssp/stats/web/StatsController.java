@@ -565,7 +565,7 @@ public class StatsController {
 		cMap.put("upper_cd", "00102");
 		List<HashMap> trgterClList = cdService.getCdList(cMap);
 		model.addAttribute("trgterClList", trgterClList);
-System.out.println("stats/suspctMatrDscvryList");
+		
 		return "stats/suspctMatrDscvryList";
 	}
 	

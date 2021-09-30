@@ -39,7 +39,13 @@ function fnSearchGridPage(url, form, grid){
 	      	var gridData = data.list;
 		    // 그리드에 데이터 세팅
 	    	AUIGrid.setGridData(grid, gridData);
-	    	$(grid).find(".aui-grid-nodata-msg-layer").text("");
+	    	/*
+	    	 * 2021.09.15
+	    	 * coded by dgkim
+	    	 * no data 메세지 때문에 좌우 스크룰 활성되지 않는 현상 방지를 위해 안보이게 처리
+	    	 * */
+	    	//$(grid).find(".aui-grid-nodata-msg-layer").text("");
+	    	$(grid).find(".aui-grid-nodata-msg-layer").hide();
 		},
 		complete:function(){
 			AUIGrid.removeAjaxLoader(grid); // 로더 끝

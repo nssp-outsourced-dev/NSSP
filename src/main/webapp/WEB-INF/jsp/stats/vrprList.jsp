@@ -36,8 +36,26 @@
 		var columnLayout = [
 			{ dataField : "RC_NO", visible : false},
 			{ dataField : "RN", 		headerText : "순번", width : 50, cellMerge : true, mergePolicy:"restrict", mergeRef: "CASE_NO"},
-			{ dataField : "PRMISN_PROGRS_NO", 		headerText : "진행번호", width : 100, cellMerge : true, mergePolicy:"restrict", mergeRef: "CASE_NO"},
-			{ dataField : "CASE_NO", 		headerText : "사건번호", width : 100, cellMerge : true, mergePolicy:"restrict", mergeRef: "CASE_NO"},
+			{ dataField : "PRMISN_PROGRS_NO", 		headerText : "진행번호", width : 100, cellMerge : true, mergePolicy:"restrict", mergeRef: "CASE_NO",
+				renderer : {type : "TemplateRenderer",
+					aliasFunction : function(rowIndex, columnIndex, value, headerText, item) {//엑셀, PDF 등 내보내기 시 값 가공 함수 
+						return fnChangeNo (value); 
+					}
+				},
+				labelFunction : function (rowIndex, columnIndex, value, headerText, item ) {
+					return fnChangeNo (value);
+				}
+			},
+			{ dataField : "CASE_NO", 		headerText : "사건번호", width : 100, 
+				renderer : {type : "TemplateRenderer",
+					aliasFunction : function(rowIndex, columnIndex, value, headerText, item) {//엑셀, PDF 등 내보내기 시 값 가공 함수 
+						return fnChangeNo (value); 
+					}
+				},
+				labelFunction : function (rowIndex, columnIndex, value, headerText, item ) {
+					return fnChangeNo (value);
+				}
+			},
 			{ dataField : "TRGTER_NM", headerText : "성명", width : 120 },
 			{ dataField : "TRGTER_RRN", headerText : "주민등록번호", width : 120 },
 			{ dataField : "OCCP_NM", headerText : "직업", width : 120 },

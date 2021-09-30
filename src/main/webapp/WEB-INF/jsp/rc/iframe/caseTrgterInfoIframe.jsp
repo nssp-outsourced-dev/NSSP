@@ -211,9 +211,6 @@ var myGridID = "#grid_wrap";
 		
 	*/
 	function fn_form_bind_popup(form, json, type){
-		console.log(form);
-		console.log(json);
-		console.log(type);
 		var text;
 		if(json._$uid != null){
 			delete json._$uid;
@@ -339,6 +336,13 @@ var myGridID = "#grid_wrap";
 		<input type="hidden" 	id="hidTrgterTyCd" 		name="hidTrgterTyCd" 	value=""><!-- 대상자 유형 -->
 		<input type="hidden" 	id="hidTrgterSn" 		name="hidTrgterSn" 	value=""><!-- 대상자 순번 -->
 		
+		<input type="hidden" id="hidHpNo" 		name="hidHpNo"	   ><!-- 대상자 휴대전화	 -->
+		<input type="hidden" id="hidOwnhomTel"	name="hidOwnhomTel"><!-- 대상자 자택전화	 -->
+		<input type="hidden" id="hidWrcTel" 	name="hidWrcTel"   ><!-- 대상자 직장전화 	 -->
+		<input type="hidden" id="hidEtcTel" 	name="hidEtcTel"   ><!-- 대상자 기타 연락처 -->
+		<input type="hidden" id="hidAgentTel" 	name="hidAgentTel" ><!-- 대리인 전화번호	 -->
+		<input type="hidden" id="hidTrgterRrn" 	name="hidTrgterRrn"><!-- 대리인 주민번호	 -->
+			
 		<div class="box_w2 mb_50 mt_10">
 			<div class="box_w2_1" style="width: 320px;">
 				<!-- 그리드 -->
@@ -429,7 +433,7 @@ var myGridID = "#grid_wrap";
 				       				<select	class="w_80px input_com"	id="selHpNo1"	name="selHpNo1" size="1" >
 										<option value="" selected="selected">=선택=</option>
 										<c:forEach var="cd" items="${hpNoCdList}">
-											<option value="${cd.cdNm}" <c:if test="${cd.cdNm eq items.grdHpNoFront}">selected</c:if> ><c:out value="${cd.cdNm}" /></option>
+											<option value="${cd.cdNm}"><c:out value="${cd.cdNm}" /></option>
 										</c:forEach>
 					       			</select>
 					       			&nbsp;-
@@ -443,7 +447,7 @@ var myGridID = "#grid_wrap";
 					        		<select class="w_80px input_com"	id="selOwnhomTel1"	name="selOwnhomTel1" size="1" >
 										<option value="" selected="selected">=선택=</option>
 										<c:forEach var="cd" items="${telofcnoCdList}">
-											<option value="${cd.cdNm}" <c:if test="${cd.cdNm eq items.grdOwnhomTelFront}">selected</c:if> ><c:out value="${cd.cdNm}" /></option>
+											<option value="${cd.cdNm}"><c:out value="${cd.cdNm}" /></option>
 										</c:forEach>
 									</select>
 									&nbsp;-
@@ -459,7 +463,7 @@ var myGridID = "#grid_wrap";
 									<select class="w_80px input_com"	id="selWrcTel1"	name="selWrcTel1" size="1" >
 										<option value="" selected="selected">=선택=</option>
 										<c:forEach var="cd" items="${telofcnoCdList}">
-											<option value="${cd.cdNm}" <c:if test="${cd.cdNm eq items.grdWrcTelFront}">selected</c:if> ><c:out value="${cd.cdNm}" /></option>
+											<option value="${cd.cdNm}"><c:out value="${cd.cdNm}" /></option>
 										</c:forEach>
 									</select>
 									&nbsp;-
@@ -472,7 +476,7 @@ var myGridID = "#grid_wrap";
 									<select id="selEtcTel1"	name="selEtcTel1" size="1" class="w_80px input_com notHangul">
 										<option value="" selected="selected">=선택=</option>
 										<c:forEach var="cd" items="${telofcnoCdList}">
-											<option value="${cd.cdNm}" <c:if test="${cd.cdNm eq items.grdEtcTelFront}">selected</c:if> ><c:out value="${cd.cdNm}" /></option>
+											<option value="${cd.cdNm}"><c:out value="${cd.cdNm}" /></option>
 										</c:forEach>
 									</select>
 									&nbsp;-

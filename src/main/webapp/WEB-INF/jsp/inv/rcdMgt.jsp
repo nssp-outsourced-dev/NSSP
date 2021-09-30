@@ -681,7 +681,7 @@
 					<select name="selReportAdd" id="selReportAdd" class="w_200px h_32px" style="float: right;">
 						<option value="">== 문서를 선택하세요 ==</option>
 						<c:forEach var="result" items="${formatClList}">
-							<option value="${result.FORMAT_ID}^${result.INPUT_YN}">${result.FORMAT_DC}</option>
+							<option value="${result.FORMAT_ID}^${result.INPUT_YN}">${result.FORMAT_NM}</option>
 						</c:forEach>
 					</select>
 				</div>

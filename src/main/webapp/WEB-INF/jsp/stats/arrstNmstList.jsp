@@ -36,7 +36,16 @@
 		var columnLayout = [
 			{ dataField : "RC_NO", visible : false},
 			{ dataField : "RN", 		headerText : "순번", width : 50, cellMerge : true, mergePolicy:"restrict", mergeRef: "CASE_NO"},
-			{ dataField : "CASE_NO", 		headerText : "제 호", width : 100, cellMerge : true, mergePolicy:"restrict", mergeRef: "CASE_NO"},
+			{ dataField : "CASE_NO", 		headerText : "제 호", width : 100, 
+				renderer : {type : "TemplateRenderer",
+					aliasFunction : function(rowIndex, columnIndex, value, headerText, item) {//엑셀, PDF 등 내보내기 시 값 가공 함수 
+						return fnChangeNo (value); 
+					}
+				},
+				labelFunction : function (rowIndex, columnIndex, value, headerText, item ) {
+					return fnChangeNo (value);
+				}
+			},
 			{ headerText : "체포 구속",
 				children: [
 					{ headerText : "취급자",
@@ -58,7 +67,7 @@
 									imgHeight : 20,
 									imgTableRef: {
 										"Y": "/AUIGrid/images/blue-check.png",
-										"": "/AUIGrid/images/accept-not.png",
+										"N": "/AUIGrid/images/accept-not.png",
 										"default": null,
 									}
 								}

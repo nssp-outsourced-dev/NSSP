@@ -671,4 +671,199 @@
 		
 		ORDER BY RN ASC
 	</select>
+	
+	<!-- 
+		2021.10.05
+		coded by dgkim
+		몰수 부대보전 신청부
+		신규 문서 서식
+		(기존 압수수색검증영장신청부 그대로 사용하여 구현)
+	 -->
+	<select id="selectCnfscMrnPresvReqstList" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		SELECT X.*
+		FROM (
+			SELECT A.*,	
+				COUNT(*) OVER() AS TOT_CNT,			
+				<isNotEmpty property="dataField">
+					<isNotEmpty property="sortType">
+						DENSE_RANK() OVER (ORDER BY A.$dataField$ $sortType$ NULLS LAST, A.ZRLONG_REQST_NO) RN
+					</isNotEmpty>
+				</isNotEmpty>
+				<isEmpty property="dataField">		
+					DENSE_RANK() OVER (ORDER BY A.ZRLONG_REQST_NO) AS RN
+				</isEmpty> 				
+			FROM
+				(
+					SELECT
+						/*DENSE_RANK() OVER (ORDER BY A.ZRLONG_REQST_NO) AS RN*/
+						A.ZRLONG_REQST_NO,
+						R.ZRLONG_NO,
+						D.CASE_NO,
+						C.RC_NO,
+						A.REQST_DE,
+						FN_CD_NM(NVL(E.RSPOFC_CD, E.CLSF_CD)) || ' ' || E.USER_NM AS REQST_NM,
+						C.TRGTER_NM,
+						DGUARD.DECRYPT('TBL','ENC',C.TRGTER_RRN) AS TRGTER_RRN,
+						FN_CD_NM(C.OCCP_CD) AS OCCP_NM,
+						C.DWLSIT_ADDR,
+						FN_RC_VIOLT_ROOT_NM (A.RC_NO) AS VIOLT_ROOT_NM,
+						DECODE(R.DSMSSL_INSTT_CD, 'P', TO_CHAR(R.EXCUT_DT,'YYYY.MM.DD HH24:MI')) AS PP_DSMSSL_INSTT,         	/*검찰사-검사*/
+						DECODE(R.DSMSSL_INSTT_CD, 'C', TO_CHAR(R.EXCUT_DT,'YYYY.MM.DD HH24:MI')) AS CC_DSMSSL_INSTT,         	/*법원-판사*/
+						TO_CHAR(R.ISUE_DT,'YYYY.MM.DD HH24:MI') AS ISUE_DT,
+						TO_CHAR(NVL(R.VALID_DT,A.VALID_DT),'YYYY-MM-DD') AS VALID_DT
+						/*석방일시*/
+						/*석방장소*/
+						/*처리결과*/
+					FROM INV_SZURE_REQST A
+					LEFT JOIN INV_SZURE_APPLCNT B ON A.ZRLONG_REQST_NO = B.ZRLONG_REQST_NO
+					LEFT JOIN RC_TMPR_TRGTER C ON B.RC_NO = C.RC_NO AND B.TRGTER_SN = C.TRGTER_SN
+					LEFT JOIN INV_SZURE_RESULT R ON A.ZRLONG_REQST_NO = R.ZRLONG_REQST_NO
+					LEFT JOIN RC_TMPR D ON A.RC_NO = D.RC_NO
+					LEFT JOIN CMN_USER E ON A.WRITNG_ID = E.ESNTL_ID
+					WHERE C.USE_YN = 'Y'
+						AND NVL(R.ZRLONG_NO,0) = (SELECT NVL(MAX(RR.ZRLONG_NO),0) FROM INV_SZURE_RESULT RR WHERE RR.ZRLONG_REQST_NO = A.ZRLONG_REQST_NO)
+					<isNotEmpty property="zrlong_se_cd" >
+						AND A.ZRLONG_SE_CD = #zrlong_se_cd#
+					</isNotEmpty>
+					<isNotEmpty property="trgter_nm" >
+						AND C.TRGTER_NM = #trgter_nm#
+					</isNotEmpty>
+					<isNotEmpty property="chager" >
+						AND D.CHARGER_ID = #chager#
+					</isNotEmpty>
+					<isNotEmpty property="dept_cd" >
+						AND D.CHARGER_DEPT_CD IN (
+							SELECT DC.DEPT_CD
+							FROM CMN_DEPT_CD DC
+							WHERE DC.USE_YN = 'Y' AND DC.DEPT_CD != '00000'
+							START WITH DC.DEPT_CD = #dept_cd#
+							CONNECT BY PRIOR DC.DEPT_CD = DC.DEPT_UPPER_CD
+						)
+					</isNotEmpty>
+					<isNotEmpty property="rc_no1" >
+						AND C.RC_NO LIKE #rc_no1# || '%'
+					</isNotEmpty>
+					<isNotEmpty property="rc_no2" >
+						AND C.RC_NO <![CDATA[ >= ]]> (SUBSTR(C.RC_NO,0,5)||LPAD(#rc_no2#,6,'0'))
+					</isNotEmpty>
+					<isNotEmpty property="rc_no3" >
+						AND C.RC_NO <![CDATA[ <= ]]> (SUBSTR(C.RC_NO,0,5)||LPAD(#rc_no3#,6,'0'))
+					</isNotEmpty>
+					<isNotEmpty property="case_no1" >
+						AND C.CASE_NO LIKE #case_no1# || '%'
+					</isNotEmpty>
+					<isNotEmpty property="case_no2" >
+						AND C.CASE_NO <![CDATA[ >= ]]> (SUBSTR(C.RC_NO,0,5)||LPAD(#case_no2#,6,'0'))
+					</isNotEmpty>
+					<isNotEmpty property="case_no3" >
+						AND C.CASE_NO <![CDATA[ <= ]]> (SUBSTR(C.RC_NO,0,5)||LPAD(#case_no3#,6,'0'))
+					</isNotEmpty>
+
+					<isNotEmpty property="prsct_de1" >
+						AND A.REQST_DE <![CDATA[ >= ]]> REPLACE(#prsct_de1#,'-','')
+					</isNotEmpty>
+					<isNotEmpty property="prsct_de2" >
+						AND A.REQST_DE <![CDATA[ <= ]]> REPLACE(#prsct_de2#,'-','')
+					</isNotEmpty>
+			) A
+		) X
+		<isNotEmpty property="startRow" >
+			WHERE (RN <![CDATA[ > ]]> #startRow# AND RN <![CDATA[ <= ]]> #endRow#)
+		</isNotEmpty>
+		ORDER BY RN ASC
+	</select>
+	
+	<!-- 
+		2021.10.05
+		coded by dgkim
+		송ㆍ수신이 완료된 전기통신에 대한 압수ㆍ수색ㆍ검증 집행사실 통지부
+		신규 문서 서식
+	 -->
+	<select id="selectTrsmrcvComptElcncVrifyExcutFactNticeList" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		SELECT X.*
+		FROM (
+			SELECT A.*,	
+				COUNT(*) OVER() AS TOT_CNT,			
+				<isNotEmpty property="dataField">
+					<isNotEmpty property="sortType">
+						DENSE_RANK() OVER (ORDER BY A.$dataField$ $sortType$ NULLS LAST, A.PRMISN_PROGRS_NO) RN
+					</isNotEmpty>
+				</isNotEmpty>
+				<isEmpty property="dataField">		
+					DENSE_RANK() OVER (ORDER BY A.PRMISN_PROGRS_NO) AS RN
+				</isEmpty> 				
+			FROM
+				(
+					SELECT PRMISN_PROGRS_NO
+						, PRMISN_SE_CD
+						, COMMN_BSNM
+						, TO_CHAR(TO_DATE(REQST_DE,'YYYYMMDD'),'YYYY-MM-DD') AS REQST_DE
+						, DTA_SCOPE
+						, REQUST_RESN
+						, SBSCRBER_RELATE
+						, RERQEST_RESN
+						, NNPMSNPC_RESN
+						, TO_CHAR(EXCUT_DT,'YYYY-MM-DD')     AS EXCUT_DT
+						, TO_CHAR(EXCUT_DT,'HH24')          AS EXCUT_DT2
+						, TO_CHAR(EXCUT_DT,'MI')              AS EXCUT_DT3
+						, A.DOC_ID
+						, A.FILE_ID
+						, A.RC_NO
+						, B.CASE_NO
+						, A.TRGTER_SN
+						, TRGTER_NM
+						, DGUARD.DECRYPT('TBL','ENC',C.TRGTER_RRN) AS TRGTER_RRN
+						, ADRES_ADDR
+						, FN_CD_NM(OCCP_CD) OCCP_CD_NM
+						, FN_EXMN_NM(B.CMPTNC_EXMN_CD) CMPTNC_EXMN_NM
+						, FN_USER_NM(B.CHARGER_ID) ALOT_USER_NM
+						, FN_RC_VIOLT_UPPER_NMS(A.RC_NO) VIOLT_NM
+						, REQST_RESULT_CD
+						, PRMISN_NO
+						, TO_CHAR(TO_DATE(PRMISN_RECPT_DE,'YYYYMMDD'),'YYYY-MM-DD') AS PRMISN_RECPT_DE
+						, TO_CHAR(TO_DATE(ISUE_DE,'YYYYMMDD'),'YYYY-MM-DD') AS ISUE_DE
+						, DSMSSL_SE_CD
+						, TO_CHAR(TO_DATE(DSMSSL_DE,'YYYYMMDD'),'YYYY-MM-DD') AS DSMSSL_DE
+						, DSMSSL_RESN
+						, TO_CHAR(TO_DATE(RETURN_DE,'YYYYMMDD'),'YYYY-MM-DD') AS RETURN_DE
+						, RETURN_RESN
+						, REREQST_YN
+						, ORIGNL_PROGRS_NO
+						, A.DTA_SCOPE_ENCLSR_YN
+						, A.REQUST_RESN_ENCLSR_YN
+						, A.SBSCRBER_RELATE_ENCLSR_YN
+						, A.RERQEST_RESN_ENCLSR_YN
+						, A.NNPMSNPC_RESN_ENCLSR_YN
+						, FN_CD_NM(REQST_RESULT_CD) AS REQST_RESULT_NM
+					FROM INV_COMMN_PRMISN A
+						, RC_TMPR_TRGTER C
+						, RC_TMPR B
+					WHERE A.RC_NO = C.RC_NO
+						AND A.TRGTER_SN = C.TRGTER_SN
+						AND A.USE_YN = 'Y'
+						AND B.USE_YN = 'Y'
+						AND A.RC_NO = B.RC_NO
+					
+					<isNotEmpty property="trgter_nm" >
+						AND C.TRGTER_NM = #trgter_nm#
+					</isNotEmpty>
+					<isNotEmpty property="chager" >
+						AND B.CHARGER_ID = #chager#
+					</isNotEmpty>
+					<isNotEmpty property="dept_cd" >
+						AND B.CHARGER_DEPT_CD IN (
+							SELECT DC.DEPT_CD
+							FROM CMN_DEPT_CD DC
+							WHERE DC.USE_YN = 'Y' AND DC.DEPT_CD != '00000'
+							START WITH DC.DEPT_CD = #dept_cd#
+							CONNECT BY PRIOR DC.DEPT_CD = DC.DEPT_UPPER_CD
+						)
+					</isNotEmpty>
+			) A
+		) X
+		<isNotEmpty property="startRow" >
+			WHERE (RN <![CDATA[ > ]]> #startRow# AND RN <![CDATA[ <= ]]> #endRow#)
+		</isNotEmpty>
+		ORDER BY RN ASC
+	</select>
 </sqlMap>

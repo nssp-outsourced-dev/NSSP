@@ -1047,16 +1047,18 @@ public class MberController {
 	public ModelAndView getIdDplctAjax(HttpServletRequest request, HttpServletResponse response, ModelMap model)
 			throws Exception {
 		String txtUserId = SimpleUtils.default_set(request.getParameter("txtUserId"));
+		String txtEmail = SimpleUtils.default_set(request.getParameter("txtEmail"));
 
 		String result = "1";
 		HashMap map = new HashMap();
 		map.put("user_id", txtUserId);
-		int cnt = mberService.getUserIdCnt(map);
-		if (cnt > 0) {
-			result = "-1";
-		}
-		HashMap ret = new HashMap();
-		ret.put("result", result);
+		map.put("email", txtEmail);
+		HashMap ret = mberService.getUserIdCnt(map);
+//		if (Integer.parseInt(String.valueOf(cnt.get("TOT_CNT"))) > 0) {
+//			result = "-1";
+//		}
+//		HashMap ret = new HashMap();
+//		ret.put("result", result);
 		return new ModelAndView("ajaxView", "ajaxData", ret);
 	}
 

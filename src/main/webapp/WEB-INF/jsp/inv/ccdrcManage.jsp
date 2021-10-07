@@ -21,8 +21,8 @@ input[type=radio] {
 	*/
 	.box_w2_1b_ov { height: 160px !important; }/* 사건목록 영역 */
 	#showinbox { height: 190px; }
-	#gridT1_wrap, #gridT2_wrap, #grid_list { height: 152px !important; }/* 사건목록, 압수물 목록 */
-	#ifrReport { height: 202px !important; }/* 작성문서목록 */
+	/* #gridT1_wrap, #gridT2_wrap, #grid_list { height: 152px !important; } 사건목록, 압수물 목록 */
+	/* #ifrReport { height: 202px !important; } 작성문서목록 */
 </style>
 <script type="text/javascript">
 	var sFormatId = "00448";

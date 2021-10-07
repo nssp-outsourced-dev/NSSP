@@ -11,7 +11,7 @@ public interface MberService {
     public List<HashMap> getUserList(HashMap map) throws Exception;
     public void updateUser(HashMap map) throws Exception;
     public void updateEtc(HashMap map) throws Exception;
-    public int getUserIdCnt(HashMap map) throws Exception;
+    public HashMap getUserIdCnt(HashMap map) throws Exception;
 	public List getAccesHistList(HashMap map) throws Exception;
     public List<HashMap> getUserListCombo(HashMap map) throws Exception;
     public int setFaceTemplate (HashMap map) throws Exception;

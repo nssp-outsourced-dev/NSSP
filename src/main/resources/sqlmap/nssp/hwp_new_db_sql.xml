@@ -830,7 +830,7 @@
 				WHERE I.USE_YN = 'Y'
 					AND I.RC_NO = #P_RC_NO#
 					AND I.TRGTER_SN = #P_TRGTER_SN#
-					AND I.ARRST_SN = #P_ARRST_SN#
+					<!-- AND I.ARRST_SN = #P_ARRST_SN# -->
 		) A
 		RIGHT JOIN DUAL D ON 1=1
 	</select>
@@ -883,42 +883,185 @@
 	</select>
 	
 	<!-- 서식56 압수ㆍ수색ㆍ검증영장신청(금융계좌 추적용) -->
-	<select id="selectHwp00000000000000000358" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
-		SELECT 
-			FN_CNVR_NO(tc.TRN_NO) AS TRN_NO --송치번호
-			, FN_OZ_DATE(TO_CHAR(SYSDATE,'YYYYMMDD'),'') AS S_DATE --현재일
-			, ict.TRGTER_NM --성명
-			, DGUARD.DECRYPT('TBL', 'ENC', ict.TRGTER_RRN) AS TRGTER_RRN --주민번호
-			, (SELECT FN_CD_NM(OCCP_CD) FROM RC_TMPR_TRGTER WHERE RC_NO = ict.RC_NO AND TRGTER_SN = ict.TRGTER_SN) AS OCCP_NM --직업
-			, (SELECT FN_USER_NM(CHARGER_ID) FROM RC_TMPR WHERE RC_NO = ict.RC_NO) AS CHARGER_NM --담당자명
-		FROM TRN_CCDRC tc
-			, INV_CCDRC_TRGTER ict
-		WHERE tc.CCDRC_NO = ict.CCDRC_NO
-			AND tc.CCDRC_SN = ict.CCDRC_SN
-			AND ict.RC_NO = #P_RC_NO#
-			AND ict.TRGTER_SN = #P_TRGTER_SN#
+	<select id="selectHwp00000000000000000358_1" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		SELECT A.*, FN_OZ_DATE(TO_CHAR(SYSDATE,'YYYYMMDD'),'') AS S_DATE FROM (
+			SELECT
+				'제 '||FN_CNVR_NO(Q.ZRLONG_REQST_NO)||' 호' AS ZRLONG_REQ_NO,
+				FN_EXMN_NM(P.CMPTNC_EXMN_CD) AS CMPTNC_EXMN_NM,
+				NVL(TO_CHAR(Q.VALID_DT,'YYYY'),'2000')||'년 '||NVL(TO_NUMBER(TO_CHAR(Q.VALID_DT,'MM')),'0')||'월 '||NVL(TO_NUMBER(TO_CHAR(Q.VALID_DT,'DD')),'0')||'일' AS VALID_DT,
+				FN_RC_VIOLT_ROOT_NM(Q.RC_NO) AS VIOLT_ROOT_NM,
+				Q.COUNSL_NM,
+				Q.SZURE_THING,
+				Q.SRCHNG_TRGET,
+				P.CRMNL_FACT AS CRMNL_FACT, /*범죄사실*/
+				Q.SRCHNG_RESN AS SRCHNG_RESN,
+				Q.ACNUT_NM_CD,
+				Q.ACNUT_BANK||'ㆍ'||ACNUT_NO AS ACNUT_BANK_NO,
+				Q.DELNG_PD,
+				Q.DELNG_CN,
+				Q.EXCUTER_ID,
+				FN_CD_NM(NVL(U.RSPOFC_CD,U.CLSF_CD)) || ' ' || U.USER_NM AS EXCUTER,
+				TO_CHAR(Q.EXCUT_DT,'YYYY')||'-'||TO_NUMBER(TO_CHAR(Q.EXCUT_DT,'MM'))||'-'||TO_NUMBER(TO_CHAR(Q.EXCUT_DT,'DD'))||' '||
+				TO_NUMBER(TO_CHAR(Q.EXCUT_DT,'HH24'))||':'||TO_CHAR(Q.EXCUT_DT,'MI') AS EXCUT_DT,
+				NVL(SZURE_ZRLONG_CD,'00790') AS SZURE_ZRLONG_CD, /*사전*/
+				FN_DEPT_NM(P.CHARGER_DEPT_CD) AS CHARGER_DEPT,
+				FN_USER_NM(P.CHARGER_ID) AS CHARGER_NM,
+				FN_USER_NM(Q.WRITNG_ID) AS WRITNG_NM
+				, (SELECT FN_CD_NM(cu.CLSF_CD) FROM CMN_USER cu WHERE ESNTL_ID = Q.WRITNG_ID) AS CLSF_NM -- 직급 by dgkim
+			FROM INV_SZURE_REQST Q
+			LEFT JOIN RC_TMPR P ON Q.RC_NO = P.RC_NO
+			LEFT JOIN CMN_USER U ON Q.EXCUTER_ID = U.ESNTL_ID
+			WHERE Q.ZRLONG_REQST_YN = 'Y'
+				AND Q.RC_NO = #P_RC_NO#
+				AND Q.ZRLONG_REQST_NO = #P_ZRLONG_REQST_NO#
+		) A
+		RIGHT JOIN DUAL D ON 1=1
+	</select>
+	
+	<select id="selectHwp00000000000000000358_2" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		SELECT
+			ROW_NUMBER() OVER(ORDER BY B.SORT_ORDR, B.TRGTER_SN)||'.' AS RM_L,
+			B.TRGTER_NM AS TRGTER_NM_L,
+			CASE WHEN NVL(B.TRGTER_TY_CD,'I') = 'E' THEN B.TRGTER_CPRN  ELSE DGUARD.DECRYPT('TBL','ENC',B.TRGTER_RRN) END AS TRGTER_RRN_L,
+			(CASE WHEN B.WRC_NM IS NOT NULL THEN B.WRC_NM||' ' END)||FN_CD_NM(B.OCCP_CD) OCCP_NM_L,
+			CASE WHEN NVL(B.TRGTER_TY_CD,'I') = 'E' THEN NVL(B.ADRES_ADDR,B.WRC_ADDR) ELSE B.ADRES_ADDR END AS ADDR_L,
+			'성    명' AS T1,
+			CASE WHEN NVL(B.TRGTER_TY_CD,'I') = 'E' THEN '법인등록번호 ' ELSE '주민등록번호 ' END AS T2,
+			'직   업' AS T3,
+			CASE WHEN NVL(B.TRGTER_TY_CD,'I') = 'E' THEN '소 재 지'   	 ELSE '주   거' END AS T4
+			, (SELECT FN_CD_NM(cu.CLSF_CD) FROM CMN_USER cu WHERE ESNTL_ID = B.WRITNG_ID) AS CLSF_NM -- 직급 by dgkim
+		FROM INV_SZURE_APPLCNT A
+		JOIN RC_TMPR_TRGTER B ON A.RC_NO = B.RC_NO AND A.TRGTER_SN = B.TRGTER_SN
+		WHERE B.USE_YN = 'Y'
+			AND A.RC_NO = #P_RC_NO#
+			AND A.ZRLONG_REQST_NO = #P_ZRLONG_REQST_NO#
+		ORDER BY B.SORT_ORDR, B.TRGTER_SN ASC
+	</select>
+	
+	<select id="selectHwp00000000000000000358_3" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		SELECT
+			ROW_NUMBER() OVER(ORDER BY A.WRITNG_DT)||'.' AS RNM_L,
+			(CASE WHEN A.ACNUT_NM_CD = '01339' THEN '■' END) AS ACNUT_NM_CD1_L,
+			(CASE WHEN A.ACNUT_NM_CD = '01340' THEN '■' END) AS ACNUT_NM_CD2_L,
+			NVL(A.ACNUT_NM, FN_CD_NM(A.ACNUT_NM_CD)) AS ACNUT_NM_L,
+			A.ACNUT_BANK || ' · ' || A.ACNUT_NO AS ACNUT_BANK_NO_L,
+			A.DELNG_PD AS DELNG_PD_L,
+			A.DELNG_CN AS DELNG_CN_L,
+			'계좌명의인' AS TT1,
+			'개설은행ㆍ계좌번호' AS TT2,
+			'거래기간' AS TT3,
+			'거래정보등의내용' AS TT4
+			, (SELECT FN_CD_NM(cu.CLSF_CD) FROM CMN_USER cu WHERE ESNTL_ID = A.WRITNG_ID) AS CLSF_NM -- 직급 by dgkim
+		FROM INV_SZURE_ACNUT A
+		JOIN INV_SZURE_REQST B ON A.RC_NO = B.RC_NO AND A.ZRLONG_REQST_NO = B.ZRLONG_REQST_NO
+		WHERE B.SZURE_ZRLONG_CD = '00792'  /*거래 계좌*/
+		  AND A.RC_NO = #P_RC_NO#
+		  AND A.ZRLONG_REQST_NO = #P_ZRLONG_REQST_NO#
+		ORDER BY A.WRITNG_DT
 	</select>
 	
 	<!-- 서식57 압수ㆍ수색ㆍ검증영장신청(사후) -->
-	<select id="selectHwp00000000000000000359" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
-		SELECT 
-			FN_CNVR_NO(tc.TRN_NO) AS TRN_NO --송치번호
-			, FN_OZ_DATE(TO_CHAR(SYSDATE,'YYYYMMDD'),'') AS S_DATE --현재일
-			, ict.TRGTER_NM --성명
-			, DGUARD.DECRYPT('TBL', 'ENC', ict.TRGTER_RRN) AS TRGTER_RRN --주민번호
-			, (SELECT FN_CD_NM(OCCP_CD) FROM RC_TMPR_TRGTER WHERE RC_NO = ict.RC_NO AND TRGTER_SN = ict.TRGTER_SN) AS OCCP_NM --직업
-			, (SELECT FN_USER_NM(CHARGER_ID) FROM RC_TMPR WHERE RC_NO = ict.RC_NO) AS CHARGER_NM --담당자명
-		FROM TRN_CCDRC tc
-			, INV_CCDRC_TRGTER ict
-		WHERE tc.CCDRC_NO = ict.CCDRC_NO
-			AND tc.CCDRC_SN = ict.CCDRC_SN
-			AND ict.RC_NO = #P_RC_NO#
-			AND ict.TRGTER_SN = #P_TRGTER_SN#
+	<select id="selectHwp00000000000000000359_1" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		SELECT A.*, FN_OZ_DATE(TO_CHAR(SYSDATE,'YYYYMMDD'),'') AS S_DATE FROM (
+			SELECT
+		        '제 '||FN_CNVR_NO(Q.ZRLONG_REQST_NO)||' 호' AS ZRLONG_REQ_NO,
+		        FN_EXMN_NM(P.CMPTNC_EXMN_CD) AS CMPTNC_EXMN_NM,
+		        NVL(TO_CHAR(Q.VALID_DT,'YYYY'),'2000')||'년 '||NVL(TO_NUMBER(TO_CHAR(Q.VALID_DT,'MM')),'0')||'월 '||NVL(TO_NUMBER(TO_CHAR(Q.VALID_DT,'DD')),'0')||'일' AS VALID_DT,
+		        FN_RC_VIOLT_ROOT_NM(Q.RC_NO) AS VIOLT_ROOT_NM,
+		        Q.COUNSL_NM,
+		        Q.SZURE_THING,
+		        Q.SRCHNG_TRGET,
+		        P.CRMNL_FACT AS CRMNL_FACT, /*범죄사실*/
+		        Q.SRCHNG_RESN AS SRCHNG_RESN,
+		        Q.ACNUT_NM_CD,
+		        Q.ACNUT_BANK||'ㆍ'||ACNUT_NO AS ACNUT_BANK_NO,
+		        Q.DELNG_PD,
+		        Q.DELNG_CN,
+		        Q.EXCUTER_ID,
+		        FN_CD_NM(NVL(U.RSPOFC_CD,U.CLSF_CD)) || ' ' || U.USER_NM AS EXCUTER,
+		        TO_CHAR(Q.EXCUT_DT,'YYYY')||'-'||TO_NUMBER(TO_CHAR(Q.EXCUT_DT,'MM'))||'-'||TO_NUMBER(TO_CHAR(Q.EXCUT_DT,'DD'))||' '||
+		        TO_NUMBER(TO_CHAR(Q.EXCUT_DT,'HH24'))||':'||TO_CHAR(Q.EXCUT_DT,'MI') AS EXCUT_DT,
+		        NVL(SZURE_ZRLONG_CD,'00790') AS SZURE_ZRLONG_CD, /*사전*/
+		        FN_DEPT_NM(P.CHARGER_DEPT_CD) AS CHARGER_DEPT,
+		        FN_USER_NM(P.CHARGER_ID) AS CHARGER_NM,
+		        FN_USER_NM(Q.WRITNG_ID) AS WRITNG_NM
+		        , (SELECT FN_CD_NM(cu.CLSF_CD) FROM CMN_USER cu WHERE ESNTL_ID = Q.WRITNG_ID) AS CLSF_NM -- 직급 by dgkim
+		    FROM INV_SZURE_REQST Q
+		    LEFT JOIN RC_TMPR P ON Q.RC_NO = P.RC_NO
+		    LEFT JOIN CMN_USER U ON Q.EXCUTER_ID = U.ESNTL_ID
+		    WHERE Q.ZRLONG_REQST_YN = 'Y'
+		      AND Q.RC_NO = #P_RC_NO#
+		      AND Q.ZRLONG_REQST_NO = #P_ZRLONG_REQST_NO#
+		) A
+		RIGHT JOIN DUAL D ON 1=1
+	</select>
+	<select id="selectHwp00000000000000000359_2" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		SELECT
+            ROW_NUMBER() OVER(ORDER BY B.SORT_ORDR, B.TRGTER_SN)||'.' AS RM_L,
+            B.TRGTER_NM AS TRGTER_NM_L,
+            CASE WHEN NVL(B.TRGTER_TY_CD,'I') = 'E' THEN B.TRGTER_CPRN  ELSE DGUARD.DECRYPT('TBL','ENC',B.TRGTER_RRN) END AS TRGTER_RRN_L,
+            (CASE WHEN B.WRC_NM IS NOT NULL THEN B.WRC_NM||' ' END)||FN_CD_NM(B.OCCP_CD) OCCP_NM_L,
+            CASE WHEN NVL(B.TRGTER_TY_CD,'I') = 'E' THEN NVL(B.ADRES_ADDR,B.WRC_ADDR) ELSE B.ADRES_ADDR END AS ADDR_L,
+            '성    명' AS T1,
+		    CASE WHEN NVL(B.TRGTER_TY_CD,'I') = 'E' THEN '법인등록번호 ' ELSE '주민등록번호 ' END AS T2,
+		    '직   업' AS T3,
+		    CASE WHEN NVL(B.TRGTER_TY_CD,'I') = 'E' THEN '소 재 지'   	 ELSE '주   거' END AS T4
+		    , (SELECT FN_CD_NM(cu.CLSF_CD) FROM CMN_USER cu WHERE ESNTL_ID = B.WRITNG_ID) AS CLSF_NM -- 직급 by dgkim
+        FROM INV_SZURE_APPLCNT A
+        JOIN RC_TMPR_TRGTER B ON A.RC_NO = B.RC_NO AND A.TRGTER_SN = B.TRGTER_SN
+        WHERE B.USE_YN = 'Y'
+          AND A.RC_NO = #P_RC_NO#
+          AND A.ZRLONG_REQST_NO = #P_ZRLONG_REQST_NO#
+        ORDER BY B.SORT_ORDR, B.TRGTER_SN ASC
+	</select>
+	<select id="selectHwp00000000000000000359_3" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		SELECT
+			ROW_NUMBER() OVER(ORDER BY A.WRITNG_DT)||'.' AS RNM_L,
+			(CASE WHEN A.ACNUT_NM_CD = '01339' THEN '■' END) AS ACNUT_NM_CD1_L,
+			(CASE WHEN A.ACNUT_NM_CD = '01340' THEN '■' END) AS ACNUT_NM_CD2_L,
+		    NVL(A.ACNUT_NM, FN_CD_NM(A.ACNUT_NM_CD)) AS ACNUT_NM_L,
+		    A.ACNUT_BANK || ' · ' || A.ACNUT_NO AS ACNUT_BANK_NO_L,
+		    A.DELNG_PD AS DELNG_PD_L,
+		    A.DELNG_CN AS DELNG_CN_L,
+		    '계좌명의인' AS TT1,
+	       	'개설은행ㆍ계좌번호' AS TT2,
+	       	'거래기간' AS TT3,
+	       	'거래정보등의내용' AS TT4
+	       	, (SELECT FN_CD_NM(cu.CLSF_CD) FROM CMN_USER cu WHERE ESNTL_ID = A.WRITNG_ID) AS CLSF_NM -- 직급 by dgkim
+		FROM INV_SZURE_ACNUT A
+		JOIN INV_SZURE_REQST B ON A.RC_NO = B.RC_NO AND A.ZRLONG_REQST_NO = B.ZRLONG_REQST_NO
+        WHERE B.SZURE_ZRLONG_CD = '00792'  /*거래 계좌*/
+		  AND A.RC_NO = #P_RC_NO#
+		  AND A.ZRLONG_REQST_NO = #P_ZRLONG_REQST_NO#
+		ORDER BY A.WRITNG_DT
 	</select>
 	
 	<!-- 서식59 전자정보 삭제ㆍ폐기 또는 반환 확인서 -->
+	<select id="selectHwp00000000000000000398" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		SELECT
+			FN_OZ_DATE(TO_CHAR(SYSDATE,'YYYYMMDD'),'') AS S_DATE --현재일
+			, FN_USER_NM(CHARGER_ID) AS CHARGER_NM --담당자명
+		FROM RC_TMPR
+		WHERE RC_NO = #P_RC_NO#
+	</select>
+	
 	<!-- 서식60 정보저장매체 복제 등 참관여부 확인서 -->
+	<select id="selectHwp00000000000000000399" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		SELECT
+			FN_OZ_DATE(TO_CHAR(SYSDATE,'YYYYMMDD'),'') AS S_DATE --현재일
+			, FN_USER_NM(CHARGER_ID) AS CHARGER_NM --담당자명
+		FROM RC_TMPR
+		WHERE RC_NO = #P_RC_NO#
+	</select>
+	
 	<!-- 서식61 정보저장매체 제출 등 참관여부 확인서 -->
+	<select id="selectHwp00000000000000000400" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		SELECT
+			FN_OZ_DATE(TO_CHAR(SYSDATE,'YYYYMMDD'),'') AS S_DATE --현재일
+			, FN_USER_NM(CHARGER_ID) AS CHARGER_NM --담당자명
+		FROM RC_TMPR
+		WHERE RC_NO = #P_RC_NO#
+	</select>
 	
 	<!-- 서식65 수색결과 증명서 -->
 	<select id="selectHwp00000000000000000360" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
@@ -1020,5 +1163,57 @@
 			JOIN RC_TMPR C ON A.RC_NO = C.RC_NO
 			JOIN INV_ZRLONG_REQST R ON R.RC_NO = A.RC_NO AND R.TRGTER_SN = A.TRGTER_SN 
 		WHERE A.RC_NO = #P_RC_NO# AND A.TRGTER_SN = #P_TRGTER_SN# AND R.ZRLONG_REQST_NO = #P_ZRLONG_REQST_NO#
+	</select>
+	
+	<!-- 입건압수조서 > 수사보고서 (구 수사보고서 양식 변경) -->
+	<select id="selectHwp00000000000000000401_1" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		SELECT A.ITIV_YYYY
+			 , A.ITIV_NO
+			 , A.CHARGER_NM
+			 , A.VIOLT_NM
+			 , A.VIOLT_ROOT_NM
+			 , A.TRGTER_NMS || CASE WHEN REGEXP_INSTR(SUBSTR(A.TRGTER_NMS,-1,1),'[0-9]') > 0 THEN '명' END AS TRGTER_NMS
+		     -- , FN_OZ_DATE(null, null) AS S_DATE
+		      , A.S_DATE -- 승인 일자로 수정 by dgkim 
+		      , A.NAME
+		      , A.ITIV_YYYY || ' ' || A.NAME || ' 제' || A.ITIV_NO || '호' AS RC_SE_NM
+		  FROM (
+				SELECT REGEXP_SUBSTR(ITIV_NO, '[^-]+', 1, 1, 'i') AS ITIV_YYYY
+			 		 , LTRIM(REGEXP_SUBSTR(ITIV_NO, '[^-]+', 1, 2, 'i'),0) AS ITIV_NO
+			 		 , FN_USER_NM (CHARGER_ID) AS CHARGER_NM
+			 		 , FN_RC_VIOLT_ROOT_NM(RT.RC_NO) AS VIOLT_NM
+			 		 , FN_RC_VIOLT_ROOT_NM(RT.RC_NO) AS VIOLT_ROOT_NM
+		        	 , FN_RC_TRGTER_NM(RT.RC_NO, '00697') AS TRGTER_NMS
+		        	 , (SELECT NVL2(ITIV_RESULT_REPORT_DT, TO_CHAR(ITIV_RESULT_REPORT_DT, 'YYYY.fmMM.DD'), TO_CHAR(SYSDATE, 'YYYY.fmMM.DD')) FROM RC_ITIV_RESULT WHERE ITIV_NO = RT.ITIV_NO) AS S_DATE -- 승인 일자로 수정 by dgkim
+		        	 , (CASE WHEN RC_SE_CD = 'F' THEN
+						'수사'
+    					WHEN RC_SE_CD = 'I' THEN
+    					'내사'
+   						WHEN RC_SE_CD = 'T' OR RC_SE_CD = NULL THEN
+    					''
+    					END) AS NAME 
+		  		  FROM RC_TMPR RT
+		 	     WHERE RT.RC_NO = #P_RC_NO#
+		 	   ) A RIGHT OUTER JOIN DUAL ON 1=1
+	</select>
+	
+	<select id="selectHwp00000000000000000401_2" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		<include refid="hwp.commonTrgtersByFormatTypeD" />
+	</select>
+	
+	<!-- 입건압수조서 > 기록목록 -->
+	<select id="selectHwp00000000000000000402" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+	<![CDATA[
+		SELECT * FROM (
+		SELECT
+		       A.RCORD_NM
+		     , A.RCORD_STATER
+		     , NVL2(A.RCORD_NM, FN_OZ_DATE2(A.RCORD_DE, null), '') RCORD_DE
+		     , A.RCORD_CO
+		  FROM TRN_RCORD A
+		 WHERE A.RC_NO = #P_RC_NO#
+		 ORDER BY A.SORT_ORDR
+		)
+	]]>
 	</select>
 </sqlMap>

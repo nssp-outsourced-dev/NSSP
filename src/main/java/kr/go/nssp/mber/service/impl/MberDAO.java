@@ -40,8 +40,8 @@ public class MberDAO extends EgovComAbstractDAO {
 		update("mber.updateEtc", map);
 	}
 
-	public int selectUserIdCnt(HashMap map) throws Exception {
-		return (Integer) selectByPk("mber.selectUserIdCnt", map);
+	public HashMap selectUserIdCnt(HashMap map) throws Exception {
+		return (HashMap) selectByPk("mber.selectUserIdCnt", map);
 	}
 
 	public List selectAccesHistList(HashMap map) throws Exception {

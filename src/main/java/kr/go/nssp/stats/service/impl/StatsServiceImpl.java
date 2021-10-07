@@ -97,4 +97,20 @@ public class StatsServiceImpl implements StatsService {
 	public List selectSuspctMatrDscvryList(HashMap param) throws Exception {
 		return statsDAO.selectSuspctMatrDscvryList(param);
 	}
+
+	/* (non-Javadoc)
+	 * @see kr.go.nssp.stats.service.StatsService#selectCnfscMrnPresvReqstList(java.util.HashMap)
+	 */
+	@Override
+	public List selectCnfscMrnPresvReqstList(HashMap param) throws Exception {
+		return statsDAO.selectCnfscMrnPresvReqstList(param);
+	}
+
+	/* (non-Javadoc)
+	 * @see kr.go.nssp.stats.service.StatsService#selectTrsmrcvComptElcncVrifyExcutFactNticeList(java.util.HashMap)
+	 */
+	@Override
+	public List selectTrsmrcvComptElcncVrifyExcutFactNticeList(HashMap param) throws Exception {
+		return statsDAO.selectTrsmrcvComptElcncVrifyExcutFactNticeList(param);
+	}
 }

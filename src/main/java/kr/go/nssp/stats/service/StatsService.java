@@ -51,4 +51,26 @@ public interface StatsService {
 	 * @throws Exception
 	 */
 	public List selectSuspctMatrDscvryList(HashMap param) throws Exception;
+	
+	/** 
+	 * @methodName : selectCnfscMrnPresvReqstList
+	 * @date : 2021.10.05
+	 * @author : dgkim
+	 * @description : 몰수 부대보전 신청부(신규 문서 서식)
+	 * @param param
+	 * @return
+	 * @throws Exception
+	 */
+	public List selectCnfscMrnPresvReqstList(HashMap param) throws Exception;
+	
+	/** 
+	 * @methodName : selectTrsmrcvComptElcncVrifyExcutFactNticeList
+	 * @date : 2021.10.05
+	 * @author : dgkim
+	 * @description : 송ㆍ수신이 완료된 전기통신에 대한 압수ㆍ수색ㆍ검증 집행사실 통지부(신규 문서 서식)
+	 * @param param
+	 * @return
+	 * @throws Exception
+	 */
+	public List selectTrsmrcvComptElcncVrifyExcutFactNticeList(HashMap param) throws Exception;
 }

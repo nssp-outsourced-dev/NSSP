@@ -46,7 +46,7 @@ public class MberServiceImpl implements MberService {
         mberDAO.updateEtc(map);
 	}
 
-    public int getUserIdCnt(HashMap map) throws Exception{
+    public HashMap getUserIdCnt(HashMap map) throws Exception{
 	    return mberDAO.selectUserIdCnt(map);
 	}
 

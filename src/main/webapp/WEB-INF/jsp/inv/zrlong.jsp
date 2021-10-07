@@ -10,6 +10,16 @@
 	color:#D9418C;
 }
 
+	/*
+		2021.08.11
+		coded by dgkim
+		수사시스템 화면 비율 조정
+		권종열 사무관 요청
+	*/
+	#gridT1_wrap, #gridT2_wrap { height: 152px !important; } /* 사건목록 */
+	#showinbox { height: 190px !important; } /* 사건목록 영역 */
+	/* #gridzrlong_wrap, #gridszure_wrap, #gridcmmng_wrap { height: 140px !important; } 체포/구속, 압수수색검증, 통신사실확인허가신청 */ 
+	/* #ifrReportzrlong, #ifrReportszure, #ifrReportcmmng { height: 185px !important; } 작성문서목록 */
 </style>
 <!-- <script type="text/javascript" src="/js/cmmng.js"></script> -->
 <script type="text/javascript">

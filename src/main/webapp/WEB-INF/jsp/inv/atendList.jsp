@@ -19,8 +19,10 @@
 		수사시스템 화면 비율 조정
 		권종열 사무관 요청
 	*/
-	#gridR_wrap { height: 200px !important; }/* 사건목록 */
-	#ifrReport { height: 250px !important; }/* 작성문서목록 */
+	#gridT1_wrap, #gridT2_wrap { height: 152px !important; } /* 사건목록 */
+	#showinbox { height: 190px !important; } /* 사건목록 영역 */
+	/* #gridR_wrap { height: 150px !important; } 사건목록 */
+	/* #ifrReport { height: 200px !important; } 작성문서목록 */
 </style>
 <script type="text/javascript">
 var docNo = "00454";  /*출석요구*/

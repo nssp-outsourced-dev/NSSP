@@ -12,6 +12,18 @@ input[type=radio] {
 .tbLft {
 	text-align: left;
 }
+	/*
+		2021.08.11
+		coded by dgkim
+		수사시스템 화면 비율 조정
+		권종열 사무관 요청
+	*/
+	#grid_case_list { height: 135px !important; } /* 사건목록 */
+	#showinbox { height: 180px !important; } /* 사건목록 영역 */
+	/* #grid_sugest_list { height: 140px !important; } 지휘건의목록  */
+	/* #ifrReport { height: 185px !important; } 작성문서목록 */
+	#gridRcordList { height: 400px !important; }
+	#grid_trgter_list { height: 240px !important; } /* 피의자정보, 체포내역, 압수물내역 */
 </style>
 <script type="text/javascript">
 

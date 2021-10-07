@@ -137,10 +137,25 @@
 		</isNotEmpty>
 	</select>
 
-	<select id="selectUserIdCnt" parameterClass="java.util.HashMap" resultClass="int">
-	    SELECT COUNT(*) AS CNT
-	    FROM CMN_USER
-		WHERE USER_ID = #user_id#
+	<select id="selectUserIdCnt" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		SELECT A.*,
+			COUNT(*) OVER() AS TOT_CNT
+		FROM
+		(
+			SELECT  *
+			FROM CMN_USER
+			<dynamic prepend="WHERE">
+				<isNotEmpty property="email">
+					EMAIL = #email#
+				</isNotEmpty>
+				
+				<isEmpty property="email">
+					USER_ID = #user_id#
+				</isEmpty>
+			</dynamic>
+			
+			
+		) A
 	</select>
 
 	<insert id="insertUserLog" parameterClass="HashMap">

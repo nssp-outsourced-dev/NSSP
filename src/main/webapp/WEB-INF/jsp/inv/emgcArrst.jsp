@@ -19,6 +19,15 @@
     cursor: pointer;
     float: right;
 }
+
+	/*
+		2021.08.11
+		coded by dgkim
+		수사시스템 화면 비율 조정
+		권종열 사무관 요청
+	*/
+	#gridT1_wrap, #gridT2_wrap { height: 152px !important; } /* 사건목록 */
+	#showinbox { height: 190px !important; } /* 사건목록 영역 */
 </style>
 <script type="text/javascript">
 	var docNo = "00446";

@@ -20,6 +20,13 @@
 <link rel="stylesheet" type="text/css" href="/css/gpki/gsw-jquery-ui.min.css"/>
 
 <script type="text/javascript">
+	/*
+		2021.10.05
+		coded by dgkim
+		이중회원가입 방지(ID, 메일로 판별)
+		권종열 사무관 요청
+	*/
+	var check = true; //이중 회원가입을 막기위한 변수(ID 중복체크, 이메일 중복체크 둘다 true여야 가입할수있다.) 
 	$(function() {
 		$(document).ready(function(){
 			fnIdClear(true);
@@ -88,6 +95,7 @@
 	}
 
 	function fnAdd(){
+		if( !Check ){ alert("중복된 계정입니다. ID, 이메일을 다시 확인하세요."); return; }
 		if(fnFormValueCheck("addForm")){
 			if(!($('#hidUserPw').val() == "0" && $('#hidUserRePw').val() == "0")){
 				alert("비밀번호를 정확하게 입력하세요.");
@@ -133,22 +141,56 @@
 		$("#txtResdncZip").val(returnValue.zipCd);
 	}
 
-	function fnIdDplctCheck(){
-	    if(!/^[a-zA-Z0-9]{8,12}$/.test($("#txtUserId").val())){
-            alert("숫자,영문자 조합으로 8~12자리의 ID를 사용할 수 있습니다.");
-    		return;
-	    }
-		var iUrl = '<c:url value='/member/getIdDplctAjax/'/>';
- 		var queryString =  $('#addForm').serialize();
- 		var processAfterGet = function(data) {
-			if(data.result == "1"){
-				alert("사용가능한 ID입니다.");
-				fnIdClear(false);
-			}else{
-				alert("입력하신 ID는 사용할 수 없습니다.");
+	/*
+		2021.10.05
+		coded by dgkim
+		이중회원가입 방지(ID, 메일로 판별)
+		권종열 사무관 요청
+	*/
+	function fnIdDplctCheck(flag){
+		if(flag == "id"){
+			if(!/^[a-zA-Z0-9]{8,12}$/.test($("#txtUserId").val())){
+				alert("숫자,영문자 조합으로 8~12자리의 ID를 사용할 수 있습니다.");
+				return;
 			}
-	    };
-		Ajax.getJson(iUrl, queryString, processAfterGet);
+			
+			$("#txtEmail1").val("");
+			var iUrl = '<c:url value='/member/getIdDplctAjax/'/>';
+			var queryString =  $('#addForm').serialize();
+			var processAfterGet = function(data) {
+				if(data.result == "1"){
+					alert("사용가능한 ID입니다.");
+					fnIdClear(false);
+					Check = true;
+				}else{
+					alert("입력하신 ID는 사용할 수 없습니다.");
+					Check = false;
+				}
+			};
+			Ajax.getJson(iUrl, queryString, processAfterGet);
+		}else if(flag == "email"){
+			if($("#txtEmail1").val() == ""){
+				$("#txtEmail1").focus();
+				alert("이메일을 입력하세요.");
+				return;
+			}else{
+				$('#txtEmail').val($('#txtEmail1').val()+"@"+$('#txtEmail2').val());//이메일 조합
+			}
+			
+			var iUrl = '<c:url value='/member/getIdDplctAjax/'/>';
+			var queryString =  $('#addForm').serialize();
+			var processAfterGet = function(data) {
+				if(data != null && data.TOT_CNT > 0){
+					$('#txtEmail, #txtEmail1').val("");//이메일 조합
+					alert("이미 존재하는 이메일입니다. <br>가입한 이력이있는지 관리자에게 문의하세요.");
+					Check = true;
+				}else {
+					alert("사용가능한 이메일입니다.");
+					Check = false;
+				}
+			};
+			Ajax.getJson(iUrl, queryString, processAfterGet);
+		}
 	}
 
 	function fnIdClear(bln){
@@ -220,7 +262,7 @@
 				<th>사용자 ID<span class="point"><img src="/img/point.png"  alt=""/></span></th>
 				<td>
 					<input type="text" id="txtUserId" name="txtUserId" maxlength="20" class="w_150px input_com notHangul" check="text" checkName="ID">
-					<input type="button" id="btnIdDplct" value="중복확인" class="btn_text" onclick="fnIdDplctCheck();" >
+					<input type="button" id="btnIdDplct" value="중복확인" class="btn_text" onclick="fnIdDplctCheck('id');" >
 					<input type="button" id="btnIdClear" value="초기화" class="btn_text" onclick="fnIdClear(true);" >
 				</td>
 			</tr>
@@ -331,7 +373,8 @@
 					<input type="hidden" id="txtEmail" name="txtEmail">
 					<input type="text" id="txtEmail1" name="txtEmail1" maxlength="20" value='' class="w_30p input_com ">
 					&#64;
-					<input type="text" id="txtEmail2" name="txtEmail2" maxlength="20" value='korea.kr' class="w_30p input_com ">
+					<input type="text" id="txtEmail2" name="txtEmail2" maxlength="20" value='korea.kr' class="w_30p input_com " readonly="readonly">
+					<input type="button" id="btnIdDplct" value="중복확인" class="btn_text" onclick="fnIdDplctCheck('email');" >
 				</td>
 			</tr>
 			<tr>

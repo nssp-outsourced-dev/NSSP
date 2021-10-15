@@ -8,7 +8,13 @@
 		       ROWNUM||'. '||FN_CD_NM(A.TRGTER_SE_CD)||' '||A.TRGTER_NM AS NM,
 		       CASE WHEN NVL(TRGTER_TY_CD,'I') = 'E' THEN TRGTER_CPRN  					ELSE TRGTER_RRN END AS TRGTER_RRN,
 		       CASE WHEN NVL(TRGTER_TY_CD,'I') = 'E' THEN NVL(DWLSIT_ADDR,WRC_ADDR)  	ELSE DWLSIT_ADDR END AS ADDR,
-		       CASE WHEN NVL(TRGTER_TY_CD,'I') = 'E' THEN NVL(WRC_TEL,TEL)  			ELSE TEL END AS TEL,
+		       /*
+		       		2021.10.08
+		       		coded by dgkim
+		       		사람일 경우 휴대폰번호로 나오게 되어있었으나 직장번호(휴대폰번호)로 변경
+		       */
+		       	--, CASE WHEN NVL(TRGTER_TY_CD,'I') = 'E' THEN NVL(WRC_TEL,TEL)  			ELSE TEL END AS TEL,
+				 CASE WHEN NVL(TRGTER_TY_CD,'I') = 'E' THEN NVL(WRC_TEL,TEL)  			ELSE WRC_TEL || '(' || TEL || ')' END AS TEL,
 			   '성    명:' AS T1,
 		       CASE WHEN NVL(TRGTER_TY_CD,'I') = 'E' THEN '법인등록번호 :'  ELSE '주민등록번호 :' END AS T2,
 		       CASE WHEN NVL(TRGTER_TY_CD,'I') = 'E' THEN '소 재 지:'   	ELSE '주   거:' END AS T3,

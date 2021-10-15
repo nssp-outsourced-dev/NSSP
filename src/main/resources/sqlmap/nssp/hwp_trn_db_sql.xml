@@ -195,7 +195,14 @@
 			SELECT  ' '||ROW_NUMBER() OVER (ORDER BY A.SORT_ORDR)||'. ' AS TRGTER_SN
 				  , TRGTER_NM
 				  , DECODE(TRGTER_TY_CD, 'I', DGUARD.DECRYPT('TBL','ENC',TRGTER_RRN), TRGTER_CPRN) TRGTER_RRN
-				  , NVL2(HP_NO, DGUARD.DECRYPT('TBL','ENC',HP_NO), WRC_TEL) HP_NO
+				  /*
+				  	2021.10.08
+					coded by dgkim
+					사람일 경우 휴대폰번호로 나오게 되어있었으나 직장번호(휴대폰번호)로 변경
+				  */
+				  --, NVL2(HP_NO, DGUARD.DECRYPT('TBL','ENC',HP_NO), WRC_TEL) HP_NO
+				  , DECODE(TRGTER_TY_CD, 'I', WRC_TEL || '(' || DGUARD.DECRYPT('TBL','ENC',HP_NO) || ')', NVL(B.WRC_TEL,DGUARD.DECRYPT('TBL','ENC',NVL(B.HP_NO,B.OWNHOM_TEL)))) AS HP_NO
+				  
 				  , NVL2(ADRES_ADDR, ADRES_ADDR, WRC_ADDR) ADRES_ADDR
 				  , DECODE(TRGTER_TY_CD, 'I', '주민등록번호 :', '법인등록번호 :') TRGTER_RRN_TITLE
 				  , DECODE(TRGTER_TY_CD, 'I', '주     거 :', '소 재 지:') ADRES_ADDR_TITLE

@@ -1372,6 +1372,12 @@
 	</insert>
 
 	<!-- 2019-08-30 의견서 복사 -->
+	<!-- 
+		2021.10.21
+		edited by dgkim
+		지휘건의 건의결과 가,부 관계없이 송치관리에서 같은 의견서 사용할수있도록 수정
+		김지만 수사관 요청 
+	 -->
 	<insert id="insertDocPblicteForSugestDoc" parameterClass="java.util.HashMap">
 	<![CDATA[
 		INSERT INTO CMN_DOC_PBLICTE
@@ -1410,7 +1416,13 @@
 				          FROM INV_SUGEST A, RC_TMPR B
 				         WHERE A.USE_YN = 'Y'
 				           AND A.SUGEST_TY_CD = '01101' /* 건의 유형 코드(수사지휘건의) */
-				           AND A.SUGEST_RESULT_CD = 'Y' /* 건의 결과 코드(가) */
+				           /*
+								2021.10.21
+								edited by dgkim
+								지휘건의 건의결과 가,부 관계없이 송치관리에서 같은 의견서 사용할수있도록 수정
+								김지만 수사관 요청
+				           */
+				           /* AND A.SUGEST_RESULT_CD = 'Y' 건의 결과 코드(가) */
 				           AND A.RC_NO = #RC_NO#
 				           AND B.USE_YN = 'Y'
 				           AND A.RC_NO = B.RC_NO

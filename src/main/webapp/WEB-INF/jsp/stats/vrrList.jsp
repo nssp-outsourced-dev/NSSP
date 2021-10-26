@@ -29,75 +29,30 @@
 	})
 
 	function fnSearch() {
-		fnMoveGridPage("/stats/vrprListAjax/", "frmList", "#grid_list", 1);
+		fnMoveGridPage("/stats/vrrListAjax/", "frmList", "#grid_list", 1);
 	}
 
 	function initGrid() {
 		var columnLayout = [
 			{ dataField : "RC_NO", visible : false},
-			{ dataField : "RN", 		headerText : "순번", width : 50, cellMerge : true, mergePolicy:"restrict", mergeRef: "CASE_NO"},
-			{ dataField : "PRMISN_PROGRS_NO", 		headerText : "진행번호", width : 100, cellMerge : true, mergePolicy:"restrict", mergeRef: "CASE_NO",
-				renderer : {type : "TemplateRenderer",
-					aliasFunction : function(rowIndex, columnIndex, value, headerText, item) {//엑셀, PDF 등 내보내기 시 값 가공 함수 
-						return fnChangeNo (value); 
-					}
-				},
-				labelFunction : function (rowIndex, columnIndex, value, headerText, item ) {
-					return fnChangeNo (value);
-				}
-			},
-			{ dataField : "CASE_NO", 		headerText : "사건번호", width : 100, 
-				renderer : {type : "TemplateRenderer",
-					aliasFunction : function(rowIndex, columnIndex, value, headerText, item) {//엑셀, PDF 등 내보내기 시 값 가공 함수 
-						return fnChangeNo (value); 
-					}
-				},
-				labelFunction : function (rowIndex, columnIndex, value, headerText, item ) {
-					return fnChangeNo (value);
-				}
-			},
-			{ dataField : "TRGTER_NM", headerText : "성명", width : 120 },
-			{ dataField : "TRGTER_RRN", headerText : "주민등록번호", width : 120 },
-			{ dataField : "OCCP_NM", headerText : "직업", width : 120 },
-			/* { dataField : "REGBS_ADDR", headerText : "주거", width : 120 }, */
-			{ dataField : "PRMISN_SE_NM", headerText : "종류", width : 120 },
-			{ dataField : "VIOLT_NM", 		headerText : "죄명", width : 200, cellMerge : true, mergePolicy:"restrict", mergeRef: "CASE_NO",},
-			{ dataField : "DTA_SCOPE", headerText : "대상 및 범위", width : 120 },
-			{ dataField : "EMERGENCY_DE", headerText : "긴급으로 자료 <br>제공받은 일시", width : 120, cellMerge : true, mergePolicy:"restrict", mergeRef: "CASE_NO", },
-			{ dataField : "", headerText : "신청 및 발부<br>일시", width : 120, cellMerge : true, mergePolicy:"restrict", mergeRef: "CASE_NO", 
-				labelFunction : function (rowIndex, columnIndex, value, headerText, item ) { // HTML 템플릿 작성
-					var template = "";
-				
-					if(item.REQST_DE != "" &&
-							item.REQST_DE != null &&
-							item.REQST_DE != undefined){
-						template += item.REQST_DE;
-					}
-					
-					if(item.ISUE_DE != "" &&
-							item.ISUE_DE != null &&
-							item.ISUE_DE != undefined){
-						template += " / " + item.ISUE_DE
-					}
-				
-					return template;
-				}
-			},
-			{ headerText : "수령 및 반환",
+			{ dataField : "RN", 		headerText : "순번", width : 50, cellMerge : true, mergePolicy:"restrict", mergeRef: "REQST_DE"},
+			{ dataField : "REQST_DE", headerText : "요청일자", width : 120, cellMerge : true, mergePolicy:"restrict", dataType : "date", formatString : "yyyy-mm-dd"},
+			{ dataField : "CHARGER_NM", headerText : "요청자", width : 120, cellMerge : true, mergePolicy:"restrict", mergeRef: "REQST_DE" },
+			{ headerText : "통신사실 확인자료",
 				children: [
-					{ dataField : "RECEIPT", headerText : "수령연월일", width : 120, cellMerge : true, mergePolicy:"restrict", mergeRef: "CASE_NO", },
-					{ dataField : "RECIPIENT", headerText : "수령자직급, 성명", width : 120 },
-					{ dataField : "RETURN_DE", headerText : "검찰반환연월일", width : 120, cellMerge : true, mergePolicy:"restrict", mergeRef: "CASE_NO", },
+					{ dataField : "TRGTER_NM", headerText : "대상자", width : 120 },
+					{ dataField : "DTA_SCOPE", headerText : "제공받은 자료의 범위", width : 120 },
+					{ dataField : "PRMISN_RECPT_DE", headerText : "회신일자", width : 120, dataType : "date", formatString : "yyyy-mm-dd" },
 				]
 			},
-			{ dataField : "NOTE", headerText : "비고", width : 120 },
+			{ dataField : "BIGO", headerText : "비고", width : 120 },
 		];
 
 		var gridPros = {
 			headerHeight : 30,
 			rowHeight: 30,
 			//noDataMessage:"조회 목록이 없습니다.",
-			//fillColumnSizeMode : true,
+			fillColumnSizeMode : true,
 			showRowNumColumn : false,
 			enableCellMerge : true,
 		};
@@ -139,11 +94,11 @@
 		if(rowCount >= 100000) {
 			alert("10만건 이상일 경우  CSV로 데이터를 출력합니다.");
 			AUIGrid.exportToCsv(myGridID, {
-				fileName : "통신사실 확인자료제공 요청허가 신청부_CSV"
+				fileName : "통신사실 확인자료 회신대장_CSV"
 			});
 		}else{
 			AUIGrid.exportToXlsx(myGridID, {
-				fileName : "통신사실 확인자료제공 요청허가 신청부_EXCEL"
+				fileName : "통신사실 확인자료 회신대장_EXCEL"
 			});
 		}
 	};

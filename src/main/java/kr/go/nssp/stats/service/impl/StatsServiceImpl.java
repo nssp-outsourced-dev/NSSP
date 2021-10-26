@@ -113,4 +113,36 @@ public class StatsServiceImpl implements StatsService {
 	public List selectTrsmrcvComptElcncVrifyExcutFactNticeList(HashMap param) throws Exception {
 		return statsDAO.selectTrsmrcvComptElcncVrifyExcutFactNticeList(param);
 	}
+
+	/* (non-Javadoc)
+	 * @see kr.go.nssp.stats.service.StatsService#selectVdecRequstExcutList(java.util.HashMap)
+	 */
+	@Override
+	public List selectVdecRequstExcutList(HashMap param) throws Exception {
+		return statsDAO.selectVdecRequstExcutList(param);
+	}
+
+	/* (non-Javadoc)
+	 * @see kr.go.nssp.stats.service.StatsService#selectVdecRplyRegstrList(java.util.HashMap)
+	 */
+	@Override
+	public List selectVdecRplyRegstrList(HashMap param) throws Exception {
+		return statsDAO.selectVdecRplyRegstrList(param);
+	}
+
+	/* (non-Javadoc)
+	 * @see kr.go.nssp.stats.service.StatsService#selectVdecRequstExcutFactList(java.util.HashMap)
+	 */
+	@Override
+	public List selectVdecRequstExcutFactList(HashMap param) throws Exception {
+		return statsDAO.selectVdecRequstExcutFactList(param);
+	}
+
+	/* (non-Javadoc)
+	 * @see kr.go.nssp.stats.service.StatsService#selectVdecRequstPostpneConfmList(java.util.HashMap)
+	 */
+	@Override
+	public List selectVdecRequstPostpneConfmList(HashMap param) throws Exception {
+		return statsDAO.selectVdecRequstPostpneConfmList(param);
+	}
 }

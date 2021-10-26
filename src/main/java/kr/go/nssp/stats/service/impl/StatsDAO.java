@@ -105,4 +105,56 @@ public class StatsDAO extends EgovComAbstractDAO {
 	public List selectTrsmrcvComptElcncVrifyExcutFactNticeList(HashMap param) throws Exception {
 		return list("stats.selectTrsmrcvComptElcncVrifyExcutFactNticeList", param);
 	}
+	
+	/** 
+	 * @methodName : selectVdecRequstExcutList
+	 * @date : 2021.10.18
+	 * @author : dgkim
+	 * @description : 통신사실 확인자료제공 요청 집행대장(신규 문서 서식)
+	 * @param param
+	 * @return
+	 * @throws Exception
+	 */
+	public List selectVdecRequstExcutList(HashMap param) throws Exception {
+		return list("stats.selectVdecRequstExcutList", param);
+	}
+	
+	/** 
+	 * @methodName : selectVdecRplyRegstrList
+	 * @date : 2021.10.18
+	 * @author : dgkim
+	 * @description : 통신사실 확인자료 회신대장(신규 문서 서식)
+	 * @param param
+	 * @return
+	 * @throws Exception
+	 */
+	public List selectVdecRplyRegstrList(HashMap param) throws Exception {
+		return list("stats.selectVdecRplyRegstrList", param);
+	}
+	
+	/** 
+	 * @methodName : selectVdecRequstExcutFactList
+	 * @date : 2021.10.18
+	 * @author : dgkim
+	 * @description : 통신사실 확인자료제공 요청 집행사실 통지부(신규 문서 서식)
+	 * @param param
+	 * @return
+	 * @throws Exception
+	 */
+	public List selectVdecRequstExcutFactList(HashMap param) throws Exception {
+		return list("stats.selectVdecRequstExcutFactList", param);
+	}
+	
+	/** 
+	 * @methodName : selectVdecRequstPostpneConfmList
+	 * @date : 2021.10.18
+	 * @author : dgkim
+	 * @description : 통신사실 확인자료제공 요청 집행사실 통지유예 승인신청부(신규 문서 서식)
+	 * @param param
+	 * @return
+	 * @throws Exception
+	 */
+	public List selectVdecRequstPostpneConfmList(HashMap param) throws Exception {
+		return list("stats.selectVdecRequstPostpneConfmList", param);
+	}
 }

@@ -132,11 +132,53 @@
 					<c:otherwise><c:set var="icon" value="icon1"/></c:otherwise>
 				</c:choose>
 				<li class="${icon} <c:if test="${LayoutMenuClCd eq result.MENU_CL_CD}">on</c:if>"> <a href="${result.MENU_URL}">${result.MENU_CL_NM}</a>
+					<%-- 
+						2021.10.18
+						coded by dgkim
+						신규 서식 메뉴가 늘어남에 따라 사건대장 메뉴만 메뉴레이아웃 변경
+					 --%>
+					<%-- 기존 소스
 					<ul class="w200"> <div class="triangle"></div>
 					<c:forEach var="resultDtl" items="${LayoutMenuList[result.AUTHOR]}" varStatus="statusDtl">
 						<li class=""><a href="${resultDtl.MENU_URL}">${resultDtl.MENU_NM}</a></li>
 					</c:forEach>
-					</ul>
+					</ul> 
+					--%>
+					
+					<c:choose>
+						<c:when test="${result.MENU_CL_CD eq '00007'}"><%-- 사건대장일 경우 --%>
+							<ul class="w200">
+								<div class="triangle"></div>
+								
+								<c:forEach var="resultDtl" items="${LayoutMenuList[result.AUTHOR]}" varStatus="statusDtl">
+									<c:choose>
+										<c:when test="${statusDtl.index % 2 eq 0}"><%-- 짝수 메뉴 --%>
+											<li class=""><a href="${resultDtl.MENU_URL}">${resultDtl.MENU_NM}</a></li>
+										</c:when>
+										<c:otherwise></c:otherwise>
+									</c:choose>
+								</c:forEach>
+							</ul>
+							
+							<ul class="w200" style="left: 200px;">
+								<c:forEach var="resultDtl" items="${LayoutMenuList[result.AUTHOR]}" varStatus="statusDtl">
+									<c:choose>
+										<c:when test="${statusDtl.index % 2 eq 1}"><%-- 홀수 메뉴 --%>
+											<li class=""><a href="${resultDtl.MENU_URL}">${resultDtl.MENU_NM}</a></li>
+										</c:when>
+										<c:otherwise></c:otherwise>
+									</c:choose>
+								</c:forEach>
+							</ul>
+						</c:when>
+						<c:otherwise><%-- 사건대장이 아닐 경우 --%>
+							<ul class="w200"> <div class="triangle"></div>
+							<c:forEach var="resultDtl" items="${LayoutMenuList[result.AUTHOR]}" varStatus="statusDtl">
+								<li class=""><a href="${resultDtl.MENU_URL}">${resultDtl.MENU_NM}</a></li>
+							</c:forEach>
+							</ul>
+						</c:otherwise>
+					</c:choose>
 				</li>
 			</c:if>
 		</c:forEach>

@@ -82,6 +82,14 @@
 		$('#txtRstSzureThing').keyup();
 		$("#txtZrlongReturnResn").keyup();
 		$("#txtSzureReturnResn").keyup();
+		
+		/*
+			2021.10.20
+			coded by dgkim
+			압수수색검증에 기록목록 기능 추가
+			김지만 수사관 요청
+		*/
+		$('#btnRcord').hide();//기록목록 버튼
 	});
 	function fnKeyEvent () {
 		$('#txtRereqstResn').keyup(function(){
@@ -140,7 +148,7 @@
 	}
 	function fnTab(e, num, tabCnt){
 		var num      = num||0;
-		var menu     = $("#"+e+"Tab_box").children().children();
+		var menu     = $("#"+e+"Tab_box").children().children("li");//기록목록 버튼 제외
 		var tabList  = $('#'+e+'Tab_list').children();  //ifrTab1
 		var select   = $(menu).eq(num);
 		var i        = num;
@@ -159,6 +167,15 @@
 						fnTabSetGd("zrlong");
 						$(".box_w2_1b_ov").css("width","calc(65% - 15px)");
 						$("#gridT2_wrap").show();
+						
+						/*
+							2021.10.20
+							coded by dgkim
+							압수수색검증에 기록목록 기능 추가
+							김지만 수사관 요청
+						*/
+						$('#btnRcord').hide();//기록목록 버튼 숨기기
+					
 						break;
 					case 1:
 						fnTabSetGd("szure");
@@ -167,11 +184,29 @@
 						AUIGrid.resize("#grid_trgter_list");
 						AUIGrid.resize("#grid_szure_rst");
 						AUIGrid.resize("#grid_acnut");
+						
+						/*
+							2021.10.20
+							coded by dgkim
+							압수수색검증에 기록목록 기능 추가
+							김지만 수사관 요청
+						*/
+						$('#btnRcord').show();//기록목록 버튼 보이기
+					
 						break;
 					case 2:
 						fnTabSetGd("cmmng");
 						$(".box_w2_1b_ov").css("width","calc(65% - 15px)");
 						$("#gridT2_wrap").show();
+						
+						/*
+							2021.10.20
+							coded by dgkim
+							압수수색검증에 기록목록 기능 추가
+							김지만 수사관 요청
+						*/
+						$('#btnRcord').hide();//기록목록 버튼 숨기기
+						
 						break;
 				}
 				//피의자 정보의 유무에 따른 크기 조절
@@ -646,9 +681,19 @@
 			} else {
 				$("#"+pTabId+"RstDtlForm").find("#hidCudType").val("U");
 			}
+			
 			//doc
 			fnDoc("ifrReport"+pTabId,data.docId,"P_RC_NO="+data.rcNo+"&P_TRGTER_SN="+data.trgterSn+"&P_ZRLONG_REQST_NO="+data.zrlongReqstNo+"&P_ZRLONG_NO="+data.zrlongNo, eval(pTabId+"DocNo"), data.fileId);
 
+			console.log("P_RC_NO="+data.rcNo+"&P_TRGTER_SN="+data.trgterSn+"&P_ZRLONG_REQST_NO="+data.zrlongReqstNo+"&P_ZRLONG_NO="+data.zrlongNo);
+			/*
+				2021.10.20
+				coded by dgkim
+				압수수색검증에 기록목록 기능 추가
+				김지만 수사관 요청
+			*/
+			$("#rcNo").val(data.rcNo);
+			
 			/*압수수색쪽에는 없음*/
 			if(pTabId == "zrlong") $("#"+pTabId+"TrgterInfoForm").find("#labCaseNo").text(fnChangeNo($("#"+pTabId+"TrgterInfoForm").find("#labCaseNo").text()));
 		}
@@ -1330,6 +1375,18 @@
 			AUIGrid.removeRow("#grid_szure_rst", rowPos[0]);
 		}
 	}
+	
+	function fnSugestRcord(){
+		var sRcNo = $("#rcNo").val()
+		if(sRcNo == ""){
+			alert("사건목록을 선택해주세요.");
+			return false;
+		}
+		sugestRcordPopup = dhtmlmodal.open('sugestRcord', 'iframe', '/inv/sugestRcordPopup/?rcNo='+ sRcNo, '기록목록', 'width=1000px,height=450px,center=1,resize=0,scrolling=1')
+		sugestRcordPopup.onclose = function(){
+			return true;
+		}
+	}
 </script>
 <!-- 상단 조회 -->
 <div class="sh_box" style="margin-bottom: 10px;">
@@ -1359,6 +1416,8 @@
 </div>
 <!-- //상단 조회 -->
 <div class="search_box mb_10" style="display: none;">
+	<input type="hidden" id="rcNo" 			name="rcNo">
+	
 	<form id="searchForm">
 		<input type="hidden" id="searchRcNo"   	 name="searchRcNo"/>
 		<input type="hidden" id="searchCaseNo"   name="searchCaseNo"/>
@@ -1375,6 +1434,12 @@
 		<li id="mTab2">압수수색검증</li>
 		<li id="mTab3" style="width: 180px;">통신사실확인허가신청</li>
 	</ul>
+	
+	<!--버튼 -->
+	<div class="right_btn">
+		<a id="btnRcord" onClick="fnSugestRcord(); return false;" class="btn_st2_2 icon_n fl mr_m1">기록목록</a>
+	</div>
+	<!--//버튼  -->
 </div>
 <div class="contents marginbot" id="mTab_list">
 	<!---------- 체포/구속 --------->

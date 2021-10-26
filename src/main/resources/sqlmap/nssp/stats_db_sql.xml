@@ -866,4 +866,242 @@
 		</isNotEmpty>
 		ORDER BY RN ASC
 	</select>
+	
+	<!-- 
+		2021.10.18
+		coded by dgkim
+		통신사실 확인자료제공 요청 집행대장
+		신규 문서 서식
+	 -->
+	 <select id="selectVdecRequstExcutList" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		SELECT X.*
+		FROM (
+			SELECT A.*,	
+				COUNT(*) OVER() AS TOT_CNT,			
+				<isNotEmpty property="dataField">
+					<isNotEmpty property="sortType">
+						DENSE_RANK() OVER (ORDER BY A.$dataField$ $sortType$ NULLS LAST, A.PRMISN_PROGRS_NO) RN
+					</isNotEmpty>
+				</isNotEmpty>
+				<isEmpty property="dataField">		
+					DENSE_RANK() OVER (ORDER BY A.PRMISN_PROGRS_NO) AS RN
+				</isEmpty> 				
+			FROM
+				(
+					SELECT
+						C.RC_NO --접수번호
+						, FN_CNVR_NO(A.PRMISN_PROGRS_NO) AS PRMISN_PROGRS_NO --집행번호
+						, FN_CNVR_NO(A.PRMISN_NO) AS PRMISN_NO --허가 번호
+						, B.TRGTER_NM --대상자성명
+						, FN_CD_NM(C.PROGRS_STTUS_CD) AS PROGRS_STTUS_NM --진행상태
+						, FN_CD_NM(C.INV_PROVIS_CD) AS INV_PROVIS_NM -- 수사단서
+						, TO_CHAR(A.EXCUT_DT, 'YYYY-MM-DD HH24:MI') AS EXCUT_DT --집행일시
+						, '' AS BIGO --비고
+					FROM INV_COMMN_PRMISN A
+						LEFT JOIN RC_TMPR_TRGTER B ON A.RC_NO = B.RC_NO AND A.TRGTER_SN = B.TRGTER_SN
+						LEFT JOIN RC_TMPR C ON A.RC_NO = C.RC_NO
+						LEFT JOIN CMN_USER UR ON C.CHARGER_ID = UR.ESNTL_ID
+					WHERE A.USE_YN = 'Y'
+					
+					<isNotEmpty property="trgter_nm" >
+						AND B.TRGTER_NM = #trgter_nm#
+					</isNotEmpty>
+					<isNotEmpty property="chager" >
+						AND C.CHARGER_ID = #chager#
+					</isNotEmpty>
+					<isNotEmpty property="dept_cd" >
+						AND C.CHARGER_DEPT_CD IN (
+							SELECT DC.DEPT_CD
+							FROM CMN_DEPT_CD DC
+							WHERE DC.USE_YN = 'Y' AND DC.DEPT_CD != '00000'
+							START WITH DC.DEPT_CD = #dept_cd#
+							CONNECT BY PRIOR DC.DEPT_CD = DC.DEPT_UPPER_CD
+						)
+					</isNotEmpty>
+			) A
+		) X
+		<isNotEmpty property="startRow" >
+			WHERE (RN <![CDATA[ > ]]> #startRow# AND RN <![CDATA[ <= ]]> #endRow#)
+		</isNotEmpty>
+		ORDER BY RN ASC
+	 </select>
+	 
+	 <!-- 
+		2021.10.18
+		coded by dgkim
+		통신사실 확인자료 회신대장
+		신규 문서 서식
+	 -->
+	 <select id="selectVdecRplyRegstrList" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		SELECT X.*
+		FROM (
+			SELECT A.*,	
+				COUNT(*) OVER() AS TOT_CNT,			
+				<isNotEmpty property="dataField">
+					<isNotEmpty property="sortType">
+						DENSE_RANK() OVER (ORDER BY A.$dataField$ $sortType$ NULLS LAST, A.REQST_DE) RN
+					</isNotEmpty>
+				</isNotEmpty>
+				<isEmpty property="dataField">		
+					DENSE_RANK() OVER (ORDER BY A.REQST_DE) AS RN
+				</isEmpty> 				
+			FROM
+				(
+					SELECT
+						C.RC_NO --접수번호
+						, TO_CHAR(TO_DATE(A.REQST_DE, 'YYYYMMDD'), 'YYYY-MM-DD') AS REQST_DE --요청일자
+						, FN_USER_NM(C.CHARGER_ID) AS CHARGER_NM --요청자
+						, B.TRGTER_NM --대상자성명
+						, A.DTA_SCOPE --제공받은 자료의 범위
+						, TO_CHAR(TO_DATE(A.PRMISN_RECPT_DE, 'YYYYMMDD'), 'YYYY-MM-DD') AS PRMISN_RECPT_DE --회신일자
+						, '' AS BIGO --비고	
+					FROM INV_COMMN_PRMISN A
+						LEFT JOIN RC_TMPR_TRGTER B ON A.RC_NO = B.RC_NO AND A.TRGTER_SN = B.TRGTER_SN
+						LEFT JOIN RC_TMPR C ON A.RC_NO = C.RC_NO
+						LEFT JOIN CMN_USER UR ON C.CHARGER_ID = UR.ESNTL_ID
+					WHERE A.USE_YN = 'Y'
+
+					<isNotEmpty property="trgter_nm" >
+						AND B.TRGTER_NM = #trgter_nm#
+					</isNotEmpty>
+					<isNotEmpty property="chager" >
+						AND C.CHARGER_ID = #chager#
+					</isNotEmpty>
+					<isNotEmpty property="dept_cd" >
+						AND C.CHARGER_DEPT_CD IN (
+							SELECT DC.DEPT_CD
+							FROM CMN_DEPT_CD DC
+							WHERE DC.USE_YN = 'Y' AND DC.DEPT_CD != '00000'
+							START WITH DC.DEPT_CD = #dept_cd#
+							CONNECT BY PRIOR DC.DEPT_CD = DC.DEPT_UPPER_CD
+						)
+					</isNotEmpty>
+			) A
+		) X
+		<isNotEmpty property="startRow" >
+			WHERE (RN <![CDATA[ > ]]> #startRow# AND RN <![CDATA[ <= ]]> #endRow#)
+		</isNotEmpty>
+		ORDER BY RN ASC
+	 </select>
+	 
+	 <!-- 
+	 	2021.10.18
+		coded by dgkim
+		통신사실 확인자료제공 요청 집행사실 통지부
+		신규 문서 서식
+	  -->
+	 <select id="selectVdecRequstExcutFactList" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		SELECT X.*
+		FROM (
+			SELECT A.*,	
+				COUNT(*) OVER() AS TOT_CNT,			
+				<isNotEmpty property="dataField">
+					<isNotEmpty property="sortType">
+						DENSE_RANK() OVER (ORDER BY A.$dataField$ $sortType$ NULLS LAST, A.PRMISN_PROGRS_NO) RN
+					</isNotEmpty>
+				</isNotEmpty>
+				<isEmpty property="dataField">		
+					DENSE_RANK() OVER (ORDER BY A.PRMISN_PROGRS_NO) AS RN
+				</isEmpty> 				
+			FROM
+				(
+					SELECT
+						C.RC_NO --접수번호
+						, FN_CNVR_NO(A.PRMISN_PROGRS_NO) AS PRMISN_PROGRS_NO --허가서 번호
+						, B.TRGTER_NM --대상자성명
+						, FN_CD_NM(UR.CLSF_CD) || ' / ' || FN_USER_NM(C.CHARGER_ID) AS CHARGER_NM --집행자의 직급 및 성명
+						, FN_CNVR_NO(C.CASE_NO) AS CASE_NO --사건번호
+						, TO_CHAR(A.EXCUT_DT, 'YYYY-MM-DD HH24:MI') || ' / ' || FN_CD_NM(A.REQST_RESULT_CD) AS REQST_RESULT_NM --처리일자 및 처리결과
+						, TO_CHAR(TO_DATE(A.ISUE_DE, 'YYYYMMDD'), 'YYYY-MM-DD') AS ISUE_DE --처리결과를 통보받은 일자
+						, TO_CHAR(A.EXCUT_DT, 'YYYY-MM-DD HH24:MI') AS EXCUT_DT --통지일자
+						, '' AS BIGO --비고
+					FROM INV_COMMN_PRMISN A
+						LEFT JOIN RC_TMPR_TRGTER B ON A.RC_NO = B.RC_NO AND A.TRGTER_SN = B.TRGTER_SN
+						LEFT JOIN RC_TMPR C ON A.RC_NO = C.RC_NO
+						LEFT JOIN CMN_USER UR ON C.CHARGER_ID = UR.ESNTL_ID
+					WHERE A.USE_YN = 'Y'
+
+					<isNotEmpty property="trgter_nm" >
+						AND B.TRGTER_NM = #trgter_nm#
+					</isNotEmpty>
+					<isNotEmpty property="chager" >
+						AND C.CHARGER_ID = #chager#
+					</isNotEmpty>
+					<isNotEmpty property="dept_cd" >
+						AND C.CHARGER_DEPT_CD IN (
+							SELECT DC.DEPT_CD
+							FROM CMN_DEPT_CD DC
+							WHERE DC.USE_YN = 'Y' AND DC.DEPT_CD != '00000'
+							START WITH DC.DEPT_CD = #dept_cd#
+							CONNECT BY PRIOR DC.DEPT_CD = DC.DEPT_UPPER_CD
+						)
+					</isNotEmpty>
+			) A
+		) X
+		<isNotEmpty property="startRow" >
+			WHERE (RN <![CDATA[ > ]]> #startRow# AND RN <![CDATA[ <= ]]> #endRow#)
+		</isNotEmpty>
+		ORDER BY RN ASC
+	 </select>
+	 
+	 <!-- 
+	 	2021.10.18
+		coded by dgkim
+		통신사실 확인자료제공 요청 집행사실 통지유예 승인신청부
+		신규 문서 서식
+	  -->
+	 <select id="selectVdecRequstPostpneConfmList" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		SELECT X.*
+		FROM (
+			SELECT A.*,	
+				COUNT(*) OVER() AS TOT_CNT,			
+				<isNotEmpty property="dataField">
+					<isNotEmpty property="sortType">
+						DENSE_RANK() OVER (ORDER BY A.$dataField$ $sortType$ NULLS LAST, A.PRMISN_PROGRS_NO) RN
+					</isNotEmpty>
+				</isNotEmpty>
+				<isEmpty property="dataField">		
+					DENSE_RANK() OVER (ORDER BY A.PRMISN_PROGRS_NO) AS RN
+				</isEmpty> 				
+			FROM
+				(
+					SELECT
+						C.RC_NO --접수번호
+						, TO_CHAR(TO_DATE(A.REQST_DE, 'YYYYMMDD'), 'YYYY-MM-DD') AS REQST_DE --신청일자
+						, FN_CD_NM(UR.CLSF_CD) || ' / ' || FN_USER_NM(C.CHARGER_ID) AS CHARGER_NM --신청자의 직급 및 성명
+						, FN_CNVR_NO(A.PRMISN_PROGRS_NO) AS PRMISN_PROGRS_NO --허가서 번호
+						, B.TRGTER_NM --통지 대상자 성명
+						, FN_CNVR_NO(C.CASE_NO) AS CASE_NO --사건번호
+						, TO_CHAR(A.EXCUT_DT, 'YYYY-MM-DD HH24:MI') || ' / ' || FN_CD_NM(A.REQST_RESULT_CD) AS REQST_RESULT_NM --처리일자 및 처리결과
+						, TO_CHAR(TO_DATE(A.ISUE_DE, 'YYYYMMDD'), 'YYYY-MM-DD') AS ISUE_DE --통보받은 일자
+						, TO_CHAR(A.EXCUT_DT, 'YYYY-MM-DD HH24:MI') AS EXCUT_DT --승인일자
+						--유예사유 해소 후 통지일자
+					FROM INV_COMMN_PRMISN A
+						LEFT JOIN RC_TMPR_TRGTER B ON A.RC_NO = B.RC_NO AND A.TRGTER_SN = B.TRGTER_SN
+						LEFT JOIN RC_TMPR C ON A.RC_NO = C.RC_NO
+						LEFT JOIN CMN_USER UR ON C.CHARGER_ID = UR.ESNTL_ID
+					WHERE A.USE_YN = 'Y'
+
+					<isNotEmpty property="trgter_nm" >
+						AND B.TRGTER_NM = #trgter_nm#
+					</isNotEmpty>
+					<isNotEmpty property="chager" >
+						AND C.CHARGER_ID = #chager#
+					</isNotEmpty>
+					<isNotEmpty property="dept_cd" >
+						AND C.CHARGER_DEPT_CD IN (
+							SELECT DC.DEPT_CD
+							FROM CMN_DEPT_CD DC
+							WHERE DC.USE_YN = 'Y' AND DC.DEPT_CD != '00000'
+							START WITH DC.DEPT_CD = #dept_cd#
+							CONNECT BY PRIOR DC.DEPT_CD = DC.DEPT_UPPER_CD
+						)
+					</isNotEmpty>
+			) A
+		) X
+		<isNotEmpty property="startRow" >
+			WHERE (RN <![CDATA[ > ]]> #startRow# AND RN <![CDATA[ <= ]]> #endRow#)
+		</isNotEmpty>
+		ORDER BY RN ASC
+	 </select>
 </sqlMap>

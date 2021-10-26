@@ -1520,7 +1520,7 @@
     			WHEN RC_SE_CD = 'T' OR RC_SE_CD = NULL THEN
     			''
     			END) AS name
-    			
+    			, (SELECT TEL_NO FROM CMN_USER WHERE ESNTL_ID = A.CHARGER_ID) AS TEL_NO --담당자 휴대전화
             FROM RC_TMPR A
             WHERE A.RC_NO = #P_RC_NO#
               AND A.USE_YN = 'Y'

@@ -52,6 +52,27 @@
 						children: [
 							{ dataField : "TRTMNT_CHFCLRK", headerText : "계장",  	width : 60, cellMerge : true, mergePolicy:"restrict", mergeRef: "CASE_NO",
 								renderer : {
+									type : "CheckBoxEditRenderer",
+									checkValue : 'Y',
+									unCheckValue : 'N'
+								}
+							},
+							{ dataField : "TRTMNT_DRHF", headerText : "과장",  	width : 60, cellMerge : true, mergePolicy:"restrict", mergeRef: "CASE_NO",
+								renderer : {
+									type : "CheckBoxEditRenderer",
+									checkValue : 'Y',
+									unCheckValue : 'N'
+								}
+							},
+							{ dataField : "TRTMNT_ISTDR", headerText : "기관장",  	width : 60, cellMerge : true, mergePolicy:"restrict", mergeRef: "CASE_NO",
+								renderer : {
+									type : "CheckBoxEditRenderer",
+									checkValue : 'Y',
+									unCheckValue : 'N'
+								}
+							},
+							/* { dataField : "TRTMNT_CHFCLRK", headerText : "계장",  	width : 60, cellMerge : true, mergePolicy:"restrict", mergeRef: "CASE_NO",
+								renderer : {
 									type : "ImageRenderer",// 이미지렌더러로 체크박스 모양 만들기
 									imgHeight : 20,
 									imgTableRef: {
@@ -60,7 +81,7 @@
 										"default": null,
 									}
 								}
-							},
+							}
 							{ dataField : "TRTMNT_DRHF", headerText : "과장", 	width : 60, cellMerge : true, mergePolicy:"restrict", mergeRef: "CASE_NO",
 								renderer : {
 									type : "ImageRenderer",// 이미지렌더러로 체크박스 모양 만들기
@@ -82,7 +103,7 @@
 										"default": null,
 									}
 								}
-							},
+							}, */
 						]
 					},
 					{ dataField : "ARRST_DT", headerText : "연월일 및 유형", width : 120, cellMerge : true, mergePolicy:"restrict", mergeRef: "CASE_NO", },
@@ -93,6 +114,27 @@
 					{ headerText : "취급자", 
 						children: [
 							{ dataField : "TRTMNT2_CHFCLRK", headerText : "계장",  	width : 60, cellMerge : true, mergePolicy:"restrict", mergeRef: "CASE_NO",
+								renderer : {
+									type : "CheckBoxEditRenderer",
+									checkValue : 'Y',
+									unCheckValue : 'N'
+								}
+							},
+							{ dataField : "TRTMNT2_DRHF", headerText : "과장",  	width : 60, cellMerge : true, mergePolicy:"restrict", mergeRef: "CASE_NO",
+								renderer : {
+									type : "CheckBoxEditRenderer",
+									checkValue : 'Y',
+									unCheckValue : 'N'
+								}
+							},
+							{ dataField : "TRTMNT2_ISTDR", headerText : "기관장",  	width : 60, cellMerge : true, mergePolicy:"restrict", mergeRef: "CASE_NO",
+								renderer : {
+									type : "CheckBoxEditRenderer",
+									checkValue : 'Y',
+									unCheckValue : 'N'
+								}
+							},
+							/* { dataField : "TRTMNT2_CHFCLRK", headerText : "계장",  	width : 60, cellMerge : true, mergePolicy:"restrict", mergeRef: "CASE_NO",
 								renderer : {
 									type : "ImageRenderer",// 이미지렌더러로 체크박스 모양 만들기
 									imgHeight : 20,
@@ -121,7 +163,7 @@
 										"N": null,
 									}
 								}
-							},
+							}, */
 						]
 					},
 					{ dataField : "RSL_DT", headerText : "연월일시", width : 120, cellMerge : true, mergePolicy:"restrict", mergeRef: "CASE_NO", },

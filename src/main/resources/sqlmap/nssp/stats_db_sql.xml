@@ -1008,7 +1008,7 @@
 					SELECT
 						C.RC_NO --접수번호
 						, FN_CNVR_NO(A.PRMISN_PROGRS_NO) AS PRMISN_PROGRS_NO --허가서 번호
-						, B.TRGTER_NM --대상자성명
+						, B.TRGTER_NM --통지 대상자 성명
 						, FN_CD_NM(UR.CLSF_CD) || ' / ' || FN_USER_NM(C.CHARGER_ID) AS CHARGER_NM --집행자의 직급 및 성명
 						, FN_CNVR_NO(C.CASE_NO) AS CASE_NO --사건번호
 						, TO_CHAR(A.EXCUT_DT, 'YYYY-MM-DD HH24:MI') || ' / ' || FN_CD_NM(A.REQST_RESULT_CD) AS REQST_RESULT_NM --처리일자 및 처리결과

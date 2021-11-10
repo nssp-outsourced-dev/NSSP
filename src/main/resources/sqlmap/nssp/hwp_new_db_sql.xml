@@ -446,15 +446,39 @@
 	<!-- 서식27 수사사항조회 -->
 	<select id="selectHwp00000000000000000300" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
 		SELECT 
-			A.TRGTER_NM /* 성명 */
-			, C.ITIV_NO /* 내사번호 */
-			, C.CASE_NO /* 사건번호 */
-			, FN_RC_VIOLT_ROOT_NM(C.RC_NO) AS VIOLT_ROOT_NM /* 죄명 */
+			A.*
+			, FN_CNVR_NO(A.CASE_YYYY) AS CNVR_NO
+			, SUBSTR(A.CASE_YYYY,0,4) || ' ' || A.NAME || ' 제' || TO_NUMBER(SUBSTR(A.CASE_YYYY , INSTR(A.CASE_YYYY, '-')+1)) || '호' AS RC_SE_NM /* 원안위 사건번호 */
 			, FN_OZ_DATE(TO_CHAR(SYSDATE,'YYYYMMDD'),'') AS S_DATE /* 현재일 */
-			, FN_USER_NM(C.CHARGER_ID) AS CHARGER_NM /* 담당자 */
-		FROM RC_TMPR_TRGTER A
-			JOIN RC_TMPR C ON A.RC_NO = C.RC_NO
-		WHERE A.RC_NO = #P_RC_NO#
+		FROM (
+			SELECT 
+				A.TRGTER_NM /* 성명 */
+				, FN_CNVR_NO(C.ITIV_NO) AS ITIV_NO /* 내사번호 */
+				, FN_CNVR_NO(C.CASE_NO) AS CASE_NO /* 사건번호 */
+				, FN_RC_VIOLT_ROOT_NM(C.RC_NO) AS VIOLT_ROOT_NM /* 죄명 */
+				, FN_USER_NM(C.CHARGER_ID) AS CHARGER_NM /* 담당자 */
+				, (CASE WHEN C.RC_SE_CD = 'F' THEN 
+						CASE_NO
+						WHEN C.RC_SE_CD = 'I' THEN
+						ITIV_NO
+						WHEN C.RC_SE_CD = 'T' OR RC_SE_CD IS NULL THEN
+						TMPR_NO
+						END) AS CASE_YYYY
+				, (CASE WHEN C.RC_SE_CD = 'F' THEN
+						'수사'
+						WHEN C.RC_SE_CD = 'I' THEN
+						'내사'
+						WHEN C.RC_SE_CD = 'T' OR RC_SE_CD = NULL THEN
+						'임시'
+						END) AS NAME
+				, CU.TEL_NO
+				, CU.FAX_NO
+			FROM RC_TMPR_TRGTER A
+				JOIN RC_TMPR C ON A.RC_NO = C.RC_NO
+				JOIN CMN_USER CU ON CU.ESNTL_ID = C.CHARGER_ID
+			WHERE A.RC_NO = #P_RC_NO# AND A.TRGTER_SN = #P_TRGTER_SN#
+		) A
+		RIGHT JOIN DUAL D ON 1=1
 	</select>
 	
 	<!-- //////////////////////////////////////////////////////////////////////////////////////////////////////////////// -->

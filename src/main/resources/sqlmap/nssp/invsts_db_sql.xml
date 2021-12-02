@@ -953,7 +953,13 @@
 					JOIN RC_TMPR R ON G.RC_NO = R.RC_NO
 					LEFT JOIN VIDO_TRPLANT C ON F.DOC_ID = C.DOC_ID AND F.PBLICTE_SN = C.PBLICTE_SN
 					WHERE F.FORMAT_ID = '00000000000000000021'
-					  AND F.USE_YN = 'Y'
+					  AND F.USE_YN = 'Y' 
+					  /*
+					  	2021.11.30
+					  	coded by dgkim
+					  	영상녹화동의서 삭제되지 않은것과 저장 된것만 나오게끔 수정
+					  */
+					  AND F.FILE_NM IS NOT NULL
 					<isNotEmpty property="trgter_nm" >
 						AND R.RC_NO IN (
 							SELECT TT.RC_NO

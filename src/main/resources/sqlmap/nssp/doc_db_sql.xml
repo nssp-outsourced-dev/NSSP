@@ -461,7 +461,36 @@
 			 , 'Y' AS DOC_YN
 			 , A.FORMAT_ID
 			 , A.FORMAT_CL_CD
-			 , A.FORMAT_NM
+			 /* 
+			 	2021.11.22
+			 	coded by dgkim
+			 	진술조서와 피의자신문조서일때 문서에 대상자나오게끔 수정
+			 	목록에서 대상자가 누구인지 몰라 하나씩 열어서 확인해야되는 불편함이 있음
+			 	권종열 사무관 요청 
+		 	 */
+		 	 /*
+		 	 	2021.11.22
+		 	 	coded by dgkim
+		 	 	출석요구서, 참고인 출석요구 서식명과 대상자 표기할수있도록 조치
+		 	 	김지만 수사관 요청
+		 	 */
+			 --, A.FORMAT_NM
+			 , DECODE(A.FORMAT_ID
+       			, '00000000000000000014' --진술조서
+	         	, (SELECT A.FORMAT_NM || '(' || TRGTER_NM || ')' FROM RC_TMPR_TRGTER WHERE DOC_ID = A.DOC_ID AND RC_NO = #rc_no#)
+	         	, '00000000000000000032' --피의자신문조서
+	         	, (SELECT A.FORMAT_NM || '(' || TRGTER_NM || ')' FROM RC_TMPR_TRGTER WHERE DOC_ID = A.DOC_ID AND RC_NO = #rc_no#)
+	         	, '00000000000000000022' --출석요구
+     			, A.FORMAT_NM || (SELECT DECODE(TRGTER_NM, null, '', '(' || TRGTER_NM || ')') FROM RC_TMPR_TRGTER WHERE RC_NO = #rc_no# AND TRGTER_SN = SUBSTR(A.INPUT_PARAM, INSTR(A.INPUT_PARAM, 'P_TRGTER_SN=') + 12, 1))
+ 				, '00000000000000000280' --참고인출석요구
+ 				, A.FORMAT_NM || (SELECT DECODE(TRGTER_NM, null, '', '(' || TRGTER_NM || ')') FROM RC_TMPR_TRGTER WHERE RC_NO = #rc_no# AND TRGTER_SN = SUBSTR(A.INPUT_PARAM, INSTR(A.INPUT_PARAM, 'P_TRGTER_SN=') + 12, 1))
+	     		, '00000000000000000285' --진술조서(2회)
+	         	, (SELECT REPLACE(A.FORMAT_NM, ')', ', ' || TRGTER_NM || ')') FROM RC_TMPR_TRGTER WHERE DOC_ID = A.DOC_ID AND RC_NO = #rc_no#)
+	         	, '00000000000000000287' --피의자신문조서(2회 이상)
+	         	, (SELECT REPLACE(A.FORMAT_NM, ')', ', ' || TRGTER_NM || ')') FROM RC_TMPR_TRGTER WHERE DOC_ID = A.DOC_ID AND RC_NO = #rc_no#)
+	         	, A.FORMAT_NM
+			 ) AS FORMAT_NM
+			 
 			 , A.INPUT_YN
 			 , A.DOC_ID
 			 , A.REGIST_PATH

@@ -173,6 +173,9 @@ public class SessionCheck extends HandlerInterceptorAdapter {
 		defaultAccessUrls.add("/doc/hwpctrlmain/");
 		defaultAccessUrls.add("/doc/hwpctrlmainIframe/");
 		defaultAccessUrls.add("/doc/saveHwpctrlAjax/");
+		
+		defaultAccessUrls.add("/doc/selectDocHistListAjax/");
+		
 		defaultAccessUrls.add("/doc/selectHwpctrlAjax/");
 		defaultAccessUrls.add("/doc/selectHwpctrlMultiAjax/");
 		defaultAccessUrls.add("/doc/selectHwpctrlPreviewAjax/");

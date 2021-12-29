@@ -39,4 +39,15 @@ public interface DocService {
 	public String getFormatNm(String formatId) throws Exception;
 
 	public int updateDocFilePath(HashMap map) throws Exception;
+	
+	/** 
+	 * @methodName : selectDocHistList
+	 * @date : 2021.11.17
+	 * @author : dgkim
+	 * @description : 
+	 * @param map
+	 * @return
+	 * @throws Exception
+	 */
+	public List<HashMap> selectDocHistList(HashMap map) throws Exception;
 }

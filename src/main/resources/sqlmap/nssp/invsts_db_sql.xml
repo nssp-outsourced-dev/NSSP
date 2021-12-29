@@ -957,7 +957,7 @@
 					  /*
 					  	2021.11.30
 					  	coded by dgkim
-					  	영상녹화동의서 삭제되지 않은것과 저장 된것만 나오게끔 수정
+					  	영상녹화동의서 저장된것만 나오게끔 수정
 					  */
 					  AND F.FILE_NM IS NOT NULL
 					<isNotEmpty property="trgter_nm" >

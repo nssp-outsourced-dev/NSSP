@@ -2,6 +2,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 <%@ taglib prefix="ui" uri="http://egovframework.gov/ctl/ui"%>
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <head>
@@ -202,13 +203,26 @@ $(function() {
 			   //console.log('10분마다'); 10분 -> 1분으로 수정
 			   window.frames['Document_HwpCtrl'].HwpCtrl.SaveAs("${fileNm}.hwp", "HWP", "autosave:false", function (res) {
 					fnSaveHwp( res, true );
+					
+					selectDocHistList(res);//문서 저장 이력 갱신
 			   });
 			}, 60000);//600000 
 		
 		
 		$("#character_table_toolbar").hide();
 		$("#character_table_toggle").text("펼치기");
-		   
+		
+		/**/
+		$("#selDocHist").on("change", function(){
+			var file_nm = $("#selDocHist option:selected").val();
+			var doc_id = $("#selDocHist option:selected").attr("doc_id");
+			var pblicte_sn = $("#selDocHist option:selected").attr("pblicte_sn");
+			pHwpCtrl.Open(file_nm, "HWP", "", function (res) {
+				if(res.result) {}
+			}, {"UserData" : "testData"});
+			
+			
+		});
 	});
 	
 	$("#test_event").click(function(e){
@@ -223,6 +237,8 @@ $(function() {
 	$("#save_event").click(function(e){
 		window.frames['Document_HwpCtrl'].HwpCtrl.SaveAs("${fileNm}.hwp", "HWP", "autosave:false", function (res) {
 			fnSaveHwp( res, false );
+			
+			selectDocHistList(res);//문서 저장 이력 갱신
 		});
 		//document.frames['Document_HwpCtrl'].HwpCtrl.Clear(0);
 		//document.frames['Document_HwpCtrl'].HwpCtrl.Save ($("#filePath").val());
@@ -269,6 +285,25 @@ $(function() {
 		   document.body.removeChild( textArea );
 		}
 	
+	/*
+		21.12.20
+		coded by dgkim
+		해당 문서 저장이력을 조회한다.
+		저장된 문서가 사라지거나 제대로 저장 되지 않는 현상 보완
+	*/
+	function selectDocHistList(res){
+		
+		Ajax.getJson("/doc/selectDocHistListAjax/", res, function(data){
+			var htmlTxt = '<option selected>==최근저장이력==</option>';
+			
+			for(var i = 0; i < data.length; i++){
+				htmlTxt += '<option value="' + data[i].fullFilePath + '" doc_id="' + data[i].DOC_ID + '" pblicte_sn="' + data[i].PBLICTE_SN + '">' + data[i].WRITNG_DT + '</option>';
+				
+			}
+			
+			$("#selDocHist").html(htmlTxt);
+		});
+	}
 });
 
 </script>
@@ -296,7 +331,14 @@ $(function() {
 				<!--  -->
 				<div class="hwp_toolbar_title" style="border-color: #333; cursor: default;"><span id="saveTime">자동 저장 전</span></div>
 				
-				<div id="docTypeMode" class="hwp_toolbar_title" style="margin-left: 350px;">
+				<select size="1" class="w_200px input_com fl mt_5" id="selDocHist" check="text">
+					<option>==최근저장이력==</option>
+					<c:forEach var="item" items="${docHist}">
+						<option value="${item.fullFilePath}" doc_id="${item.DOC_ID}" pblicte_sn="${item.PBLICTE_SN}">${item.WRITNG_DT}</option>
+					</c:forEach>
+				</select>
+							
+				<div id="docTypeMode" class="hwp_toolbar_title" style="margin-left: 200px;"><!-- style="margin-left: 350px;" -->
 				</div>
 				
 <!-- 				<div id="docTypeMode" class="hwp_toolbar_title" style="margin-left: 350px;">

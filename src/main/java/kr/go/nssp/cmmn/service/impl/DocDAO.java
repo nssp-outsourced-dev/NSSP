@@ -121,5 +121,30 @@ public class DocDAO extends EgovComAbstractDAO {
 		if(o != null) m = (HashMap) o;
 		return m;
 	}
-
+	
+	/** 
+	 * @methodName : insertCmnDocHist
+	 * @date : 2021.11.17
+	 * @author : dgkim
+	 * @description : 
+	 * @param map
+	 * @return
+	 * @throws Exception
+	 */
+	public void insertCmnDocHist(HashMap map) throws Exception {
+		insert("doc.insertCmnDocHist", map);
+	}
+	
+	/** 
+	 * @methodName : selectDocHistList
+	 * @date : 2021.11.17
+	 * @author : dgkim
+	 * @description : 
+	 * @param map
+	 * @return
+	 * @throws Exception
+	 */
+	public List<HashMap> selectDocHistList(HashMap map) throws Exception {
+		return list("doc.selectDocHistList", map);
+	}
 }

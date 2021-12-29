@@ -125,24 +125,48 @@
 			if(items.CHK_TYPE == "FILE") {
 				fnDocFileDownload(items.DOC_ID, items.PBLICTE_SN);
 			} else {
-				<c:choose>
-					<c:when test="${owner eq 'Y'}">
-						if(items.DOC_YN == "Y"){
-							if(items.JSON_YN == "N" && items.INPUT_YN == "Y"){
-								//parent.fnReportInputIfr("${ifr_id}",items.DOC_ID, items.PBLICTE_SN);
-								parent.fnHwpctrl (items.DOC_ID, items.PBLICTE_SN, items.FORMAT_NM, "${ifr_id}");
+				if(items.FORMAT_ID == "00000000000000000021"){//영상녹화동의서일 경우 영상녹화시 필요적 고지사항 팝업 open
+					parent.btnInfoPop();
+					setTimeout(function(){
+						<c:choose>
+							<c:when test="${owner eq 'Y'}">
+								if(items.DOC_YN == "Y"){
+									if(items.JSON_YN == "N" && items.INPUT_YN == "Y"){
+										//parent.fnReportInputIfr("${ifr_id}",items.DOC_ID, items.PBLICTE_SN);
+										parent.fnHwpctrl (items.DOC_ID, items.PBLICTE_SN, items.FORMAT_NM, "${ifr_id}");
+									}else{
+										//parent.fnReportViewIfr("${ifr_id}",items.DOC_ID, items.PBLICTE_SN);
+										parent.fnHwpctrl (items.DOC_ID, items.PBLICTE_SN, items.FORMAT_NM, "${ifr_id}");
+									}
+								}else{
+									fnReportMake(items.FORMAT_ID, items.INPUT_YN);
+								}
+							</c:when>
+							<c:otherwise>
+								parent.fnReportViewIfr("${ifr_id}",items.DOC_ID, items.PBLICTE_SN);
+							</c:otherwise>
+						</c:choose>
+					}, 3000);
+				}else {
+					<c:choose>
+						<c:when test="${owner eq 'Y'}">
+							if(items.DOC_YN == "Y"){
+								if(items.JSON_YN == "N" && items.INPUT_YN == "Y"){
+									//parent.fnReportInputIfr("${ifr_id}",items.DOC_ID, items.PBLICTE_SN);
+									parent.fnHwpctrl (items.DOC_ID, items.PBLICTE_SN, items.FORMAT_NM, "${ifr_id}");
+								}else{
+									//parent.fnReportViewIfr("${ifr_id}",items.DOC_ID, items.PBLICTE_SN);
+									parent.fnHwpctrl (items.DOC_ID, items.PBLICTE_SN, items.FORMAT_NM, "${ifr_id}");
+								}
 							}else{
-								//parent.fnReportViewIfr("${ifr_id}",items.DOC_ID, items.PBLICTE_SN);
-								parent.fnHwpctrl (items.DOC_ID, items.PBLICTE_SN, items.FORMAT_NM, "${ifr_id}");
+								fnReportMake(items.FORMAT_ID, items.INPUT_YN);
 							}
-						}else{
-							fnReportMake(items.FORMAT_ID, items.INPUT_YN);
-						}
-					</c:when>
-					<c:otherwise>
-						parent.fnReportViewIfr("${ifr_id}",items.DOC_ID, items.PBLICTE_SN);
-					</c:otherwise>
-				</c:choose>
+						</c:when>
+						<c:otherwise>
+							parent.fnReportViewIfr("${ifr_id}",items.DOC_ID, items.PBLICTE_SN);
+						</c:otherwise>
+					</c:choose>
+				}
 			}
 		});
 		AUIGrid.bind(myGridID, "ready", function(event) {

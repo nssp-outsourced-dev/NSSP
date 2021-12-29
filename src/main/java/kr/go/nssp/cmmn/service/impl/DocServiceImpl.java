@@ -180,6 +180,9 @@ public class DocServiceImpl implements DocService {
 		String strPath = map.get("file_path")==null?"":map.get("file_path").toString();
 		strPath = strPath.substring(strPath.indexOf("get")+4);
 		map.put("file_path", strPath);
+		
+		docDAO.insertCmnDocHist(map);
+		
 		return docDAO.updateHwpctrlInfo(map);
 	}
 
@@ -207,5 +210,19 @@ public class DocServiceImpl implements DocService {
 		} else {
 			return 0;
 		}
+	}
+
+	/* (non-Javadoc)
+	 * @see kr.go.nssp.cmmn.service.DocService#selectDocHistList(java.util.HashMap)
+	 */
+	@Override
+	public List<HashMap> selectDocHistList(HashMap map) throws Exception {
+		List<HashMap> result = docDAO.selectDocHistList(map);
+		
+		for(HashMap item : result) {
+			item.put("fullFilePath", Utility.HWP_FILE_PATH + String.valueOf(item.get("FILE_PATH")));
+		}
+		
+		return result;
 	}
 }

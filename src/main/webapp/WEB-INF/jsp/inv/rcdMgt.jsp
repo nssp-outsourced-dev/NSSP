@@ -33,7 +33,7 @@
 	*/
 	#gridT1_wrap { height: 140px !important; }/* 사건목록 */
 	#gridT2_wrap { height: 492px !important; }/* 작성문서목록 */
-	.tb_01_h100 tr:last-child { height: 20px !important;}/* 범죄사실 */
+	.tb_01_h100 tr:last-child { height: 123px !important;}/* 범죄사실 */
 </style>
 <script type="text/javascript">
 	var docNo = "00445";	/*입건조서*/
@@ -698,7 +698,13 @@
 			</div>
 			<div class="right_btn fr">
 				<a href="javascript:fnRstPop();" class="btn_st2 icon_n fl mr_m1" style="display: none;" id = "btnRstPop">내사결과보고</a>
-				<a href="javascript:btnInfoPop();" class="btn_st2_2 icon_n fl">영상녹화시필요적고지사항</a>
+				<!-- 
+					2021.12.24
+					coded by dgkim
+					영상녹화동의서를 위한 별도 메뉴 생성으로 인한 주석처리
+					김지만 수사관 요청
+				 -->
+				<!-- <a href="javascript:btnInfoPop();" class="btn_st2_2 icon_n fl">영상녹화시필요적고지사항</a> -->
 				<a href="javascript:btnDtl();" class="btn_st2_2 icon_n fl mr_m1">사건상세보기</a>
 			</div>
 		</div>
@@ -726,7 +732,13 @@
 						<col width="" />
 					</colgroup>
 					<tbody>
-						<tr>
+						<!-- 
+							2021.12.24
+							coded by dgkim
+							영상녹화동의서를 위한 별도 메뉴 생성으로 인한 주석처리
+							김지만 수사관 요청
+						 -->
+						<!-- <tr>
 							<th> <a id="btnVdoRec" onclick="fnRecSave()" class="btn_st1 icon_n fl" style="width : 95px; padding: 0 0 0 0; text-align: center;" >영상녹화저장</a>
 							</th>
 							<th style="height: 30px;">영상녹화물<br/>관리자</th>
@@ -739,7 +751,7 @@
 									<input type="text" class="w_100p input_com calendar" id="txtVidoTrplantDe" disabled="disabled"  name="txtVidoTrplantDe" readonly="readonly" check="text" checkName="녹화일"/>
 								</div>
 							</td>
-						</tr>
+						</tr> -->
 						<tr>
 							<th rowspan="2">개인정보</th>
 							<th style="height: 30px;">성명</th>

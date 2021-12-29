@@ -751,7 +751,7 @@ public class DocController {
 					returnStr = "doc/hwpFmT";
 				}
 	    	}
-
+	    	
 	    	model.addAttribute("fileNm", Utility.nvl(rMap.get("FORMAT_NM")));
 	    	model.addAttribute("prDocId", doc_id);
 	    	model.addAttribute("prPblicteSn", pblicte_sn);
@@ -763,6 +763,9 @@ public class DocController {
 	    	if(null != docType && "R".equals(docType)) {
 	    		model.addAttribute("prDocType", docType);
 	    	}    	
+	    	//
+	    	model.addAttribute("docHist", docService.selectDocHistList(map));
+	    	//
 	    	/*System.out.println("fileNm >>> "+Utility.nvl(rMap.get("FORMAT_NM")));
 	    	System.out.println("prDocId >>> "+doc_id);
 	    	System.out.println("prPblicteSn >>> "+pblicte_sn);
@@ -1032,6 +1035,31 @@ public class DocController {
     	}
     	
 		return new ModelAndView("ajaxView", "ajaxData", cMap);
+	}
+	
+	
+	/** 
+	 * @methodName : selectDocHistListAjax
+	 * @date : 2021.11.17
+	 * @author : dgkim
+	 * @description : 
+	 * @param request
+	 * @param session
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping(value="/selectDocHistListAjax/")
+	public @ResponseBody ModelAndView selectDocHistListAjax(HttpServletRequest request, HttpSession session) throws Exception {
+		InvUtil commonUtil = InvUtil.getInstance();
+		String esntl_id = SimpleUtils.default_set(session.getAttribute("esntl_id").toString());
+		//String dept_cd = SimpleUtils.default_set(session.getAttribute("dept_cd").toString());
+		HashMap map = commonUtil.getParameterMapConvert(request);
+		map.put("esntl_id", esntl_id);
+		//map.put("dept_cd", dept_cd);
+		List<HashMap> result = docService.selectDocHistList(map);
+		//HashMap cMap = new HashMap();
+		//cMap.put("rst", value);
+		return new ModelAndView("ajaxView", "ajaxData", result);
 	}
 }
 

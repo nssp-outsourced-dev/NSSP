@@ -715,6 +715,15 @@ var targetGridId = "#grid_target_list";
 		case "liContextItem_F12": //압수물관리
 			location.href = "<c:url value='/inv/ccdrcManage/?hidRcNo="+rcNo+"&hidCaseNo="+caseNo+"'/>";
 			break;
+			/*
+				2021.12.24
+				coded by dgkim
+				영상녹화관리 메뉴 생성
+				김지만 수사관 요청
+			*/
+		case "liContextItem_F013": //영상녹화관리
+			location.href = "<c:url value='/inv/vidoTrplant/?hidRcNo="+rcNo+"&hidTrgterSn="+trgterSn+"'/>";
+			break;
 		case "liContextItem_FC01": //정식사건 수정
 			//location.href = "<c:url value='/rc/caseUpdateView/?rcNo="+rcNo+"&rcSeCd="+rcSeCd+"'/>";
 			fnCaseUpdatePopup( rcNo, rcSeCd, progrsSttusCd );
@@ -784,6 +793,22 @@ var targetGridId = "#grid_target_list";
 		case "liContextItem_IC31": //임시사건 사건변경요청
 			fnCaseConfmReqst( rcNo, rcSeCd, progrsSttusCd, "T", "02131", "01383", sanctnId, "R" );
 			break;
+			
+		/* 
+			2021.12.15
+			coded by dgkim
+			내사사건 접수후 사건번호가 생기지 않으면 정식사건 변경 요청가능하도록 수정
+			권종열 사무관 요청
+		*/
+		case "liContextItem_IC32": //정식사건 사건변경요청
+			if(fnIsEmpty(caseNo)){
+				fnCaseConfmReqst( rcNo, rcSeCd, progrsSttusCd, "F", "02131", "01383", sanctnId, "R" );
+			}else{
+				alert("사건번호가 존재합니다.(" + fnChangeNo(caseNo) + ") \n사건번호가 존재하는 경우 사건변경요청을 할수없습니다.");
+			}
+			
+			break;
+			
 		case "liContextItem_IC41": //사건 이송
 			fnCaseTrnsf( rcNo );
 			break;
@@ -1299,6 +1324,13 @@ var targetGridId = "#grid_target_list";
 	<li class="FT"></li>
 	<li id="liContextItem_F01"  class="F cssCtTxt" >출석요구</li>
 	<li id="liContextItem_F02"  class="F cssCtTxt" >조서관리</li>
+	<!-- 
+		2021.12.24
+		coded by dgkim
+		영상녹화관리 메뉴 생성
+		김지만 수사관 요청
+	 -->
+	<li id="liContextItem_F013"  class="F cssCtTxt" >영상녹화</li>
 	<li id="liContextItem_F03"  class="F cssCtTxt" >긴급체포</li>
 	<li id="liContextItem_F04"  class="F cssCtTxt" >현행범체포</li>
 	<li id="liContextItem_F05"  class="F cssCtTxt" >체포영장에의한 체포</li>
@@ -1327,6 +1359,14 @@ var targetGridId = "#grid_target_list";
 	<li id="liContextItem_IC22" class="IC cssCtTxt">내사사건 표지</li>
 	<li id="liContextItem_IC23" class="IC cssCtTxt">내사결과 보고</li>
 	<li id="liContextItem_IC31" class="IC cssCtTxt">임시사건 사건변경</li>
+	<!-- 
+		2021.12.15
+		coded by dgkim
+		내사사건 접수후 사건번호가 생기지 않으면 정식사건 변경 요청가능하도록 수정
+		권종열 사무관 요청
+	 -->
+	<li id="liContextItem_IC32" class="IC cssCtTxt">정식사건 사건변경</li>
+	
 	<li id="liContextItem_IC41" class="IC cssCtTxt">사건 이송</li>
 	<li class="I"></li>
 	<li id="liContextItem_I01"  class="I cssCtTxt" >출석요구관리</li>

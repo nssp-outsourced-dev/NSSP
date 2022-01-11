@@ -297,7 +297,7 @@ $(function() {
 			var htmlTxt = '<option selected>==최근저장이력==</option>';
 			
 			for(var i = 0; i < data.length; i++){
-				htmlTxt += '<option value="' + data[i].fullFilePath + '" doc_id="' + data[i].DOC_ID + '" pblicte_sn="' + data[i].PBLICTE_SN + '">' + data[i].WRITNG_DT + '</option>';
+				htmlTxt += '<option value="' + data[i].fullFilePath + '" doc_id="' + data[i].DOC_ID + '" pblicte_sn="' + data[i].PBLICTE_SN + '">' + data[i].WRITNG_DT + " (" + data[i].WRITNG_NM + ")" + '</option>';
 				
 			}
 			
@@ -320,27 +320,28 @@ $(function() {
 				<div class="hwp_toolbar_title" style="border-color: #333;">
 					<span id="down_event">다운로드</span>
 				</div>
-				<div class="hwp_toolbar_title" style="border-color: #333;">
-					<span id="character_table_event">사용자 정의 문자표 : <span id="character_table_toggle">펼치기</span></span>
-				</div>
+				
 				<!--
 				<div class="hwp_toolbar_title" style="border-color: #333;">
 					<span id="print_event">인쇄</span>
 				</div> 
 				-->
 				<!--  -->
+				
+							
+				<div id="docTypeMode" class="hwp_toolbar_title" style="margin: 0px 130px 0px 130px;"><!-- style="margin-left: 350px;" -->
+				</div>
+				<div class="hwp_toolbar_title" style="border-color: #333;">
+					<span id="character_table_event">사용자 정의 문자표 : <span id="character_table_toggle">펼치기</span></span>
+				</div>
 				<div class="hwp_toolbar_title" style="border-color: #333; cursor: default;"><span id="saveTime">자동 저장 전</span></div>
 				
 				<select size="1" class="w_200px input_com fl mt_5" id="selDocHist" check="text">
 					<option>==최근저장이력==</option>
 					<c:forEach var="item" items="${docHist}">
-						<option value="${item.fullFilePath}" doc_id="${item.DOC_ID}" pblicte_sn="${item.PBLICTE_SN}">${item.WRITNG_DT}</option>
+						<option value="${item.fullFilePath}" doc_id="${item.DOC_ID}" pblicte_sn="${item.PBLICTE_SN}">${item.WRITNG_DT} (${item.WRITNG_NM})</option>
 					</c:forEach>
 				</select>
-							
-				<div id="docTypeMode" class="hwp_toolbar_title" style="margin-left: 200px;"><!-- style="margin-left: 350px;" -->
-				</div>
-				
 <!-- 				<div id="docTypeMode" class="hwp_toolbar_title" style="margin-left: 350px;">
 				</div> -->
 				<!--

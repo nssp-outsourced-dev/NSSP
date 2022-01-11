@@ -212,6 +212,85 @@ public class RcdMgtController {
     	int value = rcdMgtService.saveVdoRec (map);
     	HashMap cMap = new HashMap();
     	cMap.put("rst", value);
+    	
+    	List<HashMap> list = rcdMgtService.selectVidoTrplant(map);
+    	cMap.put("list", commonUtil.getConvertUnderscoreNameGrid(list));
+    	
+    	HashMap detail = rcdMgtService.selectVidoTrplantDetail(map);
+    	cMap.put("rtnValue", commonUtil.getConvertUnderscoreName(detail));
+    	
         return new ModelAndView("ajaxView", "ajaxData", cMap);
     }
+	
+	/** 
+	 * @methodName : vidoTrplant
+	 * @date : 2021.12.20
+	 * @author : dgkim
+	 * @description : 
+	 * @param request
+	 * @param response
+	 * @param map
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping (value = "/vidoTrplant/")
+	public String  vidoTrplant (HttpServletRequest request, HttpServletResponse response, ModelMap map) throws Exception {
+		//대상자구분
+		HashMap cMap = new HashMap();
+		cMap.put("upper_cd", "00102");
+		map.addAttribute("trgterSeList", cdService.getCdList(cMap));
+		cMap.put("upper_cd", "00103");
+		map.addAttribute("atendNticeCd", cdService.getCdList(cMap));
+		map.put("hidRcNo", Utility.nvl(request.getParameter("hidRcNo")));
+		map.put("hidTrgterSn", Utility.nvl(request.getParameter("hidTrgterSn")));
+		map.put("hidLoginNm",  request.getSession().getAttribute("user_nm"));
+		
+		return "inv/vidoTrplant";
+	}
+	
+	/** 
+	 * @methodName : VidoTrplantAjax
+	 * @date : 2021.12.23
+	 * @author : dgkim
+	 * @description : 영상 녹화 동의서의 별도 메뉴 구현으로 인한 추가 
+	 * 					김지만 수사관 요청
+	 * @param request
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping (value = "/vidoTrplantAjax/")
+	public @ResponseBody List<HashMap> vidoTrplantAjax(HttpServletRequest request) throws Exception {
+		InvUtil commonUtil = InvUtil.getInstance();
+		Map map = commonUtil.getParameterMapConvert(request);
+		HttpSession session = request.getSession();
+		String esntl_id = SimpleUtils.default_set(session.getAttribute("esntl_id").toString());
+		String dept_cd = SimpleUtils.default_set(session.getAttribute("dept_cd").toString());
+		map.put("esntl_id", esntl_id);
+		map.put("dept_cd", dept_cd);
+		List<HashMap> list = (List<HashMap>) rcdMgtService.selectVidoTrplant(map);
+		list = commonUtil.getConvertUnderscoreNameGrid(list);
+		return list;
+	}
+	
+	/** 
+	 * @methodName : searchVidoTrplantDetailAjax
+	 * @date : 2021.12.23
+	 * @author : dgkim
+	 * @description : 영상 녹화 동의서의 별도 메뉴 구현으로 인한 상세 추가
+						김지만 수사관 요청
+	 * @param request
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping (value = "/searchVidoTrplantDetailAjax/")
+	public @ResponseBody ModelAndView searchVidoTrplantDetailAjax (HttpServletRequest request) throws Exception {
+		InvUtil commonUtil = InvUtil.getInstance();
+		Map map = commonUtil.getParameterMapConvert(request);
+		HashMap detail = rcdMgtService.selectVidoTrplantDetail(map);
+		detail = commonUtil.getConvertUnderscoreName(detail);
+		HashMap cMap = new HashMap();
+		cMap.put("detail", detail);
+		//cMap.put("docList", docList);
+		return new ModelAndView("ajaxView", "ajaxData", cMap);
+	}
 }

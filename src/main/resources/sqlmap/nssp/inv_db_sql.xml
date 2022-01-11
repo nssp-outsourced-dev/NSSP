@@ -440,14 +440,41 @@
 			,FN_RC_VIOLT_UPPER_NMS (B.RC_NO) AS VIOLT_NM
 			,NVL(NVL(NVL(DWLSIT_ADDR,WRC_ADDR),ADRES_ADDR),REGBS_ADDR) AS RCVER_ADDR
 			,NVL(NVL(NVL(DWLSIT_ZIP,WRC_ZIP),ADRES_ZIP),REGBS_ZIP) AS RCVER_ZIP
-			,C.VIDO_TRPLANT_CHARGER
-            ,TO_CHAR(TO_DATE(C.VIDO_TRPLANT_DE),'YYYY-MM-DD') AS VIDO_TRPLANT_DE
-            ,C.PBLICTE_SN
             ,B.RC_SE_CD
             ,B.PROGRS_STTUS_CD
             ,B.ITIV_NO
             ,B.TMPR_NO
             ,A.SORT_ORDR
+            /* 영상 녹화 */
+			, C.PBLICTE_SN --발행 일련번호
+			, C.IS_SUSPCT --피의자 여부
+			, DECODE(C.IS_SUSPCT, 'Y', '피의자', '참여자') AS SUSPCT_NM ----피의자 여부명
+			, C.EXMNR --조사자
+			, C.EXMNR_RSPOFC --조사자 직책 
+			, C.ATDRN --참여자
+			, C.ATDRN_RSPOFC --참여자 직책
+			, C.VIDO_TRPLANT_CHARGER --영상녹화물 관리자
+			, TO_CHAR(TO_DATE(C.VIDO_TRPLANT_DE), 'YYYY-MM-DD') AS VIDO_TRPLANT_DE --영상녹화일
+			, C.VIDO_TRPLANT_FACT --영상녹화 사실
+			, C.VIDO_TRPLANT_PLACE --영상녹화 장소
+			, C.DSCNTC_RESN --중단 사유
+			
+			, TO_CHAR(C.START_DT, 'YYYY-MM-DD') AS START_DT --시작 시각
+			, TO_CHAR(C.START_DT, 'HH24') AS START_DT2 --시작 시각1
+			, TO_CHAR(C.START_DT, 'MI') AS START_DT3 --시작 시각2
+			
+			, TO_CHAR(C.END_DT, 'YYYY-MM-DD') AS END_DT --중단 시각
+			, TO_CHAR(C.END_DT, 'HH24') AS END_DT2 --중단 시각1
+			, TO_CHAR(C.END_DT, 'MI') AS END_DT3 --중단 시각2
+			
+			, TO_CHAR(C.DSCNTC_DT, 'YYYY-MM-DD') AS DSCNTC_DT --중단 시각
+			, TO_CHAR(C.DSCNTC_DT, 'HH24') AS DSCNTC_DT2 --중단 시각1
+			, TO_CHAR(C.DSCNTC_DT, 'MI') AS DSCNTC_DT3 --중단 시각2
+			
+			, TO_CHAR(C.RESMPT_DT, 'YYYY-MM-DD') AS RESMPT_DT --재개 시각
+			, TO_CHAR(C.RESMPT_DT, 'HH24') AS RESMPT_DT2 --재개 시각1
+			, TO_CHAR(C.RESMPT_DT, 'MI') AS RESMPT_DT3 --재개 시각2
+			, C.VDO_ID
 			FROM RC_TMPR_TRGTER A
 			LEFT JOIN RC_TMPR  B ON A.RC_NO = B.RC_NO
 			LEFT JOIN VIDO_TRPLANT C ON A.DOC_ID = C.DOC_ID AND C.PBLICTE_SN = DECODE(REGEXP_INSTR(#pblicte_sn#, '[^0-9]'),0,#pblicte_sn#,0)
@@ -2735,18 +2762,91 @@
 
 	<insert id="saveVdoRec" parameterClass="java.util.HashMap">
 		MERGE INTO VIDO_TRPLANT A
-		USING DUAL
-		   ON (A.DOC_ID = #doc_id# AND A.PBLICTE_SN = TO_NUMBER(#pblicte_sn#))
-		 WHEN MATCHED THEN
-		      UPDATE SET VIDO_TRPLANT_CHARGER 	= #vido_trplant_charger#
-		               , VIDO_TRPLANT_DE 		= REPLACE(#vido_trplant_de#,'-','')
-		               , UPDT_ID 				= #esntl_id#
-		               , UPDT_DT 				= SYSDATE
-		 WHEN NOT MATCHED THEN
-		      INSERT (DOC_ID, PBLICTE_SN, VIDO_TRPLANT_CHARGER, VIDO_TRPLANT_DE, WRITNG_ID, WRITNG_DT)
-		      VALUES (#doc_id#, #pblicte_sn#,
-		      		  #vido_trplant_charger#, REPLACE(#vido_trplant_de#,'-',''),
-		      		  #esntl_id#, SYSDATE)
+		USING DUAL 
+			ON (A.RC_NO = #rc_no# AND A.TRGTER_SN = TO_NUMBER(#trgter_sn#) AND A.VDO_ID = TO_NUMBER(#vdo_id#))
+		WHEN MATCHED THEN
+			UPDATE SET VIDO_TRPLANT_CHARGER 	= #vido_trplant_charger#
+				, VIDO_TRPLANT_DE 		= REPLACE(#vido_trplant_de#,'-','')
+				, UPDT_ID 				= #esntl_id#
+				, UPDT_DT 				= SYSDATE
+				<!-- 
+					2021.12.23
+					coded by dgkim
+					영상 녹화 동의서의 별도 메뉴 구현으로 인한 칼럼 추가
+					김지만 수사관 요청
+				-->
+				, IS_SUSPCT = #is_suspct#
+				, EXMNR = #exmnr#
+				, EXMNR_RSPOFC = #exmnr_rspofc#
+				, ATDRN = #atdrn#
+				, ATDRN_RSPOFC = #atdrn_rspofc#
+				, VIDO_TRPLANT_FACT = #vido_trplant_fact#
+				, VIDO_TRPLANT_PLACE = #vido_trplant_place#
+				, DSCNTC_RESN = #dscntc_resn#
+				, DSCNTC_DT = TO_DATE(REPLACE(#dscntc_dt#, '-', '') || LPAD(#dscntc_dt2#, 2, '0') || LPAD(#dscntc_dt3#, 2, '0'), 'YYYYMMDDHH24MI')
+				, RESMPT_DT = TO_DATE(REPLACE(#resmpt_dt#, '-', '') || LPAD(#resmpt_dt2#, 2, '0') || LPAD(#resmpt_dt3#, 2, '0'), 'YYYYMMDDHH24MI')
+				, START_DT = TO_DATE(REPLACE(#start_dt#, '-', '') || LPAD(#start_dt2#, 2, '0') || LPAD(#start_dt3#, 2, '0'), 'YYYYMMDDHH24MI')
+				, END_DT = TO_DATE(REPLACE(#end_dt#, '-', '') || LPAD(#end_dt2#, 2, '0') || LPAD(#end_dt3#, 2, '0'), 'YYYYMMDDHH24MI')
+		WHEN NOT MATCHED THEN
+			INSERT (
+				DOC_ID
+				, PBLICTE_SN
+				, VIDO_TRPLANT_CHARGER
+				, VIDO_TRPLANT_DE
+				, WRITNG_ID
+				, WRITNG_DT
+				<!-- 
+					2021.12.23
+					coded by dgkim
+					영상 녹화 동의서의 별도 메뉴 구현으로 인한 칼럼 추가
+					김지만 수사관 요청
+				-->
+				, IS_SUSPCT
+				, EXMNR
+				, EXMNR_RSPOFC
+				, ATDRN
+				, ATDRN_RSPOFC
+				, VIDO_TRPLANT_FACT
+				, VIDO_TRPLANT_PLACE
+				, DSCNTC_RESN
+				, DSCNTC_DT
+				, RESMPT_DT
+				, START_DT
+				, END_DT
+				, VDO_ID
+				, RC_NO
+				, TRGTER_SN
+				, FILE_ID
+			) VALUES (
+				#doc_id#
+				, #pblicte_sn#
+				, #vido_trplant_charger#
+				, REPLACE(#vido_trplant_de#,'-','')
+				, #esntl_id#
+				, SYSDATE
+				<!-- 
+					2021.12.23
+					coded by dgkim
+					영상 녹화 동의서의 별도 메뉴 구현으로 인한 칼럼 추가
+					김지만 수사관 요청
+				-->
+				, #is_suspct#
+				, #exmnr#
+				, #exmnr_rspofc#
+				, #atdrn#
+				, #atdrn_rspofc#
+				, #vido_trplant_fact#
+				, #vido_trplant_place#
+				, #dscntc_resn#
+				, TO_DATE(REPLACE(#dscntc_dt#, '-', '') || LPAD(#dscntc_dt2#, 2, '0') || LPAD(#dscntc_dt3#, 2, '0'), 'YYYYMMDDHH24MI')
+				, TO_DATE(REPLACE(#resmpt_dt#, '-', '') || LPAD(#resmpt_dt2#, 2, '0') || LPAD(#resmpt_dt3#, 2, '0'), 'YYYYMMDDHH24MI')
+				, TO_DATE(REPLACE(#start_dt#, '-', '') || LPAD(#start_dt2#, 2, '0') || LPAD(#start_dt3#, 2, '0'), 'YYYYMMDDHH24MI')
+				, TO_DATE(REPLACE(#end_dt#, '-', '') || LPAD(#end_dt2#, 2, '0') || LPAD(#end_dt3#, 2, '0'), 'YYYYMMDDHH24MI')
+				, (SELECT NVL(MAX(VDO_ID), 0) + 1 FROM VIDO_TRPLANT)
+				, #rc_no#
+				, #trgter_sn#
+				, #file_id#
+			)
 	</insert>
 
 	<select id="selectStpDocChkAjax" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
@@ -2761,4 +2861,84 @@
         AND A.FORMAT_ID IN ( '00000000000000000179', '00000000000000000258' )
 	</select>
 
+	<!-- 
+		2021.12.23
+		coded by dgkim
+		영상 녹화 동의서의 별도 메뉴 구현으로 인한 조회 추가
+		김지만 수사관 요청
+	 -->
+	<select id="selectVidoTrplant" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		SELECT 
+			RTT.RC_NO --접수번호
+			, VT.DOC_ID --문서 ID
+			, VT.PBLICTE_SN --발행 일련번호
+			, ROWNUM AS RN --회차	
+			, RTT.TRGTER_NM --대상자명
+			, RTT.TRGTER_SN --대상자 일련번호
+			, VT.IS_SUSPCT --피의자 여부
+			, DECODE(VT.IS_SUSPCT, 'Y', '피의자', 'N', '참여자', '') AS SUSPCT_NM ----피의자 여부명
+			, DECODE(VT.EXMNR_RSPOFC, NULL, VT.EXMNR, VT.EXMNR || ' (' || VT.EXMNR_RSPOFC || ')') AS EXMNR --조사자 성명 및 직책
+			, DECODE(VT.ATDRN_RSPOFC, NULL, VT.ATDRN, VT.ATDRN || ' (' || VT.ATDRN_RSPOFC || ')') AS ATDRN --참여자 성명 및 직책
+			, VT.VIDO_TRPLANT_CHARGER --영상녹화물 관리자
+			, TO_CHAR(TO_DATE(VT.VIDO_TRPLANT_DE), 'YYYY-MM-DD') AS VIDO_TRPLANT_DE --영상녹화일
+			, VT.VDO_ID --영상녹화ID
+		FROM RC_TMPR_TRGTER RTT
+			LEFT JOIN VIDO_TRPLANT VT  
+			ON VT.RC_NO = RTT.RC_NO  AND VT.TRGTER_SN = RTT.TRGTER_SN
+		WHERE VT.RC_NO  = #rc_no# AND VT.TRGTER_SN = #trgter_sn#
+		ORDER BY VT.VDO_ID ASC
+	</select>
+	
+	<!-- 
+		2021.12.23
+		coded by dgkim
+		영상 녹화 동의서의 별도 메뉴 구현으로 인한 상세 추가
+		김지만 수사관 요청
+	 -->
+	<select id="selectVidoTrplantDetail" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		SELECT 
+			RTT.RC_NO --접수번호
+			, VT.DOC_ID --문서 ID
+			, VT.PBLICTE_SN --발행 일련번호
+			, ROWNUM AS RN --회차	
+			, RTT.TRGTER_NM --대상자명
+			, VT.TRGTER_SN --대상자 일련번호
+			, VT.IS_SUSPCT --피의자 여부
+			, DECODE(VT.IS_SUSPCT, 'Y', '피의자', '참여자') AS SUSPCT_NM ----피의자 여부명
+			, VT.EXMNR --조사자
+			, VT.EXMNR_RSPOFC --조사자 직책 
+			, VT.ATDRN --참여자
+			, VT.ATDRN_RSPOFC --참여자 직책
+			, VT.VIDO_TRPLANT_CHARGER --영상녹화물 관리자
+			, TO_CHAR(TO_DATE(VT.VIDO_TRPLANT_DE), 'YYYY-MM-DD') AS VIDO_TRPLANT_DE --영상녹화일
+			, VT.VIDO_TRPLANT_FACT --영상녹화 사실
+			, VT.VIDO_TRPLANT_PLACE --영상녹화 장소
+			, VT.DSCNTC_RESN --중단 사유
+			
+			, TO_CHAR(VT.START_DT, 'YYYY-MM-DD') AS START_DT --시작 시각
+			, TO_CHAR(VT.START_DT, 'HH24') AS START_DT2 --시작 시각1
+			, TO_CHAR(VT.START_DT, 'MI') AS START_DT3 --시작 시각2
+			
+			, TO_CHAR(VT.END_DT, 'YYYY-MM-DD') AS END_DT --중단 시각
+			, TO_CHAR(VT.END_DT, 'HH24') AS END_DT2 --중단 시각1
+			, TO_CHAR(VT.END_DT, 'MI') AS END_DT3 --중단 시각2
+			
+			, TO_CHAR(VT.DSCNTC_DT, 'YYYY-MM-DD') AS DSCNTC_DT --중단 시각
+			, TO_CHAR(VT.DSCNTC_DT, 'HH24') AS DSCNTC_DT2 --중단 시각1
+			, TO_CHAR(VT.DSCNTC_DT, 'MI') AS DSCNTC_DT3 --중단 시각2
+			
+			, TO_CHAR(VT.RESMPT_DT, 'YYYY-MM-DD') AS RESMPT_DT --재개 시각
+			, TO_CHAR(VT.RESMPT_DT, 'HH24') AS RESMPT_DT1 --재개 시각1
+			, TO_CHAR(VT.RESMPT_DT, 'MI') AS RESMPT_DT1 --재개 시각2
+			, VT.RC_NO
+			, VT.VDO_ID
+		FROM VIDO_TRPLANT VT
+			INNER JOIN RC_TMPR_TRGTER RTT 
+			ON VT.RC_NO = RTT.RC_NO  AND VT.TRGTER_SN = RTT.TRGTER_SN
+		WHERE VT.VDO_ID = #vdo_id#
+			<!-- RTT.RC_NO  = #rc_no# 
+			AND RTT.TRGTER_SN = #trgter_sn#
+			AND VT.DOC_ID = #doc_id#
+			AND VT.PBLICTE_SN = #pblicte_sn# -->
+	</select>
 </sqlMap>

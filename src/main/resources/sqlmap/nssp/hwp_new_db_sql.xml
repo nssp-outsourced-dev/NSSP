@@ -1460,4 +1460,24 @@
 		)
 	]]>
 	</select>
+	
+	<!-- 영상녹화 > 수사보고서 -->
+	<select id="selectHwp00000000000000000458" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		SELECT
+			FN_OZ_DATE(TO_CHAR(SYSDATE,'YYYYMMDD'),'') S_DATE, /* 2021-05-11 hsno  작성 일자로 변경*/
+			A.WRITNG_NM,
+			A.CHARGER_NM
+			/*, A.S_DATE -- 승인 일자로 수정 by dgkim*/
+		FROM (
+				SELECT
+					FN_USER_NM(NVL(A.WRITNG_ID, B.WRITNG_ID)) AS WRITNG_NM
+					, FN_CHARGER_NM(FN_USER_NM(A.CHARGER_ID)) AS CHARGER_NM --담당자로 변경 by dgkim
+					/*, TO_CHAR(NVL2(A.PRSCT_DE, TO_DATE(A.PRSCT_DE, 'YYYY-MM-DD'), SYSDATE), 'YYYY.fmMM.DD') AS S_DATE -- 승인 일자로 수정 by dgkim*/
+				FROM RC_TMPR A
+				LEFT JOIN RC_TMPR_TRGTER B ON A.RC_NO = B.RC_NO AND B.TRGTER_SN = #P_TRGTER_SN#
+				WHERE A.RC_NO   = #P_RC_NO#
+					AND A.USE_YN != 'N'
+			) A
+		RIGHT JOIN DUAL D ON 1=1
+	</select>
 </sqlMap>

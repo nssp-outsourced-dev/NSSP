@@ -32,17 +32,29 @@
 		권종열 사무관 요청
 	*/
 	#gridT1_wrap { height: 140px !important; }/* 사건목록 */
-	#gridT2_wrap { height: 492px !important; }/* 작성문서목록 */
-	.tb_01_h100 tr:last-child { height: 123px !important;}/* 범죄사실 */
+	#gridT2_wrap { height: 503px !important; }/* 작성문서목록 */
+	/* .tb_01_h100 tr:last-child { height: 123px !important;} 범죄사실 */
+	.tb_01_h100 tr:last-child { height: 20px !important;}/* 범죄사실 */
+	#ifrReport { height: 160px !important; }/* 작성문서목록 */
+	
+	/* 영상녹화시필요적고지사항 버튼 */
+	#popupBtn { float: right; background-color: red; color: white; }
+	#popupBtn:hover { background-color: darkred; }
 </style>
 <script type="text/javascript">
 	var docNo = "00445";	/*입건조서*/
+	var docNo2 = "02168";  /* 영상녹화 */
 	var nowBodyMenuVisible = false;
 	$(function() {
+		fnDatePickerImg("txtStartDt",null,false);
+		fnDatePickerImg("txtEndDt",null,false);
+		fnDatePickerImg("txtDscntcDt",null,false);
+		fnDatePickerImg("txtResmptDt",null,false);
 		fnDatePickerImg("txtVidoTrplantDe",null,false);
 		fnSendKey ('${hidRcNo}', '${hidTrgterSn}');
 		fnTopLst ();
 		initGrid ();
+		fnDoc ("","","");
 		$("#searchFormatClCd").val(docNo);
 
 		$(document).on("click", function(event) {
@@ -53,6 +65,11 @@
 		});
 
 	});
+	
+	function fnDoc (pDocId, pParam, pFileId) {
+		fnReportList('ifrReport',pDocId,docNo2,pParam, pFileId);
+	}
+	
 	function fnTopLst () {
 		$("#show").click(function(){
 	        $("#showinbox").show();
@@ -352,7 +369,12 @@
 	}
 	function fnDetail(items) {
 		var processAfterGet2 = function(data) {
-			fn_form_bind ("dtltgForm",data);
+			if(items.grdTrgterSn == 0){
+				$('#dtltgForm').clearForm(["hidRcNo","hidTrgterSn"]);
+			}else{
+				fn_form_bind ("dtltgForm",data);//console.log(data);
+			}
+			
 			$("#hidPblicteSn").val(items.grdPblicteSn); /*영상녹화 정보 저장을 위함*/
 			$("#hidFormatId").val(items.grdFormatId);
 
@@ -364,15 +386,18 @@
 				else $("#btnRstPop").text ("내사사건결과보고");
 			}
 			//영상녹화
-			if(!fnIsEmpty(items.grdFormatId) && parseInt(items.grdFormatId) == 21) {
+			/* if(!fnIsEmpty(items.grdFormatId) && parseInt(items.grdFormatId) == 21) {
 				$("#txtVidoTrplantCharger").prop("readonly", false);
 				$("#txtVidoTrplantDe").prop("disabled", false);
 			} else {
 				$("#txtVidoTrplantCharger").prop("readonly", true);
 				$("#txtVidoTrplantDe").prop("disabled", true);
-			}
+			} */
 		}
 		Ajax.getJson("<c:url value='/inv/rmTrgterListAjax/'/>", "grdRcNo="+items.grdRcNo+"&grdTrgterSn="+items.grdTrgterSn+"&grdPblicteSn="+items.grdPblicteSn, processAfterGet2);
+		
+		//문서조회
+		fnDoc(items.grdDocId,"P_RC_NO="+items.grdRcNo+"&P_TRGTER_SN="+items.grdTrgterSn+"&P_VDO_ID="+items.grdVdoId, items.grdFileId);
 	}
 	function fnReportMake (formatId, inputYn, docId, target ){
 		if(!fnIsEmpty(docId) && docId.length != 20){
@@ -559,7 +584,8 @@
 			alert("파일을 첨부할 대상자를 선택하여 주십시오.");
 			return;
 		}		
-		var formatId = $("#selReportAdd").val();	
+		//get방식으로 특수문자 막쓰면 오류난다
+		var formatId = $("#selReportAdd").val().replace("^", ".");
 		var docFpopup = btnDocFilePop(docNo,selFId,formatId);
 		docFpopup.controls.onclick=function(){
 			$("#searchRcNo").val($("#dtltgForm").find("#hidRcNo").val());
@@ -594,11 +620,11 @@
 		}
 	}
 	function fnRecSave () {
-		var strFormatId = $("#hidFormatId").val();
+		/* var strFormatId = $("#hidFormatId").val();
 		if(fnIsEmpty(strFormatId) || parseInt(strFormatId) != 21) {
 			alert("좌측 목록에서 해당되는 영상녹화 문서를 선택 후 영상녹화 정보를 저장하여 주십시오.");
 			return;
-		}
+		} */
 		var strDocNo = $("#hidDocId").val();
 		var strPblicteSn = $("#hidPblicteSn").val();
 		if(fnIsEmpty(strDocNo) || fnIsEmpty(strPblicteSn)) {
@@ -608,7 +634,7 @@
 		if(fnFormValueCheck("dtltgForm")){
 			var processAfterGet = function(data) {
 				if(!fnIsEmpty(data.rst) && parseInt(data.rst) > 0) {
-					alert("영상녹화 정보가 되었습니다.");
+					alert("영상녹화 정보가 저장 되었습니다.");
 				}
 			}
 			var param = $('#dtltgForm').serialize();
@@ -674,8 +700,10 @@
 				<a href="javascript:fnTree(2)" class="fr" style="width: 25px; font-size: 20px;">－</a>
 				<a href="javascript:fnTree(1)" class="fr" style="width: 25px; font-size: 20px;">＋</a>
 			</div>
+			
 			<div class="fr" style="width: calc(100% - 300px)">
 				<div class="right_btn fr" style="width : 100%">
+					<a href="javascript:btnDtl();" class="btn_st2_2 icon_n fl mr_m1" style="float: right;">사건상세보기</a>
 					<a href="javascript:fnFilePop()" class="btn_st2 icon_n fr mr_m1">파일관리</a>
 					<a href="javascript:fnReportAdd()" class="btn_st2 icon_n fr mr_m1">추가</a>
 					<select name="selReportAdd" id="selReportAdd" class="w_200px h_32px" style="float: right;">
@@ -684,7 +712,7 @@
 							<option value="${result.FORMAT_ID}^${result.INPUT_YN}">${result.FORMAT_NM}</option>
 						</c:forEach>
 					</select>
-				</div>
+				</div>	
 			</div>
 		</div>
 		<div class="com_box mb_10">
@@ -692,10 +720,10 @@
 		</div>
 	</div>
 	<div class="box_w2_2b">
-		<div class="com_box" style="margin-bottom: 7px;">
-			<div class="title_s_st2 fl" style="width: 100px;">
+		<div class="com_box" style="margin-bottom: 0px;">
+			<!-- <div class="title_s_st2 fl" style="width: 100px;">
 				<img src="/img/title_icon1.png" alt="" />대상자정보
-			</div>
+			</div> -->
 			<div class="right_btn fr">
 				<a href="javascript:fnRstPop();" class="btn_st2 icon_n fl mr_m1" style="display: none;" id = "btnRstPop">내사결과보고</a>
 				<!-- 
@@ -703,11 +731,19 @@
 					coded by dgkim
 					영상녹화동의서를 위한 별도 메뉴 생성으로 인한 주석처리
 					김지만 수사관 요청
+					
+					2021.12.29
+					edit by dgkim
+					원래대로 되돌리기
+					권종열 사무관 요청
 				 -->
 				<!-- <a href="javascript:btnInfoPop();" class="btn_st2_2 icon_n fl">영상녹화시필요적고지사항</a> -->
-				<a href="javascript:btnDtl();" class="btn_st2_2 icon_n fl mr_m1">사건상세보기</a>
+				<!-- <a href="javascript:btnDtl();" class="btn_st2_2 icon_n fl mr_m1">사건상세보기</a> -->
 			</div>
 		</div>
+		
+		<iframe name="ifrReport" id="ifrReport" scrolling="no" frameborder="0" width="100%;" height="330px"></iframe>
+		
 		<!--테이블 시작 -->
 		<form id="dtltgForm">
 		<input type="hidden" id="hidRcSeCd" name="hidRcSeCd"/>	<!-- 사건구분 -->
@@ -720,15 +756,19 @@
 		<input type="hidden" id="hidProgrsSttusCd" name="hidProgrsSttusCd"/>
 		<input type="hidden" id="hidItivNo" name="hidItivNo"/>
 		<input type="hidden" id="hidTmprNo" name="hidTmprNo"/>
+		<!--  -->
+		<input type="hidden" id="hidVdoId" name="hidVdoId"/>
+		
 		<div class="com_box mb_20">
 			<div class="tb_01_box">
 				<table class="tb_01_h100">
 					<caption>대상자상세보기</caption>
 					<colgroup>
-						<col width="100px" />
-						<col width="100px" />
+						<col width="130px" />
 						<col width="" />
-						<col width="100px" />
+						<col width="" />
+						<col width="130px" />
+						<col width="" />
 						<col width="" />
 					</colgroup>
 					<tbody>
@@ -737,22 +777,112 @@
 							coded by dgkim
 							영상녹화동의서를 위한 별도 메뉴 생성으로 인한 주석처리
 							김지만 수사관 요청
+							
+							2021.12.29
+							edit by dgkim
+							원래대로 되돌리기
+							권종열 사무관 요청
 						 -->
-						<!-- <tr>
-							<th> <a id="btnVdoRec" onclick="fnRecSave()" class="btn_st1 icon_n fl" style="width : 95px; padding: 0 0 0 0; text-align: center;" >영상녹화저장</a>
+						<!--  -->
+						<tr class="h_40px">
+							<th>피의자 여부<img src="/img/point.png"></th>
+							<td colspan="5">
+								<div class='input_radio2 t_left'>
+									<input class="to-labelauty-icon" type="radio" name="rdoIsSuspct" value="Y" check="radio" checkName="피의자 여부" />피의자
+								</div>
+								<div class='input_radio2 t_left'>
+									<input class="to-labelauty-icon" type="radio" name="rdoIsSuspct" value="N" check="radio" checkName="피의자 여부" />참여자
+								</div>
+								
+								<a href="javascript:btnInfoPop();" class="btn_st2_2 icon_n fl" id="popupBtn">영상녹화시필요적고지사항</a>
+							</td>
+							
+						</tr>
+						<tr>
+							<th>조사자<img src="/img/point.png"></th>
+							<td colspan="2"><input type="text" id="txtExmnr" name="txtExmnr" class="w_150px input_com" check="text" checkName="조사자"></td>
+							<th>직책</th>
+							<td colspan="2"><input type="text" id="txtExmnrRspofc" name="txtExmnrRspofc" class="w_150px input_com"></td>
+						</tr>
+						<tr>
+							<th>참여자<img src="/img/point.png"></th>
+							<td colspan="2"><input type="text" id="txtAtdrn" name="txtAtdrn" class="w_150px input_com" check="text" checkName="참여자"></td>
+							<th>직책</th>
+							<td colspan="2"><input type="text" id="txtAtdrnRspofc" name="txtAtdrnRspofc" class="w_150px input_com"></td>
+						</tr>
+						
+						<tr>
+							<th>영상녹화 사실</th>
+							<td colspan="5"><input type="text" id="txtVidoTrplantFact" name="txtVidoTrplantFact" class="input_com mr_5" style="width: 100%;" /></td>
+						</tr>
+						<tr>
+							<th>영상녹화 장소</th>
+							<td colspan="5"><input type="text" id="txtVidoTrplantPlace" name="txtVidoTrplantPlace" class="w_250px input_com" style="width: 100%;" /></td>
+						</tr>
+						<tr>
+							<th>시작 시각</th>
+							<td colspan="2">
+								<div class="calendar_box mr_5 fl" style="width: 130px">
+									<input type="text" class="w_100p input_com calendar" id="txtStartDt"  name="txtStartDt" readonly="readonly">
+								</div>
+								<div class="fl">
+									<input type="text" id="txtStartDt2" name="txtStartDt2" class="input_com" onkeyup="fnHHMMChk(event,'HH')" maxlength="2" style="width: 40px;" />:
+									<input type="text" id="txtStartDt3" name="txtStartDt3" class="input_com" onkeyup="fnHHMMChk(event,'MM')" maxlength="2" style="width: 40px;" />
+								</div>
+							</td>
+							<th>종료 시각</th>
+							<td colspan="2">
+								<div class="calendar_box mr_5 fl" style="width: 130px">
+									<input type="text" class="w_100p input_com calendar" id="txtEndDt"  name="txtEndDt" readonly="readonly">
+								</div>
+								<div class="fl">
+									<input type="text" id="txtEndDt2" name="txtEndDt2" class="input_com" onkeyup="fnHHMMChk(event,'HH')" maxlength="2" style="width: 40px;" />:
+									<input type="text" id="txtEndDt3" name="txtEndDt3" class="input_com" onkeyup="fnHHMMChk(event,'MM')" maxlength="2" style="width: 40px;" />
+								</div>
+							</td>
+						</tr>
+						
+						<tr>
+							<th>중단 이유</th>
+							<td colspan="5"><input type="text" id="txtDscntcResn" name="txtDscntcResn" class="input_com mr_5" style="width: 100%;" /></td>
+						</tr>
+						<tr>
+							<th>중단 시각</th>
+							<td colspan="2">
+								<div class="calendar_box mr_5 fl" style="width: 130px">
+									<input type="text" class="w_100p input_com calendar" id="txtDscntcDt"  name="txtDscntcDt" readonly="readonly">
+								</div>
+								<div class="fl">
+									<input type="text" id="txtDscntcDt2" name="txtDscntcDt2" class="input_com" onkeyup="fnHHMMChk(event,'HH')" maxlength="2" style="width: 40px;" />:
+									<input type="text" id="txtDscntcDt3" name="txtDscntcDt3" class="input_com" onkeyup="fnHHMMChk(event,'MM')" maxlength="2" style="width: 40px;" />
+								</div>
+							</td>
+							<th>재개 시각</th>
+							<td colspan="2">
+								<div class="calendar_box mr_5 fl" style="width: 130px">
+									<input type="text" class="w_100p input_com calendar" id="txtResmptDt"  name="txtResmptDt" readonly="readonly">
+								</div>
+								<div class="fl">
+									<input type="text" id="txtResmptDt2" name="txtResmptDt2" class="input_com" onkeyup="fnHHMMChk(event,'HH')" maxlength="2" style="width: 40px;" />:
+									<input type="text" id="txtResmptDt3" name="txtResmptDt3" class="input_com" onkeyup="fnHHMMChk(event,'MM')" maxlength="2" style="width: 40px;" />
+								</div>
+							</td>
+						</tr>
+						<tr>
 							</th>
 							<th style="height: 30px;">영상녹화물<br/>관리자</th>
-							<td>
-								<input type="text" name="txtVidoTrplantCharger" id="txtVidoTrplantCharger" readonly="readonly" class="w_120px input_com" maxlength="20" check="text" checkName="녹화담당자"/>
+							<td colspan="2">
+								<input type="text" name="txtVidoTrplantCharger" id="txtVidoTrplantCharger" class="w_120px input_com" maxlength="20" check="text" checkName="녹화담당자"/>
 							</td>
 							<th>영상<br/>녹화일</th>
 							<td>
 								<div class="calendar_box mr_5 fl" style="width: 130px">
-									<input type="text" class="w_100p input_com calendar" id="txtVidoTrplantDe" disabled="disabled"  name="txtVidoTrplantDe" readonly="readonly" check="text" checkName="녹화일"/>
+									<input type="text" class="w_100p input_com calendar" id="txtVidoTrplantDe" name="txtVidoTrplantDe" readonly="readonly" check="text" checkName="녹화일"/>
 								</div>
 							</td>
-						</tr> -->
-						<tr>
+							<th><a id="btnVdoRec" onclick="fnRecSave()" class="btn_st2 icon_n fr mr_m1">저장</a></th>
+						</tr>
+						<!-- <tr>
 							<th rowspan="2">개인정보</th>
 							<th style="height: 30px;">성명</th>
 							<td>
@@ -826,7 +956,7 @@
 							<td colspan="3">
 								<textarea disabled="disabled" id="txtCrmnlFact" name="txtCaseSumry"></textarea>
 							</td>
-						</tr>
+						</tr> -->
 					</tbody>
 				</table>
 			</div>

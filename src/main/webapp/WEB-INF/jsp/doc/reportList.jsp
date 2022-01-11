@@ -120,6 +120,13 @@
 		};
 		myGridID = AUIGrid.create("#grid_list", columnLayout, gridPros);
 
+		AUIGrid.bind("#grid_list", "cellClick", function(event) {
+			var items = event.item;
+			if(parent.document.getElementById("hidVdoId")){//영상녹화 전용
+				parent.document.getElementById("hidPblicteSn").value = items.PBLICTE_SN;
+			}
+		});
+		
 		AUIGrid.bind("#grid_list", "cellDoubleClick", function(event) {
 			var items = event.item;
 			if(items.CHK_TYPE == "FILE") {

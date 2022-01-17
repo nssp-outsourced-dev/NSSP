@@ -151,6 +151,9 @@
 		     , X.JUDMN_DE           --판결처분일
 		     , X.JUDMN_OUTLINE      --판결요지 
 		     , X.RM                 --비고
+		     , X.OCCRRNC_ZERO_NO --발생 원표 번호
+	  		 , X.ARREST_ZERO_NO --검거 원표 번호
+     		 , X.SUSPCT_ZERO_NO --피의자 원표 번호
 		FROM
 		(
 			SELECT A.*,
@@ -230,7 +233,15 @@
 			  , TS.JUDMN_DE           --판결처분일
 			  , TS.JUDMN_OUTLINE      --판결요지 
 			  , TS.RM                 --비고
-				/*NVL((SELECT MAX(TC.TRN_DE) FROM TRN_CASE TC WHERE TC.RC_NO = RT.RC_NO AND TC.USE_YN = 'Y'),'') AS TRN_DE,*/            
+				/*NVL((SELECT MAX(TC.TRN_DE) FROM TRN_CASE TC WHERE TC.RC_NO = RT.RC_NO AND TC.USE_YN = 'Y'),'') AS TRN_DE,*/
+			  /* 
+			  	2022.01.14
+			  	범죄사건부에 발생사건표, 검거사건표, 피의자표 추가
+			  	김지만 수사관 요청
+			  */
+			  , TC.OCCRRNC_ZERO_NO --발생 원표 번호
+	  		  , TC.ARREST_ZERO_NO --검거 원표 번호
+     		  , TS.SUSPCT_ZERO_NO --피의자 원표 번호            
 				FROM RC_TMPR RT
 				INNER JOIN RC_TMPR_TRGTER RTT ON RT.RC_NO = RTT.RC_NO AND RTT.USE_YN = 'Y' AND RTT.TRGTER_SE_CD = '00697'
 				LEFT OUTER JOIN TRN_SUSPCT TS ON TS.RC_NO = RTT.RC_NO AND TS.TRGTER_SN = RTT.TRGTER_SN AND TS.USE_YN = 'Y'
@@ -1008,7 +1019,7 @@
 					SELECT
 						C.RC_NO --접수번호
 						, FN_CNVR_NO(A.PRMISN_PROGRS_NO) AS PRMISN_PROGRS_NO --허가서 번호
-						, B.TRGTER_NM --통지 대상자 성명
+						, B.TRGTER_NM --대상자성명
 						, FN_CD_NM(UR.CLSF_CD) || ' / ' || FN_USER_NM(C.CHARGER_ID) AS CHARGER_NM --집행자의 직급 및 성명
 						, FN_CNVR_NO(C.CASE_NO) AS CASE_NO --사건번호
 						, TO_CHAR(A.EXCUT_DT, 'YYYY-MM-DD HH24:MI') || ' / ' || FN_CD_NM(A.REQST_RESULT_CD) AS REQST_RESULT_NM --처리일자 및 처리결과

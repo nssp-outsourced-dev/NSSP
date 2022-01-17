@@ -64,7 +64,10 @@
 				}, {
 					headerText : "담당자", dataField : "CHARGER_NM", width : 100
 				}, {
-					headerText : "증거품", dataField : "EVDENC_DC", width : 150
+					headerText : "증거품", dataField : "EVDENC_DC", width : 150,
+					labelFunction : function (rowIndex, columnIndex, value, headerText, item ) {
+						return "없음";
+					}
 				}, {
 					headerText : "구속여부", dataField : "IMPR_STTUS_NM"	, width : 100
 				}]
@@ -72,13 +75,13 @@
 				headerText : "검찰",
 				dataField : "TITLE_2", // 그룹 헤더의 dataField 는 무의미 하지만, 칼럼 속성 변경 시 접근자로  사용하기 위해 임의 지정함.(중복되지 않게 임의 지정하세요.)
 				children :  [{
-					headerText : "수리일자", dataField : "", width : 100
+					headerText : "수리일자", dataField : "TRN_DE", width : 120, dataType : "date", formatString : "yyyy-mm-dd"
 				}, {
 					headerText : "수리자(직급,성명,날인)", dataField : "", width : 200
 				}]
 			},
 			{
-				headerText : "송치의견", dataField : "TRN_OPINION_NM"	, width : 150
+				headerText : "송치의견", dataField : "TEMP"	, width : 150
 			} 
 		];
 

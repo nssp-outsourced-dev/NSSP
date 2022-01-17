@@ -196,6 +196,12 @@
 				  FROM RC_TMPR A
 				     , CMN_USER B
 				 WHERE A.USE_YN = 'Y'
+				 	/*
+				 		2022.01.14
+				 		사건인계에서 송치종결인것은 인계대상이 아니기에 제거
+				 		권종열 사무관 요청
+				 	*/
+				 	AND A.PROGRS_STTUS_CD != '02123' --송치 종결
 				<isEqual property="coldCase" compareValue="Y">
 		  		   AND A.PROGRS_STTUS_CD IN ('02103','02121','02122','02131','02132','02141','02143') 	--미제사건 
 	 	        </isEqual>

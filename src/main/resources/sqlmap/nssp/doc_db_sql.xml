@@ -705,7 +705,7 @@
 			, #pblicte_sn#
 			, #file_path#
 			, #esntl_id#
-			, SYSDATE
+			, SYSDATE + (INTERVAL '22' MINUTE)
 		)
 	</insert>
 	
@@ -716,26 +716,23 @@
 		저장된 문서가 사라지거나 제대로 저장 되지 않는 현상 보완
 	 -->
 	<select id="selectDocHistList" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
-		SELECT X.*
+		SELECT
+		        A.*
 		FROM (
-			SELECT A.*, DENSE_RANK() OVER (ORDER BY A.WRITNG_DT DESC) AS RN
-			FROM
-			(
-				SELECT 
-					cdh.DOC_ID
-					, cdh.PBLICTE_SN
-					, cdh.FILE_PATH
-					, cdh.WRITNG_ID
-					, to_char(cdh.WRITNG_DT, 'yyyy-mm-dd hh24:mi') AS WRITNG_DT
-					, (SELECT FORMAT_ID FROM CMN_DOC_PBLICTE WHERE DOC_ID = cdh.DOC_ID AND PBLICTE_SN = cdh.PBLICTE_SN) AS FORMAT_ID
-					, (SELECT USER_NM FROM CMN_USER WHERE ESNTL_ID = cdh.WRITNG_ID) AS WRITNG_NM
-				FROM CMN_DOC_HIST cdh
-				WHERE cdh.DOC_ID = #doc_id#
-					AND cdh.PBLICTE_SN = #pblicte_sn#
-			) A
-		) X
-		WHERE (RN <![CDATA[ > ]]> 0 AND RN <![CDATA[ <= ]]> 5)
-		ORDER BY RN ASC
+			SELECT 
+				cdh.DOC_ID
+				, cdh.PBLICTE_SN
+				, cdh.FILE_PATH
+				, cdh.WRITNG_ID
+				, to_char(cdh.WRITNG_DT, 'yyyy-mm-dd hh24:mi') AS WRITNG_DT
+				, (SELECT FORMAT_ID FROM CMN_DOC_PBLICTE WHERE DOC_ID = cdh.DOC_ID AND PBLICTE_SN = cdh.PBLICTE_SN) AS FORMAT_ID
+				, (SELECT USER_NM FROM CMN_USER WHERE ESNTL_ID = cdh.WRITNG_ID) AS WRITNG_NM
+			FROM CMN_DOC_HIST cdh
+			WHERE cdh.DOC_ID = #doc_id#
+				AND cdh.PBLICTE_SN = #pblicte_sn#
+				AND cdh.WRITNG_ID != 'GNRL0000000000000163' --test data 제거
+			ORDER BY cdh.WRITNG_DT DESC
+		) A
+		AND ROWNUM <![CDATA[ <= ]]> 15
 	</select>
-
 </sqlMap>

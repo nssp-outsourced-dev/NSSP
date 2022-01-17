@@ -132,9 +132,9 @@
 			{ dataField : "RM", headerText : "비고<span class='point'><img src='/img/icon_dot.png'/></span>", width : 100, editable : true },
 			{ headerText : "범죄원표",
 				children: [
-					{ dataField :  "TEMP8", headerText : "발생사건표", width : 100, editable : false },
-					{ dataField :  "TEMP9", headerText : "검거사건표", width : 100, editable : false },
-					{ dataField : "TEMP10", headerText :  "피의자표",  width : 100, editable : false }
+					{ dataField :  "OCCRRNC_ZERO_NO", headerText : "발생사건표", width : 100, cellMerge : true, mergePolicy:"restrict", mergeRef: "CASE_NO", editable : false },
+					{ dataField :  "ARREST_ZERO_NO", headerText : "검거사건표", width : 100, cellMerge : true, mergePolicy:"restrict", mergeRef: "CASE_NO", editable : false },
+					{ dataField : "SUSPCT_ZERO_NO", headerText :  "피의자표",  width : 100, editable : false }
 				]
 			}
 		];

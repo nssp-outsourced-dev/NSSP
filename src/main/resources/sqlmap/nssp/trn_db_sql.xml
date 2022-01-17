@@ -194,6 +194,16 @@
 						WHERE TV.TRN_NO = A.TRN_NO
 							AND TV.RC_NO = B.RC_NO
 					) TRN_VIOLT_OPINION
+					/* 
+						2022.01.14
+						사건송치부에 송치의견 나올수있도록 수정
+						김지만 수사관 요청
+					 */
+					, (SELECT LISTAGG(FN_CD_NM(TV.TRN_OPINION_CD),', ') WITHIN GROUP (ORDER BY TV.VIOLT_CD)
+						FROM TRN_VIOLT TV
+						WHERE TV.TRN_NO = A.TRN_NO
+							AND TV.RC_NO = B.RC_NO
+					) AS TRN_OPINION_NM --송치의견
 				FROM TRN_CASE A
 	 				, RC_TMPR B
 				WHERE A.USE_YN= 'Y'

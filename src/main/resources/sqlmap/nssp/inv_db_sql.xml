@@ -1874,14 +1874,14 @@
 					'',
 				</isEmpty>
 				<isNotEmpty property="rst_valid_dt">
-					TO_DATE(REPLACE(#rst_valid_dt#,'/','')||LPAD(#rst_valid_dt2#,2,'0')||LPAD(#rst_valid_dt3#,2,'0'),'YYYYMMDDHH24MI'),
+					TO_DATE(REPLACE(REPLACE(#rst_valid_dt#, '/', ''), '.' ,'')||LPAD(#rst_valid_dt2#,2,'0')||LPAD(#rst_valid_dt3#,2,'0'),'YYYYMMDDHH24MI'),
 				</isNotEmpty>
 		       ISUE_DT           =
 		       	<isEmpty property="isue_dt">
 					'',
 				</isEmpty>
 				<isNotEmpty property="isue_dt">
-					TO_DATE(REPLACE(#isue_dt#,'/','')||LPAD(#isue_dt2#,2,'0')||LPAD(#isue_dt3#,2,'0'),'YYYYMMDDHH24MI'),
+					TO_DATE(REPLACE(REPLACE(#isue_dt#, '/' , ''), '.' ,'') || LPAD(#isue_dt2#,2,'0')||LPAD(#isue_dt3#,2,'0'),'YYYYMMDDHH24MI'),
 				</isNotEmpty>
 		       DSMSSL_INSTT_CD   = #dsmssl_instt_cd#,
 		       DSMSSL_RESN       = #dsmssl_resn#

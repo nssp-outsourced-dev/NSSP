@@ -230,13 +230,22 @@
                         FN_CD_NM(C.OCCP_CD) AS OCCP_NM,
                         C.DWLSIT_ADDR,
                         FN_RC_VIOLT_ROOT_NM (A.RC_NO) AS VIOLT_ROOT_NM,
-                        DECODE(R.DSMSSL_INSTT_CD, 'P', TO_CHAR(R.EXCUT_DT,'YYYY.MM.DD HH24:MI')) AS PP_DSMSSL_INSTT,         	/*검찰사-검사*/
-                        DECODE(R.DSMSSL_INSTT_CD, 'C', TO_CHAR(R.EXCUT_DT,'YYYY.MM.DD HH24:MI')) AS CC_DSMSSL_INSTT,         	/*법원-판사*/
-                        TO_CHAR(R.ISUE_DT,'YYYY.MM.DD HH24:MI') AS ISUE_DT,
+                        DECODE(R.DSMSSL_INSTT_CD, 'P', TO_CHAR(R.EXCUT_DT,'YYYY-MM-DD HH24:MI')) AS PP_DSMSSL_INSTT,         	/*검찰사-검사*/
+                        DECODE(R.DSMSSL_INSTT_CD, 'C', TO_CHAR(R.EXCUT_DT,'YYYY-MM-DD HH24:MI')) AS CC_DSMSSL_INSTT,         	/*법원-판사*/
+                        TO_CHAR(R.ISUE_DT,'YYYY-MM-DD HH24:MI') AS ISUE_DT,
                         TO_CHAR(NVL(R.VALID_DT,A.VALID_DT),'YYYY-MM-DD') AS VALID_DT
                         /*석방일시*/
                         /*석방장소*/
                         /*처리결과*/
+                        /*
+                        	2021.01.18
+                        	coded by dgkim
+                        	집행일시, 집행장소, 처리결과 추가
+                        	김지만 수사관 요청
+                        */
+                        , TO_CHAR(R.EXCUT_DT,'YYYY-MM-DD HH24:MI') AS SZURE_RST_EXCUT_DT --집행일시 
+						, R.EXCUT_PLACE --집행장소 
+						, DECODE(R.EXCUT_SE_CD, 'Y', '집행', 'N', '집행불능', 'R', '반환') AS EXCUT_SE_NM --처리결과 
                   	FROM INV_SZURE_REQST A
                     LEFT JOIN INV_SZURE_APPLCNT B ON A.ZRLONG_REQST_NO = B.ZRLONG_REQST_NO
                     LEFT JOIN RC_TMPR_TRGTER C ON B.RC_NO = C.RC_NO AND B.TRGTER_SN = C.TRGTER_SN
@@ -502,7 +511,14 @@
 					FN_CD_NM (C.INV_PROVIS_CD) AS INV_PROVIS_NM,
 					DECODE(C.RC_SE_CD, 'T' ,'임시','I','내사','F','정식') AS RC_SE_NM,
 					FN_RC_VIOLT_ROOT_NM (S.RC_NO) AS VIOLT_ROOT_NM,
-					S.PRESENTER /* 제출자 */
+					S.PRESENTER, /* 제출자 */
+					/*
+						2021.01.18
+						coded by dgkim
+						수령자 칼럼 추가
+						김지만 수사관 요청
+					*/
+					S.RECIPIENT /* 수령자 */
 					FROM INV_SUGEST S
 					JOIN RC_TMPR C ON S.RC_NO = C.RC_NO
 					WHERE S.USE_YN = 'Y'
@@ -1036,10 +1052,14 @@
 		coded by dgkim
 		지휘건의부 제출자 입력란 추가
 		김지만 수사관 요청
+		
+		edit by dgkim
+		지휘건의부 수령자 입력란 추가
 	 -->
 	 <update id="updateSugestStats" parameterClass="java.util.HashMap">
 		UPDATE INV_SUGEST
 			SET PRESENTER = #grdPresenter# --제출자
+				, RECIPIENT = #grdRecipient# --수령자
 				, UPDT_ID = #esntl_id# --수정 ID
 				, UPDT_DT = SYSDATE --수정 일시
 		WHERE SUGEST_NO = #grdSugestNo# --건의 번호

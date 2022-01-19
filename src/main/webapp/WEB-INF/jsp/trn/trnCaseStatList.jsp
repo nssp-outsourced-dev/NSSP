@@ -33,7 +33,12 @@
 
 		fnMoveGridPage("/trn/trnCaseStatListAjax/", "frmList", "#grid_list", 1);
 	}
-
+	/* 
+		2021.01.18
+		coded by dgkim
+		송치의견 반영으로 인한 쿼리 수정, 피의자명 여러건 나오도록 수정
+		김지만 수사관 요청
+	*/
 	function initGrid() {
 		var columnLayout = [{
 			headerText : "특별사법경찰",
@@ -41,33 +46,30 @@
 			children :  [{
 					headerText : "순번", dataField : "RN", width : 50
 				}, {
-					headerText : "송치번호", dataField : "TRN_NO", width : 120,
+					headerText : "송치번호", dataField : "TRN_NO", width : 120, cellMerge : true, mergePolicy:"restrict", mergeRef: "TRN_NO",
 					labelFunction : function (rowIndex, columnIndex, value, headerText, item ) {
 						return fnChangeNo (value);
 					}
 				}, {
-					headerText : "송치일자", dataField : "TRN_DE", width : 120, dataType : "date", formatString : "yyyy-mm-dd"
+					headerText : "송치일자", dataField : "TRN_DE", width : 120, dataType : "date", formatString : "yyyy-mm-dd", cellMerge : true, mergePolicy:"restrict", mergeRef: "TRN_NO",
 				}, {
-					headerText : "경찰사건번호", dataField : "CASE_NO", width : 120,
+					headerText : "경찰사건번호", dataField : "CASE_NO", width : 120, cellMerge : true, mergePolicy:"restrict", mergeRef: "TRN_NO",
 					labelFunction : function (rowIndex, columnIndex, value, headerText, item ) {
 						return fnChangeNo (value);
 					}
 				}, {
-					headerText : "피의자", dataField : "TRGTER_NM", width : 120
+					headerText : "피의자", dataField : "TRGTER_NM", width : 200
 				}, {
-					headerText : "죄명", dataField : "VIOLT_NM", style : "grid_td_left"
+					headerText : "죄명", dataField : "VIOLT_NM", style : "grid_td_left", cellMerge : true, mergePolicy:"restrict", mergeRef: "TRN_NO",
 					/* renderer : {type : "TemplateRenderer"},
 					labelFunction : function (rowIndex, columnIndex, value, headerText, item ) {
 						var template = value.replace(",", "<br>");
 						return template;
 					} */
 				}, {
-					headerText : "담당자", dataField : "CHARGER_NM", width : 100
+					headerText : "담당자", dataField : "CHARGER_NM", width : 100, cellMerge : true, mergePolicy:"restrict", mergeRef: "TRN_NO",
 				}, {
-					headerText : "증거품", dataField : "EVDENC_DC", width : 150,
-					labelFunction : function (rowIndex, columnIndex, value, headerText, item ) {
-						return "없음";
-					}
+					headerText : "증거품", dataField : "EVDENC_DC", width : 150, cellMerge : true, mergePolicy:"restrict", mergeRef: "TRN_NO",
 				}, {
 					headerText : "구속여부", dataField : "IMPR_STTUS_NM"	, width : 100
 				}]
@@ -75,13 +77,13 @@
 				headerText : "검찰",
 				dataField : "TITLE_2", // 그룹 헤더의 dataField 는 무의미 하지만, 칼럼 속성 변경 시 접근자로  사용하기 위해 임의 지정함.(중복되지 않게 임의 지정하세요.)
 				children :  [{
-					headerText : "수리일자", dataField : "TRN_DE", width : 120, dataType : "date", formatString : "yyyy-mm-dd"
+					headerText : "수리일자", dataField : "TRN_DE", width : 120, dataType : "date", formatString : "yyyy-mm-dd", cellMerge : true, mergePolicy:"restrict", mergeRef: "TRN_NO",
 				}, {
-					headerText : "수리자(직급,성명,날인)", dataField : "", width : 200
+					headerText : "수리자(직급,성명,날인)", dataField : "", width : 200, cellMerge : true, mergePolicy:"restrict", mergeRef: "TRN_NO",
 				}]
 			},
 			{
-				headerText : "송치의견", dataField : "TEMP"	, width : 150
+				headerText : "송치의견", dataField : "TRN_OPINION_NM"	, width : 150
 			} 
 		];
 
@@ -97,7 +99,8 @@
 			showRowNumColumn : false,
 			displayTreeOpen : true,
 			showAutoNoDataMessage : false,
-			groupingMessage : "여기에 칼럼을 드래그하면 그룹핑이 됩니다."
+			groupingMessage : "여기에 칼럼을 드래그하면 그룹핑이 됩니다.",
+			enableCellMerge : true,
 		};
 		myGridID = AUIGrid.create("#grid_list", columnLayout, gridPros);
 		AUIGrid.bind("#grid_list", "cellDoubleClick", function(event) {

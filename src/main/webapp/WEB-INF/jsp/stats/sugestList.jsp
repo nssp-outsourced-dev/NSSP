@@ -59,7 +59,13 @@
 					return fnChangeNo (value);
 				}
 			},
-			{ dataField : "", 		headerText : "수령자", width : 130, editable : false }  
+			/* 
+				2021.01.18
+				coded by dgkim
+				지휘건의부의 수령자 추가
+				김지만 수사관 요청
+			 */
+			{ dataField : "grdRecipient", 		headerText : "수령자<span class='point'><img src='/img/icon_dot.png'/></span>", width : 130, editable : true }  
 		];
 		var gridPros = {
 			headerHeight : 30,

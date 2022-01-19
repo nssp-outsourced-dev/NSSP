@@ -80,6 +80,12 @@
 	</select>
 
 	<!-- 대장/통계 > 송치부 -->
+	<!--
+		2021.01.18
+		coded by dgkim
+		송치의견 반영으로 인한 쿼리 수정, 피의자명 여러건 나오도록 수정
+		김지만 수사관 요청
+	 -->
 	<select id="selectTrnCaseStatList" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
 		SELECT X.*
 		FROM
@@ -92,7 +98,7 @@
 					</isNotEmpty>
 				</isNotEmpty>
 				<isEmpty property="dataField">		
-					ROW_NUMBER() OVER(ORDER BY A.TRN_NO) RN
+					ROW_NUMBER() OVER(ORDER BY A.TRN_NO, A.TRGTER_SN) RN
 					<!-- ROW_NUMBER() OVER(ORDER BY A.TRN_NO, A.SORT_ORDR) RN -->
 				</isEmpty>
 			FROM
@@ -174,11 +180,12 @@
 					, B.CASE_NO
 					, A.TRN_DE
 					, NVL2(A.EVDENC_DC, 'Y', 'N') EVDENC_YN
-					, A.EVDENC_DC
+					, NVL(A.EVDENC_DC, '없음') AS EVDENC_DC
 					, A.TRN_RM
 					, FN_EXMN_NM(A.CMPTNC_EXMN_CD) CMPTNC_EXMN_NM
 					, FN_USER_NM(B.CHARGER_ID) CHARGER_NM
-					, FN_RC_TRGTER_NM (A.RC_NO, '00697')AS TRGTER_NM
+					, C.TRGTER_NM --, FN_RC_TRGTER_NM (A.RC_NO, '00697')AS TRGTER_NM
+					, C.TRGTER_SN
 					, (SELECT FN_CD_NM(MIN(C.IMPR_STTUS_CD) KEEP(DENSE_RANK FIRST ORDER BY C.TRGTER_SN ASC))
 						FROM TRN_SUSPCT C
 						WHERE C.TRN_NO = A.TRN_NO 
@@ -199,17 +206,22 @@
 						사건송치부에 송치의견 나올수있도록 수정
 						김지만 수사관 요청
 					 */
-					, (SELECT LISTAGG(FN_CD_NM(TV.TRN_OPINION_CD),', ') WITHIN GROUP (ORDER BY TV.VIOLT_CD)
+					, (SELECT FN_CD_NM(TV.TRN_OPINION_CD)
 						FROM TRN_VIOLT TV
 						WHERE TV.TRN_NO = A.TRN_NO
 							AND TV.RC_NO = B.RC_NO
+							AND TV.TRGTER_SN = C.TRGTER_SN
 					) AS TRN_OPINION_NM --송치의견
 				FROM TRN_CASE A
 	 				, RC_TMPR B
-				WHERE A.USE_YN= 'Y'
-					AND B.USE_YN = 'Y'
-					AND A.RC_NO = B.RC_NO
-					AND A.ED_YN = 'Y'
+				 	, RC_TMPR_TRGTER C
+				WHERE A.USE_YN = 'Y'
+				    AND B.USE_YN = 'Y'
+				    AND C.USE_YN = 'Y'
+				    AND A.RC_NO = B.RC_NO
+				    AND B.RC_NO = C.RC_NO
+				    AND C.TRGTER_SE_CD = '00697' --피의자만 조회
+				    AND A.ED_YN = 'Y'
 				<isNotEmpty property="searchTrgterNm" >
 					AND A.RC_NO IN(SELECT RC_NO FROM RC_TMPR_TRGTER WHERE TRGTER_NM LIKE '%' || #searchTrgterNm# || '%')
 				</isNotEmpty>

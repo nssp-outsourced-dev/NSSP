@@ -36,6 +36,8 @@ public interface InvstsService {
 	 * @description : 
 	 * 		지휘건의부 제출자 입력란 추가
 	 * 		김지만 수사관 요청
+	 * 		지휘건의부 수령자 입력란 추가
+	 * 		김지만 수사관 요청
 	 * @param param
 	 * @return
 	 * @throws Exception

@@ -733,6 +733,6 @@
 				AND cdh.WRITNG_ID != 'GNRL0000000000000163' --test data 제거
 			ORDER BY cdh.WRITNG_DT DESC
 		) A
-		AND ROWNUM <![CDATA[ <= ]]> 15
+		WHERE ROWNUM <![CDATA[ <= ]]> 15
 	</select>
 </sqlMap>

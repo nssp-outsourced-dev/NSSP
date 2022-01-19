@@ -70,7 +70,7 @@
 					{ dataField : "grdOccpNm", 		headerText : "직업", 		style : 'tbLft'},
 				]
 			},
-			{ dataField : "grdVioltRootNm", headerText : "죄명", style:'tbLft',
+			{ dataField : "grdVioltRootNm", headerText : "죄명", style:'tbLft', width : 150,
 				cellMerge : true,
 				mergeRef : "grdZrlongReqstNo",
 				mergePolicy : "restrict"
@@ -95,11 +95,17 @@
 				mergeRef : "grdZrlongReqstNo",
 				mergePolicy : "restrict"
 			},
+			/* 
+				2021.01.18
+				coded by dgkim
+				집행일시, 장소, 처리결과 수정
+				김지만 수사관 요청
+			 */
 			{ headerText : "집행",
 				children: [
-					{ dataField : "grdSzureRstExcutDt", 	headerText : "일시", 		width : 100 },
-					{ dataField : "grdExcutPlace2", 	headerText : "장소", 		width : 100 },
-					{ dataField : "grdExcutSeCd", 	headerText : "처리결과", 		width : 100 },
+					{ dataField : "grdSzureRstExcutDt", 	headerText : "일시", 		width : 120 },
+					{ dataField : "grdExcutPlace", 	headerText : "장소", 		width : 200 },
+					{ dataField : "grdExcutSeNm", 	headerText : "처리결과", 		width : 100 },
 				]
 			},
 			{ dataField : "", 		headerText : "비고", width : 50, cellMerge : true },
@@ -184,7 +190,7 @@
 			rowHeight: 30,
 			enableCellMerge : true,
 			cellMergePolicy : "withNull",
-			fillColumnSizeMode : true,
+			//fillColumnSizeMode : true,
 			showRowNumColumn : false
 		};
 		myGridID = AUIGrid.create("#grid_list", columnLayout, gridPros);

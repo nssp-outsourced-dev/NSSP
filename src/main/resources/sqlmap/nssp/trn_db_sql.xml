@@ -25,7 +25,14 @@
 		          FROM INV_SUGEST A, RC_TMPR B
 		         WHERE A.USE_YN = 'Y'
 		           AND A.SUGEST_TY_CD = '01101' /* 건의 유형 코드(수사지휘건의) */
-		           -- AND A.SUGEST_RESULT_CD = 'Y' /* 건의 결과 코드(가) */ /* 2021-05-20 hsno 지휘건의에서 건의 결과가 '가'가 되지 않아도 사건 송치에 나오도록 수정 */
+		           /* 
+		           		2021-05-20 hsno 지휘건의에서 건의 결과가 '가'가 되지 않아도 사건 송치에 나오도록 수정
+		           		2022.01.20 
+		           		edit by dgkim
+		           		다시 롤백
+		           		권종열 사무관 요청
+		           */
+		           AND A.SUGEST_RESULT_CD = 'Y' /* 건의 결과 코드(가) */ 
 		           AND B.USE_YN = 'Y'
 		           AND A.RC_NO = B.RC_NO
 		           AND (   (B.INV_RESMPT_YN = 'Y' AND B.INV_RESMPT_DE <= A.SUGEST_DE)
@@ -206,7 +213,7 @@
 						사건송치부에 송치의견 나올수있도록 수정
 						김지만 수사관 요청
 					 */
-					, (SELECT FN_CD_NM(TV.TRN_OPINION_CD)
+					, (SELECT LISTAGG(FN_CD_NM(TV.TRN_OPINION_CD), ', ')
 						FROM TRN_VIOLT TV
 						WHERE TV.TRN_NO = A.TRN_NO
 							AND TV.RC_NO = B.RC_NO
@@ -1443,8 +1450,13 @@
 								edited by dgkim
 								지휘건의 건의결과 가,부 관계없이 송치관리에서 같은 의견서 사용할수있도록 수정
 								김지만 수사관 요청
+								
+								2022.01.20 
+		           				edit by dgkim
+		           				다시 롤백
+		           				권종열 사무관 요청
 				           */
-				           /* AND A.SUGEST_RESULT_CD = 'Y' 건의 결과 코드(가) */
+				           AND A.SUGEST_RESULT_CD = 'Y'/* 건의 결과 코드(가) */
 				           AND A.RC_NO = #RC_NO#
 				           AND B.USE_YN = 'Y'
 				           AND A.RC_NO = B.RC_NO

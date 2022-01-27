@@ -1343,7 +1343,13 @@ var targetGridId = "#grid_target_list";
 	<li id="liContextItem_F12"  class="F cssCtTxt" >압수물관리</li>
 	<li class="FC"></li>
 	<li id="liContextItem_FC08" class="FC cssCtTxt">수사지휘건의</li>
-	<li id="liContextItem_FC09" class="FC cssCtTxt">사건송치</li>
+	<!-- 
+		2021.01.20
+		coded by dgkim
+		사건송치 메뉴 삭제
+		권종열 사무관 요청
+	 -->
+	<!-- <li id="liContextItem_FC09" class="FC cssCtTxt">사건송치</li> -->
 	<li id="liContextItem_FC10" class="FC cssCtTxt">사건이송</li>
 
 	<li id="liContextItem_IT01" class="IT cssCtTxt">사건대상자 수정</li>

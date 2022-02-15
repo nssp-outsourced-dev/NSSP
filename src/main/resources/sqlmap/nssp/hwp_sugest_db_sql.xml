@@ -10,7 +10,13 @@
 		SELECT
 		       A.RCORD_NM
 		     , A.RCORD_STATER
-		     , NVL2(A.RCORD_NM, FN_OZ_DATE2(A.RCORD_DE, null), '') RCORD_DE
+		     /*
+		     	2022.01.27
+		     	coded by dgkim
+		     	날짜 공백 제거
+		     	김지만 수사관 요청
+		     */
+		     , NVL2(A.RCORD_NM, REPLACE(FN_OZ_DATE2(A.RCORD_DE, null), ' ', ''), '') RCORD_DE 
 		     , A.RCORD_CO
 		  FROM TRN_RCORD A
 		 WHERE A.RC_NO = #P_RC_NO#

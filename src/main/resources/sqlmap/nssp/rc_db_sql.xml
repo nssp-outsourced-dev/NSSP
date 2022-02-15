@@ -553,6 +553,16 @@
 			   		) ABC
 		 	  ) X
 		 WHERE (RN <![CDATA[ > ]]> #startRow# AND RN <![CDATA[ <= ]]> #endRow#)
+		  <!-- 
+		  		2022.02.14
+		  		coded by dgkim
+		  		내사건관리 > 정식사건에는 기소중지 참고인중지 나오면 안됨
+		  		김지만 수사관 요청
+		   -->
+		  <isEqual property="rc_se_cd" compareValue="F">
+			AND X.PROGRS_STTUS_CD NOT IN ('02124','02125')
+	   	  </isEqual>
+		  
 	  ORDER BY RN ASC
 	</select>
 

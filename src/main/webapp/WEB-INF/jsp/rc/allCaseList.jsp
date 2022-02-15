@@ -235,7 +235,13 @@
 			}
 		  }
 		, { dataField : "ALOT_USER_NM"	 , headerText : "담당자"	, width : 92	}
-		, { dataField : "RC_DT"			 , headerText : "접수일자", width : 70		}
+		/* 
+			2022.01.27
+			coded by dgkim 
+			접수일자 제거 
+			김지만 수사관 요청
+		*/
+		/* , { dataField : "RC_DT"			 , headerText : "접수일자", width : 70		} */
 		, { dataField : "TRN_NO"		 , headerText : "송치번호", width : 70 , visible : false }
 	];
 

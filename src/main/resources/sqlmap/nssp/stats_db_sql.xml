@@ -118,7 +118,7 @@
 			 , X.TOT_CNT
 			 , X.RC_NO
 			 , X.ITIV_NO
-			 , X.CASE_NO
+			 , FN_CNVR_NO(X.CASE_NO) AS CASE_NO
 			 , X.RC_DT
 			 , X.OCCRRNC_BEGIN_DT
 			 , X.OCCRRNC_END_DT
@@ -129,7 +129,7 @@
 			 , X.CHARGER_DEPT_NM
 			 , X.VIOLT_NM
 			 , X.SUFRER_NM
-			 , X.PRSCT_DE		
+			 , TO_CHAR(TO_DATE(X.PRSCT_DE, 'YYYYMMDD'), 'YYYY-MM-DD') AS PRSCT_DE
 			 , X.TRGTER_NM
 			 , X.TRGTER_ENG_NM
 			 , X.TRGTER_RRN
@@ -141,11 +141,11 @@
 			 , X.DWLSIT_ADDR
 		     , X.ATTRACT_PLACE
 		     , X.RSL_DT
-		     , X.CCDRC_NO
+		     , FN_CNVR_NO(X.CCDRC_NO) AS CCDRC_NO
 		     , X.TRN_OPINION_NM
 		     , X.TRN_VIOLT_NM
-		     , X.TRN_NO
-		     , X.TRN_DE
+		     , FN_CNVR_NO(X.TRN_NO) AS TRN_NO
+		     , TO_CHAR(TO_DATE(X.TRN_DE, 'YYYYMMDD'), 'YYYY-MM-DD') AS TRN_DE
              , X.PRSEC_DSPS_DE      --검사처분일
 		     , X.PRSEC_DSPS_OUTLINE --검사처분 요지
 		     , X.JUDMN_DE           --판결처분일
@@ -276,14 +276,20 @@
 				<isNotEmpty property="searchPrsctDeEnd" >
 					AND RT.PRSCT_DE <![CDATA[ <= ]]> REPLACE(#searchPrsctDeEnd#,'-','')
 				</isNotEmpty>
+				
+				/*
+					2022.01.27
+					coded by dgkim
+					대상자 순번 정렬방식 추가
+					김지만 수사관 요청
+				*/
+				ORDER BY RT.CASE_NO ASC, RTT.TRGTER_SN ASC
 			) A
 		) X		
 		<isNotEmpty property="startRow" >
 			WHERE (RN <![CDATA[ > ]]> #startRow# AND RN <![CDATA[ <= ]]> #endRow#)
 		</isNotEmpty>
-		ORDER BY CASE_NO ASC
 	</select>
-
 
 	<select id="selectItivCaseList" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
 		SELECT
@@ -1113,6 +1119,90 @@
 		<isNotEmpty property="startRow" >
 			WHERE (RN <![CDATA[ > ]]> #startRow# AND RN <![CDATA[ <= ]]> #endRow#)
 		</isNotEmpty>
+		ORDER BY RN ASC
+	 </select>
+	 
+	 <!-- 
+	 	2022.02.09
+	 	coded by dgkim
+	 	사건대장 출력이력 저장
+	 	대검 범죄사건부 보안 조치
+	  -->
+	 <insert id="insertStatsOutptHist" parameterClass="java.util.HashMap">
+		INSERT INTO CMN_STATS_OUTPT_HIST 
+			(
+				OUTPT_DT
+				, ESNTL_ID
+				, OUTPT_URL
+				, OUTPT_IP
+			) 
+		VALUES
+			(
+				SYSDATE
+				, #esntl_id#
+				, #outpt_url#
+				, #outpt_ip#
+			)
+	</insert>
+	
+	<!-- 
+		2022.02.09
+		coded by dgkim
+		사건대장 출력이력 조회
+		대검 범죄사건부 보안 조치
+	 -->
+	<select id="selectStatsOutptHistList" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		SELECT
+			X.*
+		FROM
+		(
+			SELECT A.*,
+				ROWNUM AS RN, COUNT(*) OVER() AS TOT_CNT
+			FROM
+			(
+				SELECT 
+					TO_CHAR(OUTPT_DT, 'YYYY-MM-DD HH24:MI:ss') AS OUTPT_DT --출력시간
+					, ESNTL_ID --출력자 ID
+					, OUTPT_URL --출력 관련 메뉴
+					, OUTPT_IP --출력자 IP
+					, (SELECT USER_ID FROM CMN_USER WHERE ESNTL_ID = csoh.ESNTL_ID) AS USER_ID --사용자 ID 
+					, (SELECT USER_NM FROM CMN_USER WHERE ESNTL_ID = csoh.ESNTL_ID) AS USER_NM --사용자 명
+					, (
+						SELECT 
+							cmc.MENU_CL_NM || ' > ' || cmd.MENU_NM
+						FROM CMN_MENU_CL cmc
+							, CMN_MENU_DETAIL cmd
+							, CMN_MENU_RELATE_URL cmru
+						WHERE
+							cmc.MENU_CL_CD = cmd.MENU_CL_CD 
+							AND cmd.MENU_CD = cmru.MENU_CD
+							AND cmru.RELATE_URL = csoh.OUTPT_URL
+					) AS MENU_NM --출력 경로 메뉴명
+				FROM CMN_STATS_OUTPT_HIST csoh
+				WHERE csoh.OUTPT_IP NOT IN('127.0.0.1', '0:0:0:0:0:0:0:1', '10.66.204.45') --테스트 IP 제외
+					
+					<isNotEmpty property="searchUserID" prepend="AND">
+						csoh.ESNTL_ID IN(SELECT ESNTL_ID FROM CMN_USER WHERE USER_ID LIKE '%' || #searchUserID# || '%')
+					</isNotEmpty>
+					
+					<isNotEmpty property="searchUserNm" prepend="AND">
+						csoh.ESNTL_ID IN(SELECT ESNTL_ID FROM CMN_USER WHERE USER_NM LIKE '%' || #searchUserNm# || '%')
+					</isNotEmpty>
+					
+					<isNotEmpty property="searchIp" prepend="AND">
+						 csoh.OUTPT_IP LIKE '%' || #searchIp# || '%'
+					</isNotEmpty>
+					
+					<isNotEmpty property="searchDe1">
+						<isNotEmpty property="searchDe2" prepend="AND" >
+							csoh.OUTPT_DT BETWEEN TO_DATE(#searchDe1# || '00:00:00', 'YYYY-MM-DD HH24:MI:SS') AND TO_DATE(#searchDe2# || '23:59:59', 'YYYY-MM-DD HH24:MI:SS')
+						</isNotEmpty>
+					</isNotEmpty>
+				
+				ORDER BY csoh.OUTPT_DT DESC
+			) A
+		) X
+		WHERE (RN <![CDATA[ > ]]> #startRow# AND RN <![CDATA[ <= ]]> #endRow#)
 		ORDER BY RN ASC
 	 </select>
 </sqlMap>

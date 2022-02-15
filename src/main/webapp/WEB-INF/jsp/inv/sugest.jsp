@@ -976,7 +976,13 @@ var myGridID;
 													<input class="to-labelauty-icon" type="radio" name="rdoSugestOpinionCd" value="N"/> 불기소
 												</div>
 												<div class='input_radio2 t_left'>
-													<input class="to-labelauty-icon" type="radio" name="rdoSugestOpinionCd" value=""/> 의견없음
+												<!--
+													2022.01.27
+													coded by dgkim 
+													의견없음 -> 기타로 문구 변경 
+													김지만 수사관 요청
+												-->
+													<input class="to-labelauty-icon" type="radio" name="rdoSugestOpinionCd" value=""/> 기타
 												</div>
 											</td>
 										</tr>

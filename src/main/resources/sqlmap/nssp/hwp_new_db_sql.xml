@@ -1480,4 +1480,28 @@
 			) A
 		RIGHT JOIN DUAL D ON 1=1
 	</select>
+	
+	<!-- 구속양식 > 영장 사본 교부 확인서 -->
+	<select id="selectHwp00000000000000000478" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		SELECT A.*, FN_OZ_DATE(TO_CHAR(SYSDATE,'YYYYMMDD'),'') AS S_DATE FROM (
+			SELECT
+				FN_CD_NM(I.ZRLONG_SE_CD) AS ZRLONG_SE_NM
+		   FROM INV_ZRLONG_REQST I
+		   WHERE I.ZRLONG_REQST_YN = 'Y'
+              AND I.RC_NO 			= #P_RC_NO#
+              AND I.TRGTER_SN 		= #P_TRGTER_SN#
+              AND I.ZRLONG_REQST_NO = #P_ZRLONG_REQST_NO#
+		) A
+		RIGHT JOIN DUAL D ON 1=1
+	</select>
+	
+	<!-- 입건압수조서 > 영장 사본 교부 확인서 -->
+	<select id="selectHwp00000000000000000479" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">00000000000000000479
+		SELECT A.*, FN_OZ_DATE(TO_CHAR(SYSDATE,'YYYYMMDD'),'') AS S_DATE FROM (
+			SELECT
+				'압수수색검증' AS ZRLONG_SE_NM
+		    FROM DUAL
+		) A
+		RIGHT JOIN DUAL D ON 1=1
+	</select>
 </sqlMap>

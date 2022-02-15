@@ -136,6 +136,7 @@ public class SessionCheck extends HandlerInterceptorAdapter {
 
 		//엑셀생성
 		defaultAccessUrls.add("/cmm/excel/");
+		defaultAccessUrls.add("/file/excel/");
 
 		//파일관련
 		defaultAccessUrls.add("/file/imageListPopup/");

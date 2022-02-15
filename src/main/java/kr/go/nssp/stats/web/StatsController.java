@@ -1219,4 +1219,151 @@ public class StatsController {
 		cMap.put("cnt", list_cnt);
 		return new ModelAndView("ajaxView", "ajaxData", cMap);
 	}
+	
+	/** 
+	 * @methodName : addStatsOutptHist
+	 * @date : 2022.02.09
+	 * @author : dgkim
+	 * @description : 사건대장 출력이력 저장
+	 * @param request
+	 * @param model
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping(value = "/addStatsOutptHist/")
+	public ModelAndView addStatsOutptHist(HttpServletRequest request, HttpSession session, Map<String, Object> param) throws Exception  {
+		int result = 1;
+		
+		try {
+			//접속 ID
+			param.put("esntl_id", SimpleUtils.default_set(session.getAttribute("esntl_id").toString()));
+			
+			//접속 IP
+			param.put("outpt_ip", request.getRemoteAddr());
+			
+			//이전 접속 URL
+			String referer = request.getHeader("REFERER");
+			
+			referer = referer.replace("http://", "")
+						.replace(request.getServerName(), "")
+						.replace(String.valueOf(request.getServerPort()), "")
+						.replace(":", "");
+			
+			if(referer.indexOf("?") != -1) {
+				referer = referer.substring(0, referer.indexOf("?"));
+			}
+			
+			param.put("outpt_url", referer);
+			
+			statsService.insertStatsOutptHist(param);
+		} catch (Exception e) {
+			result = -1;
+		}
+		
+		return new ModelAndView("ajaxView", "ajaxData", result);
+	}
+	
+	/** 
+	 * @methodName : outptHistList
+	 * @date : 2022.02.09
+	 * @author : dgkim
+	 * @description : 사건대장 출력이력 화면
+	 * @param request
+	 * @param response
+	 * @param model
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping(value = "/outptHistList/")
+	public String outptHistList(HttpServletRequest request, HttpServletResponse response, ModelMap model) throws Exception {
+		HttpSession session = request.getSession();
+		String esntl_id = SimpleUtils.default_set(session.getAttribute("esntl_id").toString());
+		String dept_cd = SimpleUtils.default_set(session.getAttribute("dept_cd").toString());
+		String dept_single_nm = SimpleUtils.default_set(session.getAttribute("dept_single_nm").toString());
+		String mngr_yn = SimpleUtils.default_set(session.getAttribute("mngr_yn").toString());
+		model.addAttribute("esntl_id", esntl_id);
+		model.addAttribute("dept_cd", dept_cd);
+		model.addAttribute("dept_single_nm", dept_single_nm);
+		model.addAttribute("mngr_yn", mngr_yn);
+
+		int pageBlock = 50;
+		model.addAttribute("hidPageBlock", pageBlock);
+
+		//대상자구분
+		HashMap cMap = new HashMap();
+		cMap.put("upper_cd", "00102");
+		List<HashMap> trgterClList = cdService.getCdList(cMap);
+		model.addAttribute("trgterClList", trgterClList);
+		
+		return "stats/outptHist";
+	}
+	
+	/** 
+	 * @methodName : outptHistListAjax
+	 * @date : 2022.02.09
+	 * @author : dgkim
+	 * @description : 사건대장 출력이력 조회
+	 * @param request
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping (value = "/outptHistListAjax/")
+	public ModelAndView outptHistListAjax (HttpServletRequest request) throws Exception {
+		HttpSession session = request.getSession();
+		String esntl_id = SimpleUtils.default_set(session.getAttribute("esntl_id").toString());
+		String dept_cd = SimpleUtils.default_set(session.getAttribute("dept_cd").toString());
+		InvUtil commonUtil = InvUtil.getInstance();
+		HashMap map = new HashMap();
+		
+		map.put("searchUserID", SimpleUtils.default_set(request.getParameter("searchUserID")));
+		map.put("searchUserNm", SimpleUtils.default_set(request.getParameter("searchUserNm")));
+		map.put("searchIp", SimpleUtils.default_set(request.getParameter("searchIp")));
+		map.put("searchDe1", SimpleUtils.default_set(request.getParameter("searchDe1")));
+		map.put("searchDe2", SimpleUtils.default_set(request.getParameter("searchDe2")));
+		
+		//현재 페이지 파라메타
+		String hidPage = SimpleUtils.default_set(request.getParameter("hidPage"));
+		int intPage = 1;
+		if(!"".equals(hidPage))	intPage = Integer.parseInt((String)hidPage);
+		String hidPageBlock = SimpleUtils.default_set(request.getParameter("hidPageBlock"));
+		if( hidPageBlock== null || hidPageBlock.equals("")){
+			//전체조회
+			hidPageBlock = "10";
+			map.put("startRow", "");
+			map.put("endRow", "");
+		}else{
+			//페이징조회
+			int pageBlock = Integer.parseInt((String)hidPageBlock);
+			//페이지 기본설정
+			int pageArea = 10;
+			//page
+			PaginationInfo paginationInfo = new PaginationInfo();
+			paginationInfo.setCurrentPageNo(intPage);
+			paginationInfo.setRecordCountPerPage(pageBlock);
+			paginationInfo.setPageSize(pageArea);
+			map.put("startRow", paginationInfo.getFirstRecordIndex());
+			map.put("endRow", paginationInfo.getLastRecordIndex());
+		}
+		
+		String sortingFields = (String) map.get("fields");		
+		if(sortingFields != null && !sortingFields.equals("")) {			
+			Map<String, Object> sortingField = Utility.getGridSortList(sortingFields);
+			if(sortingField != null && sortingField.size() > 0 ) {				
+				map.put("dataField", sortingField.get("dataField"));
+				map.put("sortType", sortingField.get("sortType"));
+			}
+		}
+		
+		int list_cnt = 0;
+		List<HashMap> list = statsService.selectStatsOutptHistList(map);
+		
+		if(list.size() > 0){
+			list_cnt = Integer.parseInt(list.get(0).get("TOT_CNT").toString());
+		}
+		
+		HashMap cMap = new HashMap();
+		cMap.put("list", list);
+		cMap.put("cnt", list_cnt);
+		return new ModelAndView("ajaxView", "ajaxData", cMap);
+	}
 }

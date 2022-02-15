@@ -3,6 +3,7 @@
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 <%@ taglib prefix="ui" uri="http://egovframework.gov/ctl/ui"%>
 
+
 <script type="text/javascript">
 	var myGridID;
 
@@ -23,9 +24,8 @@
 			
 			AUIGrid.setCellMerge("#grid_list", true);
 		});
-
 	})
-
+	
 	function fnSearch() {
 		fnMoveGridPage("/stats/crimeCaseListAjax/", "frmList", "#grid_list", 1);
 	}
@@ -177,27 +177,35 @@
 		fnCaseDetailPopup(items[0].item.RC_NO, "");
 	}
 
-
 	function fnExportTo() {
-		//FileSaver.js 로 로컬 다운로드가능 여부 확인
-		if(!AUIGrid.isAvailableLocalDownload(myGridID)) {
-			alert("로컬 다운로드 불가능한 브라우저 입니다. 서버 사이드로 전송하여 다운로드 처리하십시오.");
-			return;
-		}
+		Ajax.getJson("<c:url value='/stats/addStatsOutptHist/'/>", {}, function(data){
+			if(data == 1){
+				location.href = "/file/excel/?menuCd=00040";
+				/* 
+				//FileSaver.js 로 로컬 다운로드가능 여부 확인
+				if(!AUIGrid.isAvailableLocalDownload(myGridID)) {
+					alert("로컬 다운로드 불가능한 브라우저 입니다. 서버 사이드로 전송하여 다운로드 처리하십시오.");
+					return;
+				}
 
-		var rowCount = AUIGrid.getRowCount(myGridID);
+				var rowCount = AUIGrid.getRowCount(myGridID);
 
-		// 10만행 보다 크다면 CSV로 다운로드 처리
-		if(rowCount >= 100000) {
-			alert("10만건 이상일 경우  CSV로 데이터를 출력합니다.");
-			AUIGrid.exportToCsv(myGridID, {
-				fileName : "범죄사건부_CSV"
-			});
-		}else{
-			AUIGrid.exportToXlsx(myGridID, {
-				fileName : "범죄사건부_EXCEL"
-			});
-		}
+				// 10만행 보다 크다면 CSV로 다운로드 처리
+				if(rowCount >= 100000) {
+					alert("10만건 이상일 경우  CSV로 데이터를 출력합니다.");
+					AUIGrid.exportToCsv(myGridID, {
+						fileName : "범죄사건부_CSV"
+					});
+				}else{
+					AUIGrid.exportToXlsx(myGridID, {
+						fileName : "범죄사건부_EXCEL"
+					});
+				}
+				 */
+			}else {
+				alert("출력 이력을 저장하지 못했습니다. 잠시후 다시 시도하십시오.");
+			}
+		});
 	};
 	
 	//피의자 검사처분 판결 내용 저장

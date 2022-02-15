@@ -7,29 +7,33 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.net.URLEncoder;
-import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.sql.Blob;
-import java.util.*;
+import java.security.GeneralSecurityException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import kr.co.siione.dist.ffmpeg.StreamView;
-import kr.co.siione.dist.utils.SimpleUtils;
-import kr.go.nssp.cmmn.service.FileService;
-
-import org.apache.commons.io.FileUtils;
-import org.springframework.http.*;
+import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
+
+import kr.co.siione.dist.ffmpeg.StreamView;
+import kr.co.siione.dist.utils.SimpleUtils;
+import kr.go.nssp.cmmn.service.FileService;
+import kr.go.nssp.stats.service.StatsService;
 
 @Controller
 @RequestMapping(value = "/file/")
@@ -516,4 +520,22 @@ public class FileController {
     	}
     }
 
+    @Resource private StatsService statsService;
+    
+    @RequestMapping(value = "/excel/")
+    public ModelAndView getExcel(HttpServletRequest request, HttpServletResponse response, ModelMap model) throws Exception {
+    	Map<String, Object> result = new HashMap<String, Object>();
+    	
+    	try {
+        	String menuCd = SimpleUtils.default_set(request.getParameter("menuCd"));
+        	List<HashMap> data = statsService.getCrimeCaseList(null);
+        	
+        	result.put("menuCd", menuCd);
+        	result.put("data", data);
+        }catch (Exception e) {
+        	System.out.println(e.getMessage());
+          }
+        
+        return new ModelAndView("excelView", "result", result);
+    }
 }

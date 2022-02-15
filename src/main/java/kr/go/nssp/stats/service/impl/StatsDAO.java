@@ -157,4 +157,29 @@ public class StatsDAO extends EgovComAbstractDAO {
 	public List selectVdecRequstPostpneConfmList(HashMap param) throws Exception {
 		return list("stats.selectVdecRequstPostpneConfmList", param);
 	}
+	
+	/** 
+	 * @methodName : insertStatsOutptHist
+	 * @date : 2022.02.09
+	 * @author : dgkim
+	 * @description : 
+	 * @param param
+	 * @throws Exception
+	 */
+	public void insertStatsOutptHist(Map<String, Object> param) throws Exception {
+		insert("stats.insertStatsOutptHist", param);
+	}
+	
+	/** 
+	 * @methodName : selectStatsOutptHistList
+	 * @date : 2022.02.09
+	 * @author : dgkim
+	 * @description : 
+	 * @param param
+	 * @return
+	 * @throws Exception
+	 */
+	public List selectStatsOutptHistList(Map<String, Object> param) throws Exception {
+		return list("stats.selectStatsOutptHistList", param);
+	}
 }

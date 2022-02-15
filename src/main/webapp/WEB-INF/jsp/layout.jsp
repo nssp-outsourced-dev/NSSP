@@ -94,6 +94,10 @@
 	.logo {
 		background-color: honeydew;
 	}
+	
+	@media print {
+		.tb_01_box { display:none; }
+	}
 </style>
 
 <script type="text/javascript">

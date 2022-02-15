@@ -240,7 +240,7 @@
 			if(!fnIsEmpty(data.prFilePath)) {
 				pHwpCtrl.Open(data.prFilePath, "HWP", "", function (res) {
 					if( res.result ){
-						pHwpCtrl.EditMode = 0;
+						pHwpCtrl.EditMode = 1;
 					}
 				}, {"UserData" : "testData"});
 			}

@@ -117,4 +117,25 @@ public interface StatsService {
 	 * @throws Exception
 	 */
 	public List selectVdecRequstPostpneConfmList(HashMap param) throws Exception;
+	
+	/** 
+	 * @methodName : insertStatsOutptHist
+	 * @date : 2022.02.09
+	 * @author : dgkim
+	 * @description : 
+	 * @param param
+	 * @throws Exception
+	 */
+	public void insertStatsOutptHist(Map<String, Object> param) throws Exception;
+	
+	/** 
+	 * @methodName : selectStatsOutptHistList
+	 * @date : 2022.02.09
+	 * @author : dgkim
+	 * @description : 
+	 * @param param
+	 * @return
+	 * @throws Exception
+	 */
+	public List selectStatsOutptHistList(Map<String, Object> param) throws Exception;
 }

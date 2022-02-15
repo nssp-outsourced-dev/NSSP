@@ -19,15 +19,33 @@
 	</classpathentry>
 	<classpathentry kind="lib" path="src/main/webapp/WEB-INF/lib/ojdbc6.jar"/>
 	<classpathentry kind="lib" path="src/main/webapp/WEB-INF/lib/ibatis-2.3.2.715.jar"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.7">
-		<attributes>
-			<attribute name="maven.pomderived" value="true"/>
-		</attributes>
-	</classpathentry>
 	<classpathentry kind="lib" path="src/main/webapp/WEB-INF/lib/siione-dist-0.0.9-shkim.jar"/>
 	<classpathentry kind="lib" path="src/main/webapp/WEB-INF/lib/gpkisecureweb-1.0.6.3.jar"/>
 	<classpathentry kind="lib" path="src/main/webapp/WEB-INF/lib/gpkisecurewebkeyboard-1.0.0.1.jar"/>
 	<classpathentry kind="lib" path="src/main/webapp/WEB-INF/lib/libgpkiapi_jni.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/5"/>
+	<classpathentry kind="src" output="target/test-classes" path="src/test/java">
+		<attributes>
+			<attribute name="optional" value="true"/>
+			<attribute name="maven.pomderived" value="true"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="C:/Dev/eGovFrameDev-3.8.0-64bit/JDBC-11.0-latest-cubrid.jar"/>
+	<classpathentry kind="con" path="org.eclipse.jst.server.core.container/org.eclipse.jst.server.tomcat.runtimeTarget/NSCP">
+		<attributes>
+			<attribute name="owner.project.facets" value="jst.web"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.7">
+		<attributes>
+			<attribute name="maven.pomderived" value="true"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="C:/Dev/eGovFrameDev-3.8.0-64bit/poi-3.16.jar"/>
+	<classpathentry kind="lib" path="C:/Dev/eGovFrameDev-3.8.0-64bit/poi-ooxml-3.16.jar"/>
+	<classpathentry kind="lib" path="C:/Dev/eGovFrameDev-3.8.0-64bit/poi-ooxml-schemas-3.16.jar"/>
+	<classpathentry kind="lib" path="C:/Dev/eGovFrameDev-3.8.0-64bit/xmlbeans-3.1.0.jar"/>
+	<classpathentry kind="lib" path="C:/Dev/eGovFrameDev-3.8.0-64bit/stax-api-1.0.1.jar"/>
+	<classpathentry kind="lib" path="C:/Dev/eGovFrameDev-3.8.0-64bit/commons-collections4-4.1.jar"/>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>

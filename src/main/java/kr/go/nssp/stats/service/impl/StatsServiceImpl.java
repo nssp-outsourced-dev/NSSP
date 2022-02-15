@@ -145,4 +145,20 @@ public class StatsServiceImpl implements StatsService {
 	public List selectVdecRequstPostpneConfmList(HashMap param) throws Exception {
 		return statsDAO.selectVdecRequstPostpneConfmList(param);
 	}
+
+	/* (non-Javadoc)
+	 * @see kr.go.nssp.stats.service.StatsService#insertStatsOutptHist(java.util.HashMap)
+	 */
+	@Override
+	public void insertStatsOutptHist(Map<String, Object> param) throws Exception {
+		statsDAO.insertStatsOutptHist(param);
+	}
+
+	/* (non-Javadoc)
+	 * @see kr.go.nssp.stats.service.StatsService#selectStatsOutptHistList(java.util.HashMap)
+	 */
+	@Override
+	public List selectStatsOutptHistList(Map<String, Object> param) throws Exception {
+		return statsDAO.selectStatsOutptHistList(param);
+	}
 }

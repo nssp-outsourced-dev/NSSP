@@ -3,5 +3,11 @@
 
 	<bean id="ajaxView" class="kr.go.nssp.utl.ajax.AjaxView" />
 	<bean id="StringView" class="kr.go.nssp.utl.ajax.StringView" />
-
+	
+	<!-- 
+		2022.02.04
+		created by dgkim
+		범죄사건부 엑셀 다운로더
+	 -->
+	<bean id="excelView" class="kr.go.nssp.utl.ExcelDownloader" />
 </beans>

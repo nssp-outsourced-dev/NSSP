@@ -729,56 +729,60 @@
 
 	<select id="selectTrnZeroNoList" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
 	<![CDATA[
-		SELECT TRN_NO, RC_NO, 0 TRGTER_SN, DOC_ID
-		     , (SELECT MAX(PBLICTE_SN) FROM CMN_DOC_PBLICTE X WHERE X.DOC_ID = A.DOC_ID AND FORMAT_ID = '00000000000000000072' AND USE_YN='Y') AS PBLICTE_SN
-		     , '' TRGTER_NM
-		     , '' TRGTER_RRN
-		     , '00000000000000000072' FORMAT_ID
-		     , '발생통계원표' FORMAT_NM
-		     , OCCRRNC_ZERO_NO AS ZERO_NO
-		  FROM TRN_CASE A
-		 WHERE USE_YN = 'Y'
-		   AND TRN_NO = #TRN_NO#
-		 UNION ALL
-		SELECT TRN_NO, RC_NO, 0, DOC_ID
-		     , (SELECT MAX(PBLICTE_SN) FROM CMN_DOC_PBLICTE X WHERE X.DOC_ID = A.DOC_ID AND FORMAT_ID = '00000000000000000073' AND USE_YN='Y') AS PBLICTE_SN
-		     , '' TRGTER_NM
-		     , '' TRGTER_RRN
-		     , '00000000000000000073' FORMAT_ID
-		     , '검거통계원표' FORMAT_NM
-		     , ARREST_ZERO_NO
-		  FROM TRN_CASE A
-		 WHERE USE_YN = 'Y'
-		   AND TRN_NO = #TRN_NO#
-		 UNION ALL
-		SELECT A.TRN_NO, A.RC_NO, A.TRGTER_SN, A.DOC_ID
-		     , (SELECT MAX(PBLICTE_SN) FROM CMN_DOC_PBLICTE X WHERE X.DOC_ID = A.DOC_ID AND FORMAT_ID = '00000000000000000074' AND USE_YN='Y') AS PBLICTE_SN
-		     , C.TRGTER_NM
-		     , DECODE(C.TRGTER_TY_CD, 'I', DGUARD.DECRYPT('TBL','ENC',C.TRGTER_RRN), NVL(C.TRGTER_CPRN, C.TRGTER_CRN))
-		     , '00000000000000000074' FORMAT_ID
-		     , '피의자통계원표' FORMAT_NM
-		     , SUSPCT_ZERO_NO
-		  FROM TRN_SUSPCT A
-		     , TRN_VIOLT B
-		     , RC_TMPR_TRGTER C
-		 WHERE A.USE_YN = 'Y'
-		   AND B.USE_YN = 'Y'
-		   AND A.TRN_NO = B.TRN_NO
-		   AND A.RC_NO = B.RC_NO
-		   AND A.TRGTER_SN = B.TRGTER_SN
-		   AND A.RC_NO = C.RC_NO
-		   AND A.TRGTER_SN = C.TRGTER_SN
-		   AND A.TRN_NO = #TRN_NO#
-		   --AND B.TRN_OPINION_CD IN ('01095', '01096') /* 기소(구속/불구속) */
-		   -- 불기소 피의자도 통계원표가 나오게 수정 by dgkim
-		   AND B.TRN_OPINION_CD IN (
-							'01095' --기소(구속)
-   							, '01096' --기소(불구속)
-   							, '01097' --불기소(혐의없음)
-   							, '01098' --불기소(공소권없음)
-   							, '01099' --불기소(죄가안됨)
-   							, '01366' --불기소(각하)
-							)
+		SELECT * FROM 
+		(
+			SELECT TRN_NO, RC_NO, 0 TRGTER_SN, DOC_ID
+			     , (SELECT MAX(PBLICTE_SN) FROM CMN_DOC_PBLICTE X WHERE X.DOC_ID = A.DOC_ID AND FORMAT_ID = '00000000000000000072' AND USE_YN='Y') AS PBLICTE_SN
+			     , '' TRGTER_NM
+			     , '' TRGTER_RRN
+			     , '00000000000000000072' FORMAT_ID
+			     , '발생통계원표' FORMAT_NM
+			     , OCCRRNC_ZERO_NO AS ZERO_NO
+			  FROM TRN_CASE A
+			 WHERE USE_YN = 'Y'
+			   AND TRN_NO = #TRN_NO#
+			 UNION ALL
+			SELECT TRN_NO, RC_NO, 0, DOC_ID
+			     , (SELECT MAX(PBLICTE_SN) FROM CMN_DOC_PBLICTE X WHERE X.DOC_ID = A.DOC_ID AND FORMAT_ID = '00000000000000000073' AND USE_YN='Y') AS PBLICTE_SN
+			     , '' TRGTER_NM
+			     , '' TRGTER_RRN
+			     , '00000000000000000073' FORMAT_ID
+			     , '검거통계원표' FORMAT_NM
+			     , ARREST_ZERO_NO
+			  FROM TRN_CASE A
+			 WHERE USE_YN = 'Y'
+			   AND TRN_NO = #TRN_NO#
+			 UNION ALL
+			SELECT A.TRN_NO, A.RC_NO, A.TRGTER_SN, A.DOC_ID
+			     , (SELECT MAX(PBLICTE_SN) FROM CMN_DOC_PBLICTE X WHERE X.DOC_ID = A.DOC_ID AND FORMAT_ID = '00000000000000000074' AND USE_YN='Y') AS PBLICTE_SN
+			     , C.TRGTER_NM
+			     , DECODE(C.TRGTER_TY_CD, 'I', DGUARD.DECRYPT('TBL','ENC',C.TRGTER_RRN), NVL(C.TRGTER_CPRN, C.TRGTER_CRN))
+			     , '00000000000000000074' FORMAT_ID
+			     , '피의자통계원표' FORMAT_NM
+			     , SUSPCT_ZERO_NO
+			  FROM TRN_SUSPCT A
+			     , TRN_VIOLT B
+			     , RC_TMPR_TRGTER C
+			 WHERE A.USE_YN = 'Y'
+			   AND B.USE_YN = 'Y'
+			   AND A.TRN_NO = B.TRN_NO
+			   AND A.RC_NO = B.RC_NO
+			   AND A.TRGTER_SN = B.TRGTER_SN
+			   AND A.RC_NO = C.RC_NO
+			   AND A.TRGTER_SN = C.TRGTER_SN
+			   AND A.TRN_NO = #TRN_NO#
+			   --AND B.TRN_OPINION_CD IN ('01095', '01096') /* 기소(구속/불구속) */
+			   -- 불기소 피의자도 통계원표가 나오게 수정 by dgkim
+			   AND B.TRN_OPINION_CD IN (
+								'01095' --기소(구속)
+	   							, '01096' --기소(불구속)
+	   							, '01097' --불기소(혐의없음)
+	   							, '01098' --불기소(공소권없음)
+	   							, '01099' --불기소(죄가안됨)
+	   							, '01366' --불기소(각하)
+								)	
+			)
+			ORDER BY FORMAT_ID ASC, TRGTER_SN ASC 
 	]]>
 	</select>
 
@@ -1298,9 +1302,9 @@
 		   SET OCCRRNC_ZERO_NO = (SELECT NVL((SELECT ZERO_NO1||'-'||(ZERO_NO2+1)
 		                                        FROM (SELECT SUBSTR(OCCRRNC_ZERO_NO, 1,7) ZERO_NO1, MAX(TO_NUMBER(SUBSTR(OCCRRNC_ZERO_NO, 9))) ZERO_NO2
 		                                                FROM TRN_CASE
-		                                               WHERE OCCRRNC_ZERO_NO LIKE (SELECT TO_CHAR(TO_DATE(PRSCT_DE), 'YYYY-MM') FROM RC_TMPR WHERE RC_NO = #RC_NO#)||'%'
+		                                               WHERE OCCRRNC_ZERO_NO LIKE (SELECT TO_CHAR(TO_DATE(PRSCT_DE, 'YYYYMMDD'), 'YYYY-MM') FROM RC_TMPR WHERE RC_NO = #RC_NO#)||'%'
 		                                               GROUP BY SUBSTR(OCCRRNC_ZERO_NO, 1,7))),
-		                                    (SELECT TO_CHAR(TO_DATE(PRSCT_DE), 'YYYY-MM')||'-1' FROM RC_TMPR WHERE RC_NO = #RC_NO#))
+		                                    (SELECT TO_CHAR(TO_DATE(PRSCT_DE, 'YYYYMMDD'), 'YYYY-MM')||'-1' FROM RC_TMPR WHERE RC_NO = #RC_NO#))
 		                            FROM DUAL)
 		 WHERE TRN_NO = #TRN_NO#
 	]]>
@@ -1323,12 +1327,15 @@
 
 	<select id="selectNewSuspctZeroNo" parameterClass="java.util.HashMap" resultClass="String">
 		<!-- SELECT FN_NEW_SUSPCT_ZERO_NO(#TRN_NO#, #RC_NO#, #TRGTER_SN#) FROM DUAL -->
-		SELECT NVL((SELECT ZERO_NO1 ||'-'||ZERO_NO2
+		<!-- 
+			
+		 -->
+		SELECT NVL((SELECT ZERO_NO1 ||'-'|| TO_CHAR(ZERO_NO2, 'fm00')
 		              FROM (SELECT SUBSTR(SUSPCT_ZERO_NO, 1, 7) ZERO_NO1, MAX(TO_NUMBER(SUBSTR(SUSPCT_ZERO_NO, 9)))+1 ZERO_NO2
 		                      FROM TRN_SUSPCT
 		                     WHERE SUSPCT_ZERO_NO LIKE (SELECT SUBSTR(TRN_DE, 1, 4) ||'-'||SUBSTR(TRN_DE, 5, 2)||'%' FROM TRN_CASE WHERE TRN_NO = #TRN_NO#)
 		                     GROUP BY SUBSTR(SUSPCT_ZERO_NO, 1, 7))),
-		           (SELECT TO_CHAR(TO_DATE(TRN_DE, 'YYYYMMDD'), 'YYYY-MM') ||'-1' FROM TRN_CASE WHERE TRN_NO = #TRN_NO#))
+		           (SELECT TO_CHAR(TO_DATE(TRN_DE, 'YYYYMMDD'), 'YYYY-MM') ||'-01' FROM TRN_CASE WHERE TRN_NO = #TRN_NO#))
 		  FROM DUAL
 	</select>
 
@@ -1466,6 +1473,48 @@
 				         )
 		        )
 		AND FORMAT_ID = '00000000000000000218'
+		AND FILE_NM IS NOT NULL
+		AND USE_YN = 'Y'
+		
+		/*
+			2022.02.14
+			coded by dgkim
+			송치관리 > 기록 목록 메뉴 삭제로 인한 송치 등록시 지휘건의 기록목록 복사
+		*/
+		UNION ALL 
+			SELECT #DOC_ID#
+			, 2
+			, '00000000000000000067'
+			, (SELECT TO_CHAR(SYSDATE,'YYYY') || '-' || LPAD(NVL(MAX(SUBSTR(DOC_NO,6,6)),0)+1, 6, '0')
+				FROM CMN_DOC_PBLICTE
+				WHERE DOC_NO LIKE TO_CHAR(SYSDATE,'YYYY') || '%')
+			, 'P_TRN_NO='||#TRN_NO#
+			, INPUT_JSON
+			, USE_YN
+			, #WRITNG_ID#
+			, SYSDATE
+			, FILE_PATH
+			, FILE_NM
+			, FILE_MG
+		FROM CMN_DOC_PBLICTE
+		 WHERE DOC_ID = (
+				SELECT DOC_ID
+				FROM INV_SUGEST
+				WHERE SUGEST_NO = (
+					SELECT MAX(A.SUGEST_NO) SUGEST_NO
+					FROM INV_SUGEST A, RC_TMPR B
+					WHERE A.USE_YN = 'Y'
+					AND A.SUGEST_TY_CD = '01101' /* 건의 유형 코드(수사지휘건의) */
+					AND A.SUGEST_RESULT_CD = 'Y'/* 건의 결과 코드(가) */
+					AND A.RC_NO = #RC_NO#
+					AND B.USE_YN = 'Y'
+					AND A.RC_NO = B.RC_NO
+					AND (   (B.INV_RESMPT_YN = 'Y' AND B.INV_RESMPT_DE <= A.SUGEST_DE)
+						OR B.INV_RESMPT_YN = 'N')
+					GROUP BY A.RC_NO
+					)
+			)
+		AND FORMAT_ID = '00000000000000000238'
 		AND FILE_NM IS NOT NULL
 		AND USE_YN = 'Y'
 	]]>

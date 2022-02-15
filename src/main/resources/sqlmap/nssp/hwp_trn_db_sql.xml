@@ -16,7 +16,13 @@
 		     , CLSF_NM
 		     , USER_NM
 		     , DUMMY
-		     , FN_TRN_DOC_VIOLT(TRN_NO) VIOLT_NM_LIST
+		     /*
+	         	2022.01.27
+	         	coded by dgkim
+	         	위반 글자 추가
+	         	김지만 수사관 요청
+	         */
+		     , FN_TRN_DOC_VIOLT(TRN_NO) || '위반' VIOLT_NM_LIST
 		     , FN_TRN_DOC_OPTION(TRN_NO) TRN_OPTION_NM_LIST
 		     , CASE_YYYY || ' ' || NAME || ' 제' || CASE_NO2 || '호' AS RC_SE_NM
 		 FROM (
@@ -26,7 +32,13 @@
 		         , FN_CD_NM (INV_PROVIS_CD) INV_PROVIS_NM
 		         , FN_OZ_DATE(TO_CHAR(RC_DT, 'YYYYMMDD'), NULL) RC_DT
 		         , CASE_NO
-		         , FN_OZ_DATE(PRSCT_DE, NULL) PRSCT_DE
+		         /*
+		         	2022.01.27
+		         	coded by dgkim
+		         	인지날짜 공백 제거
+		         	김지만 수사관 요청
+		         */
+		         , REPLACE(FN_OZ_DATE(PRSCT_DE, NULL), ' ', '') PRSCT_DE
 		         , FN_CD_NM(CLSF_CD) CLSF_NM
 		         --, C.USER_NM
 		         , FN_USER_NM(B.CHARGER_ID) AS USER_NM -- 담당자로 변경 by dgkim
@@ -143,7 +155,13 @@
 		SELECT
 		       A.RCORD_NM
 		     , A.RCORD_STATER
-		     , NVL2(A.RCORD_NM, FN_OZ_DATE2(A.RCORD_DE, null), '') RCORD_DE
+		     /*
+		     	2022.01.27
+		     	coded by dgkim
+		     	날짜 공백 제거
+		     	김지만 수사관 요청
+		     */
+		     , NVL2(A.RCORD_NM, REPLACE(FN_OZ_DATE2(A.RCORD_DE, null), ' ', ''), '') RCORD_DE
 		     , A.RCORD_CO
 		  FROM TRN_RCORD A
 		     , TRN_CASE B

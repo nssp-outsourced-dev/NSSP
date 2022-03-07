@@ -134,9 +134,9 @@
 			$('#txtVioltNm').val(data.VIOLT_NM);
 			$('#txtVioltDc').val(data.VIOLT_DC);
 			if(data.VIOLT_CN != null){
-				$('#txtVioltCn').text(data.VIOLT_CN);
+				$('#txtVioltCn').val(data.VIOLT_CN);
 			}else{
-				$('#txtVioltCn').text("");
+				$('#txtVioltCn').val("");
 			}
 
 			$('#selSort').val(data.SORT_ORDR);

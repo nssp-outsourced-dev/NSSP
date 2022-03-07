@@ -393,6 +393,8 @@
 				$("#txtVidoTrplantCharger").prop("readonly", true);
 				$("#txtVidoTrplantDe").prop("disabled", true);
 			} */
+			
+			$("#hidVdoId").val(data.vdoId);
 		}
 		Ajax.getJson("<c:url value='/inv/rmTrgterListAjax/'/>", "grdRcNo="+items.grdRcNo+"&grdTrgterSn="+items.grdTrgterSn+"&grdPblicteSn="+items.grdPblicteSn, processAfterGet2);
 		
@@ -619,16 +621,23 @@
 			return true;
 		}
 	}
+	
+	/*
+		2022.03.03
+		coded by dgkim
+		영상녹화 저장
+		권종열 사무관 요청
+	*/
 	function fnRecSave () {
 		/* var strFormatId = $("#hidFormatId").val();
 		if(fnIsEmpty(strFormatId) || parseInt(strFormatId) != 21) {
-			alert("좌측 목록에서 해당되는 영상녹화 문서를 선택 후 영상녹화 정보를 저장하여 주십시오.");
+			alert("우측 목록에서 해당되는 영상녹화 문서를 선택 후 영상녹화 정보를 저장하여 주십시오.");
 			return;
 		} */
 		var strDocNo = $("#hidDocId").val();
 		var strPblicteSn = $("#hidPblicteSn").val();
 		if(fnIsEmpty(strDocNo) || fnIsEmpty(strPblicteSn)) {
-			alert("좌측 목록에서 해당되는 영상녹화 문서를 선택 후 영상녹화 정보를 저장하여 주십시오.");
+			alert("우측 목록에서 해당되는 영상녹화 문서를 선택 후 영상녹화 정보를 저장하여 주십시오.");
 			return;
 		}
 		if(fnFormValueCheck("dtltgForm")){
@@ -641,6 +650,7 @@
 			Ajax.getJson("<c:url value='/inv/saveVdoRecAjax/'/>", param, processAfterGet);
 		}
 	}
+	
 	function fnRstPop () {
 		var strRcSeCd = $("#hidRcSeCd").val();
 		var progrsSttusCd = $("#hidProgrsSttusCd").val();
@@ -870,11 +880,11 @@
 						</tr>
 						<tr>
 							</th>
-							<th style="height: 30px;">영상녹화물<br/>관리자</th>
+							<th style="height: 30px;">영상녹화물<br/>관리자<img src="/img/point.png"></th>
 							<td colspan="2">
 								<input type="text" name="txtVidoTrplantCharger" id="txtVidoTrplantCharger" class="w_120px input_com" maxlength="20" check="text" checkName="녹화담당자"/>
 							</td>
-							<th>영상<br/>녹화일</th>
+							<th>영상<br/>녹화일<img src="/img/point.png"></th>
 							<td>
 								<div class="calendar_box mr_5 fl" style="width: 130px">
 									<input type="text" class="w_100p input_com calendar" id="txtVidoTrplantDe" name="txtVidoTrplantDe" readonly="readonly" check="text" checkName="녹화일"/>

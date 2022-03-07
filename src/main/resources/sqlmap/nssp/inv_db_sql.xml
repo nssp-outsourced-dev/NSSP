@@ -477,7 +477,7 @@
 			, C.VDO_ID
 			FROM RC_TMPR_TRGTER A
 			LEFT JOIN RC_TMPR  B ON A.RC_NO = B.RC_NO
-			LEFT JOIN VIDO_TRPLANT C ON A.DOC_ID = C.DOC_ID AND C.PBLICTE_SN = DECODE(REGEXP_INSTR(#pblicte_sn#, '[^0-9]'),0,#pblicte_sn#,0)
+			LEFT JOIN VIDO_TRPLANT C ON A.DOC_ID = C.DOC_ID <!-- AND C.PBLICTE_SN = DECODE(REGEXP_INSTR(#pblicte_sn#, '[^0-9]'),0,#pblicte_sn#,0) -->
 			WHERE A.USE_YN = 'Y'
 			  <isNotEmpty property="rc_no" open="AND">
 			  	A.RC_NO = #rc_no#

@@ -15,6 +15,7 @@
 		<org.slf4j-version>1.6.6</org.slf4j-version>
 		<egovframework.rte.version>3.1.0</egovframework.rte.version>
 		<poi.version>3.16</poi.version>
+		<org.log4j-version>2.17.1</org.log4j-version>
 	</properties>
 	
 	<distributionManagement>
@@ -455,12 +456,12 @@
 		<dependency>
 			<groupId>org.apache.logging.log4j</groupId>
 			<artifactId>log4j-core</artifactId>
-			<version>2.17.1</version>
+			<version>${org.log4j-version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.logging.log4j</groupId>
 			<artifactId>log4j-slf4j-impl</artifactId>
-			<version>2.17.1</version>
+			<version>${org.log4j-version}</version>
 			<exclusions>
 				<exclusion>
 					<groupId>org.slf4j</groupId>
@@ -473,7 +474,7 @@
 		<dependency>
 			<groupId>org.apache.logging.log4j</groupId>
 			<artifactId>log4j-api</artifactId>
-			<version>2.17.1</version>
+			<version>${org.log4j-version}</version>
 		</dependency>
 		
 		<!-- 

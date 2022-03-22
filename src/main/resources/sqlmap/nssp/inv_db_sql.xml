@@ -23,9 +23,13 @@
 			FN_RC_TRGTER_NM (A.RC_NO, '00698') AS TRGTER_NM_V	/*피해자*/
 		FROM RC_TMPR A
 		WHERE A.USE_YN = 'Y'
+		
+		<isNotEqual property="type" compareValue="all">
 		  AND A.CHARGER_DEPT_CD = #dept_cd#
 		  AND A.CHARGER_ID = #esntl_id#
-		  AND DECODE(A.RC_SE_CD, 'T' ,A.TMPR_NO,'I',A.ITIV_NO,'F',A.CASE_NO) IS NOT NULL /*사건번호,내사번호,임시번호*/
+		</isNotEqual>
+		
+		AND DECODE(A.RC_SE_CD, 'T' ,A.TMPR_NO,'I',A.ITIV_NO,'F',A.CASE_NO) IS NOT NULL /*사건번호,내사번호,임시번호*/
         <!-- 미제사건 모두 조회 -->
         <isNotEmpty property="page_type">
        		<isEqual property="page_type" compareValue="zrlong" open="AND">
@@ -1874,14 +1878,14 @@
 					'',
 				</isEmpty>
 				<isNotEmpty property="rst_valid_dt">
-					TO_DATE(REPLACE(REPLACE(#rst_valid_dt#, '/', ''), '.' ,'')||LPAD(#rst_valid_dt2#,2,'0')||LPAD(#rst_valid_dt3#,2,'0'),'YYYYMMDDHH24MI'),
+					TO_DATE(REPLACE(#rst_valid_dt#,'/','')||LPAD(#rst_valid_dt2#,2,'0')||LPAD(#rst_valid_dt3#,2,'0'),'YYYYMMDDHH24MI'),
 				</isNotEmpty>
 		       ISUE_DT           =
 		       	<isEmpty property="isue_dt">
 					'',
 				</isEmpty>
 				<isNotEmpty property="isue_dt">
-					TO_DATE(REPLACE(REPLACE(#isue_dt#, '/' , ''), '.' ,'') || LPAD(#isue_dt2#,2,'0')||LPAD(#isue_dt3#,2,'0'),'YYYYMMDDHH24MI'),
+					TO_DATE(REPLACE(#isue_dt#,'/','')||LPAD(#isue_dt2#,2,'0')||LPAD(#isue_dt3#,2,'0'),'YYYYMMDDHH24MI'),
 				</isNotEmpty>
 		       DSMSSL_INSTT_CD   = #dsmssl_instt_cd#,
 		       DSMSSL_RESN       = #dsmssl_resn#

@@ -5,6 +5,8 @@ import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.URLEncoder;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -17,19 +19,15 @@ import org.apache.poi.poifs.crypt.EncryptionInfo;
 import org.apache.poi.poifs.crypt.EncryptionMode;
 import org.apache.poi.poifs.crypt.Encryptor;
 import org.apache.poi.poifs.filesystem.POIFSFileSystem;
-import org.apache.poi.ss.usermodel.BorderStyle;
-import org.apache.poi.ss.usermodel.FillPatternType;
 import org.apache.poi.ss.usermodel.HorizontalAlignment;
 import org.apache.poi.ss.usermodel.VerticalAlignment;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.util.CellRangeAddress;
 import org.apache.poi.xssf.usermodel.XSSFCell;
 import org.apache.poi.xssf.usermodel.XSSFCellStyle;
-import org.apache.poi.xssf.usermodel.XSSFColor;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
-import org.apache.poi.xssf.usermodel.extensions.XSSFCellBorder.BorderSide;
 import org.springframework.web.servlet.view.AbstractView;
 
 import kr.go.nssp.utl.egov.EgovProperties;
@@ -68,7 +66,8 @@ public class ExcelDownloader extends AbstractView {
 
 				switch (menuCd) {
 				case "00040":// 범죄사건부일 경우
-					workbook = this.getCrimeCaseWorkbook((List<HashMap>) result.get("data"));
+					workbook = this.getCrimeCaseWorkbook((List<HashMap>) result.get("data"), request);
+					
 					fileName = "범죄사건부_EXCEL";
 					break;
 				default:
@@ -161,7 +160,7 @@ public class ExcelDownloader extends AbstractView {
 	 * @return
 	 * @throws Exception
 	 */
-	private XSSFWorkbook getCrimeCaseWorkbook(List<HashMap> data) throws Exception {
+	private XSSFWorkbook getCrimeCaseWorkbook(List<HashMap> data, HttpServletRequest request) throws Exception {
 		final String[][] headerTxt = {
 				{ "사건번호", "수리", "구분", "수사담당자", "피의자", "        ", "    ", "조회", "죄명(위반죄명)", "범죄", "                ",
 						"피해정도", "피해자 등", "체포/구속", "       ", "            ", "        ", "        ", "석방일시및사유", "송치",
@@ -416,12 +415,12 @@ public class ExcelDownloader extends AbstractView {
 			bodyCell.setCellValue("null".equals(String.valueOf(item.get("SUSPCT_ZERO_NO"))) ? ""
 					: String.valueOf(item.get("SUSPCT_ZERO_NO")));
 		}
-
+		
 		// body cell 병합
 		for (int i = sheet.getFirstRowNum() + headerTxt.length; i <= sheet.getLastRowNum(); i++) {
 			String currentCaseNo = sheet.getRow(i).getCell(0).getStringCellValue();// 현재행 사건번호
 			String nextCaseNo = ((i + 1) > sheet.getLastRowNum()) ? "" : sheet.getRow(i + 1).getCell(0).getStringCellValue();// 다음행 사건번호
-			//System.out.println(sheet.getLastRowNum());
+
 			if(currentCaseNo == nextCaseNo) {//현재행 사건번호랑 다음행 사건번호가 같으면
 				for (int j = i + 1; j <= sheet.getLastRowNum() + 1; j++) {// 현재행부터 마지막행까지 loop
 					//System.out.println("i: " + i + ", j" + j);
@@ -444,7 +443,39 @@ public class ExcelDownloader extends AbstractView {
 				}
 			}
 		}
+		
+		/*
+		 * 2022.03.14
+		 * coded by dgkim
+		 * 범죄사건부 보안조치 출력자 출력
+		 * 권종열 사무관 요청
+		 * */
+		bodyRow = sheet.createRow(data.size() + headerTxt.length + 5);
+		bodyCell = bodyRow.createCell(0);
+		bodyCell.setCellStyle(bodyStyle);
+		bodyCell.setCellValue("IP");
+		
+		bodyCell = bodyRow.createCell(1);
+		bodyCell.setCellStyle(bodyStyle);
+		bodyCell.setCellValue("출력일시");
+		
+		bodyCell = bodyRow.createCell(2);
+		bodyCell.setCellStyle(bodyStyle);
+		bodyCell.setCellValue("사용자 ID");
 
+		bodyRow = sheet.createRow(data.size() + headerTxt.length + 6);
+		bodyCell = bodyRow.createCell(0);
+		bodyCell.setCellStyle(bodyStyle);
+		bodyCell.setCellValue(request.getRemoteAddr());
+		
+		bodyCell = bodyRow.createCell(1);
+		bodyCell.setCellStyle(bodyStyle);
+		bodyCell.setCellValue(new SimpleDateFormat("yyyy. MM. dd. HH:mm:ss").format(new Date()));
+		
+		bodyCell = bodyRow.createCell(2);
+		bodyCell.setCellStyle(bodyStyle);
+		bodyCell.setCellValue(String.valueOf(request.getSession().getAttribute("user_id")));
+		
 		return workbook;
 	}
 }

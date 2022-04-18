@@ -46,7 +46,13 @@ public class MberServiceImpl implements MberService {
         mberDAO.updateEtc(map);
 	}
 
-    public HashMap getUserIdCnt(HashMap map) throws Exception{
+	/*
+	 * 2021.10.05
+	 * coded by dgkim
+	 * 이중회원가입 방지(ID, 메일로 판별) 이메일 중복검사 추가
+	 * 권종열 사무관 요청
+	 * */
+    public List<HashMap> getUserIdCnt(HashMap map) throws Exception{
 	    return mberDAO.selectUserIdCnt(map);
 	}
 

@@ -273,8 +273,9 @@
 		var iUrl = '<c:url value='/member/getIdDplctAjax/'/>';
  		var queryString =  $('#addForm').serialize();
  		var processAfterGet = function(data) {
-			if(data.result == "1"){
+			if(data == null){
 				alert("사용가능한 ID입니다.");
+				$("#hidEsntlID").val($("#txtUserId").val());
 				fnIdClear(false);
 			}else{
 				alert("입력하신 ID는 사용할 수 없습니다.");

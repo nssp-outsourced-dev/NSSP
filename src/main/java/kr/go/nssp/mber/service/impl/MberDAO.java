@@ -40,8 +40,15 @@ public class MberDAO extends EgovComAbstractDAO {
 		update("mber.updateEtc", map);
 	}
 
-	public HashMap selectUserIdCnt(HashMap map) throws Exception {
-		return (HashMap) selectByPk("mber.selectUserIdCnt", map);
+	/*
+	 * 2021.10.05
+	 * coded by dgkim
+	 * 이중회원가입 방지(ID, 메일로 판별) 이메일 중복검사 추가
+	 * 권종열 사무관 요청
+	 * */
+	public List<HashMap> selectUserIdCnt(HashMap map) throws Exception {
+		//return (HashMap) selectByPk("mber.selectUserIdCnt", map);
+		return list("mber.selectUserIdCnt", map);
 	}
 
 	public List selectAccesHistList(HashMap map) throws Exception {

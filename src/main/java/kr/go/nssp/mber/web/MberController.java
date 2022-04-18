@@ -582,7 +582,7 @@ public class MberController {
 							String author_cd = (String) data.get("AUTHOR_CD");
 							String mngr_yn = "N";
 							session.setAttribute("author_cd", author_cd);
-							if ("00001".equals(author_cd) || "00002".equals(author_cd)) {
+							if ("00001".equals(author_cd) || "00002".equals(author_cd) || "00007".equals(author_cd)) {
 								mngr_yn = "Y";
 							}
 							session.setAttribute("mngr_yn", mngr_yn);
@@ -1053,12 +1053,23 @@ public class MberController {
 		HashMap map = new HashMap();
 		map.put("user_id", txtUserId);
 		map.put("email", txtEmail);
-		HashMap ret = mberService.getUserIdCnt(map);
-//		if (Integer.parseInt(String.valueOf(cnt.get("TOT_CNT"))) > 0) {
-//			result = "-1";
-//		}
-//		HashMap ret = new HashMap();
-//		ret.put("result", result);
+		/*
+		 * 2021.10.05
+		 * coded by dgkim
+		 * 이중회원가입 방지(ID, 메일로 판별) 이메일 중복검사 추가
+		 * 권종열 사무관 요청
+		 * */
+		List<HashMap> ret = mberService.getUserIdCnt(map);
+		
+		if(ret != null && ret.size() > 0) {
+			if (Integer.parseInt(String.valueOf(ret.get(0).get("TOT_CNT"))) > 0) {
+				result = "-1";
+			}
+		}
+
+		//HashMap ret = new HashMap();
+		//ret.put("result", result);
+		
 		return new ModelAndView("ajaxView", "ajaxData", ret);
 	}
 

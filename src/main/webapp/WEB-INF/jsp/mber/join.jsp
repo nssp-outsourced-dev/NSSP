@@ -158,7 +158,7 @@
 			var iUrl = '<c:url value='/member/getIdDplctAjax/'/>';
 			var queryString =  $('#addForm').serialize();
 			var processAfterGet = function(data) {
-				if(data.result == "1"){
+				if(data == null){
 					alert("사용가능한 ID입니다.");
 					fnIdClear(false);
 					Check = true;

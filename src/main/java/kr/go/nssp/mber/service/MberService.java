@@ -11,7 +11,13 @@ public interface MberService {
     public List<HashMap> getUserList(HashMap map) throws Exception;
     public void updateUser(HashMap map) throws Exception;
     public void updateEtc(HashMap map) throws Exception;
-    public HashMap getUserIdCnt(HashMap map) throws Exception;
+    /*
+	 * 2021.10.05
+	 * coded by dgkim
+	 * 이중회원가입 방지(ID, 메일로 판별) 이메일 중복검사 추가
+	 * 권종열 사무관 요청
+	 * */
+    public List<HashMap> getUserIdCnt(HashMap map) throws Exception;
 	public List getAccesHistList(HashMap map) throws Exception;
     public List<HashMap> getUserListCombo(HashMap map) throws Exception;
     public int setFaceTemplate (HashMap map) throws Exception;

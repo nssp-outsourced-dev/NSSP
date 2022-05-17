@@ -44,13 +44,13 @@
 					pHwpCtrl.MoveToField(key+"{{"+i+"}}", false, false, false);
 				});
 				
-				/* 의견서만 직업란을 추가하도록 수정 by dgkim */
+				/* 의견서만 직업란을 추가하도록 수정 by dgkim 
 				if("<c:out value='${fileNm}' />" === "의견서"){
-					/* if(json.T2.indexOf("법인") == -1){//기업일 경우
-						kmapPos = Object.keys(kmap).length;//직업란 추가
-					}else{
-						kmapPos = (Object.keys(kmap).length) -1;//직업란 제외
-					} */
+					//if(json.T2.indexOf("법인") == -1){//기업일 경우
+						//kmapPos = Object.keys(kmap).length;//직업란 추가
+					//}else{
+						//kmapPos = (Object.keys(kmap).length) -1;//직업란 제외
+					//}
 					
 					kmapPos = Object.keys(kmap).length;//직업란 추가
 					pos = (pHwpCtrl.GetPos().list) + 1 + 7;//인적사항 사이 간격을 없애기위해 처음에만 증가한다
@@ -58,6 +58,10 @@
 					kmapPos = (Object.keys(kmap).length) - 1;//의견서가 아닌 경우 직업란 추가하지 않도록 수정 dy dgkim
 					pos = (pHwpCtrl.GetPos().list) + 1 + 4;//인적사항 사이 간격을 없애기위해 처음에만 증가한다
 				}
+				*/
+				
+				kmapPos = Object.keys(kmap).length;//직업란 추가
+				pos = (pHwpCtrl.GetPos().list) + 1 + 7;//인적사항 사이 간격을 없애기위해 처음에만 증가한다
 			} else {
 				//fnAddRow ();//빈행 행을 만들지 않음
 				pHwpCtrl.MovePos(105, 0, 0);

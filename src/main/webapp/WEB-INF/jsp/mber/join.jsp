@@ -157,13 +157,13 @@
 			$("#txtEmail1").val("");
 			var iUrl = '<c:url value='/member/getIdDplctAjax/'/>';
 			var queryString =  $('#addForm').serialize();
-			var processAfterGet = function(data) {
-				if(data == null){
-					alert("사용가능한 ID입니다.");
+			var processAfterGet = function(data) {console.log(data);
+				if(data != null && data.length > 0){
+					alert("이미 존재하는 ID입니다. \n가입한 이력이있는지 관리자에게 문의하세요.");
 					fnIdClear(false);
 					Check = true;
 				}else{
-					alert("입력하신 ID는 사용할 수 없습니다.");
+					alert("사용가능한 ID입니다.");
 					Check = false;
 				}
 			};
@@ -180,9 +180,9 @@
 			var iUrl = '<c:url value='/member/getIdDplctAjax/'/>';
 			var queryString =  $('#addForm').serialize();
 			var processAfterGet = function(data) {
-				if(data != null && data.TOT_CNT > 0){
+				if(data != null && data.length > 0){
 					$('#txtEmail, #txtEmail1').val("");//이메일 조합
-					alert("이미 존재하는 이메일입니다. <br>가입한 이력이있는지 관리자에게 문의하세요.");
+					alert("이미 존재하는 이메일입니다. \n가입한 이력이있는지 관리자에게 문의하세요.");
 					Check = true;
 				}else {
 					alert("사용가능한 이메일입니다.");

@@ -7,7 +7,7 @@ import java.util.List;
 import javax.annotation.Resource;
 import javax.servlet.http.*;
 
-import kr.co.siione.dist.utils.SimpleUtils;
+import kr.go.nssp.utl.SimpleUtils;
 import kr.go.nssp.bbs.service.BbsService;
 import kr.go.nssp.cmmn.service.FileService;
 import kr.go.nssp.utl.Utility;

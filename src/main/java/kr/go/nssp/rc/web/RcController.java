@@ -29,7 +29,7 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import egovframework.rte.ptl.mvc.tags.ui.pagination.PaginationInfo;
-import kr.co.siione.dist.utils.SimpleUtils;
+import kr.go.nssp.utl.SimpleUtils;
 import kr.go.nssp.alot.service.AlotService;
 import kr.go.nssp.cmmn.service.CdService;
 import kr.go.nssp.cmmn.service.DeptService;

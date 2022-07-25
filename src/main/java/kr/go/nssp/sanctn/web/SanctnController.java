@@ -9,7 +9,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import kr.co.siione.dist.utils.SimpleUtils;
+import kr.go.nssp.utl.SimpleUtils;
 import kr.go.nssp.cmmn.service.CdService;
 import kr.go.nssp.inv.service.PrsctService;
 import kr.go.nssp.rc.service.RcService;

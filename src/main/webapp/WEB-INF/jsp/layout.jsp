@@ -5,7 +5,7 @@
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <%@ taglib prefix="decorator" uri="http://www.opensymphony.com/sitemesh/decorator" %>
-<%@ page import="kr.co.siione.dist.utils.SimpleUtils" %>
+<%@ page import="kr.go.nssp.utl.SimpleUtils" %>
 <%@ page import="kr.go.nssp.utl.LoginManager" %>
 <%@ page import="kr.go.nssp.utl.AuthorManager" %>
 <%@ page import="java.util.*" %>

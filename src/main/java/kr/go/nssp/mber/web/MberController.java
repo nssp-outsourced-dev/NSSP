@@ -24,7 +24,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import kr.co.siione.dist.utils.SimpleUtils;
+import kr.go.nssp.utl.SimpleUtils;
 import kr.go.nssp.cmmn.service.CdService;
 import kr.go.nssp.cmmn.service.DeptService;
 import kr.go.nssp.face.web.FaceLgMatcher;
@@ -58,7 +58,7 @@ import com.gpki.servlet.GPKIHttpServletResponse;
 
 import twitter4j.internal.org.json.JSONObject;
 import egovframework.rte.ptl.mvc.tags.ui.pagination.PaginationInfo;
-import kr.co.siione.dist.utils.SimpleUtils;
+import kr.go.nssp.utl.SimpleUtils;
 import kr.go.nssp.cmmn.service.CdService;
 import kr.go.nssp.cmmn.service.DeptService;
 import kr.go.nssp.face.web.FaceLgMatcher;

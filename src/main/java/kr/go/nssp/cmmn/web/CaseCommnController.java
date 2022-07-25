@@ -14,7 +14,7 @@ import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import kr.co.siione.dist.utils.SimpleUtils;
+import kr.go.nssp.utl.SimpleUtils;
 import kr.go.nssp.cmmn.service.CaseCommnService;
 import kr.go.nssp.rc.service.RcService;
 import kr.go.nssp.utl.InvUtil;

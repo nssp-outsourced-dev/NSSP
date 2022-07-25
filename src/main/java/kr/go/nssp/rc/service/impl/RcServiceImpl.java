@@ -10,7 +10,7 @@ import javax.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import kr.co.siione.dist.utils.SimpleUtils;
+import kr.go.nssp.utl.SimpleUtils;
 import kr.go.nssp.alot.service.impl.AlotDAO;
 import kr.go.nssp.cmmn.service.DocService;
 import kr.go.nssp.cmmn.service.FileService;

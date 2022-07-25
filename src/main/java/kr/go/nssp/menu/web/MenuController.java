@@ -7,7 +7,7 @@ import java.util.List;
 import javax.annotation.Resource;
 import javax.servlet.http.*;
 
-import kr.co.siione.dist.utils.SimpleUtils;
+import kr.go.nssp.utl.SimpleUtils;
 import kr.go.nssp.cmmn.service.CdService;
 import kr.go.nssp.menu.service.MenuService;
 import kr.go.nssp.utl.AuthorManager;

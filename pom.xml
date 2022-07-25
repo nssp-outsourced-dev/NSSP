@@ -1,7 +1,7 @@
-﻿﻿<?xml version="1.0" encoding="UTF-8"?>
+﻿<?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
-	<groupId>go</groupId>
+	<groupId>aero.cubox.sjpi</groupId>
 	<artifactId>nssp</artifactId>
 	<packaging>war</packaging>
 	<version>1.0.0</version>
@@ -9,7 +9,7 @@
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-		<java-version>1.7</java-version>
+		<java-version>1.8</java-version>
 		<org.springframework-version>3.2.8.RELEASE</org.springframework-version>
 		<org.aspectj-version>1.6.10</org.aspectj-version>
 		<org.slf4j-version>1.6.6</org.slf4j-version>
@@ -17,23 +17,11 @@
 		<poi.version>3.16</poi.version>
 		<org.log4j-version>2.17.1</org.log4j-version>
 	</properties>
-	
-	<distributionManagement>
-			<repository>
-				<id>release</id> 
-				<url>http://127.0.0.1:8283/nexus/content/repositories/releases/</url>
-			</repository>		
-  		<snapshotRepository>
-   			<id>snapshots</id>
-   			<url>http://127.0.0.1:8283/nexus/content/repositories/snapshots/</url>
-  		</snapshotRepository>  		
- 	</distributionManagement>
- 
-	
+
 	<!-- egovframe DI 오류로 추가 -->
 
 	<repositories>
-	
+
 		<repository>
 			<id>mvn2</id>
 			<url>http://repo1.maven.org/maven2/</url>
@@ -55,13 +43,16 @@
 				<enabled>false</enabled>
 			</snapshots>
 		</repository>
+		<!--
 	    <repository> 
 	        <id>central</id>
 	        <url>http://127.0.0.1:8283/nexus/content/groups/public/</url>
 	        <releases><enabled>true</enabled></releases>
 	        <snapshots><enabled>true</enabled></snapshots>
 	    </repository>
+		-->
 	</repositories>
+<!--
 
 	<pluginRepositories>
 	    <pluginRepository>
@@ -71,6 +62,7 @@
 	        <snapshots><enabled>true</enabled></snapshots>
 	    </pluginRepository>
 	</pluginRepositories>
+-->
 
 	<dependencies>
 		<!-- nexus test -->
@@ -396,7 +388,8 @@
 	        <artifactId>validation-api</artifactId> 
 	        <version>1.0.0.GA</version> 
 		</dependency>
-  		 <dependency>
+  		<!--
+  		<dependency>
 			<groupId>com.neurotec</groupId>
 			<artifactId>neurotec-biometrics-client</artifactId>
 			<version>11.1.0.0</version>
@@ -440,12 +433,14 @@
 			<groupId>com.neurotec</groupId>
 			<artifactId>neurotec-media</artifactId>
 			<version>11.1.0.0</version>
+			<
 		</dependency>
 		<dependency>
 			<groupId>com.neurotec.samples</groupId>
 			<artifactId>samples-utils</artifactId>
 			<version>11.1.0.0</version>
 		</dependency>
+		-->
 		<dependency>
 			<groupId>net.java.dev.jna</groupId>
 			<artifactId>jna</artifactId>

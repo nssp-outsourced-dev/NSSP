@@ -6,12 +6,13 @@
 	<entry key="base.driver">oracle.jdbc.driver.OracleDriver</entry>
 
 	<!-- #Dev -->
-	<entry key="base.url">jdbc:oracle:thin:@172.16.107.111:1521/orcl</entry> 	
-	
+	<!--<entry key="base.url">jdbc:oracle:thin:@172.16.107.111:1521/orcl</entry>-->
+	<entry key="base.url">jdbc:oracle:thin:@192.168.1.18:32118/XE</entry>
+
     <!-- #Real	
 	<entry key="base.url">jdbc:oracle:thin:@10.66.204.44:1521/orcl</entry>
 	-->
-	<entry key="base.username">nssp_dba</entry>
-	<entry key="base.password">nssp_dba</entry>
+	<entry key="base.username">cubox_dba</entry>
+	<entry key="base.password">cubox_dba</entry>
 
 </properties>

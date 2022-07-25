@@ -214,4 +214,9 @@ $RECYCLE.BIN/
 # Windows shortcuts
 *.lnk
 
+/target/
+/classes/
+/nssc.iml
+
 # End of https://www.toptal.com/developers/gitignore/api/intellij+all,eclipse,windows,macos
+

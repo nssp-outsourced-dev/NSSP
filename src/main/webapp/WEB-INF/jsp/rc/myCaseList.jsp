@@ -784,9 +784,11 @@ var targetGridId = "#grid_target_list";
 		case "liContextItem_IC21": //내사착수 보고
 			fnItivOutsetReprtPopup(rcNo, itivNo, progrsSttusCd);
 			break;
+		/*
 		case "liContextItem_IC22": //내사사건표지
 			fnCaseRptPopup (rcNo, docId, "5", invProvisCd);
 			break;
+		*/
 		case "liContextItem_IC23": //내사결과보고
 			fnItivResultReprtPopup(rcNo, itivNo, progrsSttusCd);
 			break;
@@ -1362,7 +1364,7 @@ var targetGridId = "#grid_target_list";
 	-->
 	<li class="IC"></li>
 	<li id="liContextItem_IC21" class="IC cssCtTxt">내사착수 보고</li>
-	<li id="liContextItem_IC22" class="IC cssCtTxt">내사사건 표지</li>
+	<%--<li id="liContextItem_IC22" class="IC cssCtTxt">내사사건 표지</li>--%>
 	<li id="liContextItem_IC23" class="IC cssCtTxt">내사결과 보고</li>
 	<li id="liContextItem_IC31" class="IC cssCtTxt">임시사건 사건변경</li>
 	<!-- 
